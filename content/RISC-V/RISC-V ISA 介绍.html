@@ -1,0 +1,546 @@
+<!doctype html>
+<html lang="zh"><head>
+<title>RISC-V ISA 介绍 - 成祠的个人博客</title>
+<meta charset="UTF-8">
+<meta name="keywords" content="blog">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+
+<link rel="shortcut icon" href="/image/favicon.png" type="image/png" />
+<meta name="description" content="ISA 的基本介绍参考RISIC-V 手册(中文版) ISA 是什么ISA（Instruction Set Architecture）指令集架构：是底层硬件电路面向上层软件程序提供的一层规范接口,可以理解为一种标准。 ISA 定义了：  基本数据类型： Byte &#x2F; HALFWORD &#x2F; WORD &#x2F; …  寄存器（Register）  指令  寻址模式  异常或者中">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RISC-V ISA 介绍">
+<meta property="og:url" content="https://www.tooupper.com/content/RISC-V/RISC-V%20ISA%20%E4%BB%8B%E7%BB%8D.html">
+<meta property="og:site_name" content="成祠的个人博客">
+<meta property="og:description" content="ISA 的基本介绍参考RISIC-V 手册(中文版) ISA 是什么ISA（Instruction Set Architecture）指令集架构：是底层硬件电路面向上层软件程序提供的一层规范接口,可以理解为一种标准。 ISA 定义了：  基本数据类型： Byte &#x2F; HALFWORD &#x2F; WORD &#x2F; …  寄存器（Register）  指令  寻址模式  异常或者中">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.tooupper.com/image/RISC-V/20232501.png">
+<meta property="og:image" content="https://www.tooupper.com/image/RISC-V/20232502.png">
+<meta property="og:image" content="https://www.tooupper.com/image/RISC-V/20232503.png">
+<meta property="og:image" content="https://www.tooupper.com/image/RISC-V/20232504.png">
+<meta property="og:image" content="https://www.tooupper.com/image/RISC-V/20232505.png">
+<meta property="og:image" content="https://www.tooupper.com/image/RISC-V/20232506.png">
+<meta property="og:image" content="https://www.tooupper.com/image/RISC-V/20232507.png">
+<meta property="og:image" content="https://www.tooupper.com/image/RISC-V/20232508.png">
+<meta property="og:image" content="https://www.tooupper.com/image/RISC-V/20232509.png">
+<meta property="og:image" content="https://www.tooupper.com/image/RISC-V/20232510.png">
+<meta property="og:image" content="https://www.tooupper.com/image/RISC-V/20232511.png">
+<meta property="og:image" content="https://www.tooupper.com/image/RISC-V/20232512.png">
+<meta property="og:image" content="https://www.tooupper.com/image/RISC-V/20232514.png">
+<meta property="og:image" content="https://www.tooupper.com/image/RISC-V/20232515.png">
+<meta property="og:image" content="https://www.tooupper.com/image/RISC-V/20232516.png">
+<meta property="og:image" content="https://www.tooupper.com/image/RISC-V/20232517.png">
+<meta property="og:image" content="https://www.tooupper.com/image/RISC-V/20232518.png">
+<meta property="og:image" content="https://www.tooupper.com/image/RISC-V/20232519.png">
+<meta property="og:image" content="https://www.tooupper.com/image/RISC-V/20232520.png">
+<meta property="og:image" content="https://www.tooupper.com/image/RISC-V/20232521.png">
+<meta property="article:published_time" content="2023-10-22T07:20:36.000Z">
+<meta property="article:modified_time" content="2023-10-25T15:03:07.688Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="riscv">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.tooupper.com/image/RISC-V/20232501.png">
+
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+<link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
+
+
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1698918461685">
+
+<link rel="stylesheet" href="/css/style.css?v=1698918461685">
+
+
+
+
+    
+        <link rel="stylesheet" href="/custom.css?v=1698918461685">
+    
+
+
+
+<script src="/lib/mdui_043tiny/mdui.js" async></script>
+<script src="/lib/fancybox/fancybox.umd.js" async></script>
+<script src="/lib/lax.min.js" async></script>
+
+
+<script async src="/js/app.js?v=1698918461685"></script>
+
+ 
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4D4ZJ9G024"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+
+  gtag("config", "G-4D4ZJ9G024");
+</script>
+
+<meta name="generator" content="Hexo 6.3.0"></head><body class="nexmoe mdui-drawer-body-left"><div id="nexmoe-background"><div class="nexmoe-bg" style="background-image: url(/image/banner.png)"></div><div class="mdui-appbar mdui-shadow-0"><div class="mdui-toolbar"><a class="mdui-btn mdui-btn-icon mdui-ripple" mdui-drawer="{target: &#039;#drawer&#039;, swipe: true}" title="menu"><i class="mdui-icon nexmoefont icon-menu"></i></a><div class="mdui-toolbar-spacer"></div><a class="mdui-btn mdui-btn-icon" href="/" title="kay"><img src="/image/Logo.png" alt="kay"></a></div></div></div><div id="nexmoe-header"><div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="kay">
+            <img src="/image/Logo.png" alt="kay" alt="kay">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>文章</span>29</div>
+        <div><span>标签</span>4</div>
+        <div><span>分类</span>2</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/aboutMe.html" title="关于博主">
+            <i class="mdui-list-item-icon nexmoefont icon-info-circle"></i>
+            <div class="mdui-list-item-content">
+                关于博主
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archives.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/downloads.html" title="下载中心">
+            <i class="mdui-list-item-icon nexmoefont icon-coffee"></i>
+            <div class="mdui-list-item-content">
+                下载中心
+            </div>
+        </a>
+        
+    </div>
+    
+    
+        
+        <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+        
+            <form id="search_form">
+                <label><input class="st-default-search-input" id="search_value" name="q" type="search" placeholder="搜索" style="
+                    font-size: 15px !important;
+                    height: 56px !important;
+                    background-image: none;
+                "></label>
+            </form>
+         
+    </div>
+</div>
+
+
+	<script async src="/js/search.js?v=1698918461686"></script>
+
+
+
+    
+        
+        <div class="nexmoe-widget-wrap">
+	<div class="nexmoe-widget nexmoe-social">
+		<a
+			class="mdui-ripple"
+			href="/image/QQOrWeChat.png"
+			target="_blank"
+			mdui-tooltip="{content: 'QQ'}"
+			style="
+				color: rgb(249, 174, 8);
+				background-color: rgba(249, 174, 8, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-QQ"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="/image/QQOrWeChat.png"
+			target="_blank"
+			mdui-tooltip="{content: 'WeChat'}"
+			style="
+				color: rgb(59, 151, 239);
+				background-color: rgba(59, 151, 239, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-wechat-fill"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://github.com/TooUpper/"
+			target="_blank"
+			mdui-tooltip="{content: 'GitHub'}"
+			style="
+				color: rgb(25, 23, 23);
+				background-color: rgba(25, 23, 23, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-github"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="/www.TooUpper.com"
+			target="_blank"
+			mdui-tooltip="{content: 'Blog'}"
+			style="
+				color: rgb(30, 136, 229);
+				background-color: rgba(30, 136, 229, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-home"
+			></i> </a
+		>
+	</div>
+</div>
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章分类</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/RISC-V/">RISC-V</a>
+          <span class="category-list-count">4</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Rust/">Rust</a>
+          <span class="category-list-count">25</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/Rust%E5%9F%BA%E7%A1%80/" style="font-size: 20px;">Rust基础</a> <a href="/tags/Rust%E8%BF%9B%E9%98%B6/" style="font-size: 15px;">Rust进阶</a> <a href="/tags/rcore/" style="font-size: 10px;">rcore</a> <a href="/tags/riscv/" style="font-size: 10px;">riscv</a>
+    </div>
+    
+  </div>
+
+    
+        
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章归档</h3>
+    <div class="nexmoe-widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/">2023</a><span class="archive-list-count">29</span></li></ul>
+    </div>
+  </div>
+
+
+
+    
+   
+    <div class="nexmoe-copyright">
+        &copy; 2023 kay
+        Powered by <a href="https://www.TooUpper.com" target="_blank">成祠</a>
+        & <a href="https://github.com/TooUpper" target="_blank">TooUpper</a>
+        <br><a target="_blank" href="https://www.TooUpper.com">鄂ICP备2020018486号</a>
+<br><a target="_blank" href="https://www.TooUpper.com">加油做一个不会被优化掉的程序员</a>
+
+    </div>
+</div><!-- .nexmoe-drawer --></div><div id="nexmoe-content"><div class="nexmoe-primary"><div class="nexmoe-post">
+  <article>
+    
+        <div class="nexmoe-post-cover absolute" style="padding-top: 62.5%;"> 
+            <img src="/image/RISC-V/risc-logo.png" alt="RISC-V ISA 介绍" loading="lazy">
+            <h1>RISC-V ISA 介绍</h1>
+        </div>
+    
+    
+    <div class="nexmoe-post-meta">
+    <div class="nexmoe-rainbow">
+        <a class="nexmoefont icon-calendar-fill">2023年10月22日</a>
+        
+            <a class="nexmoefont icon-appstore-fill -link" href="/categories/RISC-V/">RISC-V</a>
+        
+        
+    <a><i class="nexmoefont icon-areachart"></i>约1.7k字</a>
+    <a><i class="nexmoefont icon-time-circle-fill"></i>预计需要6分钟</a>
+
+    </div>
+    
+    
+    
+    
+    
+</div>
+
+    <h1 id="ISA-的基本介绍"><a href="#ISA-的基本介绍" class="headerlink" title="ISA 的基本介绍"></a>ISA 的基本介绍</h1><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="http://riscvbook.com/chinese">RISIC-V 手册(中文版)</a></p>
+<h2 id="ISA-是什么"><a href="#ISA-是什么" class="headerlink" title="ISA 是什么"></a>ISA 是什么</h2><p><strong>ISA（Instruction Set Architecture）指令集架构</strong>：是底层硬件电路面向上层软件程序提供的一层<strong>规范接口</strong>,可以理解为一种标准。</p>
+<p><strong>ISA 定义了</strong>：</p>
+<ul>
+<li><p>基本数据类型：</p>
+<p>Byte &#x2F; HALFWORD &#x2F; WORD &#x2F; …</p>
+</li>
+<li><p>寄存器（Register）</p>
+</li>
+<li><p>指令</p>
+</li>
+<li><p>寻址模式</p>
+</li>
+<li><p>异常或者中断的处理方式</p>
+</li>
+<li><p>等等…</p>
+</li>
+</ul>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="/image/RISC-V/20232501.png" alt="image-20232501" data-caption="image-20232501" loading="lazy"></p>
+<p><strong>Microarchitecture</strong>：微架构</p>
+<h2 id="为什么要-ISA"><a href="#为什么要-ISA" class="headerlink" title="为什么要 ISA"></a>为什么要 ISA</h2><ul>
+<li>为上层软件提供一层抽象，制定规则和约束，让编程者不用操心具体的电路结构。</li>
+<li><code>IBM 360</code>是第一个将 ISA 与其实现分离的计算机。</li>
+</ul>
+<h2 id="CISC-vs-RISC"><a href="#CISC-vs-RISC" class="headerlink" title="CISC vs RISC"></a>CISC vs RISC</h2><p><strong>CISC复杂指令集</strong></p>
+<p>​	<strong>（Complex Instruction Set Computing）</strong></p>
+<p>​	针对特定的功能实现特定的指令，导致<code>指令数目比较多，但生成的程序相对较短</code>。</p>
+<p><strong>RISC精简指令集</strong></p>
+<p>​	<strong>（Reduced Instruction Set Computing）</strong></p>
+<pre><code> 只定义常用指令,对复杂的功能采用常用指令组合实现，导致`指令数目比较精简，但生成的程序长度相对较长`。
+</code></pre>
+<p><strong>现如今，RISC 和 CISC 也逐渐有相互融合的趋势</strong>。</p>
+<p>类似 古文 和 现代语言的 例子。</p>
+<h2 id="ISA-的宽度"><a href="#ISA-的宽度" class="headerlink" title="ISA 的宽度"></a>ISA 的宽度</h2><p>ISA（处理器）的宽度指的是 CPU 中<strong>通用寄存器</strong>的宽度（二进制的位数），这决定了寻找范围的大小、以及数据运算的能力。</p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="/image/RISC-V/20232502.png" alt="image-20232502" data-caption="image-20232502" loading="lazy"></p>
+<p><strong>注意一个问题：ISA 的宽度和指令编码长度无关</strong>。</p>
+<h2 id="知名-ISA-介绍"><a href="#知名-ISA-介绍" class="headerlink" title="知名 ISA 介绍"></a>知名 ISA 介绍</h2><p><img onerror="imgOnError(this);" data-fancybox="gallery" src="/image/RISC-V/20232503.png" alt="image-20232503" data-caption="image-20232503" loading="lazy"></p>
+<h1 id="RISC-V-ISA-基本介绍"><a href="#RISC-V-ISA-基本介绍" class="headerlink" title="RISC-V ISA 基本介绍"></a>RISC-V ISA 基本介绍</h1><h2 id="RISC-V-的历史简介"><a href="#RISC-V-的历史简介" class="headerlink" title="RISC -V 的历史简介"></a>RISC -V 的历史简介</h2><ul>
+<li><code>RISC-V</code>念做 “risk-five”，代表着<code>Berkeley</code>所研发的第五代精简指令集。</li>
+<li>该项目 2010 年始于加州大学伯克利(Berkeley)分校，希望选择一款 ISA 用于科研和教学。经过前期多年的研究和选型，最终决定放弃使用现成的 x86 和 ARM 等 ISA，而是自己从头研发一款：<ul>
+<li>x86：太复杂，IP 问题（知识产权问题）。</li>
+<li>ARM：一样的复杂，而且在 2010 年之前还不支持 64 位，以及同样的 IP 问题。</li>
+</ul>
+</li>
+<li>主要研发人员：<ul>
+<li>Andrew Waterman</li>
+<li>YunSup Lee</li>
+<li>David Patterson</li>
+<li>Krste Asanovic</li>
+</ul>
+</li>
+</ul>
+<h2 id="RISC-V-究竟是什么"><a href="#RISC-V-究竟是什么" class="headerlink" title="RISC -V 究竟是什么"></a>RISC -V 究竟是什么</h2><ul>
+<li>一款高质量，免许可证，开放的 RISC ISA。</li>
+<li>一套非盈利的 RISC-V 基金会维护的标准：<a target="_blank" rel="noopener" href="https://riscv.org/">https://riscv.org/</a></li>
+<li>适用于所有类型的计算机系统：从微控制器到计算机。</li>
+<li>RISC-V 不是一家公司，也不是一款 CPU 的实现。</li>
+</ul>
+<h2 id="RISC-V-发展现状"><a href="#RISC-V-发展现状" class="headerlink" title="RISC -V 发展现状"></a>RISC -V 发展现状</h2><p><img onerror="imgOnError(this);" data-fancybox="gallery" src="/image/RISC-V/20232504.png" alt="image-20232504" data-caption="image-20232504" loading="lazy"></p>
+<p><a target="_blank" rel="noopener" href="https://news.mydrivers.com/1/659/659842.html">https://news.mydrivers.com/1/659/659842.html</a></p>
+<p><strong>RISC-V 成员以超过 700 个，分布在全球 50 多个国家</strong></p>
+<p><a target="_blank" rel="noopener" href="https://riscv.org/members/">https://riscv.org/members/</a></p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="/image/RISC-V/20232505.png" alt="image-20232505" data-caption="image-20232505" loading="lazy"></p>
+<h2 id="RISC-V-的特点"><a href="#RISC-V-的特点" class="headerlink" title="RISC -V 的特点"></a>RISC -V 的特点</h2><h3 id="简单"><a href="#简单" class="headerlink" title="简单"></a>简单</h3><h3 id="清晰的分层设计"><a href="#清晰的分层设计" class="headerlink" title="清晰的分层设计"></a>清晰的分层设计</h3><h3 id="模块化"><a href="#模块化" class="headerlink" title="模块化"></a>模块化</h3><h3 id="稳定"><a href="#稳定" class="headerlink" title="稳定"></a>稳定</h3><h3 id="社区化"><a href="#社区化" class="headerlink" title="社区化"></a>社区化</h3><h1 id="RISC-V-ISA-规范一览"><a href="#RISC-V-ISA-规范一览" class="headerlink" title="RISC-V ISA 规范一览"></a>RISC-V ISA 规范一览</h1><p><a target="_blank" rel="noopener" href="https://riscv.org/technical/specifications/">官方 ISA 标准下载地址</a></p>
+<h1 id="RISC-V-ISA-命名规范"><a href="#RISC-V-ISA-命名规范" class="headerlink" title="RISC-V ISA 命名规范"></a>RISC-V ISA 命名规范</h1><ul>
+<li>ISA命名格式：<code>RV[###][abc...xyz]</code><ul>
+<li><code>RV</code>：用于标识 RISC-V 体系架构的前缀，即 RISC-V 的缩写。</li>
+<li><code>[###]</code>：{32，64，128} 用于标识处理器的字宽，也就是处理器的寄存器的宽度（单位为 bit）</li>
+<li><code>[abc...xyz]</code>：标识该处理器支持的指令集模块集合。</li>
+</ul>
+</li>
+<li>例子：<code>RV32IMA</code>，<code>RV64GC</code><ul>
+<li>32位的RV支持I模块，M模块，A模块。</li>
+<li>64位的RV支持G模块，C模块。</li>
+</ul>
+</li>
+</ul>
+<h1 id="模块化的-ISA"><a href="#模块化的-ISA" class="headerlink" title="模块化的 ISA"></a>模块化的 ISA</h1><p><strong>增量 ISA</strong>：计算机体系结构的传统方法，同一个体系架构下的新一代处理器不仅实现了新的 ISA 拓展，还必须实现过去的所有兼容，目的是为了保持向后的二进制兼容性。典型的 80x86 为代表</p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="/image/RISC-V/20232506.png" alt="image-20232506" data-caption="image-20232506" loading="lazy"></p>
+<p>指令集数目不断增加。</p>
+<p><strong>模块化的 ISA</strong>：由 1 个基本整数指令集 + 多个可选的扩展指令集组成。基础指令集是固定的，永远不会改变。</p>
+<p><strong>RISC-V ISA &#x3D; 1 个基本整数指令集 + 多个可选的扩展指令集</strong></p>
+<ul>
+<li><p>基本整数（Integer）指令集</p>
+<p>唯一强制要求实现的基础指令集，其他指令集都是可选的扩展模块</p>
+</li>
+</ul>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="/image/RISC-V/20232507.png" alt="image-20232507" data-caption="image-20232507" loading="lazy"></p>
+<ul>
+<li><p>扩展模块指令集</p>
+<ul>
+<li>RISC-V 允许在实现中以可选的形式实现其他标准化和非标准化的指令集扩展。</li>
+<li>特定组合“IMAFD”被称为“通用（General）”组合，用英文字母 G 标识。</li>
+</ul>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="/image/RISC-V/20232508.png" alt="image-20232508" data-caption="image-20232508" loading="lazy"></p>
+</li>
+<li><p>例子：</p>
+<ul>
+<li>RV32I：最基本的 RISC-V 实现</li>
+<li>RV32IMAC：32位实现，支持 Integer + Multiply + Atomic + Compressed</li>
+<li>RV64GC：64位实现，支持 IMAFDC</li>
+</ul>
+</li>
+</ul>
+<h1 id="通用寄存器"><a href="#通用寄存器" class="headerlink" title="通用寄存器"></a>通用寄存器</h1><ul>
+<li>RISC-V 的 Unprivileged Specification 定义了 32 个通用寄存器以及一个 PC<ul>
+<li>对 RV32I &#x2F; RV64I &#x2F; RV128I 都一样</li>
+<li>如果实现支持 F&#x2F;D 扩展则需要额外支持 32 个浮点（Float Point）寄存器。</li>
+<li>RV32E 将 32 个通用寄存器缩减为 16 个。</li>
+</ul>
+</li>
+<li>寄存器的宽度由 ISA 决定<ul>
+<li>RV32 的寄存器宽度为 32 位。</li>
+<li>RV64 的寄存器宽度为 64 位，依次类推。</li>
+</ul>
+</li>
+<li>每个寄存器具体编程时有特定的用途以及各自的别名。由 RISC-V Application Binary Interface（ABI）定义。</li>
+</ul>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="/image/RISC-V/20232509.png" alt="image-20232509" data-caption="image-20232509" loading="lazy"></p>
+<p>上图中定义了 32 个通用寄存器和一个 PC寄存器(程序计数器)，在其他指令集架构中 PC寄存器 是暴露出来的，可以人为的去操作，而RISC-V则没有，所以无法人工操作。但可以用特殊的方式去读他。</p>
+<h1 id="Hart-硬件线程"><a href="#Hart-硬件线程" class="headerlink" title="Hart(硬件线程)"></a>Hart(硬件线程)</h1><ul>
+<li>HART &#x3D; <strong>HAR</strong>dware <strong>T</strong>hread</li>
+</ul>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="/image/RISC-V/20232510.png" alt="image-20232510" data-caption="image-20232510" loading="lazy"></p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="/image/RISC-V/20232511.png" alt="image-20232511" data-caption="image-20232511" loading="lazy"></p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="/image/RISC-V/20232512.png" alt="image-20232512" data-caption="image-20232512" loading="lazy"></p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="/image/RISC-V/20232514.png" alt="image-20232514" data-caption="image-20232514" loading="lazy"></p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="/image/RISC-V/20232515.png" alt="image-20232515" data-caption="image-20232515" loading="lazy"></p>
+<h1 id="特权级别（Privileged-Level）"><a href="#特权级别（Privileged-Level）" class="headerlink" title="特权级别（Privileged Level）"></a>特权级别（Privileged Level）</h1><ul>
+<li>RISC-V 的 Privileged Specification 定义了三个特权级别（Privilege level）</li>
+<li>Mechine 级别是最高的级别，所有的实现都需要支持。</li>
+<li>可选的 Debug 级别</li>
+</ul>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="/image/RISC-V/20232516.png" alt="image-20232516" data-caption="image-20232516" loading="lazy"></p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="/image/RISC-V/20232517.png" alt="image-20232517" data-caption="image-20232517" loading="lazy"></p>
+<p>User&#x2F;Application：用户态</p>
+<p>Supervisor：内核态</p>
+<p>Machine：机器态</p>
+<p>RISC-V上电后就是Machine态这时候访问的都是物理地址，没有虚拟地址，然后跳到Supervisor态，相当于进入到CPU的保护模式，这时候虚拟地址就开了，访问的就是虚拟地址；User态就类似用户模式。</p>
+<h1 id="Control-and-Status-Registers-CSR"><a href="#Control-and-Status-Registers-CSR" class="headerlink" title="Control and Status Registers(CSR)"></a>Control and Status Registers(CSR)</h1><ul>
+<li><p>不同的特权级别下时分别对应各自的一套Registers(CSR)，用于控制（Control）和获取相应 Level 下的处理器工作状态。</p>
+</li>
+<li><p>高级别的特权级别下可以访问低级别的 CSR，例如 Machine Level 下可以访问 Supervisor &#x2F; User Level 的 CSR，以此内推；但反之不可以。</p>
+</li>
+<li><p>RISC-V 定义了专门用于操作 CSR 的指令（【参考1(下卷)】中定义的“Zicsr”扩展）。</p>
+</li>
+<li><p>RISC-V 定义了特定的指令可以用于在不同特权级别之间进行切换（【参考1(下卷)】中定义的ECALL&#x2F;EBREAK）。</p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="/image/RISC-V/20232518.png" alt="image-20232518" data-caption="image-20232518" loading="lazy"></p>
+</li>
+</ul>
+<h1 id="内存管理与保护"><a href="#内存管理与保护" class="headerlink" title="内存管理与保护"></a>内存管理与保护</h1><ul>
+<li><p>物理内存保护（Physical Memory Protection, PMP）</p>
+<ul>
+<li><p>允许 M 模式指定 U 模式可以访问的内存地址。</p>
+</li>
+<li><p>支持 R&#x2F;W&#x2F;X，以及 Lock</p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="/image/RISC-V/20232519.png" alt="image-20232519" data-caption="image-20232519" loading="lazy"></p>
+</li>
+</ul>
+</li>
+<li><p>虚拟内存（Virtual Memory）</p>
+<ul>
+<li><p>需要支持 Supervisor Level</p>
+</li>
+<li><p>用于实现高级的操作系统特性（Unix &#x2F; Linux）</p>
+</li>
+<li><p>多种映射方式 Sv32 &#x2F; Sv39 &#x2F; Sv48</p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="/image/RISC-V/20232520.png" alt="image-20232520" data-caption="image-20232520" loading="lazy"></p>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="异常和中断"><a href="#异常和中断" class="headerlink" title="异常和中断"></a>异常和中断</h1><ul>
+<li>异常（Exception）：“an unusual condition occurring at run time associated with an instruction in the current RISC-V hart”</li>
+<li>中断（Interrupt）：“an external asynchronous event that may cause a RISC-V hart to experience an unexpected thansfer of control”</li>
+</ul>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="/image/RISC-V/20232521.png" alt="image-20232521" data-caption="image-20232521" loading="lazy"></p>
+
+    
+  </article>
+
+  
+      
+    <div class="nexmoe-post-copyright">
+        <strong>本文作者：</strong>kay<br>
+        <strong>本文链接：</strong><a href="https://www.tooupper.com/content/RISC-V/RISC-V%20ISA%20%E4%BB%8B%E7%BB%8D.html" title="https:&#x2F;&#x2F;www.tooupper.com&#x2F;content&#x2F;RISC-V&#x2F;RISC-V%20ISA%20%E4%BB%8B%E7%BB%8D.html" target="_blank" rel="noopener">https:&#x2F;&#x2F;www.tooupper.com&#x2F;content&#x2F;RISC-V&#x2F;RISC-V%20ISA%20%E4%BB%8B%E7%BB%8D.html</a><br>
+        
+            <strong>版权声明：</strong>本文采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/deed.zh" target="_blank">CC BY-NC-SA 3.0 CN</a> 协议进行许可
+
+        
+    </div>
+
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+   
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/riscv/" rel="tag">riscv</a>
+    
+</div>
+  
+  
+    <script async src="/js/copy-codeblock.js?v=1698918460920"></script>
+  
+
+  
+      <div class="nexmoe-post-footer">
+          
+      </div>
+  
+</div></div><div class="nexmoe-post-right">    <div class="nexmoe-fixed">
+        <div class="nexmoe-tool">
+
+            
+
+            
+            
+            <button class="mdui-fab catalog" style="overflow:unset;">
+                <i class="nexmoefont icon-i-catalog"></i>
+                <div class="nexmoe-toc">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#ISA-%E7%9A%84%E5%9F%BA%E6%9C%AC%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">ISA 的基本介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">1.1.</span> <span class="toc-text">参考</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ISA-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">1.2.</span> <span class="toc-text">ISA 是什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81-ISA"><span class="toc-number">1.3.</span> <span class="toc-text">为什么要 ISA</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CISC-vs-RISC"><span class="toc-number">1.4.</span> <span class="toc-text">CISC vs RISC</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ISA-%E7%9A%84%E5%AE%BD%E5%BA%A6"><span class="toc-number">1.5.</span> <span class="toc-text">ISA 的宽度</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9F%A5%E5%90%8D-ISA-%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.6.</span> <span class="toc-text">知名 ISA 介绍</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#RISC-V-ISA-%E5%9F%BA%E6%9C%AC%E4%BB%8B%E7%BB%8D"><span class="toc-number">2.</span> <span class="toc-text">RISC-V ISA 基本介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#RISC-V-%E7%9A%84%E5%8E%86%E5%8F%B2%E7%AE%80%E4%BB%8B"><span class="toc-number">2.1.</span> <span class="toc-text">RISC -V 的历史简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RISC-V-%E7%A9%B6%E7%AB%9F%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">2.2.</span> <span class="toc-text">RISC -V 究竟是什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RISC-V-%E5%8F%91%E5%B1%95%E7%8E%B0%E7%8A%B6"><span class="toc-number">2.3.</span> <span class="toc-text">RISC -V 发展现状</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RISC-V-%E7%9A%84%E7%89%B9%E7%82%B9"><span class="toc-number">2.4.</span> <span class="toc-text">RISC -V 的特点</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%80%E5%8D%95"><span class="toc-number">2.4.1.</span> <span class="toc-text">简单</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B8%85%E6%99%B0%E7%9A%84%E5%88%86%E5%B1%82%E8%AE%BE%E8%AE%A1"><span class="toc-number">2.4.2.</span> <span class="toc-text">清晰的分层设计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A8%A1%E5%9D%97%E5%8C%96"><span class="toc-number">2.4.3.</span> <span class="toc-text">模块化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A8%B3%E5%AE%9A"><span class="toc-number">2.4.4.</span> <span class="toc-text">稳定</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BE%E5%8C%BA%E5%8C%96"><span class="toc-number">2.4.5.</span> <span class="toc-text">社区化</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#RISC-V-ISA-%E8%A7%84%E8%8C%83%E4%B8%80%E8%A7%88"><span class="toc-number">3.</span> <span class="toc-text">RISC-V ISA 规范一览</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#RISC-V-ISA-%E5%91%BD%E5%90%8D%E8%A7%84%E8%8C%83"><span class="toc-number">4.</span> <span class="toc-text">RISC-V ISA 命名规范</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A8%A1%E5%9D%97%E5%8C%96%E7%9A%84-ISA"><span class="toc-number">5.</span> <span class="toc-text">模块化的 ISA</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%80%9A%E7%94%A8%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-number">6.</span> <span class="toc-text">通用寄存器</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Hart-%E7%A1%AC%E4%BB%B6%E7%BA%BF%E7%A8%8B"><span class="toc-number">7.</span> <span class="toc-text">Hart(硬件线程)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%89%B9%E6%9D%83%E7%BA%A7%E5%88%AB%EF%BC%88Privileged-Level%EF%BC%89"><span class="toc-number">8.</span> <span class="toc-text">特权级别（Privileged Level）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Control-and-Status-Registers-CSR"><span class="toc-number">9.</span> <span class="toc-text">Control and Status Registers(CSR)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E4%B8%8E%E4%BF%9D%E6%8A%A4"><span class="toc-number">10.</span> <span class="toc-text">内存管理与保护</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BC%82%E5%B8%B8%E5%92%8C%E4%B8%AD%E6%96%AD"><span class="toc-number">11.</span> <span class="toc-text">异常和中断</span></a></li></ol>
+                </div>
+            </button>
+            
+
+            
+
+            <a href="#nexmoe-content" class="backtop toc-link" aria-label="Back To Top" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+        </div>
+    </div>
+</div></div><div id="nexmoe-footer"><!--!--></div><div><div id="nexmoe-search-space">
+	<div class="search-container">
+		<div class="search-header">
+			<div class="search-input-container">
+				<input
+					class="search-input"
+					type="text"
+					placeholder="搜索"
+					oninput="sinput();"
+				/>
+			</div>
+			<a class="search-close" onclick="sclose();">×</a>
+		</div>
+		<div class="search-body"></div>
+	</div>
+</div>
+</div><div><script async src="https://www.TooUpper.com" crossorigin="anonymous"></script>
+</div></body></html>

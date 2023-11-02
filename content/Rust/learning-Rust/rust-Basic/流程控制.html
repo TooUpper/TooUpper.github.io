@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="zh"><head>
+<title>流程控制 - 成祠的个人博客</title>
+<meta charset="UTF-8">
+<meta name="keywords" content="blog">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+
+<link rel="shortcut icon" href="/image/favicon.png" type="image/png" />
+<meta name="description" content="流程控制if … else …12345678910fn main() &amp;#123;    let condition &#x3D; true;    let number &#x3D; if condition &amp;#123;        5    &amp;#125; else &amp;#123;        6    &amp;#125;;    println!(&quot;The value of number is: &amp;#1">
+<meta property="og:type" content="article">
+<meta property="og:title" content="流程控制">
+<meta property="og:url" content="https://www.tooupper.com/content/Rust/learning-Rust/rust-Basic/%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6.html">
+<meta property="og:site_name" content="成祠的个人博客">
+<meta property="og:description" content="流程控制if … else …12345678910fn main() &amp;#123;    let condition &#x3D; true;    let number &#x3D; if condition &amp;#123;        5    &amp;#125; else &amp;#123;        6    &amp;#125;;    println!(&quot;The value of number is: &amp;#1">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-09-25T12:01:14.000Z">
+<meta property="article:modified_time" content="2023-10-07T13:53:01.772Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="Rust基础">
+<meta name="twitter:card" content="summary">
+
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+<link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
+
+
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1698918461764">
+
+<link rel="stylesheet" href="/css/style.css?v=1698918461764">
+
+
+
+
+    
+        <link rel="stylesheet" href="/custom.css?v=1698918461764">
+    
+
+
+
+<script src="/lib/mdui_043tiny/mdui.js" async></script>
+<script src="/lib/fancybox/fancybox.umd.js" async></script>
+<script src="/lib/lax.min.js" async></script>
+
+
+<script async src="/js/app.js?v=1698918461764"></script>
+
+ 
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4D4ZJ9G024"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+
+  gtag("config", "G-4D4ZJ9G024");
+</script>
+
+<meta name="generator" content="Hexo 6.3.0"></head><body class="nexmoe mdui-drawer-body-left"><div id="nexmoe-background"><div class="nexmoe-bg" style="background-image: url(/image/banner.png)"></div><div class="mdui-appbar mdui-shadow-0"><div class="mdui-toolbar"><a class="mdui-btn mdui-btn-icon mdui-ripple" mdui-drawer="{target: &#039;#drawer&#039;, swipe: true}" title="menu"><i class="mdui-icon nexmoefont icon-menu"></i></a><div class="mdui-toolbar-spacer"></div><a class="mdui-btn mdui-btn-icon" href="/" title="kay"><img src="/image/Logo.png" alt="kay"></a></div></div></div><div id="nexmoe-header"><div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="kay">
+            <img src="/image/Logo.png" alt="kay" alt="kay">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>文章</span>29</div>
+        <div><span>标签</span>4</div>
+        <div><span>分类</span>2</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/aboutMe.html" title="关于博主">
+            <i class="mdui-list-item-icon nexmoefont icon-info-circle"></i>
+            <div class="mdui-list-item-content">
+                关于博主
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archives.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/downloads.html" title="下载中心">
+            <i class="mdui-list-item-icon nexmoefont icon-coffee"></i>
+            <div class="mdui-list-item-content">
+                下载中心
+            </div>
+        </a>
+        
+    </div>
+    
+    
+        
+        <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+        
+            <form id="search_form">
+                <label><input class="st-default-search-input" id="search_value" name="q" type="search" placeholder="搜索" style="
+                    font-size: 15px !important;
+                    height: 56px !important;
+                    background-image: none;
+                "></label>
+            </form>
+         
+    </div>
+</div>
+
+
+	<script async src="/js/search.js?v=1698918461765"></script>
+
+
+
+    
+        
+        <div class="nexmoe-widget-wrap">
+	<div class="nexmoe-widget nexmoe-social">
+		<a
+			class="mdui-ripple"
+			href="/image/QQOrWeChat.png"
+			target="_blank"
+			mdui-tooltip="{content: 'QQ'}"
+			style="
+				color: rgb(249, 174, 8);
+				background-color: rgba(249, 174, 8, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-QQ"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="/image/QQOrWeChat.png"
+			target="_blank"
+			mdui-tooltip="{content: 'WeChat'}"
+			style="
+				color: rgb(59, 151, 239);
+				background-color: rgba(59, 151, 239, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-wechat-fill"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://github.com/TooUpper/"
+			target="_blank"
+			mdui-tooltip="{content: 'GitHub'}"
+			style="
+				color: rgb(25, 23, 23);
+				background-color: rgba(25, 23, 23, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-github"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="/www.TooUpper.com"
+			target="_blank"
+			mdui-tooltip="{content: 'Blog'}"
+			style="
+				color: rgb(30, 136, 229);
+				background-color: rgba(30, 136, 229, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-home"
+			></i> </a
+		>
+	</div>
+</div>
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章分类</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/RISC-V/">RISC-V</a>
+          <span class="category-list-count">4</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Rust/">Rust</a>
+          <span class="category-list-count">25</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/Rust%E5%9F%BA%E7%A1%80/" style="font-size: 20px;">Rust基础</a> <a href="/tags/Rust%E8%BF%9B%E9%98%B6/" style="font-size: 15px;">Rust进阶</a> <a href="/tags/rcore/" style="font-size: 10px;">rcore</a> <a href="/tags/riscv/" style="font-size: 10px;">riscv</a>
+    </div>
+    
+  </div>
+
+    
+        
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章归档</h3>
+    <div class="nexmoe-widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/">2023</a><span class="archive-list-count">29</span></li></ul>
+    </div>
+  </div>
+
+
+
+    
+   
+    <div class="nexmoe-copyright">
+        &copy; 2023 kay
+        Powered by <a href="https://www.TooUpper.com" target="_blank">成祠</a>
+        & <a href="https://github.com/TooUpper" target="_blank">TooUpper</a>
+        <br><a target="_blank" href="https://www.TooUpper.com">鄂ICP备2020018486号</a>
+<br><a target="_blank" href="https://www.TooUpper.com">加油做一个不会被优化掉的程序员</a>
+
+    </div>
+</div><!-- .nexmoe-drawer --></div><div id="nexmoe-content"><div class="nexmoe-primary"><div class="nexmoe-post">
+  <article>
+    
+        <div class="nexmoe-post-cover absolute" style="padding-top: 62.5%;"> 
+            <img src="/image/Rust/RustCrab.png" alt="流程控制" loading="lazy">
+            <h1>流程控制</h1>
+        </div>
+    
+    
+    <div class="nexmoe-post-meta">
+    <div class="nexmoe-rainbow">
+        <a class="nexmoefont icon-calendar-fill">2023年09月25日</a>
+        
+            <a class="nexmoefont icon-appstore-fill -link" href="/categories/Rust/">Rust</a>
+        
+        
+    <a><i class="nexmoefont icon-areachart"></i>约1.4k字</a>
+    <a><i class="nexmoefont icon-time-circle-fill"></i>预计需要5分钟</a>
+
+    </div>
+    
+    
+    
+    
+    
+</div>
+
+    <h1 id="流程控制"><a href="#流程控制" class="headerlink" title="流程控制"></a><strong>流程控制</strong></h1><h2 id="if-…-else-…"><a href="#if-…-else-…" class="headerlink" title="if … else …"></a>if … else …</h2><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">condition</span> = <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">number</span> = <span class="keyword">if</span> condition &#123;</span><br><span class="line">        <span class="number">5</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="number">6</span></span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;The value of number is: &#123;&#125;&quot;</span>, number);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意：</p>
+<ul>
+<li><strong><code>if</code> 语句块是表达式</strong>，这里我们使用 <code>if</code> 表达式的返回值来给 <code>number</code> 进行赋值：<code>number</code> 的值是 <code>5</code></li>
+<li>用 <code>if</code> 来赋值时，要保证每个分支返回的类型一样(事实上，这种说法不完全准确)，此处返回的 <code>5</code> 和 <code>6</code> 就是同一个类型，如果返回类型不一致就会报错</li>
+</ul>
+<h2 id="循环控制"><a href="#循环控制" class="headerlink" title="循环控制"></a>循环控制</h2><h3 id="for循环"><a href="#for循环" class="headerlink" title="for循环"></a>for循环</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">for</span> <span class="variable">i</span> <span class="keyword">in</span> <span class="number">1</span>..=<span class="number">5</span> &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上代码循环输出一个从 1 到 5 的序列，简单粗暴，核心就在于 <code>for</code> 和 <code>in</code> 的联动，语义表达如下：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> 元素 <span class="keyword">in</span> 集合 &#123;</span><br><span class="line">  <span class="comment">// 使用元素干一些你懂我不懂的事情</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意，使用 <code>for</code> 时我们往往使用集合的<strong>引用</strong>形式，除非你不想在后面的代码中继续使用该集合（比如我们这里使用了 <code>container</code> 的引用）。如果不使用引用的话，所有权会被转移（move）到 <code>for</code> 语句块中，后面就无法再使用这个集合了)：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> <span class="variable">item</span> <span class="keyword">in</span> &amp;container &#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>对于实现了 <code>copy</code> 特征的数组(例如 [i32; 10] )而言， <code>for item in arr</code> 并不会把 <code>arr</code> 的所有权转移，而是直接对其进行了拷贝，因此循环之后仍然可以使用 <code>arr</code> 。</p>
+</blockquote>
+<p>如果想在循环中，<strong>修改该元素</strong>，可以使用 <code>mut</code> 关键字：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> <span class="variable">item</span> <span class="keyword">in</span> &amp;<span class="keyword">mut</span> collection &#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>总结如下：</p>
+<table>
+<thead>
+<tr>
+<th>使用方法</th>
+<th>等价使用方式</th>
+<th>所有权</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>for item in collection</code></td>
+<td><code>for item in IntoIterator::into_iter(collection)</code></td>
+<td>转移所有权</td>
+</tr>
+<tr>
+<td><code>for item in &amp;collection</code></td>
+<td><code>for item in collection.iter()</code></td>
+<td>不可变借用</td>
+</tr>
+<tr>
+<td><code>for item in &amp;mut collection</code></td>
+<td><code>for item in collection.iter_mut()</code></td>
+<td>可变借用</td>
+</tr>
+</tbody></table>
+<p>如果想在循环中<strong>获取元素的索引</strong>：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">a</span> = [<span class="number">4</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>];</span><br><span class="line">    <span class="comment">// `.iter()` 方法把 `a` 数组变成一个迭代器</span></span><br><span class="line">    <span class="title function_ invoke__">for</span> (i, v) <span class="keyword">in</span> a.<span class="title function_ invoke__">iter</span>().<span class="title function_ invoke__">enumerate</span>() &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;第&#123;&#125;个元素是&#123;&#125;&quot;</span>, i + <span class="number">1</span>, v);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>有同学可能会想到，如果我们想用 <code>for</code> 循环控制某个过程执行 10 次，但是又不想单独声明一个变量来控制这个流程，该怎么写？</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> <span class="variable">_</span> <span class="keyword">in</span> <span class="number">0</span>..<span class="number">10</span> &#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以用 <code>_</code> 来替代 <code>i</code> 用于 <code>for</code> 循环中，<strong>在 Rust 中 <code>_</code> 的含义是忽略该值或者类型的意思</strong>，如果不使用 <code>_</code>，那么编译器会给你一个 <code>变量未使用的</code> 的警告。</p>
+<p><strong>两种循环方式优劣对比</strong></p>
+<p>以下代码，使用了两种循环方式：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 第一种</span></span><br><span class="line"><span class="keyword">let</span> <span class="variable">collection</span> = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>];</span><br><span class="line"><span class="keyword">for</span> <span class="variable">i</span> <span class="keyword">in</span> <span class="number">0</span>..collection.<span class="title function_ invoke__">len</span>() &#123;</span><br><span class="line">  <span class="comment">// 这里需要显式的进行边界检查，以防下表越界。</span></span><br><span class="line">  <span class="keyword">let</span> <span class="variable">item</span> = collection[i];</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 第二种 它底层会自动取创建一个迭代器并遍历集合中的元素，所以不存在越界检查这个问题。</span></span><br><span class="line"><span class="keyword">for</span> <span class="variable">item</span> <span class="keyword">in</span> collection &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>第一种方式是循环索引，然后<strong>通过索引下标去访问集合</strong>，第二种方式是<strong>直接循环集合中的元素</strong>，优劣如下：</p>
+<ul>
+<li><strong>性能</strong>：第一种使用方式中 <code>collection[index]</code> 的索引访问，会因为边界检查(Bounds Checking)导致运行时的性能损耗 —— Rust 会检查并确认 <code>index</code> 是否落在集合内，但是第二种直接迭代的方式就不会触发这种检查，因为编译器会在编译时就完成分析并证明这种访问是合法的</li>
+<li><strong>安全</strong>：第一种方式里对 <code>collection</code> 的索引访问是非连续的，存在一定可能性在两次访问之间，<code>collection</code> 发生了变化，导致脏数据产生。而第二种直接迭代的方式是连续访问，因此不存在这种风险( 由于所有权限制，在访问过程中，数据并不会发生变化)。</li>
+</ul>
+<h3 id="continue"><a href="#continue" class="headerlink" title="continue"></a>continue</h3><p>使用 <code>continue</code> 可以跳过当前当次的循环，开始下次的循环：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> <span class="variable">i</span> <span class="keyword">in</span> <span class="number">1</span>..<span class="number">4</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> i == <span class="number">2</span> &#123; </span><br><span class="line">        <span class="keyword">continue</span>; </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">print!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, i); <span class="comment">// 输出 1 3</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="break"><a href="#break" class="headerlink" title="break"></a>break</h3><p>使用 <code>break</code> 可以直接跳出当前整个循环：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> <span class="variable">i</span> <span class="keyword">in</span> <span class="number">1</span>..<span class="number">4</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> i == <span class="number">2</span> &#123;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">print!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, i); <span class="comment">// 输出 1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="while-循环"><a href="#while-循环" class="headerlink" title="while 循环"></a>while 循环</h3><p>如果你需要一个条件来循环，当该条件为 <code>true</code> 时，继续循环，条件为 <code>false</code>，跳出循环，那么 <code>while</code> 就非常适用：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">n</span> = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> n &lt;= <span class="number">5</span>  &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;!&quot;</span>, n);</span><br><span class="line"></span><br><span class="line">        n = n + <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;我出来了喔！&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="loop循环-无条件循环"><a href="#loop循环-无条件循环" class="headerlink" title="loop循环(无条件循环)"></a>loop循环(无条件循环)</h3><p>对于循环而言，<code>loop</code> 循环毋庸置疑，是适用面最高的，它可以适用于所有循环场景（虽然能用，但是在很多场景下， <code>for</code> 和 <code>while</code> 才是最优选择），因为 <code>loop</code> 就是一个简单的无限循环，你可以在内部实现逻辑通过 <code>break</code> 关键字来控制循环何时结束。</p>
+<p>因此，当使用 <code>loop</code> 时，必不可少的伙伴是 <code>break</code> 关键字，它能让循环在满足某个条件时跳出：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">counter</span> = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">result</span> = <span class="keyword">loop</span> &#123;</span><br><span class="line">        counter += <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> counter == <span class="number">10</span> &#123;</span><br><span class="line">            <span class="keyword">break</span> counter * <span class="number">2</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;The result is &#123;&#125;&quot;</span>, result);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上代码当 <code>counter</code> 递增到 <code>10</code> 时，就会通过 <code>break</code> 返回一个 <code>counter * 2</code> 的值，最后赋给 <code>result</code> 并打印出来。</p>
+<p>这里有几点值得注意：</p>
+<ul>
+<li><strong>break 可以单独使用，也可以带一个返回值</strong>，有些类似 <code>return</code></li>
+<li><strong>loop 是一个表达式</strong>，因此可以返回一个值</li>
+</ul>
+
+    
+  </article>
+
+  
+      
+    <div class="nexmoe-post-copyright">
+        <strong>本文作者：</strong>kay<br>
+        <strong>本文链接：</strong><a href="https://www.tooupper.com/content/Rust/learning-Rust/rust-Basic/%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6.html" title="https:&#x2F;&#x2F;www.tooupper.com&#x2F;content&#x2F;Rust&#x2F;learning-Rust&#x2F;rust-Basic&#x2F;%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6.html" target="_blank" rel="noopener">https:&#x2F;&#x2F;www.tooupper.com&#x2F;content&#x2F;Rust&#x2F;learning-Rust&#x2F;rust-Basic&#x2F;%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6.html</a><br>
+        
+            <strong>版权声明：</strong>本文采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/deed.zh" target="_blank">CC BY-NC-SA 3.0 CN</a> 协议进行许可
+
+        
+    </div>
+
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+   
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/Rust%E5%9F%BA%E7%A1%80/" rel="tag">Rust基础</a>
+    
+</div>
+  
+  
+    <script async src="/js/copy-codeblock.js?v=1698918460969"></script>
+  
+
+  
+      <div class="nexmoe-post-footer">
+          
+      </div>
+  
+</div></div><div class="nexmoe-post-right">    <div class="nexmoe-fixed">
+        <div class="nexmoe-tool">
+
+            
+
+            
+            
+            <button class="mdui-fab catalog" style="overflow:unset;">
+                <i class="nexmoefont icon-i-catalog"></i>
+                <div class="nexmoe-toc">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6"><span class="toc-number">1.</span> <span class="toc-text">流程控制</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#if-%E2%80%A6-else-%E2%80%A6"><span class="toc-number">1.1.</span> <span class="toc-text">if … else …</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BE%AA%E7%8E%AF%E6%8E%A7%E5%88%B6"><span class="toc-number">1.2.</span> <span class="toc-text">循环控制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#for%E5%BE%AA%E7%8E%AF"><span class="toc-number">1.2.1.</span> <span class="toc-text">for循环</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#continue"><span class="toc-number">1.2.2.</span> <span class="toc-text">continue</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#break"><span class="toc-number">1.2.3.</span> <span class="toc-text">break</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#while-%E5%BE%AA%E7%8E%AF"><span class="toc-number">1.2.4.</span> <span class="toc-text">while 循环</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#loop%E5%BE%AA%E7%8E%AF-%E6%97%A0%E6%9D%A1%E4%BB%B6%E5%BE%AA%E7%8E%AF"><span class="toc-number">1.2.5.</span> <span class="toc-text">loop循环(无条件循环)</span></a></li></ol></li></ol></li></ol>
+                </div>
+            </button>
+            
+
+            
+
+            <a href="#nexmoe-content" class="backtop toc-link" aria-label="Back To Top" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+        </div>
+    </div>
+</div></div><div id="nexmoe-footer"><!--!--></div><div><div id="nexmoe-search-space">
+	<div class="search-container">
+		<div class="search-header">
+			<div class="search-input-container">
+				<input
+					class="search-input"
+					type="text"
+					placeholder="搜索"
+					oninput="sinput();"
+				/>
+			</div>
+			<a class="search-close" onclick="sclose();">×</a>
+		</div>
+		<div class="search-body"></div>
+	</div>
+</div>
+</div><div><script async src="https://www.TooUpper.com" crossorigin="anonymous"></script>
+</div></body></html>

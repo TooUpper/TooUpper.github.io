@@ -1,0 +1,831 @@
+<!doctype html>
+<html lang="zh"><head>
+<title>智能指针 - 成祠的个人博客</title>
+<meta charset="UTF-8">
+<meta name="keywords" content="blog">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+
+<link rel="shortcut icon" href="/image/favicon.png" type="image/png" />
+<meta name="description" content="智能指针在各个编程语言中，指针的概念几乎都是相同的：指针是一个包含了内存地址的变量，该内存地址引用或者指向了另外的数据。 在 Rust 中，最常见的指针类型是引用，引用通过 &amp; 符号表示。不同于其它语言，引用在 Rust 中被赋予了更深层次的含义，那就是：借用其它变量的值。引用本身很简单，除了指向某个值外并没有其它的功能，也不会造成性能上的额外损耗，因此是 Rust 中使用最多的指针类型。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="智能指针">
+<meta property="og:url" content="https://www.tooupper.com/content/Rust/learning-Rust/rust-senior/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88.html">
+<meta property="og:site_name" content="成祠的个人博客">
+<meta property="og:description" content="智能指针在各个编程语言中，指针的概念几乎都是相同的：指针是一个包含了内存地址的变量，该内存地址引用或者指向了另外的数据。 在 Rust 中，最常见的指针类型是引用，引用通过 &amp; 符号表示。不同于其它语言，引用在 Rust 中被赋予了更深层次的含义，那就是：借用其它变量的值。引用本身很简单，除了指向某个值外并没有其它的功能，也不会造成性能上的额外损耗，因此是 Rust 中使用最多的指针类型。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-10-02T11:26:14.000Z">
+<meta property="article:modified_time" content="2023-10-21T11:58:15.000Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="Rust进阶">
+<meta name="twitter:card" content="summary">
+
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+<link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
+
+
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1698918461698">
+
+<link rel="stylesheet" href="/css/style.css?v=1698918461698">
+
+
+
+
+    
+        <link rel="stylesheet" href="/custom.css?v=1698918461698">
+    
+
+
+
+<script src="/lib/mdui_043tiny/mdui.js" async></script>
+<script src="/lib/fancybox/fancybox.umd.js" async></script>
+<script src="/lib/lax.min.js" async></script>
+
+
+<script async src="/js/app.js?v=1698918461698"></script>
+
+ 
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4D4ZJ9G024"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+
+  gtag("config", "G-4D4ZJ9G024");
+</script>
+
+<meta name="generator" content="Hexo 6.3.0"></head><body class="nexmoe mdui-drawer-body-left"><div id="nexmoe-background"><div class="nexmoe-bg" style="background-image: url(/image/banner.png)"></div><div class="mdui-appbar mdui-shadow-0"><div class="mdui-toolbar"><a class="mdui-btn mdui-btn-icon mdui-ripple" mdui-drawer="{target: &#039;#drawer&#039;, swipe: true}" title="menu"><i class="mdui-icon nexmoefont icon-menu"></i></a><div class="mdui-toolbar-spacer"></div><a class="mdui-btn mdui-btn-icon" href="/" title="kay"><img src="/image/Logo.png" alt="kay"></a></div></div></div><div id="nexmoe-header"><div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="kay">
+            <img src="/image/Logo.png" alt="kay" alt="kay">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>文章</span>29</div>
+        <div><span>标签</span>4</div>
+        <div><span>分类</span>2</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/aboutMe.html" title="关于博主">
+            <i class="mdui-list-item-icon nexmoefont icon-info-circle"></i>
+            <div class="mdui-list-item-content">
+                关于博主
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archives.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/downloads.html" title="下载中心">
+            <i class="mdui-list-item-icon nexmoefont icon-coffee"></i>
+            <div class="mdui-list-item-content">
+                下载中心
+            </div>
+        </a>
+        
+    </div>
+    
+    
+        
+        <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+        
+            <form id="search_form">
+                <label><input class="st-default-search-input" id="search_value" name="q" type="search" placeholder="搜索" style="
+                    font-size: 15px !important;
+                    height: 56px !important;
+                    background-image: none;
+                "></label>
+            </form>
+         
+    </div>
+</div>
+
+
+	<script async src="/js/search.js?v=1698918461699"></script>
+
+
+
+    
+        
+        <div class="nexmoe-widget-wrap">
+	<div class="nexmoe-widget nexmoe-social">
+		<a
+			class="mdui-ripple"
+			href="/image/QQOrWeChat.png"
+			target="_blank"
+			mdui-tooltip="{content: 'QQ'}"
+			style="
+				color: rgb(249, 174, 8);
+				background-color: rgba(249, 174, 8, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-QQ"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="/image/QQOrWeChat.png"
+			target="_blank"
+			mdui-tooltip="{content: 'WeChat'}"
+			style="
+				color: rgb(59, 151, 239);
+				background-color: rgba(59, 151, 239, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-wechat-fill"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://github.com/TooUpper/"
+			target="_blank"
+			mdui-tooltip="{content: 'GitHub'}"
+			style="
+				color: rgb(25, 23, 23);
+				background-color: rgba(25, 23, 23, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-github"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="/www.TooUpper.com"
+			target="_blank"
+			mdui-tooltip="{content: 'Blog'}"
+			style="
+				color: rgb(30, 136, 229);
+				background-color: rgba(30, 136, 229, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-home"
+			></i> </a
+		>
+	</div>
+</div>
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章分类</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/RISC-V/">RISC-V</a>
+          <span class="category-list-count">4</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Rust/">Rust</a>
+          <span class="category-list-count">25</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/Rust%E5%9F%BA%E7%A1%80/" style="font-size: 20px;">Rust基础</a> <a href="/tags/Rust%E8%BF%9B%E9%98%B6/" style="font-size: 15px;">Rust进阶</a> <a href="/tags/rcore/" style="font-size: 10px;">rcore</a> <a href="/tags/riscv/" style="font-size: 10px;">riscv</a>
+    </div>
+    
+  </div>
+
+    
+        
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章归档</h3>
+    <div class="nexmoe-widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/">2023</a><span class="archive-list-count">29</span></li></ul>
+    </div>
+  </div>
+
+
+
+    
+   
+    <div class="nexmoe-copyright">
+        &copy; 2023 kay
+        Powered by <a href="https://www.TooUpper.com" target="_blank">成祠</a>
+        & <a href="https://github.com/TooUpper" target="_blank">TooUpper</a>
+        <br><a target="_blank" href="https://www.TooUpper.com">鄂ICP备2020018486号</a>
+<br><a target="_blank" href="https://www.TooUpper.com">加油做一个不会被优化掉的程序员</a>
+
+    </div>
+</div><!-- .nexmoe-drawer --></div><div id="nexmoe-content"><div class="nexmoe-primary"><div class="nexmoe-post">
+  <article>
+    
+        <div class="nexmoe-post-cover absolute" style="padding-top: 62.5%;"> 
+            <img src="/image/Rust/RustCrab.png" alt="智能指针" loading="lazy">
+            <h1>智能指针</h1>
+        </div>
+    
+    
+    <div class="nexmoe-post-meta">
+    <div class="nexmoe-rainbow">
+        <a class="nexmoefont icon-calendar-fill">2023年10月02日</a>
+        
+            <a class="nexmoefont icon-appstore-fill -link" href="/categories/Rust/">Rust</a>
+        
+        
+    <a><i class="nexmoefont icon-areachart"></i>约17.1k字</a>
+    <a><i class="nexmoefont icon-time-circle-fill"></i>预计需要67分钟</a>
+
+    </div>
+    
+    
+    
+    
+    
+</div>
+
+    <h1 id="智能指针"><a href="#智能指针" class="headerlink" title="智能指针"></a>智能指针</h1><p>在各个编程语言中，指针的概念几乎都是相同的：<strong>指针是一个包含了内存地址的变量，该内存地址引用或者指向了另外的数据</strong>。</p>
+<p>在 Rust 中，最常见的指针类型是引用，引用通过 <code>&amp;</code> 符号表示。不同于其它语言，引用在 Rust 中被赋予了更深层次的含义，那就是：借用其它变量的值。引用本身很简单，除了指向某个值外并没有其它的功能，也不会造成性能上的额外损耗，因此是 Rust 中使用最多的指针类型。</p>
+<p>而智能指针则不然，它虽然也号称指针，但是它是一个复杂的家伙：通过比引用更复杂的数据结构，包含比引用更多的信息，例如元数据，当前长度，最大可用长度等。总之，Rust 的智能指针并不是独创，在 C++ 或者其他语言中也存在相似的概念。</p>
+<p>Rust 标准库中定义的那些智能指针，虽重但强，可以提供比引用更多的功能特性，例如本章将讨论的引用计数智能指针。该智能指针允许你同时拥有同一个数据的多个所有权，它会跟踪每一个所有者并进行计数，当所有的所有者都归还后，该智能指针及指向的数据将自动被清理释放。</p>
+<p>引用和智能指针的另一个不同在于前者仅仅是借用了数据，而<strong>后者往往可以拥有它们指向的数据</strong>，然后再为其它人提供服务。</p>
+<p>在之前的章节中，实际上我们已经见识过多种智能指针，例如动态字符串 <code>String</code> 和动态数组 <code>Vec</code>，它们的数据结构中不仅仅包含了指向底层数据的指针，还包含了当前长度、最大长度等信息，其中 <code>String</code> 智能指针还提供了一种担保信息：所有的数据都是合法的 <code>UTF-8</code> 格式。</p>
+<p>智能指针往往是基于结构体实现，它与我们自定义的结构体最大的区别在于它实现了 <code>Deref</code> 和 <code>Drop</code> 特征：</p>
+<ul>
+<li><code>Deref</code> 可以让智能指针像引用那样工作，这样你就可以写出同时支持智能指针和引用的代码，例如 <code>*T</code></li>
+<li><code>Drop</code> 允许你指定智能指针超出作用域后自动执行的代码，例如做一些数据清除等收尾工作</li>
+</ul>
+<p>智能指针在 Rust 中很常见，本次挑选几个最常用、最有代表性的进行讲解：</p>
+<ul>
+<li><code>Box&lt;T&gt;</code>，可以将值分配到堆上</li>
+<li><code>Rc&lt;T&gt;</code>，引用计数类型，允许多所有权存在</li>
+<li><code>Ref&lt;T&gt;</code> 和 <code>RefMut&lt;T&gt;</code>，允许将借用规则检查从编译期移动到运行期进行</li>
+</ul>
+<h2 id="Box堆分配对象"><a href="#Box堆分配对象" class="headerlink" title="Box堆分配对象"></a>Box堆分配对象</h2><p>如果说 <code>Box&lt;T&gt;</code> 是不是 Rust 中最常见的智能指针，那估计没有任何争议。因为 <code>Box&lt;T&gt;</code> 允许你将一个值分配到堆上，然后在栈上保留一个智能指针指向堆上的数据。</p>
+<p>之前我们在所有权章节简单讲过堆栈的概念，这里再补充一些。</p>
+<h3 id="Rust-中的堆栈"><a href="#Rust-中的堆栈" class="headerlink" title="Rust 中的堆栈"></a>Rust 中的堆栈</h3><p>高级语言 Python&#x2F;Java 等往往会弱化堆栈的概念，但是要用好 C&#x2F;C++&#x2F;Rust，就必须对堆栈有深入的了解，原因是两者的内存管理方式不同：前者有 GC 垃圾回收机制，因此无需你去关心内存的细节。</p>
+<p><strong>栈内存从高位地址向下增长，且栈内存是连续分配的</strong>，一般来说<strong>操作系统对栈内存的大小都有限制</strong>，因此 C 语言中无法创建任意长度的数组。在 Rust 中，<code>main</code> 线程的[栈大小是 <code>8MB</code>，普通线程是 <code>2MB</code>，在函数调用时会在其中创建一个临时栈空间，调用结束后 Rust 会让这个栈空间里的对象自动进入 <code>Drop</code> 流程，最后栈顶指针自动移动到上一个调用栈顶，无需程序员手动干预，因而栈内存申请和释放是非常高效的。</p>
+<blockquote>
+<p>当我们在程序中创建新的栈帧（stack frame）时，栈指针会向内存的较低地址方向移动。</p>
+<p>具体来说，每当我们在函数中声明一个新的局部变量、传递函数参数或者调用另一个函数时，栈指针都会向下移动一定的距离，以为新的栈帧分配空间。这种栈指针不断向下移动的过程被称为栈的增长。</p>
+</blockquote>
+<p>与栈相反，堆上内存则是从低位地址向上增长，<strong>堆内存通常只受物理内存限制</strong>，而且通常是不连续的，因此从性能的角度看，栈往往比堆更高。</p>
+<p>相比其它语言，Rust 堆上对象还有一个特殊之处，它们都拥有一个所有者，因此受所有权规则的限制：当赋值时，发生的是所有权的转移（只需浅拷贝栈上的引用或智能指针即可），例如以下代码：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">b</span> = <span class="title function_ invoke__">foo</span>(<span class="string">&quot;world&quot;</span>);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, b);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">foo</span>(x: &amp;<span class="type">str</span>) <span class="punctuation">-&gt;</span> <span class="type">String</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">a</span> = <span class="string">&quot;Hello, &quot;</span>.<span class="title function_ invoke__">to_string</span>() + x;</span><br><span class="line">    a</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在 <code>foo</code> 函数中，<code>a</code> 是 <code>String</code> 类型，它其实是一个智能指针结构体，该智能指针存储在函数栈中，指向堆上的字符串数据。当被从 <code>foo</code> 函数转移给 <code>main</code> 中的 <code>b</code> 变量时，栈上的智能指针被复制一份赋予给 <code>b</code>，而底层数据无需发生改变，这样就完成了所有权从 <code>foo</code> 函数内部到 <code>b</code> 的转移。</p>
+<h4 id="堆栈的性能"><a href="#堆栈的性能" class="headerlink" title="堆栈的性能"></a>堆栈的性能</h4><p>很多人可能会觉得栈的性能肯定比堆高，其实未必。 由于我们在后面的性能专题会专门讲解堆栈的性能问题，因此这里就大概给出结论：</p>
+<ul>
+<li>小型数据，在栈上的分配性能和读取性能都要比堆上高</li>
+<li>中型数据，栈上分配性能高，但是读取性能和堆上并无区别，因为无法利用寄存器或 CPU 高速缓存，最终还是要经过一次内存寻址</li>
+<li>大型数据，只建议在堆上分配和使用</li>
+</ul>
+<p>总之，栈的分配速度肯定比堆上快，但是读取速度往往取决于你的数据能不能放入寄存器或 CPU 高速缓存。 因此不要仅仅因为堆上性能不如栈这个印象，就总是优先选择栈，导致代码更复杂的实现。</p>
+<h3 id="Box-的使用场景"><a href="#Box-的使用场景" class="headerlink" title="Box 的使用场景"></a>Box 的使用场景</h3><p>由于 <code>Box</code> 是简单的封装，除了将值存储在堆上外，并没有其它性能上的损耗。而性能和功能往往是鱼和熊掌，因此 <code>Box</code> 相比其它智能指针，功能较为单一，可以在以下场景中使用它：</p>
+<ul>
+<li>特意的将数据分配在堆上</li>
+<li>数据较大时，又不想在转移所有权时进行数据拷贝</li>
+<li>类型的大小在编译期无法确定，但是我们又需要固定大小的类型时</li>
+<li>特征对象，用于说明对象实现了一个特征，而不是某个特定的类型</li>
+</ul>
+<p>以上场景，我们在本章将一一讲解，后面车速较快，请系好安全带。</p>
+<h4 id="使用-Box-将数据存储在堆上"><a href="#使用-Box-将数据存储在堆上" class="headerlink" title="使用 Box&lt;T&gt; 将数据存储在堆上"></a>使用 <code>Box&lt;T&gt;</code> 将数据存储在堆上</h4><p>如果一个变量拥有一个数值 <code>let a = 3</code>，那变量 <code>a</code> 必然是存储在栈上的，那如果我们想要 <code>a</code> 的值存储在堆上就需要使用 <code>Box&lt;T&gt;</code>：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">a</span> = <span class="type">Box</span>::<span class="title function_ invoke__">new</span>(<span class="number">3</span>);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;a = &#123;&#125;&quot;</span>, a); <span class="comment">// a = 3</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 下面一行代码将报错</span></span><br><span class="line">    <span class="comment">// let b = a + 1; // cannot add `&#123;integer&#125;` to `Box&lt;&#123;integer&#125;&gt;`</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样就可以创建一个智能指针指向了存储在堆上的 <code>3</code>，并且 <code>a</code> 持有了该指针。在本章的引言中，我们提到了智能指针往往都实现了 <code>Deref</code> 和 <code>Drop</code> 特征，因此：</p>
+<ul>
+<li><code>println!</code> 可以正常打印出 <code>a</code> 的值，是因为它隐式地调用了 <code>Deref</code> 对智能指针 <code>a</code> 进行了解引用</li>
+<li>最后一行代码 <code>let b = a + 1</code> 报错，是因为在表达式中，我们无法自动隐式地执行 <code>Deref</code> 解引用操作，你需要使用 <code>*</code> 操作符 <code>let b = *a + 1</code>，来显式的进行解引用</li>
+<li><code>a</code> 持有的智能指针将在作用域结束（<code>main</code> 函数结束）时，被释放掉，这是因为 <code>Box&lt;T&gt;</code> 实现了 <code>Drop</code> 特征</li>
+</ul>
+<p>以上的例子在实际代码中其实很少会存在，因为将一个简单的值分配到堆上并没有太大的意义。将其分配在栈上，由于寄存器、CPU 缓存的原因，它的性能将更好，而且代码可读性也更好。</p>
+<h4 id="避免栈上数据的拷贝"><a href="#避免栈上数据的拷贝" class="headerlink" title="避免栈上数据的拷贝"></a>避免栈上数据的拷贝</h4><p>当栈上数据转移所有权时，实际上是把数据拷贝了一份，最终新旧变量各自拥有不同的数据，因此所有权并未转移。</p>
+<p>而堆上则不然，底层数据并不会被拷贝，转移所有权仅仅是复制一份栈中的指针，再将新的指针赋予新的变量，然后让拥有旧指针的变量失效，最终完成了所有权的转移：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="comment">// 在栈上创建一个长度为1000的数组</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">arr</span> = [<span class="number">0</span>;<span class="number">1000</span>];</span><br><span class="line">    <span class="comment">// 将arr所有权转移arr1，由于 `arr` 分配在栈上，因此这里实际上是直接重新深拷贝了一份数据</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">arr1</span> = arr;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// arr 和 arr1 都拥有各自的栈上数组，因此不会报错</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, arr.<span class="title function_ invoke__">len</span>());</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, arr1.<span class="title function_ invoke__">len</span>());</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 在堆上创建一个长度为1000的数组，然后使用一个智能指针指向它</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">arr</span> = <span class="type">Box</span>::<span class="title function_ invoke__">new</span>([<span class="number">0</span>;<span class="number">1000</span>]);</span><br><span class="line">    <span class="comment">// 将堆上数组的所有权转移给 arr1，由于数据在堆上，因此仅仅拷贝了智能指针的结构体，底层数据并没有被拷贝</span></span><br><span class="line">    <span class="comment">// 所有权顺利转移给 arr1，arr 不再拥有所有权</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">arr1</span> = arr;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, arr1.<span class="title function_ invoke__">len</span>());</span><br><span class="line">    <span class="comment">// 由于 arr 不再拥有底层数组的所有权，因此下面代码将报错</span></span><br><span class="line">    <span class="comment">// println!(&quot;&#123;:?&#125;&quot;, arr.len());</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从以上代码，可以清晰看出大块的数据为何应该放入堆中，此时 <code>Box</code> 就成为了我们最好的帮手。</p>
+<h4 id="将-动态大小类型-变为-Sized-固定大小类型"><a href="#将-动态大小类型-变为-Sized-固定大小类型" class="headerlink" title="将 动态大小类型 变为 Sized 固定大小类型"></a>将 动态大小类型 变为 Sized 固定大小类型</h4><p>Rust 需要在编译时知道类型占用多少空间，如果一种类型在编译时无法知道具体的大小，那么被称为动态大小类型 DST。</p>
+<p>其中一种无法在编译时知道大小的类型是<strong>递归类型</strong>：在类型定义中又使用到了自身，或者说该类型的值的一部分可以是相同类型的其它值，这种值的嵌套理论上可以无限进行下去，所以 Rust 不知道递归类型需要多少空间：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> <span class="title class_">List</span> &#123;</span><br><span class="line">    <span class="title function_ invoke__">Cons</span>(<span class="type">i32</span>, List), <span class="comment">// 一般来说这是个自定义的类型</span></span><br><span class="line">    Nil,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上就是函数式语言中常见的 <code>Cons List</code>，它的每个节点包含一个 <code>i32</code> 值，还包含了一个新的 <code>List</code>，因此这种嵌套可以无限进行下去，Rust 认为该类型是一个 DST 类型，并给予报错：</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">error[E0072]: recursive type `List` has infinite size //递归类型 `List` 拥有无限长的大小</span><br><span class="line"><span class="meta prompt_"> --&gt; </span><span class="language-bash">src/main.rs:3:1</span></span><br><span class="line">  |</span><br><span class="line">3 | enum List &#123;</span><br><span class="line">  | ^^^^^^^^^ recursive type has infinite size</span><br><span class="line">4 |     Cons(i32, List),</span><br><span class="line">  |               ---- recursive without indirection</span><br></pre></td></tr></table></figure>
+
+<p>此时若想解决这个问题，就可以使用我们的 <code>Box&lt;T&gt;</code>：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> <span class="title class_">List</span> &#123;</span><br><span class="line">    <span class="title function_ invoke__">Cons</span>(<span class="type">i32</span>, <span class="type">Box</span>&lt;List&gt;),</span><br><span class="line">    Nil,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>只需要将 <code>List</code> 存储到堆上，然后使用一个智能指针指向它，即可完成从 DST 到 Sized 类型(固定大小类型)的华丽转变。</p>
+<h4 id="特诊对象"><a href="#特诊对象" class="headerlink" title="特诊对象"></a>特诊对象</h4><p>在 Rust 中，想实现不同类型组成的数组只有两个办法：枚举和特征对象，前者限制较多，因此后者往往是最常用的解决办法。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">trait</span> <span class="title class_">Draw</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">draw</span>(&amp;<span class="keyword">self</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Button</span> &#123;</span><br><span class="line">    id: <span class="type">u32</span>,</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">Draw</span> <span class="keyword">for</span> <span class="title class_">Button</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">draw</span>(&amp;<span class="keyword">self</span>) &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;这是屏幕上第&#123;&#125;号按钮&quot;</span>, <span class="keyword">self</span>.id)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Select</span> &#123;</span><br><span class="line">    id: <span class="type">u32</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">Draw</span> <span class="keyword">for</span> <span class="title class_">Select</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">draw</span>(&amp;<span class="keyword">self</span>) &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;这个选择框贼难用&#123;&#125;&quot;</span>, <span class="keyword">self</span>.id)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">elems</span>: <span class="type">Vec</span>&lt;<span class="type">Box</span>&lt;<span class="keyword">dyn</span> Draw&gt;&gt; = <span class="built_in">vec!</span>[<span class="type">Box</span>::<span class="title function_ invoke__">new</span>(Button &#123; id: <span class="number">1</span> &#125;), <span class="type">Box</span>::<span class="title function_ invoke__">new</span>(Select &#123; id: <span class="number">2</span> &#125;)];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> <span class="variable">e</span> <span class="keyword">in</span> elems &#123;</span><br><span class="line">        e.<span class="title function_ invoke__">draw</span>()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上代码将不同类型的 <code>Button</code> 和 <code>Select</code> 包装成 <code>Draw</code> 特征的特征对象，放入一个数组中，<code>Box&lt;dyn Draw&gt;</code> 就是特征对象。</p>
+<p>其实，特征也是 DST 类型，而特征对象在做的就是将 DST 类型转换为固定大小类型。</p>
+<h3 id="Box-内存布局"><a href="#Box-内存布局" class="headerlink" title="Box 内存布局"></a>Box 内存布局</h3><p>先来看看 <code>Vec&lt;i32&gt;</code> 的内存布局：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">(stack)    (heap)</span><br><span class="line">┌──────┐   ┌───┐</span><br><span class="line">│ vec1 │──→│ <span class="number">1</span> │</span><br><span class="line">└──────┘   ├───┤</span><br><span class="line">           │ <span class="number">2</span> │</span><br><span class="line">           ├───┤</span><br><span class="line">           │ <span class="number">3</span> │</span><br><span class="line">           ├───┤</span><br><span class="line">           │ <span class="number">4</span> │</span><br><span class="line">           └───┘</span><br></pre></td></tr></table></figure>
+
+<p>之前提到过 <code>Vec</code> 和 <code>String</code> 都是智能指针，从上图可以看出，该智能指针存储在栈中，然后指向堆上的数组数据。</p>
+<p>那如果数组中每个元素都是一个 <code>Box</code> 对象呢？来看看 <code>Vec&lt;Box&lt;i32&gt;&gt;</code> 的内存布局：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">                    (heap)</span><br><span class="line">(stack)    (heap)   ┌───┐</span><br><span class="line">┌──────┐   ┌───┐ ┌─→│ <span class="number">1</span> │</span><br><span class="line">│ vec2 │──→│B1 │─┘  └───┘</span><br><span class="line">└──────┘   ├───┤    ┌───┐</span><br><span class="line">           │B2 │───→│ <span class="number">2</span> │</span><br><span class="line">           ├───┤    └───┘</span><br><span class="line">           │B3 │─┐  ┌───┐</span><br><span class="line">           ├───┤ └─→│ <span class="number">3</span> │</span><br><span class="line">           │B4 │─┐  └───┘</span><br><span class="line">           └───┘ │  ┌───┐</span><br><span class="line">                 └─→│ <span class="number">4</span> │</span><br><span class="line">                    └───┘</span><br></pre></td></tr></table></figure>
+
+<p>上面的 <code>B1</code> 代表被 <code>Box</code> 分配到堆上的值 <code>1</code>。</p>
+<p>可以看出智能指针 <code>vec2</code> 依然是存储在栈上，然后指针指向一个堆上的数组，该数组中每个元素都是一个 <code>Box</code> 智能指针，最终 <code>Box</code> 智能指针又指向了存储在堆上的实际值。</p>
+<p>因此当我们从数组中取出某个元素时，取到的是对应的智能指针 <code>Box</code>，需要对该智能指针进行解引用，才能取出最终的值：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">arr</span> = <span class="built_in">vec!</span>[<span class="type">Box</span>::<span class="title function_ invoke__">new</span>(<span class="number">1</span>), <span class="type">Box</span>::<span class="title function_ invoke__">new</span>(<span class="number">2</span>)];</span><br><span class="line">    <span class="keyword">let</span> (first, second) = (&amp;arr[<span class="number">0</span>], &amp;arr[<span class="number">1</span>]); <span class="comment">// &amp;Box&lt;&#123;integer&#125;&gt;</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">sum</span> = **first + **second;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上代码有几个值得注意的点：</p>
+<ul>
+<li><p>使用 <code>&amp;</code> 借用数组中的元素，否则会报所有权错误</p>
+<blockquote>
+<p>vec 中的数据是存在 heap 上的，是动态的，将动态数据直接进行所有权的转移必须实现copy，不然肯定报错。</p>
+</blockquote>
+</li>
+<li><p>表达式不能隐式的解引用，因此必须使用 <code>**</code> 做两次解引用，第一次将 <code>&amp;Box&lt;i32&gt;</code> 类型转成 <code>Box&lt;i32&gt;</code>，第二次将 <code>Box&lt;i32&gt;</code> 转成 <code>i32</code></p>
+</li>
+</ul>
+<h3 id="Box-leak"><a href="#Box-leak" class="headerlink" title="Box::leak"></a>Box::leak</h3><p><code>Box</code> 中还提供了一个非常有用的关联函数：<code>Box::leak</code>，它可以消费掉 <code>Box</code> 并且强制目标值从内存中泄漏，读者可能会觉得，这有啥用啊？</p>
+<p>其实还真有点用，例如，你可以把一个 <code>String</code> 类型，变成一个 <code>&#39;static</code> 生命周期的 <code>&amp;str</code> 类型：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">   <span class="keyword">let</span> <span class="variable">s</span> = <span class="title function_ invoke__">gen_static_str</span>();</span><br><span class="line">   <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, s);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">gen_static_str</span>() <span class="punctuation">-&gt;</span> &amp;<span class="symbol">&#x27;static</span> <span class="type">str</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">s</span> = <span class="type">String</span>::<span class="title function_ invoke__">new</span>(); <span class="comment">// new() 方法会进行初始化并返回一个空字符串</span></span><br><span class="line">    s.<span class="title function_ invoke__">push_str</span>(<span class="string">&quot;hello, world&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="type">Box</span>::<span class="title function_ invoke__">leak</span>(s.<span class="title function_ invoke__">into_boxed_str</span>())<span class="comment">//  将 String 类型的字符串转换为 Box&lt;str&gt; 类型的堆分配字符串。</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在之前的代码中，如果 <code>String</code> 创建于函数中，那么返回它的唯一方法就是转移所有权给调用者 <code>fn move_str() -&gt; String</code>，而通过 <code>Box::leak</code> 我们不仅返回了一个 <code>&amp;str</code> 字符串切片，它还是 <code>&#39;static</code> 生命周期的！</p>
+<p>要知道真正具有 <code>&#39;static</code> 生命周期的往往都是编译期就创建的值，例如 <code>let v = &quot;hello, world&quot;</code>，这里 <code>v</code> 是直接打包到二进制可执行文件中的，因此该字符串具有 <code>&#39;static</code> 生命周期，再比如 <code>const</code> 常量。</p>
+<p>又有读者要问了，我还可以手动为变量标注 <code>&#39;static</code> 啊。其实你标注的 <code>&#39;static</code> 只是用来忽悠编译器的，但是超出作用域，一样被释放回收。而使用 <code>Box::leak</code> 就可以将一个运行期的值转为 <code>&#39;static</code>。</p>
+<h4 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h4><p>光看上面的描述，大家可能还是云里雾里、一头雾水。</p>
+<p>那么我说一个简单的场景，<strong>你需要一个在运行期初始化的值，但是可以全局有效，也就是和整个程序活得一样久</strong>，那么就可以使用 <code>Box::leak</code>，例如有一个存储配置的结构体实例，它是在运行期动态插入内容，那么就可以将其转为全局有效，虽然 <code>Rc/Arc</code> 也可以实现此功能，但是 <code>Box::leak</code> 是性能最高的。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p><code>Box</code> 背后是调用 <code>jemalloc</code> 来做内存管理，所以堆上的空间无需我们的手动管理。与此类似，带 GC 的语言中的对象也是借助于 <code>Box</code> 概念来实现的，<strong>一切皆对象 &#x3D; 一切皆 Box</strong>， 只不过我们无需自己去 <code>Box</code> 罢了。</p>
+<p>其实很多时候，编译器的鞭笞可以助我们更快的成长，例如所有权规则里的借用、move、生命周期就是编译器在教我们做人，哦不是，是教我们深刻理解堆栈、内存布局、作用域等等你在其它 GC 语言无需去关注的东西。刚开始是很痛苦，但是一旦熟悉了这套规则，写代码的效率和代码本身的质量将飞速上升，直到你可以用 Java 开发的效率写出 Java 代码不可企及的性能和安全性，最终 Rust 语言所谓的开发效率低、心智负担高，对你来说终究不是个事。</p>
+<p>因此，不要怪 Rust，<strong>它只是在帮我们成为那个更好的程序员，而这些苦难终究成为我们走向优秀的垫脚石</strong>。</p>
+<h2 id="Deref-解引用"><a href="#Deref-解引用" class="headerlink" title="Deref 解引用"></a>Deref 解引用</h2><p>在开始之前，我们先来看一段代码：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#[derive(Debug)]</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">    name: <span class="type">String</span>,</span><br><span class="line">    age: <span class="type">u8</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">new</span>(name: <span class="type">String</span>, age: <span class="type">u8</span>) <span class="punctuation">-&gt;</span> <span class="keyword">Self</span> &#123;</span><br><span class="line">        Person &#123; name, age&#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">display</span>(<span class="keyword">self</span>: &amp;<span class="keyword">mut</span> Person, age: <span class="type">u8</span>) &#123;</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">Person</span>&#123;name, age&#125; = &amp;<span class="keyword">self</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上代码有一个很奇怪的地方：在 <code>display</code> 方法中，<code>self</code> 是 <code>&amp;mut Person</code> 的类型，接着我们对其取了一次引用 <code>&amp;self</code>，此时 <code>&amp;self</code> 的类型是 <code>&amp;&amp;mut Person</code>，然后我们又将其和 <code>Person</code> 类型进行匹配，取出其中的值。</p>
+<p>那么问题来了，Rust 不是号称安全的语言吗？为何允许将 <code>&amp;&amp;mut Person</code> 跟 <code>Person</code> 进行匹配呢？答案就在本章节中。</p>
+<p>何为智能指针？能不让你写出 <code>****s</code> 形式的解引用，我认为就是智能: )，智能指针的名称来源，主要就在于它实现了 <code>Deref</code> 和 <code>Drop</code> 特征，这两个特征可以智能地帮助我们节省使用上的负担：</p>
+<ul>
+<li><code>Deref</code> 可以让智能指针像引用那样工作，这样你就可以写出同时支持智能指针和引用的代码，例如 <code>*T</code></li>
+<li><code>Drop</code> 允许你指定智能指针超出作用域后自动执行的代码，例如做一些数据清除等收尾工作</li>
+</ul>
+<p>先来看看 <code>Deref</code> 特征是如何工作的。</p>
+<h3 id="通过-获取引用背后的值"><a href="#通过-获取引用背后的值" class="headerlink" title="通过 * 获取引用背后的值"></a>通过 * 获取引用背后的值</h3><p>在正式讲解 <code>Deref</code> 之前，我们先来看下常规引用的解引用。</p>
+<p>常规引用是一个指针类型，包含了目标数据存储的内存地址。对常规引用使用 <code>*</code> 操作符，就可以通过解引用的方式获取到内存地址对应的数据值：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">x</span> = <span class="number">5</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">y</span> = &amp;x;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">assert_eq!</span>(<span class="number">5</span>, x);</span><br><span class="line">    <span class="built_in">assert_eq!</span>(<span class="number">5</span>, *y);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里 <code>y</code> 就是一个常规引用，包含了值 <code>5</code> 所在的内存地址，然后通过解引用 <code>*y</code>，我们获取到了值 <code>5</code>。如果你试图执行 <code>assert_eq!(5, y);</code>，代码就会无情报错，因为你无法将一个引用与一个数值做比较：</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">error[E0277]: can&#x27;t compare `&#123;integer&#125;` with `&amp;&#123;integer&#125;` //无法将&#123;integer&#125; 与&amp;&#123;integer&#125;进行比较</span><br><span class="line"><span class="meta prompt_"> --&gt; </span><span class="language-bash">src/main.rs:6:5</span></span><br><span class="line">  |</span><br><span class="line">6 |     assert_eq!(5, y);</span><br><span class="line">  |     ^^^^^^^^^^^^^^^^^ no implementation for `&#123;integer&#125; == &amp;&#123;integer&#125;`</span><br><span class="line">  |</span><br><span class="line">  = help: the trait `PartialEq&lt;&amp;&#123;integer&#125;&gt;` is not implemented for `&#123;integer&#125;`</span><br><span class="line">                    // 你需要为&#123;integer&#125;实现用于比较的特征PartialEq&lt;&amp;&#123;integer&#125;&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="智能指针解引用"><a href="#智能指针解引用" class="headerlink" title="智能指针解引用"></a>智能指针解引用</h3><p>上面所说的解引用方式和其它大多数语言并无区别，但是 Rust 中将解引用提升到了一个新高度。考虑一下智能指针，它是一个结构体类型，如果你直接对它进行 <code>*myStruct</code>，显然编译器不知道该如何办，因此我们可以为智能指针结构体实现 <code>Deref</code> 特征。</p>
+<p>实现 <code>Deref</code> 后的智能指针结构体，就可以像普通引用一样，通过 <code>*</code> 进行解引用，例如 <code>Box&lt;T&gt;</code> 智能指针：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">x</span> = <span class="type">Box</span>::<span class="title function_ invoke__">new</span>(<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">sum</span> = *x + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>智能指针 <code>x</code> 被 <code>*</code> 解引用为 <code>i32</code> 类型的值 <code>1</code>，然后再进行求和。</p>
+<h4 id="定义自己的智能指针"><a href="#定义自己的智能指针" class="headerlink" title="定义自己的智能指针"></a>定义自己的智能指针</h4><p>现在，让我们一起来实现一个智能指针，功能上类似 <code>Box&lt;T&gt;</code>。由于 <code>Box&lt;T&gt;</code> 本身很简单，并没有包含类如长度、最大长度等信息，因此用一个元组结构体即可。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">MyBox</span>&lt;T&gt;(T);</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span>&lt;T&gt; MyBox&lt;T&gt; &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">new</span>(x: T) <span class="punctuation">-&gt;</span> MyBox&lt;T&gt; &#123;</span><br><span class="line">        <span class="title function_ invoke__">MyBox</span>(x)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>跟 <code>Box&lt;T&gt;</code> 一样，我们的智能指针也持有一个 <code>T</code> 类型的值，然后使用关联函数 <code>MyBox::new</code> 来创建智能指针。由于还未实现 <code>Deref</code> 特征，此时使用 <code>*</code> 肯定会报错：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">y</span> = MyBox::<span class="title function_ invoke__">new</span>(<span class="number">5</span>);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">assert_eq!</span>(<span class="number">5</span>, *y);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行后，报错如下：</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">error[E0614]: type `MyBox&lt;&#123;integer&#125;&gt;` cannot be dereferenced</span><br><span class="line"><span class="meta prompt_">  --&gt; </span><span class="language-bash">src/main.rs:12:19</span></span><br><span class="line">   |</span><br><span class="line">12 |     assert_eq!(5, *y);</span><br><span class="line">   |                   ^^</span><br></pre></td></tr></table></figure>
+
+<h3 id="为智能指针实现-Deref-特征"><a href="#为智能指针实现-Deref-特征" class="headerlink" title="为智能指针实现 Deref 特征"></a>为智能指针实现 Deref 特征</h3><p>现在来为 <code>MyBox</code> 实现 <code>Deref</code> 特征，以支持 <code>*</code> 解引用操作符：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::ops::Deref;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span>&lt;T&gt; Deref <span class="keyword">for</span> <span class="title class_">MyBox</span>&lt;T&gt; &#123;</span><br><span class="line">    <span class="keyword">type</span> <span class="title class_">Target</span> = T;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">deref</span>(&amp;<span class="keyword">self</span>) <span class="punctuation">-&gt;</span> &amp;<span class="keyword">Self</span>::Target &#123;</span><br><span class="line">        &amp;<span class="keyword">self</span>.<span class="number">0</span>  <span class="comment">// 0表示第一个成员变量</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>很简单，当解引用 <code>MyBox</code> 智能指针时，返回元组结构体中的元素 <code>&amp;self.0</code>，有几点要注意的：</p>
+<ul>
+<li>在 <code>Deref</code> 特征中声明了关联类型 <code>Target</code>，在之前章节中介绍过，关联类型主要是为了提升代码可读性</li>
+<li><code>deref</code> 返回的是一个常规引用，可以被 <code>*</code> 进行解引用</li>
+</ul>
+<p>之前报错的代码此时已能顺利编译通过。当然，标准库实现的智能指针要考虑很多边边角角情况，肯定比我们的实现要复杂。</p>
+<h3 id="背后的原理"><a href="#背后的原理" class="headerlink" title="* 背后的原理"></a>* 背后的原理</h3><p>当我们对智能指针 <code>Box</code> 进行解引用时，实际上 Rust 为我们调用了以下方法：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">*(y.<span class="title function_ invoke__">deref</span>())</span><br></pre></td></tr></table></figure>
+
+<p>首先调用 <code>deref</code> 方法返回值的常规引用，然后通过 <code>*</code> 对常规引用进行解引用，最终获取到目标值。</p>
+<p>至于 Rust 为何要使用这个有点啰嗦的方式实现，原因在于所有权系统的存在。如果 <code>deref</code> 方法直接返回一个值，而不是引用，那么该值的所有权将被转移给调用者，而我们不希望调用者仅仅只是 <code>*T</code> 一下，就拿走了智能指针中包含的值。</p>
+<p>需要注意的是，<code>*</code> 不会无限递归替换，从 <code>*y</code> 到 <code>*(y.deref())</code> 只会发生一次，而不会继续进行替换然后产生形如 <code>*((y.deref()).deref())</code> 的怪物。</p>
+<h3 id="函数和方法中的隐式-Deref-转换"><a href="#函数和方法中的隐式-Deref-转换" class="headerlink" title="函数和方法中的隐式 Deref 转换"></a>函数和方法中的隐式 Deref 转换</h3><p>对于函数和方法的传参，Rust 提供了一个极其有用的隐式转换：<code>Deref </code>转换。若一个类型实现了 <code>Deref</code> 特征，那它的引用在传给函数或方法时，会根据参数签名来决定是否进行隐式的 <code>Deref</code> 转换，例如：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;hello world&quot;</span>);</span><br><span class="line">    <span class="title function_ invoke__">display</span>(&amp;s)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">display</span>(s: &amp;<span class="type">str</span>) &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>,s);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上代码有几点值得注意：</p>
+<ul>
+<li><code>String</code> 实现了 <code>Deref</code> 特征，可以在需要时自动被转换为 <code>&amp;str</code> 类型</li>
+<li><code>&amp;s</code> 是一个 <code>&amp;String</code> 类型，当它被传给 <code>display</code> 函数时，自动通过 <code>Deref</code> 转换成了 <code>&amp;str</code></li>
+<li>必须使用 <code>&amp;s</code> 的方式来触发 <code>Deref</code>(仅引用类型的实参才会触发自动解引用)</li>
+</ul>
+<h4 id="连续的隐式-Deref-转换"><a href="#连续的隐式-Deref-转换" class="headerlink" title="连续的隐式 Deref 转换"></a>连续的隐式 Deref 转换</h4><p>如果你以为 <code>Deref</code> 仅仅这点作用，那就大错特错了。<code>Deref</code> 可以支持连续的隐式转换，直到找到适合的形式为止：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">MyBox</span>&lt;T&gt;(T);</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span>&lt;T&gt; MyBox&lt;T&gt; &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">new</span>(x: T) <span class="punctuation">-&gt;</span> MyBox&lt;T&gt; &#123;</span><br><span class="line">        <span class="title function_ invoke__">MyBox</span>(x)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s</span> = MyBox::<span class="title function_ invoke__">new</span>(<span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;hello world&quot;</span>));</span><br><span class="line">    <span class="title function_ invoke__">display</span>(&amp;s)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">display</span>(s: &amp;<span class="type">str</span>) &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>,s);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里我们使用了之前自定义的智能指针 <code>MyBox</code>，并将其通过连续的隐式转换变成 <code>&amp;str</code> 类型：首先 <code>MyBox</code> 被 <code>Deref</code> 成 <code>String</code> 类型，结果并不能满足 <code>display</code> 函数参数的要求，编译器发现 <code>String</code> 还可以继续 <code>Deref</code> 成 <code>&amp;str</code>，最终成功的匹配了函数参数。</p>
+<p>想象一下，假如 <code>Rust</code> 没有提供这种隐式转换，我们该如何调用 <code>display</code> 函数？</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">m</span> = MyBox::<span class="title function_ invoke__">new</span>(<span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;Rust&quot;</span>));</span><br><span class="line">    <span class="title function_ invoke__">display</span>(&amp;(*m)[..]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果不言而喻，肯定是 <code>&amp;s</code> 的方式优秀得多。总之，当参与其中的类型定义了 <code>Deref</code> 特征时，Rust 会分析该类型并且连续使用 <code>Deref</code> 直到最终获得一个引用来匹配函数或者方法的参数类型，这种行为完全不会造成任何的性能损耗，因为完全是在编译期完成。</p>
+<p>但是 <code>Deref</code> 并不是没有缺点，缺点就是：如果你不知道某个类型是否实现了 <code>Deref</code> 特征，那么在看到某段代码时，并不能在第一时间反应过来该代码发生了隐式的 <code>Deref</code> 转换。事实上，不仅仅是 <code>Deref</code>，在 Rust 中还有各种 <code>From/Into</code> 等等会给阅读代码带来一定负担的特征。还是那句话，一切选择都是权衡，有得必有失，得了代码的简洁性，往往就失去了可读性，Go 语言就是一个刚好相反的例子。</p>
+<p>再来看一下在方法、赋值中自动应用 <code>Deref</code> 的例子：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s</span> = MyBox::<span class="title function_ invoke__">new</span>(<span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;hello, world&quot;</span>));</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s1</span>: &amp;<span class="type">str</span> = &amp;s; <span class="comment">// 赋值操作需要手动解引用 指的是需要我们手动添加 &amp;</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s2</span>: <span class="type">String</span> = s.<span class="title function_ invoke__">to_string</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对于 <code>s1</code>，我们通过两次 <code>Deref</code> 将 <code>&amp;str</code> 类型的值赋给了它（<strong>赋值操作需要手动解引用</strong>）；而对于 <code>s2</code>，我们在其上直接调用方法 <code>to_string</code>，实际上 <code>MyBox</code> 根本没有没有实现该方法，能调用 <code>to_string</code>，完全是因为编译器对 <code>MyBox</code> 应用了 <code>Deref</code> 的结果（<strong>方法调用会自动解引用</strong>）。</p>
+<h3 id="Deref-规则总结"><a href="#Deref-规则总结" class="headerlink" title="Deref 规则总结"></a>Deref 规则总结</h3><p>在上面，我们零碎的介绍了不少关于 <code>Deref</code> 特征的知识，下面来通过较为正式的方式来对其规则进行下总结。</p>
+<p>一个类型为 <code>T</code> 的对象 <code>foo</code>，如果 <code>T: Deref&lt;Target=U&gt;</code>，那么，相关 <code>foo</code> 的引用 <code>&amp;foo</code> 在应用的时候会自动转换为 <code>&amp;U</code>。</p>
+<p>示例：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::ops::Deref;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">MyBox</span>&lt;T&gt;(T);</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span>&lt;T&gt; Deref <span class="keyword">for</span> <span class="title class_">MyBox</span>&lt;T&gt; &#123;</span><br><span class="line">    <span class="keyword">type</span> <span class="title class_">Target</span> = T;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">deref</span>(&amp;<span class="keyword">self</span>) <span class="punctuation">-&gt;</span> &amp;<span class="keyword">Self</span>::Target &#123;</span><br><span class="line">        &amp;<span class="keyword">self</span>.<span class="number">0</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">foo</span>: MyBox&lt;<span class="type">String</span>&gt; = <span class="title function_ invoke__">MyBox</span>(<span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;hello, world&quot;</span>));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 解引用强制转换，将 &amp;foo 自动转换为 &amp;String</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">r1</span>: &amp;<span class="type">String</span> = &amp;foo;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;r1: &#123;&#125;&quot;</span>, r1);  <span class="comment">// 输出: r1: hello, world</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 解引用强制转换，将 &amp;foo 自动转换为 &amp;str</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">r2</span>: &amp;<span class="type">str</span> = &amp;foo;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;r2: &#123;&#125;&quot;</span>, r2);  <span class="comment">// 输出: r2: hello, world</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>粗看这条规则，貌似有点类似于 <code>AsRef</code>，而跟 <code>解引用</code> 似乎风马牛不相及，实际里面有些玄妙之处。</p>
+<h4 id="引用归一化"><a href="#引用归一化" class="headerlink" title="引用归一化"></a>引用归一化</h4><p>Rust 编译器实际上只能对 <code>&amp;v</code> 形式的引用进行解引用操作，那么问题来了，如果是一个智能指针或者 <code>&amp;&amp;&amp;&amp;v</code> 类型的呢？ 该如何对这两个进行解引用？</p>
+<p>答案是：Rust 会在解引用时自动把智能指针和 <code>&amp;&amp;&amp;&amp;v</code> 做引用归一化操作，转换成 <code>&amp;v</code> 形式，最终再对 <code>&amp;v</code> 进行解引用：</p>
+<ul>
+<li>把智能指针（比如在库中定义的，Box、Rc、Arc、Cow 等）从结构体脱壳为内部的引用类型，也就是转成结构体内部的 <code>&amp;v</code></li>
+<li>把多重<code>&amp;</code>，例如 <code>&amp;&amp;&amp;&amp;&amp;&amp;&amp;v</code>，归一成 <code>&amp;v</code></li>
+</ul>
+<p>关于第二种情况，这么干巴巴的说，也许大家会迷迷糊糊的，我们来看一段标准库源码：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">impl</span>&lt;T: ?<span class="built_in">Sized</span>&gt; Deref <span class="keyword">for</span> &amp;T &#123;</span><br><span class="line">    <span class="keyword">type</span> <span class="title class_">Target</span> = T;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">deref</span>(&amp;<span class="keyword">self</span>) <span class="punctuation">-&gt;</span> &amp;T &#123; <span class="comment">// 这里 &amp; 不是再加一个&amp;。类似传入 &amp;&amp;str 调用 *self解除一个 然后变成了 &amp;str 返回</span></span><br><span class="line">        *<span class="keyword">self</span> <span class="comment">// 解除一层 &amp;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这段源码中，<code>&amp;T</code> 被自动解引用为 <code>T</code>，也就是 <code>&amp;T: Deref&lt;Target=T&gt;</code> 。 按照这个代码，<code>&amp;&amp;&amp;&amp;T</code> 会被自动解引用为 <code>&amp;&amp;&amp;T</code>，然后再自动解引用为 <code>&amp;&amp;T</code>，以此类推， 直到最终变成 <code>&amp;T</code>。</p>
+<p>PS: 以下是 <code>LLVM</code> 编译后的部分中间层代码：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Rust 代码</span></span><br><span class="line"><span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">_2</span>: &amp;<span class="type">i32</span>;</span><br><span class="line"><span class="keyword">let</span> <span class="variable">_3</span>: &amp;&amp;&amp;&amp;<span class="type">i32</span>;</span><br><span class="line"></span><br><span class="line">bb0: &#123;</span><br><span class="line">    _2 = (*(*(*_3)))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h4><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">foo</span>(s: &amp;<span class="type">str</span>) &#123;&#125;</span><br><span class="line"></span><br><span class="line">   <span class="comment">// 由于 String 实现了 Deref&lt;Target=str&gt;</span></span><br><span class="line">   <span class="keyword">let</span> <span class="variable">owned</span> = <span class="string">&quot;Hello&quot;</span>.<span class="title function_ invoke__">to_string</span>();</span><br><span class="line"></span><br><span class="line">   <span class="comment">// 因此下面的函数可以正常运行：</span></span><br><span class="line">   <span class="title function_ invoke__">foo</span>(&amp;owned);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::rc::Rc;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">fn</span> <span class="title function_">foo</span>(s: &amp;<span class="type">str</span>) &#123;&#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// String 实现了 Deref&lt;Target=str&gt;</span></span><br><span class="line">  <span class="keyword">let</span> <span class="variable">owned</span> = <span class="string">&quot;Hello&quot;</span>.<span class="title function_ invoke__">to_string</span>();</span><br><span class="line">  <span class="comment">// 且 Rc 智能指针可以被自动脱壳为内部的 `owned` 引用： &amp;String ，然后 &amp;String 再自动解引用为 &amp;str</span></span><br><span class="line">  <span class="keyword">let</span> <span class="variable">counted</span> = Rc::<span class="title function_ invoke__">new</span>(owned);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 因此下面的函数可以正常运行:</span></span><br><span class="line">  <span class="title function_ invoke__">foo</span>(&amp;counted);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Foo</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">impl</span> <span class="title class_">Foo</span> &#123;</span><br><span class="line">      <span class="keyword">fn</span> <span class="title function_">foo</span>(&amp;<span class="keyword">self</span>) &#123; <span class="built_in">println!</span>(<span class="string">&quot;Foo&quot;</span>); &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> <span class="variable">f</span> = &amp;&amp;Foo;</span><br><span class="line"></span><br><span class="line">  f.<span class="title function_ invoke__">foo</span>();</span><br><span class="line">  (&amp;f).<span class="title function_ invoke__">foo</span>();</span><br><span class="line">  (&amp;&amp;f).<span class="title function_ invoke__">foo</span>();</span><br><span class="line">  (&amp;&amp;&amp;&amp;&amp;&amp;&amp;&amp;f).<span class="title function_ invoke__">foo</span>();</span><br></pre></td></tr></table></figure>
+
+<h3 id="三种-Deref-转换"><a href="#三种-Deref-转换" class="headerlink" title="三种 Deref 转换"></a>三种 Deref 转换</h3><p>在之前，我们讲的都是不可变的 <code>Deref</code> 转换，实际上 Rust 还支持将一个可变的引用转换成另一个可变的引用以及将一个可变引用转换成不可变的引用，规则如下：</p>
+<ul>
+<li>当 <code>T: Deref&lt;Target=U&gt;</code>，可以将 <code>&amp;T</code> 转换成 <code>&amp;U</code>，也就是我们之前看到的例子</li>
+<li>当 <code>T: DerefMut&lt;Target=U&gt;</code>，可以将 <code>&amp;mut T</code> 转换成 <code>&amp;mut U</code></li>
+<li>当 <code>T: Deref&lt;Target=U&gt;</code>，可以将 <code>&amp;mut T</code> 转换成 <code>&amp;U</code></li>
+</ul>
+<p>来看一个关于 <code>DerefMut</code> 的例子：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">MyBox</span>&lt;T&gt; &#123;</span><br><span class="line">    v: T,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span>&lt;T&gt; MyBox&lt;T&gt; &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">new</span>(x: T) <span class="punctuation">-&gt;</span> MyBox&lt;T&gt; &#123;</span><br><span class="line">        MyBox &#123; v: x &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> std::ops::Deref;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span>&lt;T&gt; Deref <span class="keyword">for</span> <span class="title class_">MyBox</span>&lt;T&gt; &#123;</span><br><span class="line">    <span class="keyword">type</span> <span class="title class_">Target</span> = T;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">deref</span>(&amp;<span class="keyword">self</span>) <span class="punctuation">-&gt;</span> &amp;<span class="keyword">Self</span>::Target &#123;</span><br><span class="line">        &amp;<span class="keyword">self</span>.v</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> std::ops::DerefMut;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span>&lt;T&gt; DerefMut <span class="keyword">for</span> <span class="title class_">MyBox</span>&lt;T&gt; &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">deref_mut</span>(&amp;<span class="keyword">mut</span> <span class="keyword">self</span>) <span class="punctuation">-&gt;</span> &amp;<span class="keyword">mut</span> <span class="keyword">Self</span>::Target &#123;</span><br><span class="line">        &amp;<span class="keyword">mut</span> <span class="keyword">self</span>.v</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">s</span> = MyBox::<span class="title function_ invoke__">new</span>(<span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;hello, &quot;</span>));</span><br><span class="line">    <span class="title function_ invoke__">display</span>(&amp;<span class="keyword">mut</span> s)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">display</span>(s: &amp;<span class="keyword">mut</span> <span class="type">String</span>) &#123;</span><br><span class="line">    s.<span class="title function_ invoke__">push_str</span>(<span class="string">&quot;world&quot;</span>);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, s);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上代码有几点值得注意:</p>
+<ul>
+<li>要实现 <code>DerefMut</code> 必须要先实现 <code>Deref</code> 特征：<code>pub trait DerefMut: Deref</code></li>
+<li><code>T: DerefMut&lt;Target=U&gt;</code> 解读：将 <code>&amp;mut T</code> 类型通过 <code>DerefMut</code> 特征的方法转换为 <code>&amp;mut U</code> 类型，对应上例中，就是将 <code>&amp;mut MyBox&lt;String&gt;</code> 转换为 <code>&amp;mut String</code></li>
+</ul>
+<p>对于上述三条规则中的第三条，它比另外两条稍微复杂了点：Rust 可以把可变引用隐式的转换成不可变引用，但反之则不行。</p>
+<p>如果从 Rust 的所有权和借用规则的角度考虑，当你拥有一个可变的引用，那该引用肯定是对应数据的唯一借用，那么此时将可变引用变成不可变引用并不会破坏借用规则；但是如果你拥有一个不可变引用，那同时可能还存在其它几个不可变的引用，如果此时将其中一个不可变引用转换成可变引用，就变成了可变引用与不可变引用的共存，最终破坏了借用规则。</p>
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><p><code>Deref</code> 可以说是 Rust 中最常见的隐式类型转换，而且它可以连续的实现如 <code>Box&lt;String&gt; -&gt; String -&gt; &amp;str</code> 的隐式转换，只要链条上的类型实现了 <code>Deref</code> 特征。</p>
+<p>我们也可以为自己的类型实现 <code>Deref</code> 特征，但是原则上来说，只应该为自定义的智能指针实现 <code>Deref</code>。例如，虽然你可以为自己的自定义数组类型实现 <code>Deref</code> 以避免 <code>myArr.0[0]</code> 的使用形式，但是 Rust 官方并不推荐这么做，特别是在你开发三方库时。</p>
+<h2 id="Drop-释放资源"><a href="#Drop-释放资源" class="headerlink" title="Drop 释放资源"></a>Drop 释放资源</h2><p>在 Rust 中，我们之所以可以一拳打跑 GC 的同时一脚踢翻手动资源回收，主要就归功于 <code>Drop</code> 特征，同时它也是智能指针的必备特征之一。</p>
+<h3 id="Rust-中的资源回收"><a href="#Rust-中的资源回收" class="headerlink" title="Rust 中的资源回收"></a>Rust 中的资源回收</h3><p>在一些无 GC 语言中，程序员在一个变量无需再被使用时，需要手动释放它占用的内存资源，如果忘记了，那么就会发生内存泄漏，最终臭名昭著的 <code>OOM</code> 问题可能就会发生。</p>
+<p>而在 Rust 中，你可以指定在一个变量超出作用域时，执行一段特定的代码，最终编译器将帮你自动插入这段收尾代码。这样，就无需在每一个使用该变量的地方，都写一段代码来进行收尾工作和资源释放。不禁让人感叹，Rust 的大腿真粗，香！</p>
+<p>没错，指定这样一段收尾工作靠的就是咱这章的主角 - <code>Drop</code> 特征。</p>
+<h3 id="例子-1"><a href="#例子-1" class="headerlink" title="例子"></a>例子</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">HasDrop1</span>;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">HasDrop2</span>;</span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">Drop</span> <span class="keyword">for</span> <span class="title class_">HasDrop1</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">drop</span>(&amp;<span class="keyword">mut</span> <span class="keyword">self</span>) &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;Dropping HasDrop1!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">Drop</span> <span class="keyword">for</span> <span class="title class_">HasDrop2</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">drop</span>(&amp;<span class="keyword">mut</span> <span class="keyword">self</span>) &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;Dropping HasDrop2!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">HasTwoDrops</span> &#123;</span><br><span class="line">    one: HasDrop1,</span><br><span class="line">    two: HasDrop2,</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">Drop</span> <span class="keyword">for</span> <span class="title class_">HasTwoDrops</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">drop</span>(&amp;<span class="keyword">mut</span> <span class="keyword">self</span>) &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;Dropping HasTwoDrops!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Foo</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">Drop</span> <span class="keyword">for</span> <span class="title class_">Foo</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">drop</span>(&amp;<span class="keyword">mut</span> <span class="keyword">self</span>) &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;Dropping Foo!&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">_x</span> = HasTwoDrops &#123;</span><br><span class="line">        two: HasDrop2,</span><br><span class="line">        one: HasDrop1,</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">_foo</span> = Foo;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;Running!&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面代码虽然长，但是目的其实很单纯，就是为了观察不同情况下变量级别的、结构体内部字段的 <code>Drop</code>，有几点值得注意：</p>
+<ul>
+<li><code>Drop</code> 特征中的 <code>drop</code> 方法借用了目标的可变引用，而不是拿走了所有权，这里先设置一个悬念，后边会讲</li>
+<li>结构体中每个字段都有自己的 <code>Drop</code></li>
+</ul>
+<p>来看看输出：</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Running!</span><br><span class="line">Dropping Foo!</span><br><span class="line">Dropping HasTwoDrops!</span><br><span class="line">Dropping HasDrop1!</span><br><span class="line">Dropping HasDrop2!</span><br></pre></td></tr></table></figure>
+
+<p>嗯，结果符合预期，每个资源都成功的执行了收尾工作，虽然 <code>println!</code> 这种收尾工作毫无意义 &#x3D;,&#x3D;</p>
+<h4 id="Drop-的顺序"><a href="#Drop-的顺序" class="headerlink" title="Drop 的顺序"></a>Drop 的顺序</h4><p>观察以上输出，我们可以得出以下关于 <code>Drop</code> 顺序的结论</p>
+<ul>
+<li><strong>变量级别，按照逆序的方式</strong>，<code>_x</code> 在 <code>_foo</code> 之前创建，因此 <code>_x</code> 在 <code>_foo</code> 之后被 <code>drop</code></li>
+<li><strong>结构体内部，按照顺序的方式</strong>，结构体 <code>_x</code> 中的字段按照定义中的顺序依次 <code>drop</code>(是 HasTwoDrops 结构体中定义的顺序 )</li>
+</ul>
+<h4 id="没有实现-Drop-的结构体"><a href="#没有实现-Drop-的结构体" class="headerlink" title="没有实现 Drop 的结构体"></a>没有实现 Drop 的结构体</h4><p>实际上，就算你不为 <code>_x</code> 结构体实现 <code>Drop</code> 特征，它内部的两个字段依然会调用 <code>drop</code>，移除以下代码，并观察输出：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">impl</span> <span class="title class_">Drop</span> <span class="keyword">for</span> <span class="title class_">HasTwoDrops</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">drop</span>(&amp;<span class="keyword">mut</span> <span class="keyword">self</span>) &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;Dropping HasTwoDrops!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>原因在于，Rust 自动为几乎所有类型都实现了 <code>Drop</code> 特征，因此就算你不手动为结构体实现 <code>Drop</code>，它依然会调用默认实现的 <code>drop</code> 函数，同时再调用每个字段的 <code>drop</code> 方法，最终打印出：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Running!</span><br><span class="line">Dropping Foo!</span><br><span class="line">Dropping HasDrop2!</span><br><span class="line">Dropping HasDrop1!</span><br></pre></td></tr></table></figure>
+
+<h3 id="手动回收"><a href="#手动回收" class="headerlink" title="手动回收"></a>手动回收</h3><p>当使用智能指针来管理锁的时候，你可能希望提前释放这个锁，然后让其它代码能及时获得锁，此时就需要提前去手动 <code>drop</code>。 但是在之前我们提到一个悬念，<code>Drop::drop</code> 只是借用了目标值的可变引用，所以，就算你提前调用了 <code>drop</code>，后面的代码依然可以使用目标值，但是这就会访问一个并不存在的值，非常不安全，好在 Rust 会阻止你：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#[derive(Debug)]</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Foo</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">Drop</span> <span class="keyword">for</span> <span class="title class_">Foo</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">drop</span>(&amp;<span class="keyword">mut</span> <span class="keyword">self</span>) &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;Dropping Foo!&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">foo</span> = Foo;</span><br><span class="line">    foo.<span class="title function_ invoke__">drop</span>();</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;Running!:&#123;:?&#125;&quot;</span>, foo);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>报错如下：</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">error[E0040]: explicit use of destructor method</span><br><span class="line"><span class="meta prompt_">  --&gt; </span><span class="language-bash">src/main.rs:37:9</span></span><br><span class="line">   |</span><br><span class="line">37 |     foo.drop();</span><br><span class="line">   |     ----^^^^--</span><br><span class="line">   |     |   |</span><br><span class="line">   |     |   explicit destructor calls not allowed</span><br><span class="line">   |     help: consider using `drop` function: `drop(foo)`</span><br></pre></td></tr></table></figure>
+
+<p>如上所示，编译器直接阻止了我们调用 <code>Drop</code> 特征的 <code>drop</code> 方法，原因是对于 Rust 而言，不允许显式地调用析构函数（这是一个用来清理实例的通用编程概念）。好在在报错的同时，编译器还给出了一个提示：使用 <code>drop</code> 函数。</p>
+<p>针对编译器提示的 <code>drop</code> 函数，我们可以大胆推测下：它能够拿走目标值的所有权。现在来看看这个猜测正确与否，以下是 <code>std::mem::drop</code> 函数的签名：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">drop</span>&lt;T&gt;(_x: T)</span><br></pre></td></tr></table></figure>
+
+<p>如上所示，<code>drop</code> 函数确实拿走了目标值的所有权，来验证下：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">foo</span> = Foo;</span><br><span class="line">    <span class="title function_ invoke__">drop</span>(foo);</span><br><span class="line">    <span class="comment">// 以下代码会报错：借用了所有权被转移的值</span></span><br><span class="line">    <span class="comment">// println!(&quot;Running!:&#123;:?&#125;&quot;, foo);</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Bingo，完美拿走了所有权，而且这种实现保证了后续的使用必定会导致编译错误，因此非常安全！</p>
+<p>细心的同学可能已经注意到，这里直接调用了 <code>drop</code> 函数，并没有引入任何模块信息，原因是该函数在<code>std::prelude</code>里。</p>
+<h3 id="Drop-使用场景"><a href="#Drop-使用场景" class="headerlink" title="Drop 使用场景"></a>Drop 使用场景</h3><p>对于 Drop 而言，主要有两个功能：</p>
+<ul>
+<li>回收内存资源</li>
+<li>执行一些收尾工作</li>
+</ul>
+<p>对于第二点，在之前我们已经详细介绍过，因此这里主要对第一点进行下简单说明。</p>
+<p>在绝大多数情况下，我们都无需手动去 <code>drop</code> 以回收内存资源，因为 Rust 会自动帮我们完成这些工作，它甚至会对复杂类型的每个字段都单独的调用 <code>drop</code> 进行回收！但是确实有极少数情况，需要你自己来回收资源的，例如文件描述符、网络 socket 等，当这些值超出作用域不再使用时，就需要进行关闭以释放相关的资源，在这些情况下，就需要使用者自己来解决 <code>Drop</code> 的问题。</p>
+<h3 id="互斥的-Copy-和-Drop"><a href="#互斥的-Copy-和-Drop" class="headerlink" title="互斥的 Copy 和 Drop"></a>互斥的 Copy 和 Drop</h3><p>我们无法为一个类型同时实现 <code>Copy</code> 和 <code>Drop</code> 特征。因为实现了 <code>Copy</code> 的特征会被编译器隐式的复制，因此非常难以预测析构函数执行的时间和频率。因此这些实现了 <code>Copy</code> 的类型无法拥有析构函数。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#[derive(Copy)]</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Foo</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">Drop</span> <span class="keyword">for</span> <span class="title class_">Foo</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">drop</span>(&amp;<span class="keyword">mut</span> <span class="keyword">self</span>) &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;Dropping Foo!&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上代码报错如下：</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">error[E0184]: the trait `Copy` may not be implemented for this type; the type has a destructor</span><br><span class="line"><span class="meta prompt_">  --&gt; </span><span class="language-bash">src/main.rs:24:10</span></span><br><span class="line">   |</span><br><span class="line">24 | #[derive(Copy)]</span><br><span class="line">   |          ^^^^ Copy not allowed on types with destructors</span><br></pre></td></tr></table></figure>
+
+<h3 id="总结-2"><a href="#总结-2" class="headerlink" title="总结"></a>总结</h3><p><code>Drop</code> 可以用于许多方面，来使得资源清理及收尾工作变得方便和安全，甚至可以用其创建我们自己的内存分配器！通过 <code>Drop</code> 特征和 Rust 所有权系统，你无需担心之后的代码清理，Rust 会自动考虑这些问题。</p>
+<p>我们也无需担心意外的清理掉仍在使用的值，这会造成编译器错误：所有权系统确保引用总是有效的，也会确保 <code>drop</code> 只会在值不再被使用时被调用一次。</p>
+<h2 id="Rc-与-Arc-实现-1vN-所有权机制"><a href="#Rc-与-Arc-实现-1vN-所有权机制" class="headerlink" title="Rc 与 Arc 实现 1vN 所有权机制"></a>Rc 与 Arc 实现 1vN 所有权机制</h2><h3 id="Rc-与-Arc"><a href="#Rc-与-Arc" class="headerlink" title="Rc 与 Arc"></a>Rc 与 Arc</h3><p>Rust 所有权机制要求一个值只能有一个所有者，在大多数情况下，都没有问题，但是考虑以下情况：</p>
+<ul>
+<li>在图数据结构中，多个边可能会拥有同一个节点，该节点直到没有边指向它时，才应该被释放清理</li>
+<li>在多线程中，多个线程可能会持有同一个数据，但是你受限于 Rust 的安全机制，无法同时获取该数据的可变引用</li>
+</ul>
+<p>以上场景不是很常见，但是一旦遇到，就非常棘手，为了解决此类问题，Rust 在所有权机制之外又引入了额外的措施来简化相应的实现：通过引用计数的方式，允许一个数据资源在同一时刻拥有多个所有者。</p>
+<p>这种实现机制就是 <code>Rc</code> 和 <code>Arc</code>，前者适用于单线程，后者适用于多线程。由于二者大部分情况下都相同，因此本章将以 <code>Rc</code> 作为讲解主体，对于 <code>Arc</code> 的不同之处，另外进行单独讲解。</p>
+<h3 id="Rc"><a href="#Rc" class="headerlink" title="Rc&lt;T&gt;"></a>Rc<code>&lt;T&gt;</code></h3><p>引用计数(reference counting)，顾名思义，通过记录一个数据被引用的次数来确定该数据是否正在被使用。当引用次数归零时，就代表该数据不再被使用，因此可以被清理释放。</p>
+<p>而 <code>Rc</code> 正是引用计数的英文缩写。当我们<strong>希望在堆上分配一个对象供程序的多个部分使用且无法确定哪个部分最后一个结束时，就可以使用 <code>Rc</code> 成为数据值的所有者</strong>，例如之前提到的多线程场景就非常适合。</p>
+<p>下面是经典的所有权被转移导致报错的例子：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;hello, world&quot;</span>);</span><br><span class="line">    <span class="comment">// s在这里被转移给a</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">a</span> = <span class="type">Box</span>::<span class="title function_ invoke__">new</span>(s);</span><br><span class="line">    <span class="comment">// 报错！此处继续尝试将 s 转移给 b</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">b</span> = <span class="type">Box</span>::<span class="title function_ invoke__">new</span>(s);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用 <code>Rc</code> 就可以轻易解决：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::rc::Rc;</span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">a</span> = Rc::<span class="title function_ invoke__">new</span>(<span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;hello, world&quot;</span>));</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">b</span> = Rc::<span class="title function_ invoke__">clone</span>(&amp;a);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">assert_eq!</span>(<span class="number">2</span>, Rc::<span class="title function_ invoke__">strong_count</span>(&amp;a));</span><br><span class="line">    <span class="built_in">assert_eq!</span>(Rc::<span class="title function_ invoke__">strong_count</span>(&amp;a), Rc::<span class="title function_ invoke__">strong_count</span>(&amp;b))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上代码我们使用 <code>Rc::new</code> 创建了一个新的 <code>Rc&lt;String&gt;</code> 智能指针并赋给变量 <code>a</code>，该指针指向底层的字符串数据。</p>
+<p>智能指针 <code>Rc&lt;T&gt;</code> 在创建时，还会将引用计数加 1，此时获取引用计数的关联函数 <code>Rc::strong_count</code> 返回的值将是 <code>1</code>。</p>
+<h4 id="Rc-clone"><a href="#Rc-clone" class="headerlink" title="Rc::clone"></a>Rc::clone</h4><p>接着，我们又使用 <code>Rc::clone</code> 克隆了一份智能指针 <code>Rc&lt;String&gt;</code>，并将该智能指针的引用计数增加到 <code>2</code>。</p>
+<p>**由于 <code>a</code> 和 <code>b</code> 是同一个智能指针的两个副本，因此通过它们两个获取引用计数的结果都是 <code>2</code>**。</p>
+<p>不要被 <code>clone</code> 字样所迷惑，以为所有的 <code>clone</code> 都是深拷贝。这里的 <code>clone</code> <strong>仅仅复制了智能指针并增加了引用计数，并没有克隆底层数据</strong>，因此 <code>a</code> 和 <code>b</code> 是共享了底层的字符串 <code>s</code>，这种<strong>复制效率是非常高</strong>的。当然你也可以使用 <code>a.clone()</code> 的方式来克隆，但是从可读性角度，我们更加推荐 <code>Rc::clone</code> 的方式。</p>
+<p>实际上在 Rust 中，还有不少 <code>clone</code> 都是浅拷贝，例如<strong>迭代器</strong>的克隆。</p>
+<h4 id="观察计数引用器的变化"><a href="#观察计数引用器的变化" class="headerlink" title="观察计数引用器的变化"></a>观察计数引用器的变化</h4><p>使用关联函数 <code>Rc::strong_count</code> 可以获取当前引用计数的值，我们来观察下引用计数如何随着变量声明、释放而变化：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::rc::Rc;</span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">a</span> = Rc::<span class="title function_ invoke__">new</span>(<span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;test ref counting&quot;</span>));</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;count after creating a = &#123;&#125;&quot;</span>, Rc::<span class="title function_ invoke__">strong_count</span>(&amp;a)); <span class="comment">// 1</span></span><br><span class="line">        <span class="keyword">let</span> <span class="variable">b</span> =  Rc::<span class="title function_ invoke__">clone</span>(&amp;a);</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;count after creating b = &#123;&#125;&quot;</span>, Rc::<span class="title function_ invoke__">strong_count</span>(&amp;a)); <span class="comment">// 2</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">let</span> <span class="variable">c</span> =  Rc::<span class="title function_ invoke__">clone</span>(&amp;a);</span><br><span class="line">            <span class="built_in">println!</span>(<span class="string">&quot;count after creating c = &#123;&#125;&quot;</span>, Rc::<span class="title function_ invoke__">strong_count</span>(&amp;c)); <span class="comment">// 3</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;count after c goes out of scope = &#123;&#125;&quot;</span>, Rc::<span class="title function_ invoke__">strong_count</span>(&amp;a)); <span class="comment">// 2</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>有几点值得注意：</p>
+<ul>
+<li>由于变量 <code>c</code> 在语句块内部声明，当离开语句块时它会因为超出作用域而被释放，所以引用计数会减少 1，事实上这个得益于 <code>Rc&lt;T&gt;</code> 实现了 <code>Drop</code> 特征</li>
+<li><code>a</code>、<code>b</code>、<code>c</code> 三个智能指针引用计数都是同样的，并且共享底层的数据，因此打印计数时用哪个都行</li>
+<li>无法看到的是：当 <code>a</code>、<code>b</code> 超出作用域后，引用计数会变成 0，最终智能指针和它指向的底层字符串都会被清理释放</li>
+</ul>
+<h4 id="不可变引用"><a href="#不可变引用" class="headerlink" title="不可变引用"></a>不可变引用</h4><p>事实上，**<code>Rc&lt;T&gt;</code> 是指向底层数据的不可变的引用**，因此你无法通过它来修改数据，这也符合 Rust 的借用规则：要么存在多个不可变借用，要么只能存在一个可变借用。</p>
+<p>但是实际开发中我们往往需要对数据进行修改，这时单独使用 <code>Rc&lt;T&gt;</code> 无法满足我们的需求，需要配合其它数据类型来一起使用，例如内部可变性的 <code>RefCell&lt;T&gt;</code> 类型以及互斥锁 <code>Mutex&lt;T&gt;</code>。事实上，在多线程编程中，<code>Arc</code> 跟 <code>Mutex</code> 锁的组合使用非常常见，它们既可以让我们在不同的线程中共享数据，又允许在各个线程中对其进行修改。</p>
+<h4 id="例子-2"><a href="#例子-2" class="headerlink" title="例子"></a>例子</h4><p>考虑一个场景，有很多小工具，每个工具都有自己的主人，但是存在多个工具属于同一个主人的情况，此时使用 <code>Rc&lt;T&gt;</code> 就非常适合：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::rc::Rc;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Owner</span> &#123;</span><br><span class="line">    name: <span class="type">String</span>,</span><br><span class="line">    <span class="comment">// ...其它字段</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Gadget</span> &#123;</span><br><span class="line">    id: <span class="type">i32</span>,</span><br><span class="line">    owner: Rc&lt;Owner&gt;,</span><br><span class="line">    <span class="comment">// ...其它字段</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="comment">// 创建一个基于引用计数的 `Owner`.</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">gadget_owner</span>: Rc&lt;Owner&gt; = Rc::<span class="title function_ invoke__">new</span>(Owner &#123;</span><br><span class="line">        name: <span class="string">&quot;Gadget Man&quot;</span>.<span class="title function_ invoke__">to_string</span>(),</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建两个不同的工具，它们属于同一个主人</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">gadget1</span> = Gadget &#123;</span><br><span class="line">        id: <span class="number">1</span>,</span><br><span class="line">        owner: Rc::<span class="title function_ invoke__">clone</span>(&amp;gadget_owner),</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">gadget2</span> = Gadget &#123;</span><br><span class="line">        id: <span class="number">2</span>,</span><br><span class="line">        owner: Rc::<span class="title function_ invoke__">clone</span>(&amp;gadget_owner),</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 释放掉第一个 `Rc&lt;Owner&gt;`</span></span><br><span class="line">    <span class="title function_ invoke__">drop</span>(gadget_owner);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 尽管在上面我们释放了 gadget_owner，但是依然可以在这里使用 owner 的信息</span></span><br><span class="line">    <span class="comment">// 原因是在 drop 之前，存在三个指向 Gadget Man 的智能指针引用，上面仅仅</span></span><br><span class="line">    <span class="comment">// drop 掉其中一个智能指针引用，而不是 drop 掉 owner 数据，外面还有两个</span></span><br><span class="line">    <span class="comment">// 引用指向底层的 owner 数据，引用计数尚未清零</span></span><br><span class="line">    <span class="comment">// 因此 owner 数据依然可以被使用</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;Gadget &#123;&#125; owned by &#123;&#125;&quot;</span>, gadget1.id, gadget1.owner.name);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;Gadget &#123;&#125; owned by &#123;&#125;&quot;</span>, gadget2.id, gadget2.owner.name);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 在函数最后，`gadget1` 和 `gadget2` 也被释放，最终引用计数归零，随后底层</span></span><br><span class="line">    <span class="comment">// 数据也被清理释放</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上代码很好的展示了 <code>Rc&lt;T&gt;</code> 的用途，当然你也可以用借用的方式，但是实现起来就会复杂得多，而且随着 <code>Gadget</code> 在代码的各个地方使用，引用生命周期也将变得更加复杂，毕竟结构体中的引用类型，总是令人不那么愉快，对不？</p>
+<h4 id="Rc-简单总结"><a href="#Rc-简单总结" class="headerlink" title="Rc 简单总结"></a>Rc 简单总结</h4><ul>
+<li><code>Rc/Arc</code> 是不可变引用，你无法修改它指向的值，只能进行读取，如果要修改，需要配合后面章节的内部可变性 <code>RefCell</code> 或互斥锁 <code>Mutex</code></li>
+<li>一旦最后一个拥有者消失，则资源会自动被回收，这个生命周期是在编译期就确定下来的</li>
+<li><code>Rc</code> 只能用于同一线程内部，想要用于线程之间的对象共享，你需要使用 <code>Arc</code></li>
+<li><code>Rc&lt;T&gt;</code> 是一个智能指针，实现了 <code>Deref</code> 特征；因此你无需先解开 <code>Rc</code> 指针，再使用里面的 <code>T</code>，而是可以直接使用 <code>T</code>。例如上例中的 <code>gadget1.owner.name</code></li>
+</ul>
+<h3 id="多线程无力的-Rc"><a href="#多线程无力的-Rc" class="headerlink" title="多线程无力的 Rc&lt;T&gt;"></a>多线程无力的 Rc<code>&lt;T&gt;</code></h3><p>来看看在多线程场景使用 <code>Rc&lt;T&gt;</code> 会如何：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::rc::Rc;</span><br><span class="line"><span class="keyword">use</span> std::thread;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s</span> = Rc::<span class="title function_ invoke__">new</span>(<span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;多线程漫游者&quot;</span>));</span><br><span class="line">    <span class="keyword">for</span> <span class="variable">_</span> <span class="keyword">in</span> <span class="number">0</span>..<span class="number">10</span> &#123;</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">s</span> = Rc::<span class="title function_ invoke__">clone</span>(&amp;s);</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">handle</span> = thread::<span class="title function_ invoke__">spawn</span>(<span class="keyword">move</span> || &#123;</span><br><span class="line">           <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, s)</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>由于我们还没有学习多线程的章节，上面的例子就特地简化了相关的实现。首先通过 <code>thread::spawn</code> 创建一个线程，然后使用 <code>move</code> 关键字把克隆出的 <code>s</code> 的所有权转移到线程中。</p>
+<p>能够实现这一点，完全得益于 <code>Rc</code> 带来的多所有权机制，但是以上代码会报错：</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">error[E0277]: `Rc&lt;String&gt;` cannot be sent between threads safely //不能在线程间安全的传递</span><br></pre></td></tr></table></figure>
+
+<p>表面原因是 <code>Rc&lt;T&gt;</code> 不能在线程间安全的传递，实际上是因为它没有实现 <code>Send</code> 特征，而该特征是恰恰是多线程间传递数据的关键，我们会在多线程章节中进行讲解。</p>
+<p>当然，还有更深层的原因：由于 <code>Rc&lt;T&gt;</code> 需要管理引用计数，但是该计数器并没有使用任何并发原语，因此无法实现原子化的计数操作，最终会导致计数错误。</p>
+<p>好在天无绝人之路，一起来看看 Rust 为我们提供的功能类似但是多线程安全的 <code>Arc</code>。</p>
+<h3 id="Arc"><a href="#Arc" class="headerlink" title="Arc"></a>Arc</h3><p><code>Arc</code> 是 <code>Atomic Rc</code> 的缩写，顾名思义：原子化的 <code>Rc&lt;T&gt;</code> 智能指针。原子化是一种并发原语，我们在后续章节会进行深入讲解，这里你只要知道它能保证我们的数据能够安全的在线程间共享即可。</p>
+<h4 id="Arc-的性能损耗"><a href="#Arc-的性能损耗" class="headerlink" title="Arc 的性能损耗"></a>Arc 的性能损耗</h4><p>你可能好奇，为何不直接使用 <code>Arc</code>，还要画蛇添足弄一个 <code>Rc</code>，还有 Rust 的基本数据类型、标准库数据类型为什么不自动实现原子化操作？这样就不存在线程不安全的问题了。</p>
+<p>原因在于原子化或者其它锁虽然可以带来的线程安全，但是都会伴随着性能损耗，而且这种性能损耗还不小。因此 Rust 把这种选择权交给你，毕竟需要线程安全的代码其实占比并不高，大部分时候我们开发的程序都在一个线程内。</p>
+<p><code>Arc</code> 和 <code>Rc</code> 拥有完全一样的 API，修改起来很简单：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::sync::Arc;</span><br><span class="line"><span class="keyword">use</span> std::thread;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s</span> = Arc::<span class="title function_ invoke__">new</span>(<span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;多线程漫游者&quot;</span>));</span><br><span class="line">    <span class="keyword">for</span> <span class="variable">_</span> <span class="keyword">in</span> <span class="number">0</span>..<span class="number">10</span> &#123;</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">s</span> = Arc::<span class="title function_ invoke__">clone</span>(&amp;s);</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">handle</span> = thread::<span class="title function_ invoke__">spawn</span>(<span class="keyword">move</span> || &#123;</span><br><span class="line">           <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, s)</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对了，两者还有一点区别：<code>Arc</code> 和 <code>Rc</code> 并没有定义在同一个模块，前者通过 <code>use std::sync::Arc</code> 来引入，后者通过 <code>use std::rc::Rc</code>。</p>
+<h3 id="总结-3"><a href="#总结-3" class="headerlink" title="总结"></a>总结</h3><p>在 Rust 中，所有权机制保证了一个数据只会有一个所有者，但如果你想要在图数据结构、多线程等场景中共享数据，这种机制会成为极大的阻碍。好在 Rust 为我们提供了智能指针 <code>Rc</code> 和 <code>Arc</code>，使用它们就能实现多个所有者共享一个数据的功能。</p>
+<p><code>Rc</code> 和 <code>Arc</code> 的区别在于，后者是原子化实现的引用计数，因此是线程安全的，可以用于多线程中共享数据。</p>
+<p><strong>这两者都是只读的</strong>，如果想要实现内部数据可修改，必须配合内部可变性 <code>RefCell</code> 或者互斥锁 <code>Mutex</code> 来一起使用。</p>
+<h2 id="Cell-与-RefCell-内部可变性"><a href="#Cell-与-RefCell-内部可变性" class="headerlink" title="Cell 与 RefCell 内部可变性"></a>Cell 与 RefCell 内部可变性</h2><h3 id="Cell-和-RefCell"><a href="#Cell-和-RefCell" class="headerlink" title="Cell 和 RefCell"></a>Cell 和 RefCell</h3><p>Rust 的编译器之严格，可以说是举世无双。特别是在所有权方面，Rust 通过严格的规则来保证所有权和借用的正确性，最终为程序的安全保驾护航。</p>
+<p>但是严格是一把双刃剑，带来安全提升的同时，损失了灵活性，有时甚至会让用户痛苦不堪、怨声载道。因此 Rust 提供了 <code>Cell</code> 和 <code>RefCell</code> 用于内部可变性，简而言之，可以在拥有不可变引用的同时修改目标数据，对于正常的代码实现来说，这个是不可能做到的（要么一个可变借用，要么多个不可变借用）。</p>
+<blockquote>
+<p>内部可变性的实现是因为 Rust 使用了 <code>unsafe</code> 来做到这一点，但是对于使用者来说，这些都是透明的，因为这些不安全代码都被封装到了安全的 API 中</p>
+</blockquote>
+<h3 id="Cell"><a href="#Cell" class="headerlink" title="Cell"></a>Cell</h3><p><code>Cell</code> 和 <code>RefCell</code> 在功能上没有区别，区别在于 <code>Cell&lt;T&gt;</code> 适用于 <code>T</code> 实现 <code>Copy</code> 的情况：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::cell::Cell;</span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">  <span class="keyword">let</span> <span class="variable">c</span> = Cell::<span class="title function_ invoke__">new</span>(<span class="string">&quot;asdf&quot;</span>);</span><br><span class="line">  <span class="keyword">let</span> <span class="variable">one</span> = c.<span class="title function_ invoke__">get</span>();</span><br><span class="line">  c.<span class="title function_ invoke__">set</span>(<span class="string">&quot;qwer&quot;</span>);</span><br><span class="line">  <span class="keyword">let</span> <span class="variable">two</span> = c.<span class="title function_ invoke__">get</span>();</span><br><span class="line">  <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;,&#123;&#125;&quot;</span>, one, two); <span class="comment">// asdf,qwer</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上代码展示了 <code>Cell</code> 的基本用法，有几点值得注意：</p>
+<ul>
+<li>“asdf” 是 <code>&amp;str</code> 类型，它实现了 <code>Copy</code> 特征</li>
+<li><code>c.get</code> 用来取值，<code>c.set</code> 用来设置新值</li>
+</ul>
+<p>取到值保存在 <code>one</code> 变量后，还能同时进行修改，这个违背了 Rust 的借用规则，但是由于 <code>Cell</code> 的存在，我们很优雅地做到了这一点，但是如果你尝试在 <code>Cell</code> 中存放<code>String</code>：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">c</span> = Cell::<span class="title function_ invoke__">new</span>(<span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;asdf&quot;</span>));</span><br></pre></td></tr></table></figure>
+
+<p>编译器会立刻报错，因为 <code>String</code> 没有实现 <code>Copy</code> 特征：</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">| pub struct String &#123;</span><br><span class="line">| ----------------- doesn&#x27;t satisfy `String: Copy`</span><br><span class="line">|</span><br><span class="line">= note: the following trait bounds were not satisfied:</span><br><span class="line">        `String: Copy`</span><br></pre></td></tr></table></figure>
+
+<h3 id="RefCell"><a href="#RefCell" class="headerlink" title="RefCell"></a>RefCell</h3><p>由于 <code>Cell</code> 类型针对的是实现了 <code>Copy</code> 特征的值类型，因此在实际开发中，<code>Cell</code> 使用的并不多，因为我们要解决的往往是可变、不可变引用共存导致的问题，此时就需要借助于 <code>RefCell</code> 来达成目的。</p>
+<p>我们可以将所有权、借用规则与这些智能指针做一个对比：</p>
+<table>
+<thead>
+<tr>
+<th>Rust 规则</th>
+<th>智能指针带来的额外规则</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>一个数据只有一个所有者</td>
+<td><code>Rc/Arc</code>让一个数据可以拥有多个所有者</td>
+</tr>
+<tr>
+<td>要么多个不可变借用，要么一个可变借用</td>
+<td><code>RefCell</code>实现编译期可变、不可变引用共存</td>
+</tr>
+<tr>
+<td>违背规则导致<strong>编译错误</strong></td>
+<td>违背规则导致<strong>运行时<code>panic</code></strong></td>
+</tr>
+</tbody></table>
+<p>可以看出，<code>Rc/Arc</code> 和 <code>RefCell</code> 合在一起，解决了 Rust 中严苛的所有权和借用规则带来的某些场景下难使用的问题。但是它们并不是银弹，例如 <code>RefCell</code> 实际上并没有解决可变引用和引用可以共存的问题，只是将报错从编译期推迟到运行时，从编译器错误变成了 <code>panic</code> 异常：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::cell::RefCell;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s</span> = RefCell::<span class="title function_ invoke__">new</span>(<span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;hello, world&quot;</span>));</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s1</span> = s.<span class="title function_ invoke__">borrow</span>(); <span class="comment">// 获取对值的临时不可变借用</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s2</span> = s.<span class="title function_ invoke__">borrow_mut</span>();  <span class="comment">// 获取对值的临时可变借用</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;,&#123;&#125;&quot;</span>, s1, s2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面代码在编译期不会报任何错误，你可以顺利运行程序：</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">thread &#x27;main&#x27; panicked at &#x27;already borrowed: BorrowMutError&#x27;, src/main.rs:6:16</span><br><span class="line">note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace</span><br></pre></td></tr></table></figure>
+
+<p>但是依然会因为违背了借用规则导致了运行期 <code>panic</code>，这非常像中国的天网，它也许会被罪犯蒙蔽一时，但是并不会被蒙蔽一世，任何导致安全风险的存在都将不能被容忍，法网恢恢，疏而不漏。</p>
+<h4 id="RefCell-为何存在"><a href="#RefCell-为何存在" class="headerlink" title="RefCell 为何存在"></a>RefCell 为何存在</h4><p>相信肯定有读者有疑问了，这么做有任何意义吗？还不如在编译期报错，至少能提前发现问题，而且性能还更好。</p>
+<p>存在即合理，究其根因，在于 Rust 编译期的<strong>宁可错杀，绝不放过</strong>的原则，当编译器不能确定你的代码是否正确时，就统统会判定为错误，因此难免会导致一些误报。</p>
+<p>而 <code>RefCell</code> 正是<strong>用于你确信代码是正确的，而编译器却发生了误判时</strong>。</p>
+<p>对于大型的复杂程序，也可以选择使用 <code>RefCell</code> 来让事情简化。例如在 Rust 编译器的<a target="_blank" rel="noopener" href="https://github.com/rust-lang/rust/blob/620d1ee5346bee10ba7ce129b2e20d6e59f0377d/src/librustc/middle/ty.rs#L803-L987"><code>ctxt结构体</code></a>中有大量的 <code>RefCell</code> 类型的 <code>map</code> 字段，主要的原因是：这些 <code>map</code> 会被分散在各个地方的代码片段所广泛使用或修改。由于这种分散在各处的使用方式，导致了管理可变和不可变成为一件非常复杂的任务（甚至不可能），你很容易就碰到编译器抛出来的各种错误。而且 <code>RefCell</code> 的运行时错误在这种情况下也变得非常可爱：一旦有人做了不正确的使用，代码会 <code>panic</code>，然后告诉我们哪些借用冲突了。</p>
+<p>总之，当你确信编译器误报但不知道该如何解决时，或者你有一个引用类型，需要被四处使用和修改然后导致借用关系难以管理时，都可以优先考虑使用 <code>RefCell</code>。</p>
+<h4 id="RefCell-简单总结"><a href="#RefCell-简单总结" class="headerlink" title="RefCell 简单总结"></a>RefCell 简单总结</h4><ul>
+<li>与 <code>Cell</code> 用于可 <code>Copy</code> 的值不同，<code>RefCell</code> 用于引用</li>
+<li><code>RefCell</code> 只是将借用规则从编译期推迟到程序运行期，并不能帮你绕过这个规则</li>
+<li><code>RefCell</code> 适用于编译期误报或者一个引用被在多处代码使用、修改以至于难于管理借用关系时</li>
+<li>使用 <code>RefCell</code> 时，违背借用规则会导致运行期的 <code>panic</code></li>
+</ul>
+<h3 id="选择-Cell-还是-RefCell"><a href="#选择-Cell-还是-RefCell" class="headerlink" title="选择 Cell 还是 RefCell"></a>选择 Cell 还是 RefCell</h3><p>根据本文的内容，我们可以大概总结下两者的区别：</p>
+<ul>
+<li><code>Cell</code> 只适用于 <code>Copy</code> 类型，用于提供值，而 <code>RefCell</code> 用于提供引用</li>
+<li><code>Cell</code> 不会 <code>panic</code>，而 <code>RefCell</code> 会</li>
+</ul>
+<h4 id="性能比较"><a href="#性能比较" class="headerlink" title="性能比较"></a>性能比较</h4><p><code>Cell</code> 没有额外的性能损耗，例如以下两段代码的性能其实是一致的：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// code snipet 1</span></span><br><span class="line"><span class="keyword">let</span> <span class="variable">x</span> = Cell::<span class="title function_ invoke__">new</span>(<span class="number">1</span>);</span><br><span class="line"><span class="keyword">let</span> <span class="variable">y</span> = &amp;x;</span><br><span class="line"><span class="keyword">let</span> <span class="variable">z</span> = &amp;x;</span><br><span class="line">x.<span class="title function_ invoke__">set</span>(<span class="number">2</span>);</span><br><span class="line">y.<span class="title function_ invoke__">set</span>(<span class="number">3</span>);</span><br><span class="line">z.<span class="title function_ invoke__">set</span>(<span class="number">4</span>);</span><br><span class="line"><span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, x.<span class="title function_ invoke__">get</span>()); <span class="comment">// 4</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// code snipet 2</span></span><br><span class="line"><span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">x</span> = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">let</span> <span class="variable">y</span> = &amp;<span class="keyword">mut</span> x;</span><br><span class="line"><span class="keyword">let</span> <span class="variable">z</span> = &amp;<span class="keyword">mut</span> x; <span class="comment">// 两次可变借用</span></span><br><span class="line">x = <span class="number">2</span>; <span class="comment">// 这里也会错，因为上面进行了借用</span></span><br><span class="line">*y = <span class="number">3</span>;</span><br><span class="line">*z = <span class="number">4</span>;</span><br><span class="line"><span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, x);</span><br></pre></td></tr></table></figure>
+
+<p>虽然性能一致，但代码 <code>1</code> 拥有代码 <code>2</code> 不具有的优势：它能编译成功:)</p>
+<p>与 <code>Cell</code> 的 <code>zero cost</code> 不同，<code>RefCell</code> 其实是有一点运行期开销的，原因是它包含了一个字大小的“借用状态”指示器，该指示器在每次运行时借用时都会被修改，进而产生一点开销。</p>
+<p>总之，当非要使用内部可变性时，首选 <code>Cell</code>，只有你的类型没有实现 <code>Copy</code> 时，才去选择 <code>RefCell</code>。</p>
+<h3 id="内部可变性"><a href="#内部可变性" class="headerlink" title="内部可变性"></a>内部可变性</h3><p>之前我们提到 <code>RefCell</code> 具有内部可变性，何为内部可变性？简单来说，对一个不可变的值进行可变借用，但这个并不符合 Rust 的基本借用规则：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">x</span> = <span class="number">5</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">y</span> = &amp;<span class="keyword">mut</span> x;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面的代码会报错，因为我们不能对一个不可变的值进行可变借用，这会破坏 Rust 的安全性保证，相反，你可以对一个可变值进行不可变借用。原因是：当值不可变时，可能会有多个不可变的引用指向它，此时若将修改其中一个为可变的，会造成可变引用与不可变引用共存的情况；而当值可变时，最多只会有一个可变引用指向它，将其修改为不可变，那么最终依然是只有一个不可变的引用指向它。</p>
+<p>虽然基本借用规则是 Rust 的基石，然而在某些场景中，一个值可以在其方法内部被修改，同时对于其它代码不可变，是很有用的：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义在外部库中的特征</span></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">trait</span> <span class="title class_">Messenger</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">send</span>(&amp;<span class="keyword">self</span>, msg: <span class="type">String</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// --------------------------</span></span><br><span class="line"><span class="comment">// 我们的代码中的数据结构和实现</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">MsgQueue</span> &#123;</span><br><span class="line">    msg_cache: <span class="type">Vec</span>&lt;<span class="type">String</span>&gt;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">Messenger</span> <span class="keyword">for</span> <span class="title class_">MsgQueue</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">send</span>(&amp;<span class="keyword">self</span>, msg: <span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.msg_cache.<span class="title function_ invoke__">push</span>(msg)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如上所示，外部库中定义了一个消息发送器特征 <code>Messenger</code>，它只有一个发送消息的功能：<code>fn send(&amp;self, msg: String)</code>，因为发送消息不需要修改自身，因此原作者在定义时，使用了 <code>&amp;self</code> 的不可变借用，这个无可厚非。</p>
+<p>我们要在自己的代码中使用该特征实现一个异步消息队列，出于性能的考虑，消息先写到本地缓存(内存)中，然后批量发送出去，因此在 <code>send</code> 方法中，需要将消息先行插入到本地缓存 <code>msg_cache</code> 中。但是问题来了，该 <code>send</code> 方法的签名是 <code>&amp;self</code>，因此上述代码会报错：</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">error[E0596]: cannot borrow `self.msg_cache` as mutable, as it is behind a `&amp;` reference</span><br><span class="line"><span class="meta prompt_">  --&gt; </span><span class="language-bash">src/main.rs:11:9</span></span><br><span class="line">   |</span><br><span class="line">2  |     fn send(&amp;self, msg: String);</span><br><span class="line">   |             ----- help: consider changing that to be a mutable reference: `&amp;mut self`</span><br><span class="line">...</span><br><span class="line">11 |         self.msg_cache.push(msg)</span><br><span class="line">   |         ^^^^^^^^^^^^^^^^^^ `self` is a `&amp;` reference, so the data it refers to cannot be borrowed as mutable</span><br></pre></td></tr></table></figure>
+
+<p>在报错的同时，编译器大聪明还善意地给出了提示：将 <code>&amp;self</code> 修改为 <code>&amp;mut self</code>，但是。。。我们实现的特征是定义在外部库中，因此该签名根本不能修改。值此危急关头， <code>RefCell</code> 闪亮登场：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::cell::RefCell;</span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">trait</span> <span class="title class_">Messenger</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">send</span>(&amp;<span class="keyword">self</span>, msg: <span class="type">String</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">struct</span> <span class="title class_">MsgQueue</span> &#123;</span><br><span class="line">    msg_cache: RefCell&lt;<span class="type">Vec</span>&lt;<span class="type">String</span>&gt;&gt;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">Messenger</span> <span class="keyword">for</span> <span class="title class_">MsgQueue</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">send</span>(&amp;<span class="keyword">self</span>, msg: <span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.msg_cache.<span class="title function_ invoke__">borrow_mut</span>().<span class="title function_ invoke__">push</span>(msg)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">mq</span> = MsgQueue &#123;</span><br><span class="line">        msg_cache: RefCell::<span class="title function_ invoke__">new</span>(<span class="type">Vec</span>::<span class="title function_ invoke__">new</span>()),</span><br><span class="line">    &#125;;</span><br><span class="line">    mq.<span class="title function_ invoke__">send</span>(<span class="string">&quot;hello, world&quot;</span>.<span class="title function_ invoke__">to_string</span>());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个 MQ 功能很弱，但是并不妨碍我们演示内部可变性的核心用法：通过包裹一层 <code>RefCell</code>，成功的让 <code>&amp;self</code> 中的 <code>msg_cache</code> 成为一个可变值，然后实现对其的修改。</p>
+<h3 id="Rc-RefCell-组合使用"><a href="#Rc-RefCell-组合使用" class="headerlink" title="Rc + RefCell 组合使用"></a>Rc + RefCell 组合使用</h3><p>在 Rust 中，一个常见的组合就是 <code>Rc</code> 和 <code>RefCell</code> 在一起使用，前者可以实现一个数据拥有多个所有者，后者可以实现数据的可变性：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::cell::RefCell;</span><br><span class="line"><span class="keyword">use</span> std::rc::Rc;</span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s</span> = Rc::<span class="title function_ invoke__">new</span>(RefCell::<span class="title function_ invoke__">new</span>(<span class="string">&quot;我很善变，还拥有多个主人&quot;</span>.<span class="title function_ invoke__">to_string</span>()));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s1</span> = s.<span class="title function_ invoke__">clone</span>();</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s2</span> = s.<span class="title function_ invoke__">clone</span>();</span><br><span class="line">    <span class="comment">// let mut s2 = s.borrow_mut();</span></span><br><span class="line">    s2.<span class="title function_ invoke__">borrow_mut</span>().<span class="title function_ invoke__">push_str</span>(<span class="string">&quot;, oh yeah!&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;\n&#123;:?&#125;\n&#123;:?&#125;&quot;</span>, s, s1, s2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，我们使用 <code>RefCell&lt;String&gt;</code> 包裹一个字符串，同时通过 <code>Rc</code> 创建了它的三个所有者：<code>s</code>、<code>s1</code>和<code>s2</code>，并且通过其中一个所有者 <code>s2</code> 对字符串内容进行了修改。</p>
+<p>由于 <code>Rc</code> 的所有者们共享同一个底层的数据，因此当一个所有者修改了数据时，会导致全部所有者持有的数据都发生了变化。</p>
+<p>程序的运行结果也在预料之中：</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">RefCell &#123; value: &quot;我很善变，还拥有多个主人, oh yeah!&quot; &#125;</span><br><span class="line">RefCell &#123; value: &quot;我很善变，还拥有多个主人, oh yeah!&quot; &#125;</span><br><span class="line">RefCell &#123; value: &quot;我很善变，还拥有多个主人, oh yeah!&quot; &#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="性能损耗"><a href="#性能损耗" class="headerlink" title="性能损耗"></a>性能损耗</h4><p>相信这两者组合在一起使用时，很多人会好奇到底性能如何，下面我们来简单分析下。</p>
+<p>首先给出一个大概的结论，这两者结合在一起使用的性能其实非常高，大致相当于没有线程安全版本的 C++ <code>std::shared_ptr</code> 指针，事实上，C++ 这个指针的主要开销也在于原子性这个并发原语上，毕竟线程安全在哪个语言中开销都不小。</p>
+<h4 id="内存损耗"><a href="#内存损耗" class="headerlink" title="内存损耗"></a>内存损耗</h4><p>两者结合的数据结构与下面类似：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Wrapper</span>&lt;T&gt; &#123;</span><br><span class="line">    <span class="comment">// Rc</span></span><br><span class="line">    strong_count: <span class="type">usize</span>,</span><br><span class="line">    weak_count: <span class="type">usize</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Refcell</span></span><br><span class="line">    borrow_count: <span class="type">isize</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 包裹的数据</span></span><br><span class="line">    item: T,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从上面可以看出，从对内存的影响来看，仅仅多分配了三个<code>usize/isize</code>，并没有其它额外的负担。</p>
+<h4 id="CPU-损耗"><a href="#CPU-损耗" class="headerlink" title="CPU 损耗"></a>CPU 损耗</h4><p>从 CPU 来看，损耗如下：</p>
+<ul>
+<li>对 <code>Rc&lt;T&gt;</code> 解引用是免费的（编译期），但是 <code>*</code> 带来的间接取值并不免费</li>
+<li>克隆 <code>Rc&lt;T&gt;</code> 需要将当前的引用计数跟 <code>0</code> 和 <code>usize::Max</code> 进行一次比较，然后将计数值加 1</li>
+<li>释放（drop） <code>Rc&lt;T&gt;</code> 需要将计数值减 1， 然后跟 <code>0</code> 进行一次比较</li>
+<li>对 <code>RefCell</code> 进行不可变借用，需要将 <code>isize</code> 类型的借用计数加 1，然后跟 <code>0</code> 进行比较</li>
+<li>对 <code>RefCell </code>的不可变借用进行释放，需要将 <code>isize</code> 减 1</li>
+<li>对 <code>RefCell</code> 的可变借用大致流程跟上面差不多，但是需要先跟 <code>0</code> 比较，然后再减 1</li>
+<li>对 <code>RefCell</code> 的可变借用进行释放，需要将 <code>isize</code> 加 1</li>
+</ul>
+<p>其实这些细节不必过于关注，只要知道 CPU 消耗也非常低，甚至编译器还会对此进行进一步优化！</p>
+<h4 id="CPU-缓存-Miss"><a href="#CPU-缓存-Miss" class="headerlink" title="CPU 缓存 Miss"></a>CPU 缓存 Miss</h4><p>唯一需要担心的可能就是这种组合数据结构对于 CPU 缓存是否亲和，这个我们无法证明，只能提出来存在这个可能性，最终的性能影响还需要在实际场景中进行测试。</p>
+<p>总之，分析这两者组合的性能还挺复杂的，大概总结下：</p>
+<ul>
+<li>从表面来看，它们带来的内存和 CPU 损耗都不大</li>
+<li>但是由于 <code>Rc</code> 额外的引入了一次间接取值（<code>*</code>），在少数场景下可能会造成性能上的显著损失</li>
+<li>CPU 缓存可能也不够亲和</li>
+</ul>
+<h3 id="通过-Cell-from-mut-解决借用冲突"><a href="#通过-Cell-from-mut-解决借用冲突" class="headerlink" title="通过 Cell::from_mut 解决借用冲突"></a>通过 Cell::from_mut 解决借用冲突</h3><p>在 Rust 1.37 版本中新增了两个非常实用的方法：</p>
+<ul>
+<li>Cell::from_mut，该方法将 <code>&amp;mut T</code> 转为 <code>&amp;Cell&lt;T&gt;</code></li>
+<li>Cell::as_slice_of_cells，该方法将 <code>&amp;Cell&lt;[T]&gt;</code> 转为 <code>&amp;[Cell&lt;T&gt;]</code></li>
+</ul>
+<p>这里我们不做深入的介绍，但是来看看如何使用这两个方法来解决一个常见的借用冲突问题：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">is_even</span>(i: <span class="type">i32</span>) <span class="punctuation">-&gt;</span> <span class="type">bool</span> &#123;</span><br><span class="line">    i % <span class="number">2</span> == <span class="number">0</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">retain_even</span>(nums: &amp;<span class="keyword">mut</span> <span class="type">Vec</span>&lt;<span class="type">i32</span>&gt;) &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">i</span> = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> <span class="variable">num</span> <span class="keyword">in</span> nums.<span class="title function_ invoke__">iter</span>().<span class="title function_ invoke__">filter</span>(|&amp;num| <span class="title function_ invoke__">is_even</span>(*num)) &#123; <span class="comment">// nums.iter() 不可变借用</span></span><br><span class="line">        nums[i] = *num; <span class="comment">// nums[i] 这里却修改了 nums</span></span><br><span class="line">        i += <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    nums.<span class="title function_ invoke__">truncate</span>(i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上代码会报错：</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">error[E0502]: cannot borrow `*nums` as mutable because it is also borrowed as immutable</span><br><span class="line"><span class="meta prompt_"> --&gt; </span><span class="language-bash">src/main.rs:8:9</span></span><br><span class="line">  |</span><br><span class="line">7 |     for num in nums.iter().filter(|&amp;num| is_even(*num)) &#123;</span><br><span class="line">  |                ----------------------------------------</span><br><span class="line">  |                |</span><br><span class="line">  |                immutable borrow occurs here</span><br><span class="line">  |                immutable borrow later used here</span><br><span class="line">8 |         nums[i] = *num;</span><br><span class="line">  |         ^^^^ mutable borrow occurs here</span><br></pre></td></tr></table></figure>
+
+<p>很明显，报错是因为同时借用了不可变与可变引用，你可以通过索引的方式来避免这个问题：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">retain_even</span>(nums: &amp;<span class="keyword">mut</span> <span class="type">Vec</span>&lt;<span class="type">i32</span>&gt;) &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">i</span> = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> <span class="variable">j</span> <span class="keyword">in</span> <span class="number">0</span>..nums.<span class="title function_ invoke__">len</span>() &#123;</span><br><span class="line">        <span class="keyword">if</span> <span class="title function_ invoke__">is_even</span>(nums[j]) &#123;</span><br><span class="line">            nums[i] = nums[j];</span><br><span class="line">            i += <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    nums.<span class="title function_ invoke__">truncate</span>(i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是这样就违背我们的初衷了，毕竟迭代器会让代码更加简洁，那么还有其它的办法吗？</p>
+<p>这时就可以使用 <code>Cell</code> 新增的这两个方法：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::cell::Cell;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">retain_even</span>(nums: &amp;<span class="keyword">mut</span> <span class="type">Vec</span>&lt;<span class="type">i32</span>&gt;) &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">slice</span>: &amp;[Cell&lt;<span class="type">i32</span>&gt;] = Cell::<span class="title function_ invoke__">from_mut</span>(&amp;<span class="keyword">mut</span> nums[..]) <span class="comment">// 将 &amp;mut T 转为 &amp;Cell&lt;[T]&gt;</span></span><br><span class="line">        .<span class="title function_ invoke__">as_slice_of_cells</span>(); <span class="comment">// 将 &amp;Cell&lt;[T]&gt; 转为 &amp;[Cell&lt;T&gt;]</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">i</span> = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> <span class="variable">num</span> <span class="keyword">in</span> slice.<span class="title function_ invoke__">iter</span>().<span class="title function_ invoke__">filter</span>(|num| <span class="title function_ invoke__">is_even</span>(num.<span class="title function_ invoke__">get</span>())) &#123;</span><br><span class="line">        slice[i].<span class="title function_ invoke__">set</span>(num.<span class="title function_ invoke__">get</span>());</span><br><span class="line">        i += <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    nums.<span class="title function_ invoke__">truncate</span>(i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>此时代码将不会报错，因为 <code>Cell</code> 上的 <code>set</code> 方法获取的是不可变引用 <code>pub fn set(&amp;self, val: T)</code>。</p>
+<p>当然，以上代码的本质还是对 <code>Cell</code> 的运用，只不过这两个方法可以很方便的帮我们把 <code>&amp;mut [T]</code> 类型转换成 <code>&amp;[Cell&lt;T&gt;]</code> 类型。</p>
+<h3 id="总结-4"><a href="#总结-4" class="headerlink" title="总结"></a>总结</h3><p><code>Cell</code> 和 <code>RefCell</code> 都为我们带来了内部可变性这个重要特性，同时还将借用规则的检查从编译期推迟到运行期，但是这个检查并不能被绕过，该来早晚还是会来，<code>RefCell</code> 在运行期的报错会造成 <code>panic</code>。</p>
+<p><code>RefCell</code> 适用于编译器误报或者一个引用被在多个代码中使用、修改以至于难于管理借用关系时，还有就是需要内部可变性时。</p>
+<p>从性能上看，<code>RefCell</code> 由于是非线程安全的，因此无需保证原子性，性能虽然有一点损耗，但是依然非常好，而 <code>Cell</code> 则完全不存在任何额外的性能损耗。</p>
+<p><code>Rc</code> 跟 <code>RefCell</code> 结合使用可以实现多个所有者共享同一份数据，非常好用，但是潜在的性能损耗也要考虑进去，建议对于热点代码使用时，做好 <code>benchmark</code>。</p>
+
+    
+  </article>
+
+  
+      
+    <div class="nexmoe-post-copyright">
+        <strong>本文作者：</strong>kay<br>
+        <strong>本文链接：</strong><a href="https://www.tooupper.com/content/Rust/learning-Rust/rust-senior/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88.html" title="https:&#x2F;&#x2F;www.tooupper.com&#x2F;content&#x2F;Rust&#x2F;learning-Rust&#x2F;rust-senior&#x2F;%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88.html" target="_blank" rel="noopener">https:&#x2F;&#x2F;www.tooupper.com&#x2F;content&#x2F;Rust&#x2F;learning-Rust&#x2F;rust-senior&#x2F;%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88.html</a><br>
+        
+            <strong>版权声明：</strong>本文采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/deed.zh" target="_blank">CC BY-NC-SA 3.0 CN</a> 协议进行许可
+
+        
+    </div>
+
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+   
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/Rust%E8%BF%9B%E9%98%B6/" rel="tag">Rust进阶</a>
+    
+</div>
+  
+  
+    <script async src="/js/copy-codeblock.js?v=1698918460931"></script>
+  
+
+  
+      <div class="nexmoe-post-footer">
+          
+      </div>
+  
+</div></div><div class="nexmoe-post-right">    <div class="nexmoe-fixed">
+        <div class="nexmoe-tool">
+
+            
+
+            
+            
+            <button class="mdui-fab catalog" style="overflow:unset;">
+                <i class="nexmoefont icon-i-catalog"></i>
+                <div class="nexmoe-toc">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88"><span class="toc-number">1.</span> <span class="toc-text">智能指针</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Box%E5%A0%86%E5%88%86%E9%85%8D%E5%AF%B9%E8%B1%A1"><span class="toc-number">1.1.</span> <span class="toc-text">Box堆分配对象</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Rust-%E4%B8%AD%E7%9A%84%E5%A0%86%E6%A0%88"><span class="toc-number">1.1.1.</span> <span class="toc-text">Rust 中的堆栈</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A0%86%E6%A0%88%E7%9A%84%E6%80%A7%E8%83%BD"><span class="toc-number">1.1.1.1.</span> <span class="toc-text">堆栈的性能</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Box-%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">1.1.2.</span> <span class="toc-text">Box 的使用场景</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-Box-%E5%B0%86%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E5%9C%A8%E5%A0%86%E4%B8%8A"><span class="toc-number">1.1.2.1.</span> <span class="toc-text">使用 Box&lt;T&gt; 将数据存储在堆上</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%81%BF%E5%85%8D%E6%A0%88%E4%B8%8A%E6%95%B0%E6%8D%AE%E7%9A%84%E6%8B%B7%E8%B4%9D"><span class="toc-number">1.1.2.2.</span> <span class="toc-text">避免栈上数据的拷贝</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B0%86-%E5%8A%A8%E6%80%81%E5%A4%A7%E5%B0%8F%E7%B1%BB%E5%9E%8B-%E5%8F%98%E4%B8%BA-Sized-%E5%9B%BA%E5%AE%9A%E5%A4%A7%E5%B0%8F%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.1.2.3.</span> <span class="toc-text">将 动态大小类型 变为 Sized 固定大小类型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%89%B9%E8%AF%8A%E5%AF%B9%E8%B1%A1"><span class="toc-number">1.1.2.4.</span> <span class="toc-text">特诊对象</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Box-%E5%86%85%E5%AD%98%E5%B8%83%E5%B1%80"><span class="toc-number">1.1.3.</span> <span class="toc-text">Box 内存布局</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Box-leak"><span class="toc-number">1.1.4.</span> <span class="toc-text">Box::leak</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">1.1.4.1.</span> <span class="toc-text">使用场景</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">1.1.5.</span> <span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Deref-%E8%A7%A3%E5%BC%95%E7%94%A8"><span class="toc-number">1.2.</span> <span class="toc-text">Deref 解引用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E8%BF%87-%E8%8E%B7%E5%8F%96%E5%BC%95%E7%94%A8%E8%83%8C%E5%90%8E%E7%9A%84%E5%80%BC"><span class="toc-number">1.2.1.</span> <span class="toc-text">通过 * 获取引用背后的值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88%E8%A7%A3%E5%BC%95%E7%94%A8"><span class="toc-number">1.2.2.</span> <span class="toc-text">智能指针解引用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89%E8%87%AA%E5%B7%B1%E7%9A%84%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">定义自己的智能指针</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88%E5%AE%9E%E7%8E%B0-Deref-%E7%89%B9%E5%BE%81"><span class="toc-number">1.2.3.</span> <span class="toc-text">为智能指针实现 Deref 特征</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%83%8C%E5%90%8E%E7%9A%84%E5%8E%9F%E7%90%86"><span class="toc-number">1.2.4.</span> <span class="toc-text">* 背后的原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E5%92%8C%E6%96%B9%E6%B3%95%E4%B8%AD%E7%9A%84%E9%9A%90%E5%BC%8F-Deref-%E8%BD%AC%E6%8D%A2"><span class="toc-number">1.2.5.</span> <span class="toc-text">函数和方法中的隐式 Deref 转换</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%9E%E7%BB%AD%E7%9A%84%E9%9A%90%E5%BC%8F-Deref-%E8%BD%AC%E6%8D%A2"><span class="toc-number">1.2.5.1.</span> <span class="toc-text">连续的隐式 Deref 转换</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Deref-%E8%A7%84%E5%88%99%E6%80%BB%E7%BB%93"><span class="toc-number">1.2.6.</span> <span class="toc-text">Deref 规则总结</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BC%95%E7%94%A8%E5%BD%92%E4%B8%80%E5%8C%96"><span class="toc-number">1.2.6.1.</span> <span class="toc-text">引用归一化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BE%8B%E5%AD%90"><span class="toc-number">1.2.6.2.</span> <span class="toc-text">例子</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E7%A7%8D-Deref-%E8%BD%AC%E6%8D%A2"><span class="toc-number">1.2.7.</span> <span class="toc-text">三种 Deref 转换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-1"><span class="toc-number">1.2.8.</span> <span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Drop-%E9%87%8A%E6%94%BE%E8%B5%84%E6%BA%90"><span class="toc-number">1.3.</span> <span class="toc-text">Drop 释放资源</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Rust-%E4%B8%AD%E7%9A%84%E8%B5%84%E6%BA%90%E5%9B%9E%E6%94%B6"><span class="toc-number">1.3.1.</span> <span class="toc-text">Rust 中的资源回收</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BE%8B%E5%AD%90-1"><span class="toc-number">1.3.2.</span> <span class="toc-text">例子</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Drop-%E7%9A%84%E9%A1%BA%E5%BA%8F"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">Drop 的顺序</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B2%A1%E6%9C%89%E5%AE%9E%E7%8E%B0-Drop-%E7%9A%84%E7%BB%93%E6%9E%84%E4%BD%93"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">没有实现 Drop 的结构体</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%8B%E5%8A%A8%E5%9B%9E%E6%94%B6"><span class="toc-number">1.3.3.</span> <span class="toc-text">手动回收</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Drop-%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">1.3.4.</span> <span class="toc-text">Drop 使用场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%92%E6%96%A5%E7%9A%84-Copy-%E5%92%8C-Drop"><span class="toc-number">1.3.5.</span> <span class="toc-text">互斥的 Copy 和 Drop</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-2"><span class="toc-number">1.3.6.</span> <span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Rc-%E4%B8%8E-Arc-%E5%AE%9E%E7%8E%B0-1vN-%E6%89%80%E6%9C%89%E6%9D%83%E6%9C%BA%E5%88%B6"><span class="toc-number">1.4.</span> <span class="toc-text">Rc 与 Arc 实现 1vN 所有权机制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Rc-%E4%B8%8E-Arc"><span class="toc-number">1.4.1.</span> <span class="toc-text">Rc 与 Arc</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Rc"><span class="toc-number">1.4.2.</span> <span class="toc-text">Rc&lt;T&gt;</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Rc-clone"><span class="toc-number">1.4.2.1.</span> <span class="toc-text">Rc::clone</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%82%E5%AF%9F%E8%AE%A1%E6%95%B0%E5%BC%95%E7%94%A8%E5%99%A8%E7%9A%84%E5%8F%98%E5%8C%96"><span class="toc-number">1.4.2.2.</span> <span class="toc-text">观察计数引用器的变化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%8D%E5%8F%AF%E5%8F%98%E5%BC%95%E7%94%A8"><span class="toc-number">1.4.2.3.</span> <span class="toc-text">不可变引用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BE%8B%E5%AD%90-2"><span class="toc-number">1.4.2.4.</span> <span class="toc-text">例子</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Rc-%E7%AE%80%E5%8D%95%E6%80%BB%E7%BB%93"><span class="toc-number">1.4.2.5.</span> <span class="toc-text">Rc 简单总结</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%97%A0%E5%8A%9B%E7%9A%84-Rc"><span class="toc-number">1.4.3.</span> <span class="toc-text">多线程无力的 Rc&lt;T&gt;</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Arc"><span class="toc-number">1.4.4.</span> <span class="toc-text">Arc</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Arc-%E7%9A%84%E6%80%A7%E8%83%BD%E6%8D%9F%E8%80%97"><span class="toc-number">1.4.4.1.</span> <span class="toc-text">Arc 的性能损耗</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-3"><span class="toc-number">1.4.5.</span> <span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Cell-%E4%B8%8E-RefCell-%E5%86%85%E9%83%A8%E5%8F%AF%E5%8F%98%E6%80%A7"><span class="toc-number">1.5.</span> <span class="toc-text">Cell 与 RefCell 内部可变性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Cell-%E5%92%8C-RefCell"><span class="toc-number">1.5.1.</span> <span class="toc-text">Cell 和 RefCell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Cell"><span class="toc-number">1.5.2.</span> <span class="toc-text">Cell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RefCell"><span class="toc-number">1.5.3.</span> <span class="toc-text">RefCell</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#RefCell-%E4%B8%BA%E4%BD%95%E5%AD%98%E5%9C%A8"><span class="toc-number">1.5.3.1.</span> <span class="toc-text">RefCell 为何存在</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#RefCell-%E7%AE%80%E5%8D%95%E6%80%BB%E7%BB%93"><span class="toc-number">1.5.3.2.</span> <span class="toc-text">RefCell 简单总结</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%89%E6%8B%A9-Cell-%E8%BF%98%E6%98%AF-RefCell"><span class="toc-number">1.5.4.</span> <span class="toc-text">选择 Cell 还是 RefCell</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%80%A7%E8%83%BD%E6%AF%94%E8%BE%83"><span class="toc-number">1.5.4.1.</span> <span class="toc-text">性能比较</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E9%83%A8%E5%8F%AF%E5%8F%98%E6%80%A7"><span class="toc-number">1.5.5.</span> <span class="toc-text">内部可变性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Rc-RefCell-%E7%BB%84%E5%90%88%E4%BD%BF%E7%94%A8"><span class="toc-number">1.5.6.</span> <span class="toc-text">Rc + RefCell 组合使用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%80%A7%E8%83%BD%E6%8D%9F%E8%80%97"><span class="toc-number">1.5.6.1.</span> <span class="toc-text">性能损耗</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E6%8D%9F%E8%80%97"><span class="toc-number">1.5.6.2.</span> <span class="toc-text">内存损耗</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CPU-%E6%8D%9F%E8%80%97"><span class="toc-number">1.5.6.3.</span> <span class="toc-text">CPU 损耗</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CPU-%E7%BC%93%E5%AD%98-Miss"><span class="toc-number">1.5.6.4.</span> <span class="toc-text">CPU 缓存 Miss</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E8%BF%87-Cell-from-mut-%E8%A7%A3%E5%86%B3%E5%80%9F%E7%94%A8%E5%86%B2%E7%AA%81"><span class="toc-number">1.5.7.</span> <span class="toc-text">通过 Cell::from_mut 解决借用冲突</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-4"><span class="toc-number">1.5.8.</span> <span class="toc-text">总结</span></a></li></ol></li></ol></li></ol>
+                </div>
+            </button>
+            
+
+            
+
+            <a href="#nexmoe-content" class="backtop toc-link" aria-label="Back To Top" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+        </div>
+    </div>
+</div></div><div id="nexmoe-footer"><!--!--></div><div><div id="nexmoe-search-space">
+	<div class="search-container">
+		<div class="search-header">
+			<div class="search-input-container">
+				<input
+					class="search-input"
+					type="text"
+					placeholder="搜索"
+					oninput="sinput();"
+				/>
+			</div>
+			<a class="search-close" onclick="sclose();">×</a>
+		</div>
+		<div class="search-body"></div>
+	</div>
+</div>
+</div><div><script async src="https://www.TooUpper.com" crossorigin="anonymous"></script>
+</div></body></html>

@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="zh"><head>
+<title>循环引用与自引用 - 成祠的个人博客</title>
+<meta charset="UTF-8">
+<meta name="keywords" content="blog">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+
+<link rel="shortcut icon" href="/image/favicon.png" type="image/png" />
+<meta name="description" content="循环引用与自引用实现一个链表是学习各大编程语言的常用技巧，但是在 Rust 中实现链表意味着····Hell，是的，你没看错，Welcome to hell。 链表在 Rust 中之所以这么难，完全是因为循环引用和自引用的问题引起的，这两个问题可以说综合了 Rust 的很多难点，难出了新高度 Weak 与 循环引用Rust 的安全性是众所周知的，但是不代表它不会内存泄漏。一个典型的例子就是同时使用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="循环引用与自引用">
+<meta property="og:url" content="https://www.tooupper.com/content/Rust/learning-Rust/rust-senior/%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8%E4%B8%8E%E8%87%AA%E5%BC%95%E7%94%A8.html">
+<meta property="og:site_name" content="成祠的个人博客">
+<meta property="og:description" content="循环引用与自引用实现一个链表是学习各大编程语言的常用技巧，但是在 Rust 中实现链表意味着····Hell，是的，你没看错，Welcome to hell。 链表在 Rust 中之所以这么难，完全是因为循环引用和自引用的问题引起的，这两个问题可以说综合了 Rust 的很多难点，难出了新高度 Weak 与 循环引用Rust 的安全性是众所周知的，但是不代表它不会内存泄漏。一个典型的例子就是同时使用">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pica.zhimg.com/80/v2-0db007dfb4167ebc22f50cf5b5a85f53_1440w.png">
+<meta property="og:image" content="https://pic1.zhimg.com/80/v2-2dbfc981f05019bf70bf81c93f956c35_1440w.png">
+<meta property="article:published_time" content="2023-10-03T08:24:14.000Z">
+<meta property="article:modified_time" content="2023-10-24T13:56:20.186Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="Rust进阶">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pica.zhimg.com/80/v2-0db007dfb4167ebc22f50cf5b5a85f53_1440w.png">
+
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+<link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
+
+
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1698918461692">
+
+<link rel="stylesheet" href="/css/style.css?v=1698918461692">
+
+
+
+
+    
+        <link rel="stylesheet" href="/custom.css?v=1698918461692">
+    
+
+
+
+<script src="/lib/mdui_043tiny/mdui.js" async></script>
+<script src="/lib/fancybox/fancybox.umd.js" async></script>
+<script src="/lib/lax.min.js" async></script>
+
+
+<script async src="/js/app.js?v=1698918461692"></script>
+
+ 
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4D4ZJ9G024"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+
+  gtag("config", "G-4D4ZJ9G024");
+</script>
+
+<meta name="generator" content="Hexo 6.3.0"></head><body class="nexmoe mdui-drawer-body-left"><div id="nexmoe-background"><div class="nexmoe-bg" style="background-image: url(/image/banner.png)"></div><div class="mdui-appbar mdui-shadow-0"><div class="mdui-toolbar"><a class="mdui-btn mdui-btn-icon mdui-ripple" mdui-drawer="{target: &#039;#drawer&#039;, swipe: true}" title="menu"><i class="mdui-icon nexmoefont icon-menu"></i></a><div class="mdui-toolbar-spacer"></div><a class="mdui-btn mdui-btn-icon" href="/" title="kay"><img src="/image/Logo.png" alt="kay"></a></div></div></div><div id="nexmoe-header"><div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="kay">
+            <img src="/image/Logo.png" alt="kay" alt="kay">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>文章</span>29</div>
+        <div><span>标签</span>4</div>
+        <div><span>分类</span>2</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/aboutMe.html" title="关于博主">
+            <i class="mdui-list-item-icon nexmoefont icon-info-circle"></i>
+            <div class="mdui-list-item-content">
+                关于博主
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archives.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/downloads.html" title="下载中心">
+            <i class="mdui-list-item-icon nexmoefont icon-coffee"></i>
+            <div class="mdui-list-item-content">
+                下载中心
+            </div>
+        </a>
+        
+    </div>
+    
+    
+        
+        <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+        
+            <form id="search_form">
+                <label><input class="st-default-search-input" id="search_value" name="q" type="search" placeholder="搜索" style="
+                    font-size: 15px !important;
+                    height: 56px !important;
+                    background-image: none;
+                "></label>
+            </form>
+         
+    </div>
+</div>
+
+
+	<script async src="/js/search.js?v=1698918461693"></script>
+
+
+
+    
+        
+        <div class="nexmoe-widget-wrap">
+	<div class="nexmoe-widget nexmoe-social">
+		<a
+			class="mdui-ripple"
+			href="/image/QQOrWeChat.png"
+			target="_blank"
+			mdui-tooltip="{content: 'QQ'}"
+			style="
+				color: rgb(249, 174, 8);
+				background-color: rgba(249, 174, 8, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-QQ"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="/image/QQOrWeChat.png"
+			target="_blank"
+			mdui-tooltip="{content: 'WeChat'}"
+			style="
+				color: rgb(59, 151, 239);
+				background-color: rgba(59, 151, 239, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-wechat-fill"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://github.com/TooUpper/"
+			target="_blank"
+			mdui-tooltip="{content: 'GitHub'}"
+			style="
+				color: rgb(25, 23, 23);
+				background-color: rgba(25, 23, 23, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-github"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="/www.TooUpper.com"
+			target="_blank"
+			mdui-tooltip="{content: 'Blog'}"
+			style="
+				color: rgb(30, 136, 229);
+				background-color: rgba(30, 136, 229, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-home"
+			></i> </a
+		>
+	</div>
+</div>
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章分类</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/RISC-V/">RISC-V</a>
+          <span class="category-list-count">4</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Rust/">Rust</a>
+          <span class="category-list-count">25</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/Rust%E5%9F%BA%E7%A1%80/" style="font-size: 20px;">Rust基础</a> <a href="/tags/Rust%E8%BF%9B%E9%98%B6/" style="font-size: 15px;">Rust进阶</a> <a href="/tags/rcore/" style="font-size: 10px;">rcore</a> <a href="/tags/riscv/" style="font-size: 10px;">riscv</a>
+    </div>
+    
+  </div>
+
+    
+        
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章归档</h3>
+    <div class="nexmoe-widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/">2023</a><span class="archive-list-count">29</span></li></ul>
+    </div>
+  </div>
+
+
+
+    
+   
+    <div class="nexmoe-copyright">
+        &copy; 2023 kay
+        Powered by <a href="https://www.TooUpper.com" target="_blank">成祠</a>
+        & <a href="https://github.com/TooUpper" target="_blank">TooUpper</a>
+        <br><a target="_blank" href="https://www.TooUpper.com">鄂ICP备2020018486号</a>
+<br><a target="_blank" href="https://www.TooUpper.com">加油做一个不会被优化掉的程序员</a>
+
+    </div>
+</div><!-- .nexmoe-drawer --></div><div id="nexmoe-content"><div class="nexmoe-primary"><div class="nexmoe-post">
+  <article>
+    
+        <div class="nexmoe-post-cover absolute" style="padding-top: 62.5%;"> 
+            <img src="/image/Rust/RustCrab.png" alt="循环引用与自引用" loading="lazy">
+            <h1>循环引用与自引用</h1>
+        </div>
+    
+    
+    <div class="nexmoe-post-meta">
+    <div class="nexmoe-rainbow">
+        <a class="nexmoefont icon-calendar-fill">2023年10月03日</a>
+        
+            <a class="nexmoefont icon-appstore-fill -link" href="/categories/Rust/">Rust</a>
+        
+        
+    <a><i class="nexmoefont icon-areachart"></i>约6k字</a>
+    <a><i class="nexmoefont icon-time-circle-fill"></i>预计需要25分钟</a>
+
+    </div>
+    
+    
+    
+    
+    
+</div>
+
+    <h1 id="循环引用与自引用"><a href="#循环引用与自引用" class="headerlink" title="循环引用与自引用"></a>循环引用与自引用</h1><p>实现一个链表是学习各大编程语言的常用技巧，但是在 Rust 中实现链表意味着····Hell，是的，你没看错，Welcome to hell。</p>
+<p>链表在 Rust 中之所以这么难，完全是因为循环引用和自引用的问题引起的，这两个问题可以说综合了 Rust 的很多难点，难出了新高度</p>
+<h2 id="Weak-与-循环引用"><a href="#Weak-与-循环引用" class="headerlink" title="Weak 与 循环引用"></a>Weak 与 循环引用</h2><p>Rust 的安全性是众所周知的，但是不代表它不会内存泄漏。一个典型的例子就是同时使用 <code>Rc&lt;T&gt;</code> 和 <code>RefCell&lt;T&gt;</code> 创建循环引用，最终这些引用的计数都无法被归零，因此 <code>Rc&lt;T&gt;</code> 拥有的值也不会被释放清理。</p>
+<h3 id="何为循环引用"><a href="#何为循环引用" class="headerlink" title="何为循环引用"></a>何为循环引用</h3><p>关于内存泄漏，如果你没有充足的 Rust 经验，可能都无法造出一份代码来再现它：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> crate::List::&#123;Cons, Nil&#125;;</span><br><span class="line"><span class="keyword">use</span> std::cell::RefCell;</span><br><span class="line"><span class="keyword">use</span> std::rc::Rc;</span><br><span class="line"></span><br><span class="line"><span class="meta">#[derive(Debug)]</span></span><br><span class="line"><span class="keyword">enum</span> <span class="title class_">List</span> &#123;</span><br><span class="line">    <span class="title function_ invoke__">Cons</span>(<span class="type">i32</span>, RefCell&lt;Rc&lt;List&gt;&gt;),</span><br><span class="line">    Nil,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">List</span> &#123;</span><br><span class="line">    <span class="comment">// 这里为什么是 &amp;RefCell&lt;Rc&lt;List&gt; 而不是 RefCell&lt;Rc&lt;List&gt;？因为 &amp;self 是引用，那么其中的元素也就是 &amp; 的。</span></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">tail</span>(&amp;<span class="keyword">self</span>) <span class="punctuation">-&gt;</span> <span class="type">Option</span>&lt;&amp;RefCell&lt;Rc&lt;List&gt;&gt;&gt; &#123;</span><br><span class="line">        <span class="keyword">match</span> <span class="keyword">self</span> &#123;</span><br><span class="line">            <span class="title function_ invoke__">Cons</span>(_, item) =&gt; <span class="title function_ invoke__">Some</span>(item),</span><br><span class="line">            Nil =&gt; <span class="literal">None</span>,</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里我们创建一个有些复杂的枚举类型 <code>List</code>，这个类型很有意思，它的每个值都指向了另一个 <code>List</code>，此外，得益于 <code>Rc</code> 的使用还允许多个值指向一个 <code>List</code>：</p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="https://pica.zhimg.com/80/v2-0db007dfb4167ebc22f50cf5b5a85f53_1440w.png" alt="img" data-caption="img" loading="lazy"></p>
+<p>如上图所示，每个矩形框节点都是一个 <code>List</code> 类型，它们或者是拥有值且指向另一个 <code>List</code> 的<code>Cons</code>，或者是一个没有值的终结点 <code>Nil</code>。同时，由于 <code>RefCell</code> 的使用，每个 <code>List</code> 所指向的 <code>List</code> 还能够被修改。</p>
+<p>下面来使用一下这个复杂的 <code>List</code> 枚举：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">a</span> = Rc::<span class="title function_ invoke__">new</span>(<span class="title function_ invoke__">Cons</span>(<span class="number">5</span>, RefCell::<span class="title function_ invoke__">new</span>(Rc::<span class="title function_ invoke__">new</span>(Nil))));</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;a的初始化rc计数 = &#123;&#125;&quot;</span>, Rc::<span class="title function_ invoke__">strong_count</span>(&amp;a)); <span class="comment">// 1</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;a指向的节点 = &#123;:?&#125;&quot;</span>, a.<span class="title function_ invoke__">tail</span>()); <span class="comment">// Some(RefCell &#123; value: Nil &#125;)</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建`b`到`a`的引用</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">b</span> = Rc::<span class="title function_ invoke__">new</span>(<span class="title function_ invoke__">Cons</span>(<span class="number">10</span>, RefCell::<span class="title function_ invoke__">new</span>(Rc::<span class="title function_ invoke__">clone</span>(&amp;a))));</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;在b创建后，a的rc计数 = &#123;&#125;&quot;</span>, Rc::<span class="title function_ invoke__">strong_count</span>(&amp;a)); <span class="comment">// 2</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;b的初始化rc计数 = &#123;&#125;&quot;</span>, Rc::<span class="title function_ invoke__">strong_count</span>(&amp;b)); <span class="comment">// 1</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;b指向的节点 = &#123;:?&#125;&quot;</span>, b.<span class="title function_ invoke__">tail</span>()); <span class="comment">// Some(RefCell &#123; value: Cons(5, RefCell &#123; value: Nil &#125;) &#125;)</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 利用RefCell的可变性，创建了`a`到`b`的引用</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">let</span> <span class="variable">Some</span>(link) = a.<span class="title function_ invoke__">tail</span>() &#123; <span class="comment">// a.tail() 是 Option&lt;&amp;RefCell&lt;Rc&lt;List&gt;&gt;&gt; 类型</span></span><br><span class="line">        <span class="comment">// // link 是 &amp;RefCell&lt;Rc&lt;List&gt;&gt; 所以要 * 解一下</span></span><br><span class="line">        *link.<span class="title function_ invoke__">borrow_mut</span>() = Rc::<span class="title function_ invoke__">clone</span>(&amp;b);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;在更改a后，b的rc计数 = &#123;&#125;&quot;</span>, Rc::<span class="title function_ invoke__">strong_count</span>(&amp;b)); <span class="comment">// 2</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;在更改a后，a的rc计数 = &#123;&#125;&quot;</span>, Rc::<span class="title function_ invoke__">strong_count</span>(&amp;a)); <span class="comment">// 2</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 下面一行println!将导致循环引用</span></span><br><span class="line">    <span class="comment">// 我们可怜的8MB大小的main线程栈空间将被它冲垮，最终造成栈溢出</span></span><br><span class="line">    <span class="comment">// println!(&quot;a next item = &#123;:?&#125;&quot;, a.tail());</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个类型定义看着复杂，使用起来更复杂！不过排除这些因素，我们可以清晰看出：</p>
+<ol>
+<li>在创建了 <code>a</code> 后，紧接着就使用 <code>a</code> 创建了 <code>b</code>，因此 <code>b</code> 引用了 <code>a</code></li>
+<li>然后我们又利用 <code>Rc</code> 克隆了 <code>b</code>，然后通过 <code>RefCell</code> 的可变性，让 <code>a</code> 引用了 <code>b</code></li>
+</ol>
+<p>至此我们成功创建了循环引用<code>a</code>-&gt; <code>b</code> -&gt; <code>a</code> -&gt; <code>b</code> ····</p>
+<p>先来观察下引用计数：</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">a的初始化rc计数 = 1</span><br><span class="line">a指向的节点 = Some(RefCell &#123; value: Nil &#125;)</span><br><span class="line">在b创建后，a的rc计数 = 2</span><br><span class="line">b的初始化rc计数 = 1</span><br><span class="line">b指向的节点 = Some(RefCell &#123; value: Cons(5, RefCell &#123; value: Nil &#125;) &#125;)</span><br><span class="line">在更改a后，b的rc计数 = 2</span><br><span class="line">在更改a后，a的rc计数 = 2</span><br></pre></td></tr></table></figure>
+
+<p>在 <code>main</code> 函数结束前，<code>a</code> 和 <code>b</code> 的引用计数均是 <code>2</code>，随后 <code>b</code> 触发 <code>Drop</code>，此时引用计数会变为 <code>1</code>，并不会归 <code>0</code>，因此 <code>b</code> 所指向内存不会被释放，同理可得 <code>a</code> 指向的内存也不会被释放，最终发生了内存泄漏。</p>
+<p>下面一张图很好的展示了这种引用循环关系： <img onerror="imgOnError(this);" data-fancybox="gallery" src="https://pic1.zhimg.com/80/v2-2dbfc981f05019bf70bf81c93f956c35_1440w.png" alt="img" data-caption="img" loading="lazy"></p>
+<p>现在我们还需要轻轻的推一下，让塔米诺骨牌轰然倒塌。反注释最后一行代码，试着运行下：</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">RefCell &#123; value: Cons(5, RefCell &#123; value: Cons(10, RefCell &#123; value: Cons(5, RefCell &#123; value: Cons(10, RefCell &#123; value: Cons(5, RefCell &#123; value: Cons(10, RefCell &#123;</span><br><span class="line">...无穷无尽</span><br><span class="line">thread &#x27;main&#x27; has overflowed its stack</span><br><span class="line">fatal runtime error: stack overflow</span><br></pre></td></tr></table></figure>
+
+<p>通过 <code>a.tail</code> 的调用，Rust 试图打印出 <code>a -&gt; b -&gt; a ···</code> 的所有内容，但是在不懈的努力后，<code>main</code> 线程终于不堪重负，发生了栈溢出。</p>
+<p>以上的代码可能并不会造成什么大的问题，但是在一个更加复杂的程序中，类似的问题可能会造成你的程序不断地分配内存、泄漏内存，最终程序会不幸<strong>OOM</strong>，当然这其中的 CPU 损耗也不可小觑。</p>
+<p>总之，创建循环引用并不简单，但是也并不是完全遇不到，当你使用 <code>RefCell&lt;Rc&lt;T&gt;&gt;</code> 或者类似的类型嵌套组合（具备内部可变性和引用计数）时，就要打起万分精神，前面可能是深渊！</p>
+<p>那么问题来了？ 如果我们确实需要实现上面的功能，该怎么办？答案是使用 <code>Weak</code>。</p>
+<h3 id="Weak"><a href="#Weak" class="headerlink" title="Weak"></a>Weak</h3><p><code>Weak</code> 非常类似于 <code>Rc</code>，但是与 <code>Rc</code> 持有所有权不同，<code>Weak</code> 不持有所有权，它仅仅保存一份指向数据的弱引用：如果你想要访问数据，需要通过 <code>Weak</code> 指针的 <code>upgrade</code> 方法实现，该方法返回一个类型为 <code>Option&lt;Rc&lt;T&gt;&gt;</code> 的值。</p>
+<p>看到这个返回，相信大家就懂了：何为弱引用？就是<strong>不保证引用关系依然存在</strong>，如果不存在，就返回一个 <code>None</code>！</p>
+<p>因为 <code>Weak</code> 引用不计入所有权，因此它<strong>无法阻止所引用的内存值被释放掉</strong>，而且 <code>Weak</code> 本身不对值的存在性做任何担保，引用的值还存在就返回 <code>Some</code>，不存在就返回 <code>None</code>。</p>
+<h4 id="Weak-与-Rc-对比"><a href="#Weak-与-Rc-对比" class="headerlink" title="Weak 与 Rc 对比"></a>Weak 与 Rc 对比</h4><p>我们来将 <code>Weak</code> 与 <code>Rc</code> 进行以下简单对比：</p>
+<table>
+<thead>
+<tr>
+<th><code>Weak</code></th>
+<th><code>Rc</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>不计数</td>
+<td>引用计数</td>
+</tr>
+<tr>
+<td>不拥有所有权</td>
+<td>拥有值的所有权</td>
+</tr>
+<tr>
+<td>不阻止值被释放(drop)</td>
+<td>所有权计数归零，才能 drop</td>
+</tr>
+<tr>
+<td>引用的值存在返回 <code>Some</code>，不存在返回 <code>None</code></td>
+<td>引用的值必定存在</td>
+</tr>
+<tr>
+<td>通过 <code>upgrade</code> 取到 <code>Option&lt;Rc&lt;T&gt;&gt;</code>，然后再取值</td>
+<td>通过 <code>Deref</code> 自动解引用，取值无需任何操作</td>
+</tr>
+</tbody></table>
+<p>通过这个对比，可以非常清晰的看出 <code>Weak</code> 为何这么弱，而这种弱恰恰非常适合我们实现以下的场景：</p>
+<ul>
+<li>持有一个 <code>Rc</code> 对象的临时引用，并且不在乎引用的值是否依然存在</li>
+<li>阻止 <code>Rc</code> 导致的循环引用，因为 <code>Rc</code> 的所有权机制，会导致多个 <code>Rc</code> 都无法计数归零</li>
+</ul>
+<p>使用方式简单总结下：<strong>对于父子引用关系，可以让父节点通过 <code>Rc</code> 来引用子节点，然后让子节点通过 <code>Weak</code> 来引用父节点</strong>。</p>
+<h4 id="Weak-总结"><a href="#Weak-总结" class="headerlink" title="Weak 总结"></a>Weak 总结</h4><p>因为 <code>Weak</code> 本身并不是很好理解，因此我们再来帮大家梳理总结下，然后再通过一个例子，来彻底掌握。</p>
+<p><code>Weak</code> 通过 <code>use std::rc::Weak</code> 来引入，它具有以下特点:</p>
+<ul>
+<li>可访问，但没有所有权，不增加引用计数，因此不会影响被引用值的释放回收</li>
+<li>可由 <code>Rc&lt;T&gt;</code> 调用 <code>downgrade</code> 方法转换成 <code>Weak&lt;T&gt;</code></li>
+<li><code>Weak&lt;T&gt;</code> 可使用 <code>upgrade</code> 方法转换成 <code>Option&lt;Rc&lt;T&gt;&gt;</code>，如果资源已经被释放，则 <code>Option</code> 的值是 <code>None</code></li>
+<li>常用于解决循环引用的问题</li>
+</ul>
+<p>一个简单的例子：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::rc::Rc;</span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="comment">// 创建Rc，持有一个值5</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">five</span> = Rc::<span class="title function_ invoke__">new</span>(<span class="number">5</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 通过Rc，创建一个Weak指针</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">weak_five</span> = Rc::<span class="title function_ invoke__">downgrade</span>(&amp;five);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Weak引用的资源依然存在，取到值5</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">strong_five</span>: <span class="type">Option</span>&lt;Rc&lt;_&gt;&gt; = weak_five.<span class="title function_ invoke__">upgrade</span>();</span><br><span class="line">    <span class="built_in">assert_eq!</span>(*strong_five.<span class="title function_ invoke__">unwrap</span>(), <span class="number">5</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 手动释放资源`five`</span></span><br><span class="line">    <span class="title function_ invoke__">drop</span>(five);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Weak引用的资源已不存在，因此返回None</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">strong_five</span>: <span class="type">Option</span>&lt;Rc&lt;_&gt;&gt; = weak_five.<span class="title function_ invoke__">upgrade</span>();</span><br><span class="line">    <span class="built_in">assert_eq!</span>(strong_five, <span class="literal">None</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>需要承认的是，使用 <code>Weak</code> 让 Rust 本来就堪忧的代码可读性又下降了不少，但是。。。真香，因为可以解决循环引用了</p>
+<h3 id="使用-Weak-解决循环引用"><a href="#使用-Weak-解决循环引用" class="headerlink" title="使用 Weak 解决循环引用"></a>使用 Weak 解决循环引用</h3><h4 id="工具间的故事"><a href="#工具间的故事" class="headerlink" title="工具间的故事"></a>工具间的故事</h4><p>工具间里，每个工具都有其主人，且多个工具可以拥有一个主人；同时一个主人也可以拥有多个工具，在这种场景下，就很容易形成循环引用，好在我们有 <code>Weak</code>：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::rc::Rc;</span><br><span class="line"><span class="keyword">use</span> std::rc::Weak;</span><br><span class="line"><span class="keyword">use</span> std::cell::RefCell;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 主人</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Owner</span> &#123;</span><br><span class="line">    name: <span class="type">String</span>,</span><br><span class="line">    gadgets: RefCell&lt;<span class="type">Vec</span>&lt;Weak&lt;Gadget&gt;&gt;&gt;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 工具</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Gadget</span> &#123;</span><br><span class="line">    id: <span class="type">i32</span>,</span><br><span class="line">    owner: Rc&lt;Owner&gt;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="comment">// 创建一个 Owner</span></span><br><span class="line">    <span class="comment">// 需要注意，该 Owner 也拥有多个 `gadgets`</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">gadget_owner</span> : Rc&lt;Owner&gt; = Rc::<span class="title function_ invoke__">new</span>(</span><br><span class="line">        Owner &#123;</span><br><span class="line">            name: <span class="string">&quot;Gadget Man&quot;</span>.<span class="title function_ invoke__">to_string</span>(),</span><br><span class="line">            gadgets: RefCell::<span class="title function_ invoke__">new</span>(<span class="type">Vec</span>::<span class="title function_ invoke__">new</span>()),</span><br><span class="line">        &#125;</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建工具，同时与主人进行关联：创建两个 gadget，他们分别持有 gadget_owner 的一个引用。</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">gadget1</span> = Rc::<span class="title function_ invoke__">new</span>(Gadget&#123;id: <span class="number">1</span>, owner: gadget_owner.<span class="title function_ invoke__">clone</span>()&#125;);</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">gadget2</span> = Rc::<span class="title function_ invoke__">new</span>(Gadget&#123;id: <span class="number">2</span>, owner: gadget_owner.<span class="title function_ invoke__">clone</span>()&#125;);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 为主人更新它所拥有的工具</span></span><br><span class="line">    <span class="comment">// 因为之前使用了 `Rc`，现在必须要使用 `Weak`，否则就会循环引用</span></span><br><span class="line">    gadget_owner.gadgets.<span class="title function_ invoke__">borrow_mut</span>().<span class="title function_ invoke__">push</span>(Rc::<span class="title function_ invoke__">downgrade</span>(&amp;gadget1));</span><br><span class="line">    gadget_owner.gadgets.<span class="title function_ invoke__">borrow_mut</span>().<span class="title function_ invoke__">push</span>(Rc::<span class="title function_ invoke__">downgrade</span>(&amp;gadget2));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 遍历 gadget_owner 的 gadgets 字段</span></span><br><span class="line">    <span class="keyword">for</span> <span class="variable">gadget_opt</span> <span class="keyword">in</span> gadget_owner.gadgets.<span class="title function_ invoke__">borrow</span>().<span class="title function_ invoke__">iter</span>() &#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// gadget_opt 是一个 Weak&lt;Gadget&gt; 。 因为 weak 指针不能保证他所引用的对象</span></span><br><span class="line">        <span class="comment">// 仍然存在。所以我们需要显式的调用 upgrade() 来通过其返回值(Option&lt;_&gt;)来判</span></span><br><span class="line">        <span class="comment">// 断其所指向的对象是否存在。</span></span><br><span class="line">        <span class="comment">// 当然，Option 为 None 的时候这个引用原对象就不存在了。</span></span><br><span class="line">        <span class="keyword">let</span> <span class="variable">gadget</span> = gadget_opt.<span class="title function_ invoke__">upgrade</span>().<span class="title function_ invoke__">unwrap</span>();</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;Gadget &#123;&#125; owned by &#123;&#125;&quot;</span>, gadget.id, gadget.owner.name);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 在 main 函数的最后，gadget_owner，gadget1 和 gadget2 都被销毁。</span></span><br><span class="line">    <span class="comment">// 具体是，因为这几个结构体之间没有了强引用（`Rc&lt;T&gt;`），所以，当他们销毁的时候。</span></span><br><span class="line">    <span class="comment">// 首先 gadget2 和 gadget1 被销毁。</span></span><br><span class="line">    <span class="comment">// 然后因为 gadget_owner 的引用数量为 0，所以这个对象可以被销毁了。</span></span><br><span class="line">    <span class="comment">// 循环引用问题也就避免了</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="tree-数据结构"><a href="#tree-数据结构" class="headerlink" title="tree 数据结构"></a>tree 数据结构</h4><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::cell::RefCell;</span><br><span class="line"><span class="keyword">use</span> std::rc::&#123;Rc, Weak&#125;;</span><br><span class="line"></span><br><span class="line"><span class="meta">#[derive(Debug)]</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Node</span> &#123;</span><br><span class="line">    value: <span class="type">i32</span>,</span><br><span class="line">    parent: RefCell&lt;Weak&lt;Node&gt;&gt;,</span><br><span class="line">    children: RefCell&lt;<span class="type">Vec</span>&lt;Rc&lt;Node&gt;&gt;&gt;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">leaf</span> = Rc::<span class="title function_ invoke__">new</span>(Node &#123;</span><br><span class="line">        value: <span class="number">3</span>,</span><br><span class="line">        parent: RefCell::<span class="title function_ invoke__">new</span>(Weak::<span class="title function_ invoke__">new</span>()),</span><br><span class="line">        children: RefCell::<span class="title function_ invoke__">new</span>(<span class="built_in">vec!</span>[]),</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(</span><br><span class="line">        <span class="string">&quot;leaf strong = &#123;&#125;, weak = &#123;&#125;&quot;</span>,</span><br><span class="line">        Rc::<span class="title function_ invoke__">strong_count</span>(&amp;leaf), <span class="comment">// 1</span></span><br><span class="line">        Rc::<span class="title function_ invoke__">weak_count</span>(&amp;leaf), <span class="comment">// 0</span></span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">branch</span> = Rc::<span class="title function_ invoke__">new</span>(Node &#123;</span><br><span class="line">            value: <span class="number">5</span>,</span><br><span class="line">            parent: RefCell::<span class="title function_ invoke__">new</span>(Weak::<span class="title function_ invoke__">new</span>()),</span><br><span class="line">            children: RefCell::<span class="title function_ invoke__">new</span>(<span class="built_in">vec!</span>[Rc::<span class="title function_ invoke__">clone</span>(&amp;leaf)]), <span class="comment">// leaf 计数 2</span></span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        *leaf.parent.<span class="title function_ invoke__">borrow_mut</span>() = Rc::<span class="title function_ invoke__">downgrade</span>(&amp;branch);</span><br><span class="line"></span><br><span class="line">        <span class="built_in">println!</span>(</span><br><span class="line">            <span class="string">&quot;branch strong = &#123;&#125;, weak = &#123;&#125;&quot;</span>,</span><br><span class="line">            Rc::<span class="title function_ invoke__">strong_count</span>(&amp;branch), <span class="comment">// 1</span></span><br><span class="line">            Rc::<span class="title function_ invoke__">weak_count</span>(&amp;branch), <span class="comment">// 1</span></span><br><span class="line">        );</span><br><span class="line"></span><br><span class="line">        <span class="built_in">println!</span>(</span><br><span class="line">            <span class="string">&quot;leaf strong = &#123;&#125;, weak = &#123;&#125;&quot;</span>,</span><br><span class="line">            Rc::<span class="title function_ invoke__">strong_count</span>(&amp;leaf), <span class="comment">// 2</span></span><br><span class="line">            Rc::<span class="title function_ invoke__">weak_count</span>(&amp;leaf), <span class="comment">// 0</span></span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="comment">// .upgrade() 方法将弱引用转换为强引用（Rc）</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;leaf parent = &#123;:?&#125;&quot;</span>, leaf.parent.<span class="title function_ invoke__">borrow</span>().<span class="title function_ invoke__">upgrade</span>()); <span class="comment">// None</span></span><br><span class="line">    <span class="built_in">println!</span>(</span><br><span class="line">        <span class="string">&quot;leaf strong = &#123;&#125;, weak = &#123;&#125;&quot;</span>,</span><br><span class="line">        Rc::<span class="title function_ invoke__">strong_count</span>(&amp;leaf), <span class="comment">// 1</span></span><br><span class="line">        Rc::<span class="title function_ invoke__">weak_count</span>(&amp;leaf), <span class="comment">// 0</span></span><br><span class="line">    );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个例子就留给读者自己解读和分析，我们就不画蛇添足了:）</p>
+<h3 id="unsafe-解决循环引用"><a href="#unsafe-解决循环引用" class="headerlink" title="unsafe 解决循环引用"></a>unsafe 解决循环引用</h3><p>虽然 <code>unsafe</code> 不安全，但是在各种库的代码中依然很常见用它来实现自引用结构，主要优点如下:</p>
+<ul>
+<li>性能高，毕竟直接用裸指针操作</li>
+<li>代码更简单更符合直觉: 对比下 <code>Option&lt;Rc&lt;RefCell&lt;Node&gt;&gt;&gt;</code></li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本文深入讲解了何为循环引用以及如何使用 <code>Weak</code> 来解决，同时还结合 <code>Rc</code>、<code>RefCell</code>、<code>Weak</code> 等实现了两个有实战价值的例子，让大家对智能指针的使用更加融会贯通。</p>
+<p>至此，智能指针一章即将结束（严格来说还有一个 <code>Mutex</code> 放在多线程一章讲解），而 Rust 语言本身的学习之旅也即将结束，后面我们将深入多线程、项目工程、应用实践、性能分析等特色专题，来一睹 Rust 在这些领域的风采。</p>
+<h2 id="结构体中的自引用"><a href="#结构体中的自引用" class="headerlink" title="结构体中的自引用"></a>结构体中的自引用</h2><h3 id="平平无奇的自引用"><a href="#平平无奇的自引用" class="headerlink" title="平平无奇的自引用"></a>平平无奇的自引用</h3><p>可能也有不少人第一次听说自引用结构体，那咱们先来看看它们长啥样。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">SelfRef</span>&lt;<span class="symbol">&#x27;a</span>&gt; &#123;</span><br><span class="line">    value: <span class="type">String</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 该引用指向上面的value</span></span><br><span class="line">    pointer_to_value: &amp;<span class="symbol">&#x27;a</span> <span class="type">str</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上就是一个很简单的自引用结构体，看上去好像没什么，那来试着运行下：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>()&#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s</span> = <span class="string">&quot;aaa&quot;</span>.<span class="title function_ invoke__">to_string</span>();</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">v</span> = SelfRef &#123;</span><br><span class="line">        value: s, <span class="comment">// 转移所有权</span></span><br><span class="line">        pointer_to_value: &amp;s  <span class="comment">// 进行不可变借用</span></span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行后报错：</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> let v = SelfRef &#123;</span><br><span class="line">12 |         value: s,</span><br><span class="line">   |                - value moved here</span><br><span class="line">13 |         pointer_to_value: &amp;s</span><br><span class="line">   |                           ^^ value borrowed here after move</span><br></pre></td></tr></table></figure>
+
+<p>因为我们试图同时使用值和值的引用，最终所有权转移和借用一起发生了。所以，这个问题貌似并没有那么好解决，不信你可以回想下自己具有的知识，是否可以解决？</p>
+<h3 id="使用-Option"><a href="#使用-Option" class="headerlink" title="使用 Option"></a>使用 Option</h3><p>最简单的方式就是使用 <code>Option</code> 分两步来实现：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#[derive(Debug)]</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">WhatAboutThis</span>&lt;<span class="symbol">&#x27;a</span>&gt; &#123;</span><br><span class="line">    name: <span class="type">String</span>,</span><br><span class="line">    nickname: <span class="type">Option</span>&lt;&amp;<span class="symbol">&#x27;a</span> <span class="type">str</span>&gt;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">tricky</span> = WhatAboutThis &#123;</span><br><span class="line">        name: <span class="string">&quot;Annabelle&quot;</span>.<span class="title function_ invoke__">to_string</span>(),</span><br><span class="line">        nickname: <span class="literal">None</span>,</span><br><span class="line">    &#125;;</span><br><span class="line">    tricky.nickname = <span class="title function_ invoke__">Some</span>(&amp;tricky.name[..<span class="number">4</span>]); <span class="comment">// 只有一个借用，并没有所有权的转移</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, tricky);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在某种程度上来说，<code>Option</code> 这个方法可以工作，但是这个方法的限制较多，例如从一个函数创建并返回它是不可能的：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">creator</span>&lt;<span class="symbol">&#x27;a</span>&gt;() <span class="punctuation">-&gt;</span> WhatAboutThis&lt;<span class="symbol">&#x27;a</span>&gt; &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">tricky</span> = WhatAboutThis &#123;</span><br><span class="line">        name: <span class="string">&quot;Annabelle&quot;</span>.<span class="title function_ invoke__">to_string</span>(),</span><br><span class="line">        nickname: <span class="literal">None</span>,</span><br><span class="line">    &#125;;	</span><br><span class="line">    tricky.nickname = <span class="title function_ invoke__">Some</span>(&amp;tricky.name[..<span class="number">4</span>]); <span class="comment">// 当函数返回后 tricky 也就不存在了，存在悬垂指针的问题</span></span><br><span class="line"></span><br><span class="line">    tricky</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>报错如下：</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">error[E0515]: cannot return value referencing local data `tricky.name`</span><br><span class="line"><span class="meta prompt_">  --&gt; </span><span class="language-bash">src/main.rs:24:5</span></span><br><span class="line">   |</span><br><span class="line">22 |     tricky.nickname = Some(&amp;tricky.name[..4]);</span><br><span class="line">   |                             ----------- `tricky.name` is borrowed here</span><br><span class="line">23 |</span><br><span class="line">24 |     tricky</span><br><span class="line">   |     ^^^^^^ returns a value referencing data owned by the current function</span><br></pre></td></tr></table></figure>
+
+<p>其实从函数签名就能看出来端倪，<code>&#39;a</code> 生命周期是凭空产生的！</p>
+<p>如果是通过方法使用，你需要一个无用 <code>&amp;&#39;a self</code> 生命周期标识，一旦有了这个标识，代码将变得更加受限，你将很容易就获得借用错误，就连 NLL 规则(借用检查机制：自动推断出变量的声明周期)都没用：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#[derive(Debug)]</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">WhatAboutThis</span>&lt;<span class="symbol">&#x27;a</span>&gt; &#123;</span><br><span class="line">    name: <span class="type">String</span>,</span><br><span class="line">    nickname: <span class="type">Option</span>&lt;&amp;<span class="symbol">&#x27;a</span> <span class="type">str</span>&gt;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span>&lt;<span class="symbol">&#x27;a</span>&gt; WhatAboutThis&lt;<span class="symbol">&#x27;a</span>&gt; &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">tie_the_knot</span>(&amp;<span class="symbol">&#x27;a</span> <span class="keyword">mut</span> <span class="keyword">self</span>) &#123; <span class="comment">// 可变借用</span></span><br><span class="line">       <span class="keyword">self</span>.nickname = <span class="title function_ invoke__">Some</span>(&amp;<span class="keyword">self</span>.name[..<span class="number">4</span>]); <span class="comment">// 不可变借用</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">tricky</span> = WhatAboutThis &#123;</span><br><span class="line">        name: <span class="string">&quot;Annabelle&quot;</span>.<span class="title function_ invoke__">to_string</span>(),</span><br><span class="line">        nickname: <span class="literal">None</span>,</span><br><span class="line">    &#125;;</span><br><span class="line">    tricky.<span class="title function_ invoke__">tie_the_knot</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// cannot borrow `tricky` as immutable because it is also borrowed as mutable</span></span><br><span class="line">    <span class="comment">// println!(&quot;&#123;:?&#125;&quot;, tricky);</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="unsafe-实现"><a href="#unsafe-实现" class="headerlink" title="unsafe 实现"></a>unsafe 实现</h3><p>既然借用规则妨碍了我们，那就一脚踢开：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#[derive(Debug)]</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">SelfRef</span> &#123;</span><br><span class="line">    value: <span class="type">String</span>,</span><br><span class="line">    pointer_to_value: *<span class="keyword">const</span> <span class="type">String</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">SelfRef</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">new</span>(txt: &amp;<span class="type">str</span>) <span class="punctuation">-&gt;</span> <span class="keyword">Self</span> &#123;</span><br><span class="line">        SelfRef &#123;</span><br><span class="line">            value: <span class="type">String</span>::<span class="title function_ invoke__">from</span>(txt),</span><br><span class="line">            pointer_to_value: std::ptr::<span class="title function_ invoke__">null</span>(),</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">init</span>(&amp;<span class="keyword">mut</span> <span class="keyword">self</span>) &#123;</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">self_ref</span>: *<span class="keyword">const</span> <span class="type">String</span> = &amp;<span class="keyword">self</span>.value;</span><br><span class="line">        <span class="keyword">self</span>.pointer_to_value = self_ref;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">value</span>(&amp;<span class="keyword">self</span>) <span class="punctuation">-&gt;</span> &amp;<span class="type">str</span> &#123;</span><br><span class="line">        &amp;<span class="keyword">self</span>.value</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">pointer_to_value</span>(&amp;<span class="keyword">self</span>) <span class="punctuation">-&gt;</span> &amp;<span class="type">String</span> &#123;</span><br><span class="line">        <span class="built_in">assert!</span>(!<span class="keyword">self</span>.pointer_to_value.<span class="title function_ invoke__">is_null</span>(),</span><br><span class="line">            <span class="string">&quot;Test::b called without Test::init being called first&quot;</span>);</span><br><span class="line">        <span class="comment">// self.pointer_to_value 是 *const String 要转为 &amp;String</span></span><br><span class="line">        <span class="comment">// 先通过 * 拿到指针实际指向的对象 String，然后加上 &amp; 变成 &amp;String</span></span><br><span class="line">        <span class="comment">// 不能直接返回 String</span></span><br><span class="line">        <span class="comment">// 理由是 SelfRef 结构体实例里拿着一个指针，pointer_to_value 函数里，如果rust允许你转移了所有权，那么再这个函数调		 //	用完， 转出去的 String 有可能被 drop（取决于你怎么用它），你现在main函数里不会马上drop，但编译器不知道这个信息，		   //  当那个 string drop以后，SelfRef 结构体实例拿的就是个悬垂指针，这是 rust 不允许的。</span></span><br><span class="line">        <span class="keyword">unsafe</span> &#123; &amp;*(<span class="keyword">self</span>.pointer_to_value) &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">t</span> = SelfRef::<span class="title function_ invoke__">new</span>(<span class="string">&quot;hello&quot;</span>);</span><br><span class="line">    t.<span class="title function_ invoke__">init</span>();</span><br><span class="line">    <span class="comment">// 打印值和指针地址 &#123;:p&#125; 表示打印的是地址</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;, &#123;:p&#125;&quot;</span>, t.<span class="title function_ invoke__">value</span>(), t.<span class="title function_ invoke__">pointer_to_value</span>()); <span class="comment">// hello, 0x268134f740</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这里，我们在 <code>pointer_to_value</code> 中直接存储裸指针，而不是 Rust 的引用，因此不再受到 Rust 借用规则和生命周期的限制，而且实现起来非常清晰、简洁。但是缺点就是，通过指针获取值时需要使用 <code>unsafe</code> 代码。</p>
+<p>当然，上面的代码你还能通过裸指针来修改 <code>String</code>，但是需要将 <code>*const</code> 修改为 <code>*mut</code>：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#[derive(Debug)]</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">SelfRef</span> &#123;</span><br><span class="line">    value: <span class="type">String</span>,</span><br><span class="line">    pointer_to_value: *<span class="keyword">mut</span> <span class="type">String</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">SelfRef</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">new</span>(txt: &amp;<span class="type">str</span>) <span class="punctuation">-&gt;</span> <span class="keyword">Self</span> &#123;</span><br><span class="line">        SelfRef &#123;</span><br><span class="line">            value: <span class="type">String</span>::<span class="title function_ invoke__">from</span>(txt),</span><br><span class="line">            pointer_to_value: std::ptr::<span class="title function_ invoke__">null_mut</span>(),</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">init</span>(&amp;<span class="keyword">mut</span> <span class="keyword">self</span>) &#123;</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">self_ref</span>: *<span class="keyword">mut</span> <span class="type">String</span> = &amp;<span class="keyword">mut</span> <span class="keyword">self</span>.value;</span><br><span class="line">        <span class="keyword">self</span>.pointer_to_value = self_ref;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">value</span>(&amp;<span class="keyword">self</span>) <span class="punctuation">-&gt;</span> &amp;<span class="type">str</span> &#123;</span><br><span class="line">        &amp;<span class="keyword">self</span>.value</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">pointer_to_value</span>(&amp;<span class="keyword">self</span>) <span class="punctuation">-&gt;</span> &amp;<span class="type">String</span> &#123;</span><br><span class="line">        <span class="built_in">assert!</span>(!<span class="keyword">self</span>.pointer_to_value.<span class="title function_ invoke__">is_null</span>(), <span class="string">&quot;Test::b called without Test::init being called first&quot;</span>);</span><br><span class="line">        <span class="keyword">unsafe</span> &#123; &amp;*(<span class="keyword">self</span>.pointer_to_value) &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">t</span> = SelfRef::<span class="title function_ invoke__">new</span>(<span class="string">&quot;hello&quot;</span>);</span><br><span class="line">    t.<span class="title function_ invoke__">init</span>();</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;, &#123;:p&#125;&quot;</span>, t.<span class="title function_ invoke__">value</span>(), t.<span class="title function_ invoke__">pointer_to_value</span>());</span><br><span class="line"></span><br><span class="line">    t.value.<span class="title function_ invoke__">push_str</span>(<span class="string">&quot;, world&quot;</span>);</span><br><span class="line">    <span class="keyword">unsafe</span> &#123;</span><br><span class="line">        (&amp;<span class="keyword">mut</span> *t.pointer_to_value).<span class="title function_ invoke__">push_str</span>(<span class="string">&quot;!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;, &#123;:p&#125;&quot;</span>, t.<span class="title function_ invoke__">value</span>(), t.<span class="title function_ invoke__">pointer_to_value</span>());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行后输出：</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hello, 0x16f3aec70</span><br><span class="line">hello, world!, 0x16f3aec70</span><br></pre></td></tr></table></figure>
+
+<p>上面的 <code>unsafe</code> 虽然简单好用，但是它不太安全，是否还有其他选择？还真的有，那就是 <code>Pin</code>。</p>
+<h3 id="无法被移动的-Pin"><a href="#无法被移动的-Pin" class="headerlink" title="无法被移动的 Pin"></a>无法被移动的 Pin</h3><p><code>Pin</code> 在后续章节会深入讲解，目前你只需要知道<strong>它可以固定住一个值，防止该值在内存中被移动</strong>。</p>
+<p>通过开头我们知道，自引用最麻烦的就是创建引用的同时，值的所有权会被转移，而通过 <code>Pin</code> 就可以很好的防止这一点：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::marker::PhantomPinned;</span><br><span class="line"><span class="keyword">use</span> std::pin::Pin;</span><br><span class="line"><span class="keyword">use</span> std::ptr::NonNull;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 下面是一个自引用数据结构体，因为 slice 字段是一个指针，指向了 data 字段</span></span><br><span class="line"><span class="comment">// 我们无法使用普通引用来实现，因为违背了 Rust 的编译规则</span></span><br><span class="line"><span class="comment">// 因此，这里我们使用了一个裸指针，通过 NonNull 来确保它不会为 null</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Unmovable</span> &#123;</span><br><span class="line">    data: <span class="type">String</span>,</span><br><span class="line">    slice: NonNull&lt;<span class="type">String</span>&gt;,</span><br><span class="line">    _pin: PhantomPinned,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">Unmovable</span> &#123;</span><br><span class="line">    <span class="comment">// 为了确保函数返回时数据的所有权不会被转移，我们将它放在堆上，唯一的访问方式就是通过指针</span></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">new</span>(data: <span class="type">String</span>) <span class="punctuation">-&gt;</span> Pin&lt;<span class="type">Box</span>&lt;<span class="keyword">Self</span>&gt;&gt; &#123;</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">res</span> = Unmovable &#123;</span><br><span class="line">            data,</span><br><span class="line">            <span class="comment">// 只有在数据到位时，才创建指针，否则数据会在开始之前就被转移所有权</span></span><br><span class="line">            slice: NonNull::<span class="title function_ invoke__">dangling</span>(),</span><br><span class="line">            _pin: PhantomPinned,</span><br><span class="line">        &#125;;</span><br><span class="line">        <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">boxed</span> = <span class="type">Box</span>::<span class="title function_ invoke__">pin</span>(res);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">let</span> <span class="variable">slice</span> = NonNull::<span class="title function_ invoke__">from</span>(&amp;boxed.data);</span><br><span class="line">        <span class="comment">// 这里其实安全的，因为修改一个字段不会转移整个结构体的所有权</span></span><br><span class="line">        <span class="keyword">unsafe</span> &#123;</span><br><span class="line">            <span class="keyword">let</span> <span class="variable">mut_ref</span>: Pin&lt;&amp;<span class="keyword">mut</span> <span class="keyword">Self</span>&gt; = Pin::<span class="title function_ invoke__">as_mut</span>(&amp;<span class="keyword">mut</span> boxed);</span><br><span class="line">            Pin::<span class="title function_ invoke__">get_unchecked_mut</span>(mut_ref).slice = slice;</span><br><span class="line">        &#125;</span><br><span class="line">        boxed</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">unmoved</span> = Unmovable::<span class="title function_ invoke__">new</span>(<span class="string">&quot;hello&quot;</span>.<span class="title function_ invoke__">to_string</span>());</span><br><span class="line">    <span class="comment">// 只要结构体没有被转移，那指针就应该指向正确的位置，而且我们可以随意移动指针</span></span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">still_unmoved</span> = unmoved;</span><br><span class="line">    <span class="built_in">assert_eq!</span>(still_unmoved.slice, NonNull::<span class="title function_ invoke__">from</span>(&amp;still_unmoved.data));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 因为我们的类型没有实现 `Unpin` 特征，下面这段代码将无法编译</span></span><br><span class="line">    <span class="comment">// let mut new_unmoved = Unmovable::new(&quot;world&quot;.to_string());</span></span><br><span class="line">    <span class="comment">// std::mem::swap(&amp;mut *still_unmoved, &amp;mut *new_unmoved);</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面的代码也非常清晰，虽然使用了 <code>unsafe</code>，其实更多的是无奈之举，跟之前的 <code>unsafe</code> 实现完全不可同日而语。</p>
+<p>其实 <code>Pin</code> 在这里并没有魔法，它也并不是实现自引用类型的主要原因，最关键的还是里面的裸指针的使用，而 <code>Pin</code> 起到的作用就是确保我们的值不会被移走，否则指针就会指向一个错误的地址！</p>
+<h3 id="使用-ouroboros"><a href="#使用-ouroboros" class="headerlink" title="使用 ouroboros"></a>使用 ouroboros</h3><p>对于自引用结构体，三方库也有支持的，其中一个就是 <a target="_blank" rel="noopener" href="https://github.com/joshua-maros/ouroboros">ouroboros</a>，当然它也有自己的限制，我们后面会提到，先来看看该如何使用：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> ouroboros::self_referencing;</span><br><span class="line"></span><br><span class="line"><span class="meta">#[self_referencing]</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">SelfRef</span> &#123;</span><br><span class="line">    value: <span class="type">String</span>,</span><br><span class="line"></span><br><span class="line">    <span class="meta">#[borrows(value)]</span></span><br><span class="line">    pointer_to_value: &amp;<span class="symbol">&#x27;this</span> <span class="type">str</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>()&#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">v</span> = SelfRefBuilder &#123;</span><br><span class="line">        value: <span class="string">&quot;aaa&quot;</span>.<span class="title function_ invoke__">to_string</span>(),</span><br><span class="line">        pointer_to_value_builder: |value: &amp;<span class="type">String</span>| value,</span><br><span class="line">    &#125;.<span class="title function_ invoke__">build</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 借用value值</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s</span> = v.<span class="title function_ invoke__">borrow_value</span>();</span><br><span class="line">    <span class="comment">// 借用指针</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">p</span> = v.<span class="title function_ invoke__">borrow_pointer_to_value</span>();</span><br><span class="line">    <span class="comment">// value值和指针指向的值相等</span></span><br><span class="line">    <span class="built_in">assert_eq!</span>(s, *p);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，<code>ouroboros</code> 使用起来并不复杂，就是需要你去按照它的方式创建结构体和引用类型：<code>SelfRef</code> 变成 <code>SelfRefBuilder</code>，引用字段从 <code>pointer_to_value</code> 变成 <code>pointer_to_value_builder</code>，并且连类型都变了。</p>
+<p>在使用时，通过 <code>borrow_value</code> 来借用 <code>value</code> 的值，通过 <code>borrow_pointer_to_value</code> 来借用 <code>pointer_to_value</code> 这个指针。</p>
+<p>看上去很美好对吧？但是你可以尝试着去修改 <code>String</code> 字符串的值试试，<code>ouroboros</code> 限制还是较多的，但是对于基本类型依然是支持的不错，以下例子来源于官方：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> ouroboros::self_referencing;</span><br><span class="line"></span><br><span class="line"><span class="meta">#[self_referencing]</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">MyStruct</span> &#123;</span><br><span class="line">    int_data: <span class="type">i32</span>,</span><br><span class="line">    float_data: <span class="type">f32</span>,</span><br><span class="line">    <span class="meta">#[borrows(int_data)]</span></span><br><span class="line">    int_reference: &amp;<span class="symbol">&#x27;this</span> <span class="type">i32</span>,</span><br><span class="line">    <span class="meta">#[borrows(mut float_data)]</span></span><br><span class="line">    float_reference: &amp;<span class="symbol">&#x27;this</span> <span class="keyword">mut</span> <span class="type">f32</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">my_value</span> = MyStructBuilder &#123;</span><br><span class="line">        int_data: <span class="number">42</span>,</span><br><span class="line">        float_data: <span class="number">3.14</span>,</span><br><span class="line">        int_reference_builder: |int_data: &amp;<span class="type">i32</span>| int_data,</span><br><span class="line">        float_reference_builder: |float_data: &amp;<span class="keyword">mut</span> <span class="type">f32</span>| float_data,</span><br><span class="line">    &#125;.<span class="title function_ invoke__">build</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Prints 42</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, my_value.<span class="title function_ invoke__">borrow_int_data</span>());</span><br><span class="line">    <span class="comment">// Prints 3.14</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, my_value.<span class="title function_ invoke__">borrow_float_reference</span>());</span><br><span class="line">    <span class="comment">// Sets the value of float_data to 84.0</span></span><br><span class="line">    my_value.<span class="title function_ invoke__">with_mut</span>(|fields| &#123;</span><br><span class="line">        **fields.float_reference = (**fields.int_reference <span class="keyword">as</span> <span class="type">f32</span>) * <span class="number">2.0</span>;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// We can hold on to this reference...</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">int_ref</span> = *my_value.<span class="title function_ invoke__">borrow_int_reference</span>();</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, *int_ref);</span><br><span class="line">    <span class="comment">// As long as the struct is still alive.</span></span><br><span class="line">    <span class="title function_ invoke__">drop</span>(my_value);</span><br><span class="line">    <span class="comment">// This will cause an error!</span></span><br><span class="line">    <span class="comment">// println!(&quot;&#123;:?&#125;&quot;, *int_ref);</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>总之，使用这个库前，强烈建议看一些官方的例子中支持什么样的类型和 API，如果能满足的你的需求，就果断使用它，如果不能满足，就继续往下看。</p>
+<p>只能说，它确实帮助我们解决了问题，但是一个是破坏了原有的结构，另外就是并不是所有数据类型都支持：它需要目标值的内存地址不会改变，因此 <code>Vec</code> 动态数组就不适合，因为当内存空间不够时，Rust 会重新分配一块空间来存放该数组，这会导致内存地址的改变。</p>
+<p>类似的库还有：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/jpernst/rental">rental</a>， 这个库其实是最有名的，但是好像不再维护了，用倒是没问题</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/Kimundi/owning-ref-rs">owning-ref</a>，将所有者和它的引用绑定到一个封装类型</li>
+</ul>
+<p>这三个库，各有各的特点，也各有各的缺陷，建议大家需要时，一定要仔细调研，并且写 demo 进行测试，不可大意。</p>
+<blockquote>
+<p>rental 虽然不怎么维护，但是可能依然是这三个里面最强大的，而且网上的用例也比较多，容易找到参考代码</p>
+</blockquote>
+<h3 id="Rc-RefCell-或-Arc-Mutex"><a href="#Rc-RefCell-或-Arc-Mutex" class="headerlink" title="Rc + RefCell 或 Arc + Mutex"></a>Rc + RefCell 或 Arc + Mutex</h3><p>类似于循环引用的解决方式，自引用也可以用这种组合来解决，但是会导致代码的类型标识到处都是，大大的影响了可读性。</p>
+<h3 id="终极大法"><a href="#终极大法" class="headerlink" title="终极大法"></a>终极大法</h3><p>如果两个放在一起会报错，那就分开它们。对，终极大法就这么简单，当然思路上的简单不代表实现上的简单，最终结果就是导致代码复杂度的上升。</p>
+<h3 id="实现链表的书"><a href="#实现链表的书" class="headerlink" title="实现链表的书"></a>实现链表的书</h3><p>最后，推荐一本专门将如何实现链表的书（真是富有 Rust 特色，链表都能复杂到出书了 o_o），<a target="_blank" rel="noopener" href="https://rust-unofficial.github.io/too-many-lists/">Learn Rust by writing Entirely Too Many Linked Lists</a></p>
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><p>上面讲了这么多方法，但是我们依然无法正确的告诉你在某个场景应该使用哪个方法，这个需要你自己的判断，因为自引用实在是过于复杂。</p>
+<p>我们能做的就是告诉你，有这些办法可以解决自引用问题，而这些办法每个都有自己适用的范围，需要你未来去深入的挖掘和发现。</p>
+<p>偷偷说一句，就算是我，遇到自引用一样挺头疼，好在这种情况真的不常见，往往是实现特定的算法和数据结构时才需要，应用代码中几乎用不到。</p>
+
+    
+  </article>
+
+  
+      
+    <div class="nexmoe-post-copyright">
+        <strong>本文作者：</strong>kay<br>
+        <strong>本文链接：</strong><a href="https://www.tooupper.com/content/Rust/learning-Rust/rust-senior/%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8%E4%B8%8E%E8%87%AA%E5%BC%95%E7%94%A8.html" title="https:&#x2F;&#x2F;www.tooupper.com&#x2F;content&#x2F;Rust&#x2F;learning-Rust&#x2F;rust-senior&#x2F;%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8%E4%B8%8E%E8%87%AA%E5%BC%95%E7%94%A8.html" target="_blank" rel="noopener">https:&#x2F;&#x2F;www.tooupper.com&#x2F;content&#x2F;Rust&#x2F;learning-Rust&#x2F;rust-senior&#x2F;%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8%E4%B8%8E%E8%87%AA%E5%BC%95%E7%94%A8.html</a><br>
+        
+            <strong>版权声明：</strong>本文采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/deed.zh" target="_blank">CC BY-NC-SA 3.0 CN</a> 协议进行许可
+
+        
+    </div>
+
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+   
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/Rust%E8%BF%9B%E9%98%B6/" rel="tag">Rust进阶</a>
+    
+</div>
+  
+  
+    <script async src="/js/copy-codeblock.js?v=1698918460926"></script>
+  
+
+  
+      <div class="nexmoe-post-footer">
+          
+      </div>
+  
+</div></div><div class="nexmoe-post-right">    <div class="nexmoe-fixed">
+        <div class="nexmoe-tool">
+
+            
+
+            
+            
+            <button class="mdui-fab catalog" style="overflow:unset;">
+                <i class="nexmoefont icon-i-catalog"></i>
+                <div class="nexmoe-toc">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8%E4%B8%8E%E8%87%AA%E5%BC%95%E7%94%A8"><span class="toc-number">1.</span> <span class="toc-text">循环引用与自引用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Weak-%E4%B8%8E-%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8"><span class="toc-number">1.1.</span> <span class="toc-text">Weak 与 循环引用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%95%E4%B8%BA%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8"><span class="toc-number">1.1.1.</span> <span class="toc-text">何为循环引用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Weak"><span class="toc-number">1.1.2.</span> <span class="toc-text">Weak</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Weak-%E4%B8%8E-Rc-%E5%AF%B9%E6%AF%94"><span class="toc-number">1.1.2.1.</span> <span class="toc-text">Weak 与 Rc 对比</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Weak-%E6%80%BB%E7%BB%93"><span class="toc-number">1.1.2.2.</span> <span class="toc-text">Weak 总结</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-Weak-%E8%A7%A3%E5%86%B3%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8"><span class="toc-number">1.1.3.</span> <span class="toc-text">使用 Weak 解决循环引用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B7%A5%E5%85%B7%E9%97%B4%E7%9A%84%E6%95%85%E4%BA%8B"><span class="toc-number">1.1.3.1.</span> <span class="toc-text">工具间的故事</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#tree-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-number">1.1.3.2.</span> <span class="toc-text">tree 数据结构</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#unsafe-%E8%A7%A3%E5%86%B3%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8"><span class="toc-number">1.1.4.</span> <span class="toc-text">unsafe 解决循环引用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">1.1.5.</span> <span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9E%84%E4%BD%93%E4%B8%AD%E7%9A%84%E8%87%AA%E5%BC%95%E7%94%A8"><span class="toc-number">1.2.</span> <span class="toc-text">结构体中的自引用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B9%B3%E5%B9%B3%E6%97%A0%E5%A5%87%E7%9A%84%E8%87%AA%E5%BC%95%E7%94%A8"><span class="toc-number">1.2.1.</span> <span class="toc-text">平平无奇的自引用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-Option"><span class="toc-number">1.2.2.</span> <span class="toc-text">使用 Option</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#unsafe-%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.2.3.</span> <span class="toc-text">unsafe 实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%A0%E6%B3%95%E8%A2%AB%E7%A7%BB%E5%8A%A8%E7%9A%84-Pin"><span class="toc-number">1.2.4.</span> <span class="toc-text">无法被移动的 Pin</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-ouroboros"><span class="toc-number">1.2.5.</span> <span class="toc-text">使用 ouroboros</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Rc-RefCell-%E6%88%96-Arc-Mutex"><span class="toc-number">1.2.6.</span> <span class="toc-text">Rc + RefCell 或 Arc + Mutex</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%88%E6%9E%81%E5%A4%A7%E6%B3%95"><span class="toc-number">1.2.7.</span> <span class="toc-text">终极大法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E9%93%BE%E8%A1%A8%E7%9A%84%E4%B9%A6"><span class="toc-number">1.2.8.</span> <span class="toc-text">实现链表的书</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-1"><span class="toc-number">1.2.9.</span> <span class="toc-text">总结</span></a></li></ol></li></ol></li></ol>
+                </div>
+            </button>
+            
+
+            
+
+            <a href="#nexmoe-content" class="backtop toc-link" aria-label="Back To Top" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+        </div>
+    </div>
+</div></div><div id="nexmoe-footer"><!--!--></div><div><div id="nexmoe-search-space">
+	<div class="search-container">
+		<div class="search-header">
+			<div class="search-input-container">
+				<input
+					class="search-input"
+					type="text"
+					placeholder="搜索"
+					oninput="sinput();"
+				/>
+			</div>
+			<a class="search-close" onclick="sclose();">×</a>
+		</div>
+		<div class="search-body"></div>
+	</div>
+</div>
+</div><div><script async src="https://www.TooUpper.com" crossorigin="anonymous"></script>
+</div></body></html>

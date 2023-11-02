@@ -1,0 +1,774 @@
+<!doctype html>
+<html lang="zh"><head>
+<title>复合类型 - 成祠的个人博客</title>
+<meta charset="UTF-8">
+<meta name="keywords" content="blog">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+
+<link rel="shortcut icon" href="/image/favicon.png" type="image/png" />
+<meta name="description" content="复合类型顾名思义，复合类型是由其它类型组合而成的，最典型的就是结构体 struct 和枚举 enum。例如平面上的一个点 point(x, y)，它由两个数值类型的值 x 和 y 组合而来。我们无法单独去维护这两个数值，因为单独一个 x 或者 y 是含义不完整的，无法标识平面上的一个点，应该把它们看作一个整体去理解和处理。 字符串与切片切片切片：引用集合中部分连续的元素序列，而不是引用整个集合。如">
+<meta property="og:type" content="article">
+<meta property="og:title" content="复合类型">
+<meta property="og:url" content="https://www.tooupper.com/content/Rust/learning-Rust/rust-Basic/%E5%A4%8D%E5%90%88%E7%B1%BB%E5%9E%8B.html">
+<meta property="og:site_name" content="成祠的个人博客">
+<meta property="og:description" content="复合类型顾名思义，复合类型是由其它类型组合而成的，最典型的就是结构体 struct 和枚举 enum。例如平面上的一个点 point(x, y)，它由两个数值类型的值 x 和 y 组合而来。我们无法单独去维护这两个数值，因为单独一个 x 或者 y 是含义不完整的，无法标识平面上的一个点，应该把它们看作一个整体去理解和处理。 字符串与切片切片切片：引用集合中部分连续的元素序列，而不是引用整个集合。如">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pic1.zhimg.com/80/v2-69da917741b2c610732d8526a9cc86f5_1440w.jpg">
+<meta property="og:image" content="https://pic3.zhimg.com/80/v2-8cc4ed8cd06d60f974d06ca2199b8df5_1440w.png">
+<meta property="article:published_time" content="2023-09-25T12:01:14.000Z">
+<meta property="article:modified_time" content="2023-10-07T13:28:30.279Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="Rust基础">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pic1.zhimg.com/80/v2-69da917741b2c610732d8526a9cc86f5_1440w.jpg">
+
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+<link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
+
+
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1698918461751">
+
+<link rel="stylesheet" href="/css/style.css?v=1698918461751">
+
+
+
+
+    
+        <link rel="stylesheet" href="/custom.css?v=1698918461751">
+    
+
+
+
+<script src="/lib/mdui_043tiny/mdui.js" async></script>
+<script src="/lib/fancybox/fancybox.umd.js" async></script>
+<script src="/lib/lax.min.js" async></script>
+
+
+<script async src="/js/app.js?v=1698918461751"></script>
+
+ 
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4D4ZJ9G024"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+
+  gtag("config", "G-4D4ZJ9G024");
+</script>
+
+<meta name="generator" content="Hexo 6.3.0"></head><body class="nexmoe mdui-drawer-body-left"><div id="nexmoe-background"><div class="nexmoe-bg" style="background-image: url(/image/banner.png)"></div><div class="mdui-appbar mdui-shadow-0"><div class="mdui-toolbar"><a class="mdui-btn mdui-btn-icon mdui-ripple" mdui-drawer="{target: &#039;#drawer&#039;, swipe: true}" title="menu"><i class="mdui-icon nexmoefont icon-menu"></i></a><div class="mdui-toolbar-spacer"></div><a class="mdui-btn mdui-btn-icon" href="/" title="kay"><img src="/image/Logo.png" alt="kay"></a></div></div></div><div id="nexmoe-header"><div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="kay">
+            <img src="/image/Logo.png" alt="kay" alt="kay">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>文章</span>29</div>
+        <div><span>标签</span>4</div>
+        <div><span>分类</span>2</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/aboutMe.html" title="关于博主">
+            <i class="mdui-list-item-icon nexmoefont icon-info-circle"></i>
+            <div class="mdui-list-item-content">
+                关于博主
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archives.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/downloads.html" title="下载中心">
+            <i class="mdui-list-item-icon nexmoefont icon-coffee"></i>
+            <div class="mdui-list-item-content">
+                下载中心
+            </div>
+        </a>
+        
+    </div>
+    
+    
+        
+        <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+        
+            <form id="search_form">
+                <label><input class="st-default-search-input" id="search_value" name="q" type="search" placeholder="搜索" style="
+                    font-size: 15px !important;
+                    height: 56px !important;
+                    background-image: none;
+                "></label>
+            </form>
+         
+    </div>
+</div>
+
+
+	<script async src="/js/search.js?v=1698918461752"></script>
+
+
+
+    
+        
+        <div class="nexmoe-widget-wrap">
+	<div class="nexmoe-widget nexmoe-social">
+		<a
+			class="mdui-ripple"
+			href="/image/QQOrWeChat.png"
+			target="_blank"
+			mdui-tooltip="{content: 'QQ'}"
+			style="
+				color: rgb(249, 174, 8);
+				background-color: rgba(249, 174, 8, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-QQ"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="/image/QQOrWeChat.png"
+			target="_blank"
+			mdui-tooltip="{content: 'WeChat'}"
+			style="
+				color: rgb(59, 151, 239);
+				background-color: rgba(59, 151, 239, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-wechat-fill"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://github.com/TooUpper/"
+			target="_blank"
+			mdui-tooltip="{content: 'GitHub'}"
+			style="
+				color: rgb(25, 23, 23);
+				background-color: rgba(25, 23, 23, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-github"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="/www.TooUpper.com"
+			target="_blank"
+			mdui-tooltip="{content: 'Blog'}"
+			style="
+				color: rgb(30, 136, 229);
+				background-color: rgba(30, 136, 229, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-home"
+			></i> </a
+		>
+	</div>
+</div>
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章分类</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/RISC-V/">RISC-V</a>
+          <span class="category-list-count">4</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Rust/">Rust</a>
+          <span class="category-list-count">25</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/Rust%E5%9F%BA%E7%A1%80/" style="font-size: 20px;">Rust基础</a> <a href="/tags/Rust%E8%BF%9B%E9%98%B6/" style="font-size: 15px;">Rust进阶</a> <a href="/tags/rcore/" style="font-size: 10px;">rcore</a> <a href="/tags/riscv/" style="font-size: 10px;">riscv</a>
+    </div>
+    
+  </div>
+
+    
+        
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章归档</h3>
+    <div class="nexmoe-widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/">2023</a><span class="archive-list-count">29</span></li></ul>
+    </div>
+  </div>
+
+
+
+    
+   
+    <div class="nexmoe-copyright">
+        &copy; 2023 kay
+        Powered by <a href="https://www.TooUpper.com" target="_blank">成祠</a>
+        & <a href="https://github.com/TooUpper" target="_blank">TooUpper</a>
+        <br><a target="_blank" href="https://www.TooUpper.com">鄂ICP备2020018486号</a>
+<br><a target="_blank" href="https://www.TooUpper.com">加油做一个不会被优化掉的程序员</a>
+
+    </div>
+</div><!-- .nexmoe-drawer --></div><div id="nexmoe-content"><div class="nexmoe-primary"><div class="nexmoe-post">
+  <article>
+    
+        <div class="nexmoe-post-cover absolute" style="padding-top: 62.5%;"> 
+            <img src="/image/Rust/RustCrab.png" alt="复合类型" loading="lazy">
+            <h1>复合类型</h1>
+        </div>
+    
+    
+    <div class="nexmoe-post-meta">
+    <div class="nexmoe-rainbow">
+        <a class="nexmoefont icon-calendar-fill">2023年09月25日</a>
+        
+            <a class="nexmoefont icon-appstore-fill -link" href="/categories/Rust/">Rust</a>
+        
+        
+    <a><i class="nexmoefont icon-areachart"></i>约12.7k字</a>
+    <a><i class="nexmoefont icon-time-circle-fill"></i>预计需要51分钟</a>
+
+    </div>
+    
+    
+    
+    
+    
+</div>
+
+    <h1 id="复合类型"><a href="#复合类型" class="headerlink" title="复合类型"></a>复合类型</h1><p>顾名思义，复合类型是由其它类型组合而成的，最典型的就是结构体 <code>struct</code> 和枚举 <code>enum</code>。例如平面上的一个点 <code>point(x, y)</code>，它由两个数值类型的值 <code>x</code> 和 <code>y</code> 组合而来。我们无法单独去维护这两个数值，因为单独一个 <code>x</code> 或者 <code>y</code> 是含义不完整的，无法标识平面上的一个点，应该把它们看作一个整体去理解和处理。</p>
+<h2 id="字符串与切片"><a href="#字符串与切片" class="headerlink" title="字符串与切片"></a>字符串与切片</h2><h3 id="切片"><a href="#切片" class="headerlink" title="切片"></a>切片</h3><p>切片：引用集合中部分连续的元素序列，而不是引用整个集合。如：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">s</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;hello world&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="variable">hello</span> = &amp;s[<span class="number">0</span>..<span class="number">5</span>];</span><br><span class="line"><span class="keyword">let</span> <span class="variable">world</span> = &amp;s[<span class="number">6</span>..<span class="number">11</span>];</span><br></pre></td></tr></table></figure>
+
+<p><code>hello</code> 没有引用整个 <code>String s</code>，而是引用了 <code>s</code> 的一部分内容，通过 <code>[0..5]</code> 的方式来指定。</p>
+<p>是创建切片的语法，使用方括号包括的一个序列：**[开始索引..终止索引]**，其中开始索引是切片中第一个元素的索引位置，而终止索引是最后一个元素后面的索引位置，也就是这是一个 <code>右半开区间</code>。</p>
+<p>切片数据结构内部会保存<strong>开始的位置</strong>和<strong>切片的长度</strong>，其中<strong>长度</strong>是通过 <code>终止索引</code> - <code>开始索引</code> 的方式计算得来的。</p>
+<p>对于 <code>let world = &amp;s[6..11];</code> 来说，<code>world</code> 是一个切片，该切片的指针指向 <code>s</code> 的第 7 个字节(索引从 0 开始, 6 是第 7 个字节)，且该切片的长度是 <code>5</code> 个字节。</p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="https://pic1.zhimg.com/80/v2-69da917741b2c610732d8526a9cc86f5_1440w.jpg" alt="img" data-caption="img" loading="lazy"></p>
+<h3 id="range-序列语法"><a href="#range-序列语法" class="headerlink" title="..range 序列语法"></a><code>..</code>range 序列语法</h3><p>在使用 Rust 的 <code>..</code> <a target="_blank" rel="noopener" href="https://course.rs/basic/base-type/numbers.html#%E5%BA%8F%E5%88%97range">range 序列</a>语法时，如果你想从索引 0 开始，可以使用如下的方式，这两个是等效的：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">s</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;hello&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="variable">slice</span> = &amp;s[<span class="number">0</span>..<span class="number">2</span>];</span><br><span class="line"><span class="keyword">let</span> <span class="variable">slice</span> = &amp;s[..<span class="number">2</span>];</span><br></pre></td></tr></table></figure>
+
+<p>同样的，如果你的切片想要包含 <code>String</code> 的最后一个字节，则可以这样使用：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">s</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;hello&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="variable">len</span> = s.<span class="title function_ invoke__">len</span>();</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="variable">slice</span> = &amp;s[<span class="number">4</span>..len];</span><br><span class="line"><span class="keyword">let</span> <span class="variable">slice</span> = &amp;s[<span class="number">4</span>..];</span><br></pre></td></tr></table></figure>
+
+<p>你也可以截取完整的 <code>String</code> 切片：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">s</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;hello&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="variable">len</span> = s.<span class="title function_ invoke__">len</span>();</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="variable">slice</span> = &amp;s[<span class="number">0</span>..len];</span><br><span class="line"><span class="keyword">let</span> <span class="variable">slice</span> = &amp;s[..];</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>在对字符串使用切片语法时需要格外小心，切片的索引必须落在字符之间的边界位置，也就是 UTF-8 字符的边界，例如中文在 UTF-8 中占用三个字节，下面的代码就会崩溃：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">s</span> = <span class="string">&quot;中国人&quot;</span>;</span><br><span class="line"><span class="keyword">let</span> <span class="variable">a</span> = &amp;s[<span class="number">0</span>..<span class="number">2</span>];</span><br><span class="line"><span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>,a);</span><br></pre></td></tr></table></figure>
+
+<p>因为我们只取 <code>s</code> 字符串的前两个字节，但是本例中每个汉字占用三个字节，因此没有落在边界处，也就是连 <code>中</code> 字都取不完整，此时程序会直接崩溃退出，如果改成 <code>&amp;s[0..3]</code>，则可以正常通过编译。 因此，当你需要对字符串做切片索引操作时，需要格外小心这一点, 关于该如何操作 UTF-8 字符串，参见<a target="_blank" rel="noopener" href="https://course.rs/basic/compound-type/string-slice.html#%E6%93%8D%E4%BD%9C-utf-8-%E5%AD%97%E7%AC%A6%E4%B8%B2">这里</a>。</p>
+</blockquote>
+<p>字符串切片的类型是 <code>&amp;str</code>，因此我们可以这样声明一个函数，输入 <code>String</code> 类型，返回它的切片: <code>fn first_word(s: &amp;String) -&gt; &amp;str </code>。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">s</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;hello world&quot;</span>);</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">word</span> = <span class="title function_ invoke__">first_word</span>(&amp;s);</span><br><span class="line">    s.<span class="title function_ invoke__">clear</span>(); <span class="comment">// error!</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;the first word is: &#123;&#125;&quot;</span>, word);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">first_word</span>(s: &amp;<span class="type">String</span>) <span class="punctuation">-&gt;</span> &amp;<span class="type">str</span> &#123;</span><br><span class="line">    &amp;s[..<span class="number">1</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在 Rust 中，<strong>切片是对现有数据的借用</strong>。</p>
+<p><code>clear</code> 需要清空改变 <code>String</code>，因此它需要一个可变借用（利用 VSCode 可以看到该方法的声明是 <code>pub fn clear(&amp;mut self)</code> ，参数是对自身的可变借用 ）；而之后的 <code>println!</code> 又使用了不可变借用，也就是在 <code>s.clear()</code> 处可变借用与不可变借用试图同时生效，因此编译无法通过。</p>
+<p>借用的规则：<strong>当我们已经有了可变借用时，就无法再拥有不可变的借用</strong>。</p>
+<h3 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h3><p>Rust 中的<strong>字符</strong>是 Unicode 类型，每个字符占据4个字节的内存空间(在 Rust 中，字符类型 <code>char</code> 一般占用 4 个字节的内存，但<strong>具体的内存占用还取决于字符的编码方式和实际使用的 Unicode 字符</strong>。)。</p>
+<p><strong>字符串</strong>是 UTF-8 编码，因此每个字符串占据的字节数是(1-4)变化的。</p>
+<p><strong>Unicode 是一个字符集，而 UTF-8 是一种长度可变的编码方式</strong></p>
+<p>Rust 在语言级别，只有一种字符串<code>str</code>，通常以引用的方式出现<code>&amp;str</code>。但是在标准库里，还有多种不同用途的字符串类型，其中使用最广的即是 <code>String</code> 类型。<strong>二者都是 UTF-8 编码</strong>。</p>
+<h4 id="String-与-str-互转"><a href="#String-与-str-互转" class="headerlink" title="String 与 &amp;str 互转"></a>String 与 &amp;str 互转</h4><p><strong>&amp;str -&gt; String</strong></p>
+<ul>
+<li><code>String::from(&quot;hello,world&quot;)</code></li>
+<li><code>&quot;hello,world&quot;.to_string()</code></li>
+</ul>
+<p><strong>String -&gt; &amp;str</strong>(取引用即可)</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;hello,world!&quot;</span>);</span><br><span class="line">    <span class="title function_ invoke__">say_hello</span>(&amp;s);</span><br><span class="line">    <span class="title function_ invoke__">say_hello</span>(&amp;s[..]);</span><br><span class="line">    <span class="title function_ invoke__">say_hello</span>(s.<span class="title function_ invoke__">as_str</span>());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">say_hello</span>(s: &amp;<span class="type">str</span>) &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>,s);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这种灵活用法是因为 <code>deref</code> 隐式强制转换。</p>
+<h4 id="字符串索引"><a href="#字符串索引" class="headerlink" title="字符串索引"></a>字符串索引</h4><p>Rust无法像其他语言那样通过下标索引去获取内容。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">s1</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;hello&quot;</span>);</span><br><span class="line"><span class="keyword">let</span> <span class="variable">h</span> = s1[<span class="number">0</span>];</span><br></pre></td></tr></table></figure>
+
+<p>该代码会产生如下错误：</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">3 |     let h = s1[0];</span><br><span class="line">  |             ^^^^^ `String` cannot be indexed by `&#123;integer&#125;`</span><br><span class="line">  |</span><br><span class="line">  = help: the trait `Index&lt;&#123;integer&#125;&gt;` is not implemented for `String`</span><br></pre></td></tr></table></figure>
+
+<h5 id="深入字符串内部"><a href="#深入字符串内部" class="headerlink" title="深入字符串内部"></a>深入字符串内部</h5><p>字符串的底层的数据存储格式实际上是[ <code>u8</code> ]，一个字节数组。对于 <code>let hello = String::from(&quot;Hola&quot;);</code> 这行代码来说，<code>Hola</code> 的长度是 <code>4</code> 个字节，因为 <code>&quot;Hola&quot;</code> 中的每个字母在 UTF-8 编码中仅占用 1 个字节，但是对于下面的代码呢？</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">hello</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;中国人&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>如果问你该字符串多长，你可能会说 <code>3</code>，但是实际上是 <code>9</code> 个字节的长度，因为大部分常用汉字在 UTF-8 中的长度是 <code>3</code> 个字节，因此这种情况下对 <code>hello</code> 进行索引，访问 <code>&amp;hello[0]</code> 没有任何意义，因为你取不到 <code>中</code> 这个字符，而是取到了这个字符三个字节中的第一个字节，这是一个非常奇怪而且难以理解的返回值。</p>
+<p>还有一个原因导致了 Rust 不允许去索引字符串：因为索引操作，我们总是期望它的性能表现是 O(1)，然而对于 <code>String</code> 类型来说，无法保证这一点，因为 Rust 可能需要从 0 开始去遍历字符串来定位合法的字符。</p>
+<h4 id="字符串切片"><a href="#字符串切片" class="headerlink" title="字符串切片"></a>字符串切片</h4><p><strong>切片的索引是通过字节来进行</strong>，但是字符串又是 UTF-8 编码，因此你无法保证索引的字节刚好落在字符的边界上，例如：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">hello</span> = <span class="string">&quot;中国人&quot;</span>;</span><br><span class="line"><span class="keyword">let</span> <span class="variable">s</span> = &amp;hello[<span class="number">0</span>..<span class="number">2</span>]; <span class="comment">// error</span></span><br></pre></td></tr></table></figure>
+
+<p>因为索引的字节落在了 <code>中</code> 字符的内部，这种返回没有任何意义。</p>
+<h4 id="字符串操作"><a href="#字符串操作" class="headerlink" title="字符串操作"></a>字符串操作</h4><p><code>String</code>是可变的字符串。</p>
+<h5 id="追加-push"><a href="#追加-push" class="headerlink" title="追加(push)"></a>追加(push)</h5><p>可以在字符串尾部可以使用 <code>push()</code> 方法追加字符 <code>char</code>，也可以使用 <code>push_str()</code> 方法追加字符串字面量。这两个方法都是<strong>在原有的字符串上追加，并不会返回新的字符串</strong>。由于字符串追加操作要修改原来的字符串，则该字符串必须是可变的，即<strong>字符串变量必须由 <code>mut</code> 关键字修饰</strong>。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">s</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;Hello &quot;</span>);</span><br><span class="line"></span><br><span class="line">    s.<span class="title function_ invoke__">push_str</span>(<span class="string">&quot;rust&quot;</span>);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;追加字符串 push_str() -&gt; &#123;&#125;&quot;</span>, s); <span class="comment">// Hello rust</span></span><br><span class="line"></span><br><span class="line">    s.<span class="title function_ invoke__">push</span>(<span class="string">&#x27;!&#x27;</span>);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;追加字符 push() -&gt; &#123;&#125;&quot;</span>, s);	<span class="comment">// Hello rust!</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="插入-insert"><a href="#插入-insert" class="headerlink" title="插入(insert)"></a>插入(insert)</h5><p>可以使用 <code>insert()</code> 方法插入单个字符 <code>char</code>，也可以使用 <code>insert_str()</code> 方法插入字符串字面量，与 <code>push()</code> 方法不同，这俩方法需要传入两个参数，第一个参数是字符（串）插入位置的索引，第二个参数是要插入的字符（串），索引从 0 开始计数，如果越界则会发生错误。由于字符串插入操作要<strong>修改原来的字符串</strong>，则该字符串必须是可变的，即<strong>字符串变量必须由 <code>mut</code> 关键字修饰</strong>。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">s</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;Hello rust!&quot;</span>);</span><br><span class="line">    s.<span class="title function_ invoke__">insert</span>(<span class="number">5</span>, <span class="string">&#x27;,&#x27;</span>);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;插入字符 insert() -&gt; &#123;&#125;&quot;</span>, s); <span class="comment">// Hello, rust!</span></span><br><span class="line">    s.<span class="title function_ invoke__">insert_str</span>(<span class="number">6</span>, <span class="string">&quot; I like&quot;</span>);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;插入字符串 insert_str() -&gt; &#123;&#125;&quot;</span>, s); <span class="comment">// Hello, I like rust!</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意：此处如果字符串是中文的话<code> s.insert(5, &#39;,&#39;);</code>这里会报错，因为中文一个字符占三个字节。</p>
+</blockquote>
+<h5 id="替换-replace"><a href="#替换-replace" class="headerlink" title="替换(replace)"></a>替换(replace)</h5><p>**<code>replace()</code> **</p>
+<p><code>replace()</code> 方法接收两个参数，第一个参数是要被替换的字符串，第二个参数是新的字符串。<strong>该方法会替换所有匹配到的字符串</strong>。<strong>该方法是返回一个新的字符串，而不是操作原来的字符串</strong>。</p>
+<p><strong><code>replace()</code> 方法可适用于 <code>String</code> 和 <code>&amp;str</code> 类型</strong>。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">string_replace</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;I like rust. Learning rust is my favorite!&quot;</span>);</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">new_string_replace</span> = string_replace.<span class="title function_ invoke__">replace</span>(<span class="string">&quot;rust&quot;</span>, <span class="string">&quot;RUST&quot;</span>);</span><br><span class="line">    dbg!(new_string_replace); <span class="comment">// new_string_replace = &quot;I like RUST. Learning RUST is my favorite!&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong><code>replace_range()</code></strong> </p>
+<p>接收两个参数，第一个参数是要替换字符串的范围（Range），第二个参数是新的字符串。<strong>该方法是直接操作原来的字符串，不会返回新的字符串。该方法需要使用 <code>mut</code> 关键字修饰</strong>。</p>
+<p><strong><code>replace_range</code> 方法仅适用于 <code>String</code> 类型</strong>。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">string_replace_range</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;I like rust!&quot;</span>);</span><br><span class="line">    string_replace_range.<span class="title function_ invoke__">replace_range</span>(<span class="number">7</span>..<span class="number">8</span>, <span class="string">&quot;R&quot;</span>);</span><br><span class="line">    dbg!(string_replace_range);	<span class="comment">// string_replace_range = &quot;I like Rust!&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="删除-delete"><a href="#删除-delete" class="headerlink" title="删除(delete)"></a>删除(delete)</h5><p>字符串删除相关的方法有 4 个，他们分别是 <code>pop()</code>，<code>remove()</code>，<code>truncate()</code>，<code>clear()</code>。这四个方法仅适用于 <code>String</code> 类型。</p>
+<p>1.<strong><code>pop()</code><strong>—— <strong>删除并返回</strong>字符串的</strong>最后一个字符</strong></p>
+<p><strong>该方法是直接操作原来的字符串</strong>。但是存在返回值，其返回值是一个 <code>Option</code> 类型，如果字符串为空，则返回 <code>None</code>。 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">fn main() &#123;</span><br><span class="line">    let mut string_pop = String::from(&quot;rust pop 中文!&quot;);</span><br><span class="line">    let p1 = string_pop.pop();</span><br><span class="line">    let p2 = string_pop.pop();</span><br><span class="line">    dbg!(p1);</span><br><span class="line">    dbg!(p2);</span><br><span class="line">    dbg!(string_pop);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>cargo run</code></p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">p1 = <span class="title function_ invoke__">Some</span>(</span><br><span class="line">   <span class="string">&#x27;!&#x27;</span>,</span><br><span class="line">)</span><br><span class="line">p2 = <span class="title function_ invoke__">Some</span>(</span><br><span class="line">   <span class="string">&#x27;文&#x27;</span>,</span><br><span class="line">)</span><br><span class="line">string_pop = <span class="string">&quot;rust pop 中&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>2.**<code>remove</code> **—— 删除并返回字符串中指定位置的字符</p>
+<p><strong>该方法是直接操作原来的字符串</strong>。但是存在返回值，其返回值是<strong>删除位置的字符串</strong>，<strong>只接收一个参数，表示该字符起始索引位置</strong>。<code>remove()</code> 方法是<strong>按照字节来处理字符串</strong>的，如果参数所给的位置不是合法的字符边界，则会发生错误。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">string_remove</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;测试remove方法&quot;</span>);</span><br><span class="line">    <span class="built_in">println!</span>(</span><br><span class="line">        <span class="string">&quot;string_remove 占 &#123;&#125; 个字节&quot;</span>,</span><br><span class="line">        std::mem::<span class="title function_ invoke__">size_of_val</span>(string_remove.<span class="title function_ invoke__">as_str</span>())</span><br><span class="line">    );</span><br><span class="line">    <span class="comment">// 删除第一个汉字</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">a</span> = string_remove.<span class="title function_ invoke__">remove</span>(<span class="number">0</span>);</span><br><span class="line">    <span class="comment">// 下面代码会发生错误</span></span><br><span class="line">    <span class="comment">// string_remove.remove(1);</span></span><br><span class="line">    <span class="comment">// 直接删除第二个汉字</span></span><br><span class="line">    <span class="comment">// string_remove.remove(3);</span></span><br><span class="line">    dbg!(string_remove);</span><br><span class="line">    dbg!(a);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>cargo run</code></p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">string_remove 占 <span class="number">18</span> 个字节</span><br><span class="line">string_remove = <span class="string">&quot;试remove方法&quot;</span></span><br><span class="line">a = <span class="string">&#x27;测&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>如果参数所给的位置不是合法的字符边界，为什么会发生错误？</p>
+<p>因为remove方法在处理时会<strong>将字符串本身拆解为一个字符迭代器</strong>，如果边界不合法则会报错。</p>
+<p>3.**<code>truncate</code> **—— 删除字符串中从指定位置开始到结尾的全部字符</p>
+<p><strong>该方法是直接操作原来的字符串</strong>。无返回值。该方法 <code>truncate()</code> 方法是按照<strong>字节</strong>来处理字符串的，如果参数所给的位置不是合法的字符边界，则会发生错误。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">string_truncate</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;测试truncate&quot;</span>);</span><br><span class="line">    string_truncate.<span class="title function_ invoke__">truncate</span>(<span class="number">3</span>);</span><br><span class="line">    dbg!(string_truncate);	<span class="comment">// string_truncate = &quot;测&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>4.<strong><code>clear</code></strong> —— 清空字符串</p>
+<p><strong>该方法是直接操作原来的字符串</strong>。调用后，删除字符串中的所有字符，相当于 <code>truncate()</code> 方法参数为 0 的时候。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">string_clear</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;string clear&quot;</span>);</span><br><span class="line">    string_clear.<span class="title function_ invoke__">clear</span>();</span><br><span class="line">    dbg!(string_clear);	<span class="comment">// string_clear = &quot;&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="连接-concatenate"><a href="#连接-concatenate" class="headerlink" title="连接(concatenate)"></a>连接(concatenate)</h5><p>1、<strong>使用 <code>+</code> 或者 <code>+=</code> 连接字符串</strong></p>
+<p>使用 <code>+</code> 或者 <code>+=</code> 连接字符串，要求<strong>右边的参数必须为字符串的切片引用</strong>（Slice）类型。其实当调用 <code>+</code> 的操作符时，相当于调用了 <code>std::string</code> 标准库中的 <a target="_blank" rel="noopener" href="https://doc.rust-lang.org/std/string/struct.String.html#method.add"><code>add()</code></a> 方法，这里 <code>add()</code> 方法的第二个参数是一个引用的类型。因此我们在使用 <code>+</code>， 必须传递切片引用类型。不能直接传递 <code>String</code> 类型。**<code>+</code> 是返回一个新的字符串，所以变量声明可以不需要 <code>mut</code> 关键字修饰<strong>。</strong>而<code>+=</code>则必须声明为<code>mut</code>因为是在原来的字符串上进行追加操作**。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">string_append</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;hello &quot;</span>);</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">string_rust</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;rust&quot;</span>);</span><br><span class="line">    <span class="comment">// &amp;string_rust会自动解引用为&amp;str</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">result</span> = string_append + &amp;string_rust;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">result</span> = result + <span class="string">&quot;!&quot;</span>; <span class="comment">// `result + &quot;!&quot;` 中的 `result` 是不可变的</span></span><br><span class="line">    result += <span class="string">&quot;!!!&quot;</span>;	<span class="comment">// 中rustlt必须声明为 mut 因为+=是在原来的字符串上进行操作</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;连接字符串 + -&gt; &#123;&#125;&quot;</span>, result); <span class="comment">// 连接字符串 + -&gt; hello rust!!!!</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>add()</code> 方法的定义：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">add</span>(<span class="keyword">self</span>, s: &amp;<span class="type">str</span>) <span class="punctuation">-&gt;</span> <span class="type">String</span></span><br></pre></td></tr></table></figure>
+
+<p>因为该方法涉及到更复杂的特征功能，因此我们这里简单说明下：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s1</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;hello,&quot;</span>);</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s2</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;world!&quot;</span>);</span><br><span class="line">    <span class="comment">// 在下句中，s1的所有权被转移走了，因此后面不能再使用s1</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s3</span> = s1 + &amp;s2;</span><br><span class="line">    <span class="built_in">assert_eq!</span>(s3,<span class="string">&quot;hello,world!&quot;</span>);</span><br><span class="line">    <span class="comment">// 下面的语句如果去掉注释，就会报错</span></span><br><span class="line">    <span class="comment">// println!(&quot;&#123;&#125;&quot;,s1);</span></span><br><span class="line">    <span class="comment">// println!(&quot;&#123;&#125;&quot;,s2); 这个可以正常打印</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>self</code> 是 <code>String</code> 类型的字符串 <code>s1</code>，该函数说明，只能将 <code>&amp;str</code> 类型的字符串切片添加到 <code>String</code> 类型的 <code>s1</code> 上，然后返回一个新的 <code>String</code> 类型，所以 <code>let s3 = s1 + &amp;s2;</code> 就很好解释了，将 <code>String</code> 类型的 <code>s1</code> 与 <code>&amp;str</code> 类型的 <code>s2</code> 进行相加，最终得到 <code>String</code> 类型的 <code>s3</code>。</p>
+<p>由此可推，以下代码也是合法的：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">s1</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;tic&quot;</span>);</span><br><span class="line"><span class="keyword">let</span> <span class="variable">s2</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;tac&quot;</span>);</span><br><span class="line"><span class="keyword">let</span> <span class="variable">s3</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;toe&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// String = String + &amp;str + &amp;str + &amp;str + &amp;str</span></span><br><span class="line"><span class="keyword">let</span> <span class="variable">s</span> = s1 + <span class="string">&quot;-&quot;</span> + &amp;s2 + <span class="string">&quot;-&quot;</span> + &amp;s3;</span><br></pre></td></tr></table></figure>
+
+<p><code>String + &amp;str</code>返回一个 <code>String</code>，然后再继续跟一个 <code>&amp;str</code> 进行 <code>+</code> 操作，返回一个 <code>String</code> 类型，不断循环，最终生成一个 <code>s</code>，也是 <code>String</code> 类型。</p>
+<p><code>s1</code> 这个变量通过调用 <code>add()</code> 方法后，所有权被转移到 <code>add()</code> 方法里面， <code>add()</code> 方法调用后就被释放了，同时 <code>s1</code> 也被释放了。再使用 <code>s1</code> 就会发生错误。这里涉及到<strong>所有权转移</strong>的相关知识。</p>
+<p>2、<strong>使用 <code>format!</code> 连接字符串</strong></p>
+<p><code>format!</code> 这种方式适用于 <code>String</code> 和 <code>&amp;str</code> ，用法与 <code>print!</code> 的用法类似。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s1</span> = <span class="string">&quot;hello&quot;</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s2</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;rust&quot;</span>);</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s</span> = <span class="built_in">format!</span>(<span class="string">&quot;&#123;&#125; &#123;&#125;!&quot;</span>, s1, s2);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, s);	<span class="comment">// hello rust!</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="字符串转义"><a href="#字符串转义" class="headerlink" title="字符串转义"></a>字符串转义</h4><p>使用<code>\</code>进行转义，基本上和其他语言雷同。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="comment">// 通过 \ + 字符的十六进制表示，转义输出一个字符</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">byte_escape</span> = <span class="string">&quot;I&#x27;m writing \x52\x75\x73\x74!&quot;</span>;</span><br><span class="line">    <span class="comment">// What are you doing? (\x3F means ?) I&#x27;m writing Rust!</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;What are you doing\x3F (\\x3F means ?) &#123;&#125;&quot;</span>, byte_escape);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// \u 可以输出一个 unicode 字符</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">unicode_codepoint</span> = <span class="string">&quot;\u&#123;211D&#125;&quot;</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">character_name</span> = <span class="string">&quot;\&quot;DOUBLE-STRUCK CAPITAL R\&quot;&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Unicode character ℝ (U+211D) is called &quot;DOUBLE-STRUCK CAPITAL R&quot;</span></span><br><span class="line">    <span class="built_in">println!</span>(</span><br><span class="line">        <span class="string">&quot;Unicode character &#123;&#125; (U+211D) is called &#123;&#125;&quot;</span>,</span><br><span class="line">        unicode_codepoint, character_name</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 换行了也会保持之前的字符串格式</span></span><br><span class="line">    <span class="comment">// 使用\忽略换行符</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">long_string</span> = <span class="string">&quot;String literals</span></span><br><span class="line"><span class="string">                        can span multiple lines.</span></span><br><span class="line"><span class="string">                        The linebreak and indentation here -&gt;\</span></span><br><span class="line"><span class="string">                        &lt;- can be escaped too!&quot;</span>;</span><br><span class="line">    <span class="comment">// String literals</span></span><br><span class="line">    <span class="comment">// can span multiple lines.</span></span><br><span class="line">    <span class="comment">// The linebreak and indentation here -&gt;&lt;- can be escaped too!&quot;;</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, long_string);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当然，在某些情况下，可能你会希望保持字符串的原样，不要转义：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, <span class="string">&quot;hello \\x52\\x75\\x73\\x74&quot;</span>); <span class="comment">// hello \x52\x75\x73\x74</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">raw_str</span> = <span class="string">r&quot;Escapes don&#x27;t work here: \x3F \u&#123;211D&#125;&quot;</span>; <span class="comment">// Escapes don&#x27;t work here: \x3F \u&#123;211D&#125;</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, raw_str);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果字符串包含双引号，可以在开头和结尾加 #</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">quotes</span> = <span class="string">r#&quot;And then I said: &quot;There is no escape!&quot;&quot;#</span>;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, quotes);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果还是有歧义，可以继续增加，没有限制</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">longer_delimiter</span> = <span class="string">r###&quot;A string with &quot;# in it. And even &quot;##!&quot;###</span>;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, longer_delimiter);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>在 Rust 中，如果在字符串字面值的前面加上一个 r，表示这是一个原始字符串字面值（raw string literal）。原始字符串字面值中的特殊字符和转义序列都会被直接输出，不会被解释为特殊字符或转义序列。</p>
+<p>字符串字面值中，如果要表示包含 r#” 和 “” 的字符串，需要使用一对 # 来定界</p>
+</blockquote>
+<h4 id="操作UTF-8字符串"><a href="#操作UTF-8字符串" class="headerlink" title="操作UTF-8字符串"></a>操作UTF-8字符串</h4><p><strong>字符</strong></p>
+<p>要以 Unicode 字符的方式遍历字符串，最好的办法是使用 <code>chars</code> 方法</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> <span class="variable">c</span> <span class="keyword">in</span> <span class="string">&quot;中国人&quot;</span>.<span class="title function_ invoke__">chars</span>() &#123;</span><br><span class="line">    <span class="built_in">print!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, c); <span class="comment">//中国人</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>字节</strong></p>
+<p>以字节的方式去便利字符串，最好的办法是使用 <code>bytes</code> 方法</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> <span class="variable">b</span> <span class="keyword">in</span> <span class="string">&quot;中国人&quot;</span>.<span class="title function_ invoke__">bytes</span>() &#123;</span><br><span class="line">    <span class="built_in">print!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, b);	<span class="comment">//228 184 173 229 155 189 228 186 186</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>获取字串</strong></p>
+<p>想要准确的从 UTF-8 字符串中获取子串是较为复杂的事情，例如想要从 <code>holla中国人नमस्ते</code> 这种变长的字符串中取出某一个子串，使用标准库你是做不到的。 你需要在 <code>crates.io</code> 上搜索 <code>utf8</code> 来寻找想要的功能。</p>
+<p>可以考虑尝试下这个库：<a target="_blank" rel="noopener" href="https://crates.io/crates/utf8_slice">utf8_slice</a>。</p>
+<h4 id="字符串深度剖析"><a href="#字符串深度剖析" class="headerlink" title="字符串深度剖析"></a>字符串深度剖析</h4><p>为啥 <code>String</code> 可变，而字符串字面值 <code>str</code> 却不可以？</p>
+<p>就字符串字面值来说，我们在编译时就知道其内容，最终字面值文本被直接硬编码进可执行文件中，这使得字符串字面值快速且高效，这主要得益于字符串字面值的不可变性。不幸的是，我们不能为了获得这种性能，而把每一个在编译时大小未知的文本都放进内存中（你也做不到！），因为有的字符串是在程序运行得过程中动态生成的。</p>
+<p>对于 <code>String</code> 类型，为了支持一个可变、可增长的文本片段，需要在堆上分配一块在编译时未知大小的内存来存放内容，这些都是在程序运行时完成的：</p>
+<ul>
+<li>首先向操作系统请求内存来存放 <code>String</code> 对象</li>
+<li>在使用完成后，将内存释放，归还给操作系统</li>
+</ul>
+<p>其中第一部分由 <code>String::from</code> 完成，它创建了一个全新的 <code>String</code>。</p>
+<p>重点来了，到了第二部分，就是百家齐放的环节，在有<strong>垃圾回收 GC</strong> 的语言中，GC 来负责标记并清除这些不再使用的内存对象，这个过程都是自动完成，无需开发者关心，非常简单好用；但是在无 GC 的语言中，需要开发者手动去释放这些内存对象，就像创建对象需要通过编写代码来完成一样，未能正确释放对象造成的后果简直不可估量。</p>
+<p>对于 Rust 而言，安全和性能是写到骨子里的核心特性，如果使用 GC，那么会牺牲性能；如果使用手动管理内存，那么会牺牲安全，这该怎么办？为此，Rust 的开发者想出了一个无比惊艳的办法：变量在离开作用域后，就自动释放其占用的内存：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;hello&quot;</span>); <span class="comment">// 从此处起，s 是有效的</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用 s</span></span><br><span class="line">&#125;                                  <span class="comment">// 此作用域已结束，</span></span><br><span class="line">                                   <span class="comment">// s 不再有效，内存被释放</span></span><br></pre></td></tr></table></figure>
+
+<p>与其它系统编程语言的 <code>free</code> 函数相同，Rust 也提供了一个释放内存的函数： <code>drop</code>，但是不同的是，其它语言要手动调用 <code>free</code> 来释放每一个变量占用的内存，而 Rust 则在变量离开作用域时，自动调用 <code>drop</code> 函数: 上面代码中，Rust 在结尾的 <code>&#125;</code> 处自动调用 <code>drop</code>。</p>
+<h2 id="元组"><a href="#元组" class="headerlink" title="元组"></a>元组</h2><p>由<strong>多种类型组</strong>合到一起形成的，因此它是复合类型，元组的<strong>长度是固定的</strong>，元组中<strong>元素的顺序也是固定的</strong>。</p>
+<p>语法：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">tup</span>: (<span class="type">i32</span>, <span class="type">f64</span>, <span class="type">u8</span>) = (<span class="number">500</span>, <span class="number">6.4</span>, <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="用模式匹配解构元组"><a href="#用模式匹配解构元组" class="headerlink" title="用模式匹配解构元组"></a>用模式匹配解构元组</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">tup</span> = (<span class="number">500</span>, <span class="number">6.4</span>, <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">let</span> (x, y, z) = tup;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;The value of y is: &#123;&#125;&quot;</span>, y);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述代码首先创建一个元组，然后将其绑定到 <code>tup</code> 上，接着使用 <code>let (x, y, z) = tup;</code> 来完成一次模式匹配，因为元组是 <code>(n1, n2, n3)</code> 形式的，因此我们用一模一样的 <code>(x, y, z)</code> 形式来进行匹配，元组中对应的值会绑定到变量 <code>x</code>， <code>y</code>， <code>z</code>上。这就是解构：用同样的形式把一个复杂对象中的值匹配出来。</p>
+<h3 id="用-来访问元组"><a href="#用-来访问元组" class="headerlink" title="用 . 来访问元组"></a>用 . 来访问元组</h3><p>模式匹配可以让我们一次性把元组中的值全部或者部分获取出来，如果只想要访问某个特定元素，那模式匹配就略显繁琐，对此，Rust 提供了 <code>.</code> 的访问方式：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">x</span>: (<span class="type">i32</span>, <span class="type">f64</span>, <span class="type">u8</span>) = (<span class="number">500</span>, <span class="number">6.4</span>, <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">five_hundred</span> = x.<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">six_point_four</span> = x.<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">one</span> = x.<span class="number">2</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>和其它语言的数组、字符串一样，元组的索引从 0 开始。</p>
+<h3 id="使用示例"><a href="#使用示例" class="headerlink" title="使用示例"></a>使用示例</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s1</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;hello&quot;</span>);</span><br><span class="line">	<span class="comment">// 此处之后 s1的所有权被移交给了calculate_length，返回给了s2。s1失效。</span></span><br><span class="line">    <span class="keyword">let</span> (s2, len) = <span class="title function_ invoke__">calculate_length</span>(s1);	</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;The length of &#x27;&#123;&#125;&#x27; is &#123;&#125;.&quot;</span>, s2, len);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">calculate_length</span>(s: <span class="type">String</span>) <span class="punctuation">-&gt;</span> (<span class="type">String</span>, <span class="type">usize</span>) &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">length</span> = s.<span class="title function_ invoke__">len</span>(); <span class="comment">// len() 返回字符串的长度</span></span><br><span class="line">    (s, length)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>calculate_length</code> 函数接收 <code>s1</code> 字符串的所有权，然后计算字符串的长度，接着把字符串所有权和字符串长度再返回给 <code>s2</code> 和 <code>len</code> 变量。</p>
+<h2 id="结构体"><a href="#结构体" class="headerlink" title="结构体"></a>结构体</h2><p>由其它数据类型组合而来，但是与元组不同的是，结构体可以为内部的每个字段起一个富有含义的名称。因此结构体更加灵活更加强大，你无需依赖这些字段的顺序来访问和解析它们。</p>
+<h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><ul>
+<li>通过关键字 <code>struct</code> 定义</li>
+<li>一个清晰明确的结构体 <code>名称</code></li>
+<li>几个有名字的结构体 <code>字段</code></li>
+</ul>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">User</span> &#123;	<span class="comment">// 此处定义了一个名为 User 的结构体</span></span><br><span class="line">    active: <span class="type">bool</span>,</span><br><span class="line">    username: <span class="type">String</span>,</span><br><span class="line">    email: <span class="type">String</span>,</span><br><span class="line">    sign_in_count: <span class="type">u64</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>该结构体名称是 <code>User</code>，拥有 4 个字段，且每个字段都有对应的字段名及类型声明，例如 <code>username</code> 代表了用户名，是一个可变的 <code>String</code> 类型。</p>
+<h3 id="创建实例"><a href="#创建实例" class="headerlink" title="创建实例"></a>创建实例</h3><p>为了使用上述结构体，我们需要创建 <code>User</code> 结构体的<strong>实例</strong>：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">user1</span> = User &#123;</span><br><span class="line">    email: <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;someone@example.com&quot;</span>),</span><br><span class="line">    username: <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;someusername123&quot;</span>),</span><br><span class="line">    active: <span class="literal">true</span>,</span><br><span class="line">    sign_in_count: <span class="number">1</span>,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>有几点值得注意:</p>
+<ol>
+<li>初始化实例时，<strong>每个字段</strong>都需要进行初始化</li>
+<li>初始化时的字段顺序<strong>不需要</strong>和结构体定义时的顺序一致</li>
+</ol>
+<h3 id="访问结构体字段"><a href="#访问结构体字段" class="headerlink" title="访问结构体字段"></a>访问结构体字段</h3><p>通过 <code>.</code> 操作符即可访问结构体实例内部的字段值，也可以修改它们：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">user1</span> = User &#123;</span><br><span class="line">    email: <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;someone@example.com&quot;</span>),</span><br><span class="line">    username: <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;someusername123&quot;</span>),</span><br><span class="line">    active: <span class="literal">true</span>,</span><br><span class="line">    sign_in_count: <span class="number">1</span>,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">user1.email = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;anotheremail@example.com&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>需要注意的是，<strong>必须要将结构体实例声明为可变的，才能修改其中的字段</strong>，Rust<strong>不支持将某个结构体某个字段标记为可变</strong>。</p>
+<h3 id="简化结构体创建"><a href="#简化结构体创建" class="headerlink" title="简化结构体创建"></a>简化结构体创建</h3><p>构造一个方法返回结构体实例：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">build_user</span>(email: <span class="type">String</span>, username: <span class="type">String</span>) <span class="punctuation">-&gt;</span> User &#123;</span><br><span class="line">    User &#123;</span><br><span class="line">        email: email,</span><br><span class="line">        username: username,</span><br><span class="line">        active: <span class="literal">true</span>,</span><br><span class="line">        sign_in_count: <span class="number">1</span>,</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可简化为：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">build_user</span>(email: <span class="type">String</span>, username: <span class="type">String</span>) <span class="punctuation">-&gt;</span> User &#123;</span><br><span class="line">    User &#123;</span><br><span class="line">        email,</span><br><span class="line">        username,</span><br><span class="line">        active: <span class="literal">true</span>,</span><br><span class="line">        sign_in_count: <span class="number">1</span>,</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>当函数参数和结构体字段同名时，可以直接使用缩略的方式进行初始化</strong>。</p>
+<h3 id="结构体更新语法"><a href="#结构体更新语法" class="headerlink" title="结构体更新语法"></a>结构体更新语法</h3><p>在实际场景中，有一种情况很常见：根据已有的结构体实例，创建新的结构体实例，例如根据已有的 <code>user1</code> 实例来构建 <code>user2</code>：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">user2</span> = User &#123;</span><br><span class="line">      active: user1.active, <span class="comment">// bool </span></span><br><span class="line">      username: user1.username, <span class="comment">// String</span></span><br><span class="line">      email: <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;another@example.com&quot;</span>), <span class="comment">// String</span></span><br><span class="line">      sign_in_count: user1.sign_in_count, <span class="comment">// u64</span></span><br><span class="line">  &#125;;</span><br></pre></td></tr></table></figure>
+
+<p>可以简化为以下<code>结构体更新语法</code>：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">user2</span> = User &#123;</span><br><span class="line">       email: <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;another@example.com&quot;</span>),</span><br><span class="line">       ..user1</span><br><span class="line">   &#125;;</span><br></pre></td></tr></table></figure>
+
+<p>因为 <code>user2</code> 仅仅在 <code>email</code> 上与 <code>user1</code> 不同，因此我们只需要对 <code>email</code> 进行赋值，剩下的通过结构体更新语法 <code>..user1</code> 即可完成。</p>
+<p><code>..</code> 语法表明凡是我们没有显式声明的字段，全部从 <code>user1</code> 中自动获取。需要注意的是</p>
+<p><strong><code>..user1</code> 必须在结构体的尾部使用</strong>。</p>
+<blockquote>
+<p>结构体更新语法跟赋值语句 <code>=</code> 非常相像，因此在上面代码中，<code>user1</code> 的部分字段所有权被转移到 <code>user2</code> 中：<code>username</code> 字段发生了所有权转移，作为结果，<code>user1</code> 无法再被使用。</p>
+<p>聪明的读者肯定要发问了：明明有三个字段进行了自动赋值，为何只有 <code>username</code> 发生了所有权转移？</p>
+<p>仔细回想一下所有权那一节的内容，我们提到了 <code>Copy</code> 特征：实现了 <code>Copy</code> 特征的类型无需所有权转移，可以直接在赋值时进行 数据拷贝，其中 <code>bool</code> 和 <code>u64</code> 类型就实现了 <code>Copy</code> 特征，因此 <code>active</code> 和 <code>sign_in_count</code> 字段在赋值给 <code>user2</code> 时，仅仅发生了拷贝，而不是所有权转移。</p>
+<p>值得注意的是：<code>username</code> 所有权被转移给了 <code>user2</code>，导致了 <code>user1</code> 无法再被使用，但是并不代表 <code>user1</code> 内部的其它字段不能被继续使用，例如：</p>
+</blockquote>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">user1</span> = User &#123;</span><br><span class="line">    email: <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;someone@example.com&quot;</span>),</span><br><span class="line">    username: <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;someusername123&quot;</span>),</span><br><span class="line">    active: <span class="literal">true</span>,</span><br><span class="line">    sign_in_count: <span class="number">1</span>,</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">let</span> <span class="variable">user2</span> = User &#123;</span><br><span class="line">    active: user1.active,</span><br><span class="line">    username: user1.username,</span><br><span class="line">    email: <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;another@example.com&quot;</span>),</span><br><span class="line">    sign_in_count: user1.sign_in_count,</span><br><span class="line">&#125;;</span><br><span class="line"><span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, user1.active);</span><br><span class="line"><span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, user1); <span class="comment">// // 下面这行会报错</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>结构体 user1中的 username 指向的数据为空，当调用 user1 时肯定会报错的，因为 实例对象本身残缺</p>
+</blockquote>
+<h3 id="结构体的内存排列"><a href="#结构体的内存排列" class="headerlink" title="结构体的内存排列"></a>结构体的内存排列</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#[derive(Debug)]</span></span><br><span class="line"> <span class="keyword">struct</span> <span class="title class_">File</span> &#123;</span><br><span class="line">   name: <span class="type">String</span>,</span><br><span class="line">   data: <span class="type">Vec</span>&lt;<span class="type">u8</span>&gt;,</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> <span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">   <span class="keyword">let</span> <span class="variable">f1</span> = File &#123;</span><br><span class="line">     name: <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;f1.txt&quot;</span>),</span><br><span class="line">     data: <span class="type">Vec</span>::<span class="title function_ invoke__">new</span>(),</span><br><span class="line">   &#125;;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">let</span> <span class="variable">f1_name</span> = &amp;f1.name;</span><br><span class="line">   <span class="keyword">let</span> <span class="variable">f1_length</span> = &amp;f1.data.<span class="title function_ invoke__">len</span>();</span><br><span class="line"></span><br><span class="line">   <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, f1); <span class="comment">// File &#123; name: &quot;f1.txt&quot;, data: [] &#125;</span></span><br><span class="line">   <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125; is &#123;&#125; bytes long&quot;</span>, f1_name, f1_length); <span class="comment">// f1.txt is 0 bytes long</span></span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面定义的 <code>File</code> 结构体在内存中的排列如下图所示：</p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="https://pic3.zhimg.com/80/v2-8cc4ed8cd06d60f974d06ca2199b8df5_1440w.png" alt="img" data-caption="img" loading="lazy"></p>
+<p>从图中可以清晰地看出 <code>File</code> 结构体两个字段 <code>name</code> 和 <code>data</code> 分别拥有底层两个 <code>[u8]</code> 数组的所有权(<code>String</code> 类型的底层也是 <code>[u8]</code> 数组)，通过 <code>ptr</code> 指针指向底层数组的内存地址，这里你可以把 <code>ptr</code> 指针理解为 Rust 中的引用类型。</p>
+<p>该图片也侧面印证了：<strong>把结构体中具有所有权的字段转移出去后，将无法再访问该字段，但是可以正常访问其它的字段</strong>。</p>
+<h3 id="元组结构体"><a href="#元组结构体" class="headerlink" title="元组结构体"></a>元组结构体</h3><p>结构体必须要有名称，但是结构体的字段可以没有名称，这种结构体长得很像元组，因此被称为元组结构体，例如：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Color</span>(<span class="type">i32</span>, <span class="type">i32</span>, <span class="type">i32</span>);</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Point</span>(<span class="type">i32</span>, <span class="type">i32</span>, <span class="type">i32</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="variable">black</span> = <span class="title function_ invoke__">Color</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line"><span class="keyword">let</span> <span class="variable">origin</span> = <span class="title function_ invoke__">Point</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+
+<p>元组结构体在你希望有一个整体名称，但是又不关心里面字段的名称时将非常有用。例如上面的 <code>Point</code> 元组结构体，众所周知 3D 点是 <code>(x, y, z)</code> 形式的坐标点，因此我们无需再为内部的字段逐一命名为：<code>x</code>, <code>y</code>, <code>z</code>。</p>
+<h3 id="单元结构体"><a href="#单元结构体" class="headerlink" title="单元结构体"></a>单元结构体</h3><p>单元结构体没有任何字段和属性。如果你定义一个类型，但是不关心该类型的内容, 只关心它的行为时，就可以使用 <code>单元结构体</code>：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">AlwaysEqual</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="variable">subject</span> = AlwaysEqual;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 我们不关心 AlwaysEqual 的字段数据，只关心它的行为，因此将它声明为单元结构体，然后再为它实现某个特征</span></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">SomeTrait</span> <span class="keyword">for</span> <span class="title class_">AlwaysEqual</span> &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="结构体数据的所有权"><a href="#结构体数据的所有权" class="headerlink" title="结构体数据的所有权"></a>结构体数据的所有权</h3><p>在之前的 <code>User</code> 结构体的定义中，有一处细节：我们使用了自身拥有所有权的 <code>String</code> 类型而不是基于引用的 <code>&amp;str</code> 字符串切片类型。这是一个有意而为之的选择：因为我们想要这个结构体拥有它所有的数据，而不是从其它地方借用数据。</p>
+<p>你也可以让 <code>User</code> 结构体从其它对象借用数据，不过这么做，就需要引入生命周期这个新概念（也是一个复杂的概念），简而言之，生命周期能确保结构体的作用范围要比它所借用的数据的作用范围要小。</p>
+<p>总之，如果你想在结构体中使用一个引用，就必须加上生命周期，否则就会报错：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">User</span> &#123;</span><br><span class="line">    username: &amp;<span class="type">str</span>, <span class="comment">// expected named lifetime parameter // 需要一个生命周期</span></span><br><span class="line">    email: &amp;<span class="type">str</span>,</span><br><span class="line">    sign_in_count: <span class="type">u64</span>,</span><br><span class="line">    active: <span class="type">bool</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">user1</span> = User &#123;</span><br><span class="line">        email: <span class="string">&quot;someone@example.com&quot;</span>,</span><br><span class="line">        username: <span class="string">&quot;someusername123&quot;</span>,</span><br><span class="line">        active: <span class="literal">true</span>,</span><br><span class="line">        sign_in_count: <span class="number">1</span>,</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>未来在生命周期中会讲到如何修复这个问题以便在结构体中存储引用，不过在那之前，我们会避免在结构体中使用引用类型。</p>
+<h3 id="使用-derive-Debug-来打印结构体信息"><a href="#使用-derive-Debug-来打印结构体信息" class="headerlink" title="使用 #[derive(Debug)]来打印结构体信息"></a>使用 #[derive(Debug)]来打印结构体信息</h3><p>在前面的代码中我们使用 <code>#[derive(Debug)]</code> 对结构体进行了标记，这样才能使用 <code>println!(&quot;&#123;:?&#125;&quot;, s);</code> 的方式对其进行打印输出，如果不加，看看会发生什么:</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Rectangle</span> &#123;</span><br><span class="line">    width: <span class="type">u32</span>,</span><br><span class="line">    height: <span class="type">u32</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">rect1</span> = Rectangle &#123;</span><br><span class="line">        width: <span class="number">30</span>,</span><br><span class="line">        height: <span class="number">50</span>,</span><br><span class="line">    &#125;;</span><br><span class="line">	<span class="comment">// `Rectangle` doesn&#x27;t implement `std::fmt::Display`</span></span><br><span class="line">    <span class="comment">//  the trait `std::fmt::Display` is not implemented for `Rectangle`</span></span><br><span class="line">    <span class="comment">//  in format strings you may be able to use `&#123;:?&#125;` (or &#123;:#?&#125; for </span></span><br><span class="line">    <span class="comment">//   pretty-print) insteadrustcClick for full compiler diagnostic</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;rect1 is &#123;&#125;&quot;</span>, rect1);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>提示我们结构体 <code>Rectangle</code> 没有实现 <code>Display</code> 特征，这是因为如果我们使用 <code>&#123;&#125;</code> 来格式化输出，那对应的类型就必须实现 <code>Display</code> 特征，以前学习的<strong>基本类型，都默认实现了<code>Display</code>特征</strong>:</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">v</span> = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">b</span> = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;, &#123;&#125;&quot;</span>, v, b);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面代码不会报错，那么结构体为什么不默认实现 <code>Display</code> 特征呢？原因在于结构体较为复杂，例如考虑以下问题：你想要逗号对字段进行分割吗？需要括号吗？加在什么地方？所有的字段都应该显示？类似的还有很多，由于这种复杂性，Rust 不希望猜测我们想要的是什么，而是把选择权交给我们自己来实现：如果要用 <code>&#123;&#125;</code> 的方式打印结构体，那就自己实现 <code>Display</code> 特征。</p>
+<p>阅读报错信息提示我们使用 <code>&#123;:?&#125;</code> 来试试，这个方式我们在本文的前面也见过，下面来试试:</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">println!</span>(<span class="string">&quot;rect1 is &#123;:?&#125;&quot;</span>, rect1);</span><br></pre></td></tr></table></figure>
+
+<p>可是依然无情报错了:</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">error[E0277]: `Rectangle` doesn<span class="symbol">&#x27;t</span> implement `<span class="built_in">Debug</span>`</span><br></pre></td></tr></table></figure>
+
+<p>好在，聪明的编译器又一次给出了提示:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">= help: the trait `Debug` is not implemented for `Rectangle`</span><br><span class="line">= note: add `#[derive(Debug)]` to `Rectangle` or manually `impl Debug for Rectangle`</span><br></pre></td></tr></table></figure>
+
+<p>让我们实现 <code>Debug</code> 特征，Oh No，就是不想实现 <code>Display</code> 特征，才用的 <code>&#123;:?&#125;</code>，怎么又要实现 <code>Debug</code>，但是仔细看，提示中有一行： <code>add #[derive(Debug)] to Rectangle</code>， 哦？这不就是我们前文一直在使用的吗？</p>
+<p>首先，Rust 默认不会为我们实现 <code>Debug</code>，为了实现，有两种方式可以选择：</p>
+<ul>
+<li>手动实现</li>
+<li>使用 <code>derive</code> 派生实现</li>
+</ul>
+<p>后者简单的多，但是也有限制，来看看该如何使用:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">[derive(Debug)]</span></span><br><span class="line">struct Rectangle &#123;</span><br><span class="line">    width: u32,</span><br><span class="line">    height: u32,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fn main() &#123;</span><br><span class="line">    let rect1 = Rectangle &#123;</span><br><span class="line">        width: 30,</span><br><span class="line">        height: 50,</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    println!(&quot;rect1 is &#123;:?&#125;&quot;, rect1);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>此时运行程序，就不再有错误，输出如下:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">cargo run</span></span><br><span class="line">rect1 is Rectangle &#123; width: 30, height: 50 &#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个输出格式看上去也不赖嘛，虽然未必是最好的。这种格式是 Rust 自动为我们提供的实现，看上基本就跟结构体的定义形式一样。</p>
+<p>当结构体较大时，我们可能希望能够有更好的输出表现，此时可以使用 <code>&#123;:#?&#125;</code> 来替代 <code>&#123;:?&#125;</code>，输出如下:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">rect1 is Rectangle &#123;</span><br><span class="line">    width: 30,</span><br><span class="line">    height: 50,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>此时结构体的输出跟我们创建时候的代码几乎一模一样了！</p>
+<h4 id="dbg-宏"><a href="#dbg-宏" class="headerlink" title="dbg! 宏"></a>dbg! 宏</h4><p>它会拿走表达式的所有权，然后打印出相应的文件名、行号等 debug 信息，当然还有我们需要的表达式的求值结果。<strong>除此之外，它最终还会把表达式值的所有权返回！</strong></p>
+<blockquote>
+<p><code>dbg!</code> 输出到标准错误输出 <code>stderr</code>，而 <code>println!</code> 输出到标准输出 <code>stdout</code>。</p>
+</blockquote>
+<p><strong><code>:</code> 在 Rust 中通常用于类型注释或模式匹配中</strong></p>
+<p>下面的例子中清晰的展示了 <code>dbg!</code> 如何在打印出信息的同时，还把表达式的值赋给了 <code>width</code>:</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#[derive(Debug)]</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Rectangle</span> &#123;</span><br><span class="line">    width: <span class="type">u32</span>,</span><br><span class="line">    height: <span class="type">u32</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">scale</span> = <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">rect1</span> = Rectangle &#123;</span><br><span class="line">        width: dbg!(<span class="number">30</span> * scale),</span><br><span class="line">        height: <span class="number">50</span>,</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    dbg!(&amp;rect1);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最终的 debug 输出如下:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">cargo run</span></span><br><span class="line">[src/main.rs:10] 30 * scale = 60</span><br><span class="line">[src/main.rs:14] &amp;rect1 = Rectangle &#123;</span><br><span class="line">    width: 60,</span><br><span class="line">    height: 50,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，我们想要的 debug 信息几乎都有了：代码所在的文件名、行号、表达式以及表达式的值，简直完美！</p>
+<h2 id="枚举"><a href="#枚举" class="headerlink" title="枚举"></a>枚举</h2><p>枚举(enum 或 enumeration)允许你通过列举可能的成员来定义一个<strong>枚举类型</strong>，以扑克牌为例：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> <span class="title class_">PokerSuit</span> &#123;</span><br><span class="line">  Clubs,</span><br><span class="line">  Spades,</span><br><span class="line">  Diamonds,</span><br><span class="line">  Hearts,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>任何一张扑克，它的花色肯定会落在四种花色中，而且也只会落在其中一个花色上，这种特性非常适合枚举的使用，因为<strong>枚举值</strong>只可能是其中某一个成员。抽象来看，四种花色尽管是不同的花色，但是它们都是扑克花色这个概念，因此当某个函数处理扑克花色时，可以把它们当作相同的类型进行传参。</p>
+<p> <strong>枚举类型是一个类型，它会包含所有可能的枚举成员, 而枚举值是该类型中的具体某个成员的实例。</strong></p>
+<h3 id="枚举值"><a href="#枚举值" class="headerlink" title="枚举值"></a>枚举值</h3><p>我们通过 <code>::</code> 操作符来访问 <code>PokerSuit</code> 下的具体成员，从代码可以清晰看出，<code>heart</code> 和 <code>diamond</code> 都是 <code>PokerSuit</code> 枚举类型的，接着可以定义一个函数来使用它们：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">heart</span> = PokerSuit::Hearts;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">diamond</span> = PokerSuit::Diamonds;</span><br><span class="line"></span><br><span class="line">    <span class="title function_ invoke__">print_suit</span>(heart);</span><br><span class="line">    <span class="title function_ invoke__">print_suit</span>(diamond);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">print_suit</span>(card: PokerSuit) &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>,card);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>print_suit</code> 函数的参数类型是 <code>PokerSuit</code>，因此我们可以把 <code>heart</code> 和 <code>diamond</code> 传给它，虽然 <code>heart</code> 是基于 <code>PokerSuit</code> 下的 <code>Hearts</code> 成员实例化的，但是它是货真价实的 <code>PokerSuit</code> 枚举类型。</p>
+<p>接下来，我们想让扑克牌变得更加实用，那么需要给每张牌赋予一个值：<code>A</code>(1)-<code>K</code>(13)，这样再加上花色，就是一张真实的扑克牌了，例如红心 A。</p>
+<p>目前来说，枚举值还不能带有值，因此先用结构体来实现：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> <span class="title class_">PokerSuit</span> &#123;</span><br><span class="line">    Clubs,</span><br><span class="line">    Spades,</span><br><span class="line">    Diamonds,</span><br><span class="line">    Hearts,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">PokerCard</span> &#123;</span><br><span class="line">    suit: PokerSuit,</span><br><span class="line">    value: <span class="type">u8</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">   <span class="keyword">let</span> <span class="variable">c1</span> = PokerCard &#123;</span><br><span class="line">       suit: PokerSuit::Clubs,</span><br><span class="line">       value: <span class="number">1</span>,</span><br><span class="line">   &#125;;</span><br><span class="line">   <span class="keyword">let</span> <span class="variable">c2</span> = PokerCard &#123;</span><br><span class="line">       suit: PokerSuit::Diamonds,</span><br><span class="line">       value: <span class="number">12</span>,</span><br><span class="line">   &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这段代码很好的完成了它的使命，通过结构体 <code>PokerCard</code> 来代表一张牌，结构体的 <code>suit</code> 字段表示牌的花色，类型是 <code>PokerSuit</code> 枚举类型，<code>value</code> 字段代表扑克牌的数值。</p>
+<p>可以吗？可以！好吗？说实话，不咋地，因为还有简洁得多的方式来实现：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> <span class="title class_">PokerCard</span> &#123;</span><br><span class="line">    <span class="title function_ invoke__">Clubs</span>(<span class="type">u8</span>),</span><br><span class="line">    <span class="title function_ invoke__">Spades</span>(<span class="type">u8</span>),</span><br><span class="line">    <span class="title function_ invoke__">Diamonds</span>(<span class="type">u8</span>),</span><br><span class="line">    <span class="title function_ invoke__">Hearts</span>(<span class="type">u8</span>),</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">   <span class="keyword">let</span> <span class="variable">c1</span> = PokerCard::<span class="title function_ invoke__">Spades</span>(<span class="number">5</span>);</span><br><span class="line">   <span class="keyword">let</span> <span class="variable">c2</span> = PokerCard::<span class="title function_ invoke__">Diamonds</span>(<span class="number">13</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>直接将数据信息关联到枚举成员上，省去近一半的代码，这种实现是不是更优雅？</p>
+<p>不仅如此，同一个枚举类型下的不同成员还能持有不同的数据类型，例如让某些花色打印 <code>1-13</code> 的字样，另外的花色打印上 <code>A-K</code> 的字样：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> <span class="title class_">PokerCard</span> &#123;</span><br><span class="line">    <span class="title function_ invoke__">Clubs</span>(<span class="type">u8</span>),</span><br><span class="line">    <span class="title function_ invoke__">Spades</span>(<span class="type">u8</span>),</span><br><span class="line">    <span class="title function_ invoke__">Diamonds</span>(<span class="type">char</span>),</span><br><span class="line">    <span class="title function_ invoke__">Hearts</span>(<span class="type">char</span>),</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">   <span class="keyword">let</span> <span class="variable">c1</span> = PokerCard::<span class="title function_ invoke__">Spades</span>(<span class="number">5</span>);</span><br><span class="line">   <span class="keyword">let</span> <span class="variable">c2</span> = PokerCard::<span class="title function_ invoke__">Diamonds</span>(<span class="string">&#x27;A&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>再来看一个来自标准库中的例子：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Ipv4Addr</span> &#123;</span><br><span class="line">    <span class="comment">// --snip--</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Ipv6Addr</span> &#123;</span><br><span class="line">    <span class="comment">// --snip--</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">enum</span> <span class="title class_">IpAddr</span> &#123;</span><br><span class="line">    <span class="title function_ invoke__">V4</span>(Ipv4Addr),</span><br><span class="line">    <span class="title function_ invoke__">V6</span>(Ipv6Addr),</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个例子跟我们之前的扑克牌很像，只不过枚举成员包含的类型更复杂了，变成了结构体：分别通过 <code>Ipv4Addr</code> 和 <code>Ipv6Addr</code> 来定义两种不同的 IP 数据。</p>
+<p>从这些例子可以看出，<strong>任何类型的数据都可以放入枚举成员中</strong>: 例如字符串、数值、结构体甚至另一个枚举。</p>
+<p>增加一些挑战？先看以下代码：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> <span class="title class_">Message</span> &#123;</span><br><span class="line">    Quit,</span><br><span class="line">    Move &#123; x: <span class="type">i32</span>, y: <span class="type">i32</span> &#125;,</span><br><span class="line">    <span class="title function_ invoke__">Write</span>(<span class="type">String</span>),</span><br><span class="line">    <span class="title function_ invoke__">ChangeColor</span>(<span class="type">i32</span>, <span class="type">i32</span>, <span class="type">i32</span>),</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">m1</span> = Message::Quit;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">m2</span> = Message::Move&#123;x:<span class="number">1</span>,y:<span class="number">1</span>&#125;;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">m3</span> = Message::<span class="title function_ invoke__">ChangeColor</span>(<span class="number">255</span>,<span class="number">255</span>,<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>该枚举类型代表一条消息，它包含四个不同的成员：</p>
+<ul>
+<li><code>Quit</code> 没有任何关联数据</li>
+<li><code>Move</code> 包含一个匿名结构体</li>
+<li><code>Write</code> 包含一个 <code>String</code> 字符串</li>
+<li><code>ChangeColor</code> 包含三个 <code>i32</code></li>
+</ul>
+<p>当然，我们也可以用结构体的方式来定义这些消息：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">QuitMessage</span>; <span class="comment">// 单元结构体</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">MoveMessage</span> &#123;</span><br><span class="line">    x: <span class="type">i32</span>,</span><br><span class="line">    y: <span class="type">i32</span>,</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">WriteMessage</span>(<span class="type">String</span>); <span class="comment">// 元组结构体</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">ChangeColorMessage</span>(<span class="type">i32</span>, <span class="type">i32</span>, <span class="type">i32</span>); <span class="comment">// 元组结构体</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>由于每个结构体都有自己的类型，因此我们无法在需要同一类型的地方进行使用，例如某个函数它的功能是接受消息并进行发送，那么用枚举的方式，就可以接收不同的消息，但是用结构体，该函数无法接受 4 个不同的结构体作为参数</strong>。</p>
+<p>而且从代码规范角度来看，枚举的实现更简洁，代码内聚性更强，不像结构体的实现，分散在各个地方。</p>
+<h3 id="同一化类型"><a href="#同一化类型" class="headerlink" title="同一化类型"></a>同一化类型</h3><p>最后，再用一个实际项目中的简化片段，来结束枚举类型的语法学习。</p>
+<p>例如我们有一个 WEB 服务，需要接受用户的长连接，假设连接有两种：<code>TcpStream</code> 和 <code>TlsStream</code>，但是我们希望对这两个连接的处理流程相同，也就是用同一个函数来处理这两个连接，代码如下：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">new</span> (stream: TcpStream) &#123;</span><br><span class="line">  <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">s</span> = stream;</span><br><span class="line">  <span class="keyword">if</span> tls &#123;</span><br><span class="line">    s = <span class="title function_ invoke__">negotiate_tls</span>(stream)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// websocket是一个WebSocket&lt;TcpStream&gt;或者</span></span><br><span class="line">  <span class="comment">//   WebSocket&lt;native_tls::TlsStream&lt;TcpStream&gt;&gt;类型</span></span><br><span class="line">  websocket = WebSocket::<span class="title function_ invoke__">from_raw_socket</span>(</span><br><span class="line">    stream, ......)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>此时，枚举类型就能帮上大忙：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> <span class="title class_">Websocket</span> &#123;</span><br><span class="line">  <span class="title function_ invoke__">Tcp</span>(Websocket&lt;TcpStream&gt;),</span><br><span class="line">  <span class="title function_ invoke__">Tls</span>(Websocket&lt;native_tls::TlsStream&lt;TcpStream&gt;&gt;),</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Option-枚举用于处理空值"><a href="#Option-枚举用于处理空值" class="headerlink" title="Option 枚举用于处理空值"></a>Option 枚举用于处理空值</h3><p>在其它编程语言中，往往都有一个 <code>null</code> 关键字，该关键字用于表明一个变量当前的值为空（不是零值，例如整型的零值是 0），也就是不存在值。当你对这些 <code>null</code> 进行操作时，例如调用一个方法，就会直接抛出<strong>null 异常</strong>，导致程序的崩溃，因此我们在编程时需要格外的小心去处理这些 <code>null</code> 空值。</p>
+<blockquote>
+<p>Tony Hoare， <code>null</code> 的发明者，曾经说过一段非常有名的话：</p>
+<p>我称之为我十亿美元的错误。当时，我在使用一个面向对象语言设计第一个综合性的面向引用的类型系统。我的目标是通过编译器的自动检查来保证所有引用的使用都应该是绝对安全的。不过在设计过程中，我未能抵抗住诱惑，引入了空引用的概念，因为它非常容易实现。就是因为这个决策，引发了无数错误、漏洞和系统崩溃，在之后的四十多年中造成了数十亿美元的苦痛和伤害。</p>
+</blockquote>
+<p>尽管如此，空值的表达依然非常有意义，因为空值表示当前时刻变量的值是缺失的。有鉴于此，Rust 吸取了众多教训，决定抛弃 <code>null</code>，而改为使用 <code>Option</code> 枚举变量来表述这种结果。</p>
+<p><code>Option</code> 枚举包含两个成员，一个成员表示含有值：<code>Some(T)</code>, 另一个表示没有值：<code>None</code>，定义如下：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> <span class="title class_">Option</span>&lt;T&gt; &#123;</span><br><span class="line">    <span class="title function_ invoke__">Some</span>(T), <span class="comment">// 一个 T 类型的数据</span></span><br><span class="line">    <span class="literal">None</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中 <code>T</code> 是泛型参数，<code>Some(T)</code>表示该枚举成员的数据类型是 <code>T</code>，换句话说，<code>Some</code> 可以包含任何类型的数据。</p>
+<p><code>Option&lt;T&gt;</code> 枚举是如此有用以至于它被包含在了 <a target="_blank" rel="noopener" href="https://course.rs/appendix/prelude.html"><code>prelude</code></a>（prelude 属于 Rust 标准库，Rust 会将最常用的类型、函数等提前引入其中，省得我们再手动引入）之中，你不需要将其显式引入作用域。另外，它的成员 <code>Some</code> 和 <code>None</code> 也是如此，无需使用 <code>Option::</code> 前缀就可直接使用 <code>Some</code> 和 <code>None</code>。总之，不能因为 <code>Some(T)</code> 和 <code>None</code> 中没有 <code>Option::</code> 的身影，就否认它们是 <code>Option</code> 下的卧龙凤雏。</p>
+<p>再来看以下代码：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">some_number</span> = <span class="title function_ invoke__">Some</span>(<span class="number">5</span>);</span><br><span class="line"><span class="keyword">let</span> <span class="variable">some_string</span> = <span class="title function_ invoke__">Some</span>(<span class="string">&quot;a string&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="variable">absent_number</span>: <span class="type">Option</span>&lt;<span class="type">i32</span>&gt; = <span class="literal">None</span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>如果使用 <code>None</code> 而不是 <code>Some</code>，需要告诉 Rust <code>Option&lt;T&gt;</code> 是什么类型的，因为编译器只通过 <code>None</code> 值无法推断出 <code>Some</code> 成员保存的值的类型</strong>。</p>
+<p>当有一个 <code>Some</code> 值时，我们就知道存在一个值，而这个值保存在 <code>Some</code> 中。当有个 <code>None</code> 值时，在某种意义上，它跟空值具有相同的意义：并没有一个有效的值。那么，<code>Option&lt;T&gt;</code> 为什么就比空值要好呢？</p>
+<p>简而言之，因为 <code>Option&lt;T&gt;</code> 和 <code>T</code>（这里 <code>T</code> 可以是任何类型）是不同的类型，例如，这段代码不能编译，因为它尝试将 <code>Option&lt;i8&gt;</code>(<code>Option&lt;T&gt;</code>) 与 <code>i8</code>(<code>T</code>) 相加：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">x</span>: <span class="type">i8</span> = <span class="number">5</span>;</span><br><span class="line"><span class="keyword">let</span> <span class="variable">y</span>: <span class="type">Option</span>&lt;<span class="type">i8</span>&gt; = <span class="title function_ invoke__">Some</span>(<span class="number">5</span>);</span><br><span class="line"><span class="comment">// error no implementation for `i8 + std::option::Option&lt;i8&gt;`</span></span><br><span class="line"><span class="keyword">let</span> <span class="variable">sum</span> = x + y;</span><br></pre></td></tr></table></figure>
+
+<p>很好！事实上，错误信息意味着 Rust 不知道该如何将 <code>Option&lt;i8&gt;</code> 与 <code>i8</code> 相加，因为它们的类型不同。当在 Rust 中拥有一个像 <code>i8</code> 这样类型的值时，编译器确保它总是有一个有效的值，我们可以放心使用而无需做空值检查。只有当使用 <code>Option&lt;i8&gt;</code>（或者任何用到的类型）的时候才需要担心可能没有值，而编译器会确保我们在使用值之前处理了为空的情况。</p>
+<p>换句话说，在对 <code>Option&lt;T&gt;</code> 进行 <code>T</code> 的运算之前必须将其转换为 <code>T</code>。通常这能帮助我们捕获到空值最常见的问题之一：期望某值不为空但实际上为空的情况。</p>
+<p>不再担心会错误的使用一个空值，会让你对代码更加有信心。为了拥有一个可能为空的值，你必须要显式的将其放入对应类型的 <code>Option&lt;T&gt;</code> 中。接着，当使用这个值时，必须明确的处理值为空的情况。只要一个值不是 <code>Option&lt;T&gt;</code> 类型，你就 <strong>可以</strong> 安全的认定它的值不为空。这是 Rust 的一个经过深思熟虑的设计决策，来限制空值的泛滥以增加 Rust 代码的安全性。</p>
+<p>那么当有一个 <code>Option&lt;T&gt;</code> 的值时，如何从 <code>Some</code> 成员中取出 <code>T</code> 的值来使用它呢？<code>Option&lt;T&gt;</code> 枚举拥有大量用于各种情况的方法：你可以查看<a target="_blank" rel="noopener" href="https://doc.rust-lang.org/std/option/enum.Option.html">它的文档</a>。熟悉 <code>Option&lt;T&gt;</code> 的方法将对你的 Rust 之旅非常有用。</p>
+<p>总的来说，为了使用 <code>Option&lt;T&gt;</code> 值，需要编写处理每个成员的代码。你想要一些代码只当拥有 <code>Some(T)</code> 值时运行，允许这些代码使用其中的 <code>T</code>。也希望一些代码在值为 <code>None</code> 时运行，这些代码并没有一个可用的 <code>T</code> 值。<code>match</code> 表达式就是这么一个处理枚举的控制流结构：它会根据枚举的成员运行不同的代码，这些代码可以使用匹配到的值中的数据。</p>
+<p>这里先简单看一下 <code>match</code> 的大致模样，在<a target="_blank" rel="noopener" href="https://course.rs/basic/match-pattern/intro.html">模式匹配</a>中，我们会详细讲解：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">plus_one</span>(x: <span class="type">Option</span>&lt;<span class="type">i32</span>&gt;) <span class="punctuation">-&gt;</span> <span class="type">Option</span>&lt;<span class="type">i32</span>&gt; &#123;</span><br><span class="line">    <span class="keyword">match</span> x &#123;</span><br><span class="line">        <span class="literal">None</span> =&gt; <span class="literal">None</span>,</span><br><span class="line">        <span class="title function_ invoke__">Some</span>(i) =&gt; <span class="title function_ invoke__">Some</span>(i + <span class="number">1</span>),</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="variable">five</span> = <span class="title function_ invoke__">Some</span>(<span class="number">5</span>);</span><br><span class="line"><span class="keyword">let</span> <span class="variable">six</span> = <span class="title function_ invoke__">plus_one</span>(five);</span><br><span class="line"><span class="keyword">let</span> <span class="variable">none</span> = <span class="title function_ invoke__">plus_one</span>(<span class="literal">None</span>);</span><br></pre></td></tr></table></figure>
+
+<p><code>plus_one</code> 通过 <code>match</code> 来处理不同 <code>Option</code> 的情况。</p>
+<h2 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h2><p>在 Rust 中，最常用的数组有两种，第一种是速度很快但是长度固定的 <code>array</code>(数组)，第二种是可动态增长的但是有性能损耗的 <code>Vector</code>(动态数组)。</p>
+<p>不知道你们发现没，这两个数组的关系跟 <code>&amp;str</code> 与 <code>String</code> 的关系很像，前者是长度固定的字符串切片，后者是可动态增长的字符串。其实，在 Rust 中无论是 <code>String</code> 还是 <code>Vector</code>，它们都是 Rust 的高级类型：集合类型。</p>
+<h3 id="array"><a href="#array" class="headerlink" title="array"></a>array</h3><p>将多个类型相同的元素依次组合在一起，就是一个<code>arrya</code>的数组。</p>
+<p>特点：</p>
+<ul>
+<li>长度固定</li>
+<li>元素必须有相同的类型</li>
+<li>依次线性排列</li>
+</ul>
+<p><code>array</code><strong>数组是 Rust 的<code>基本类型</code>，是固定长度的，这点与其他编程语言不同，其它编程语言的数组往往是可变长度的，与 Rust 中的动态数组 <code>Vector</code> 类似</strong></p>
+<h4 id="创建数组"><a href="#创建数组" class="headerlink" title="创建数组"></a>创建数组</h4><p>在 Rust 中，数组是这样定义的：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">a</span> = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>数组语法跟 JavaScript 很像，也跟大多数编程语言很像。由于它的元素类型大小固定，且长度也是固定，因此<strong>数组 <code>array</code> 是存储在栈上</strong>，性能也会非常优秀。与此对应，<strong>动态数组 <code>Vector</code> 是存储在堆上</strong>，因此长度可以动态改变。当你不确定是使用数组还是动态数组时，那就应该使用后者。</p>
+<p>举个例子，在需要知道一年中各个月份名称的程序中，你很可能希望使用的是数组而不是动态数组。因为月份是固定的，它总是只包含 12 个元素：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">months</span> = [<span class="string">&quot;January&quot;</span>, <span class="string">&quot;February&quot;</span>, <span class="string">&quot;March&quot;</span>, <span class="string">&quot;April&quot;</span>, <span class="string">&quot;May&quot;</span>, <span class="string">&quot;June&quot;</span>, <span class="string">&quot;July&quot;</span>,</span><br><span class="line">              <span class="string">&quot;August&quot;</span>, <span class="string">&quot;September&quot;</span>, <span class="string">&quot;October&quot;</span>, <span class="string">&quot;November&quot;</span>, <span class="string">&quot;December&quot;</span>];</span><br></pre></td></tr></table></figure>
+
+<p>在一些时候，还需要为<strong>数组声明类型</strong>，如下所示：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">a</span>: [<span class="type">i32</span>; <span class="number">5</span>] = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>];</span><br></pre></td></tr></table></figure>
+
+<p>这里，数组类型是通过方括号语法声明，<code>i32</code> 是元素类型，分号后面的数字 <code>5</code> 是数组长度，数组类型也从侧面说明了<strong>数组的元素类型要统一，长度要固定</strong>。</p>
+<p>还可以使用下面的语法初始化一个<strong>某个值重复出现 N 次的数组</strong>：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">a</span> = [<span class="number">3</span>; <span class="number">5</span>]; <span class="comment">// let a = [3, 3, 3, 3, 3];</span></span><br></pre></td></tr></table></figure>
+
+<p><code>a</code> 数组包含 <code>5</code> 个元素，这些元素的初始化值为 <code>3</code>。</p>
+<h4 id="访问数组元素"><a href="#访问数组元素" class="headerlink" title="访问数组元素"></a>访问数组元素</h4><p>因为数组是连续存放元素的，因此可以通过索引的方式来访问存放其中的元素：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">a</span> = [<span class="number">9</span>, <span class="number">8</span>, <span class="number">7</span>, <span class="number">6</span>, <span class="number">5</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">first</span> = a[<span class="number">0</span>]; <span class="comment">// 获取a数组第一个元素</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">second</span> = a[<span class="number">1</span>]; <span class="comment">// 获取第二个元素</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>与许多语言类似，数组的索引下标是从 0 开始的。此处，<code>first</code> 获取到的值是 <code>9</code>，<code>second</code> 是 <code>8</code>。</p>
+<h4 id="数组元素为非基本类型"><a href="#数组元素为非基本类型" class="headerlink" title="数组元素为非基本类型"></a>数组元素为非基本类型</h4><p>实际开发中还会碰到一种情况，就是<strong>数组元素是非基本类型</strong>的，这时候大家一定会这样写。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// error the trait `std::marker::Copy` is not implemented for `String`</span></span><br><span class="line"><span class="keyword">let</span> <span class="variable">array</span> = [<span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;rust is good!&quot;</span>); <span class="number">8</span>];</span><br><span class="line"></span><br><span class="line"><span class="built_in">println!</span>(<span class="string">&quot;&#123;:#?&#125;&quot;</span>, array);</span><br></pre></td></tr></table></figure>
+
+<p>然后你会惊喜的得到编译错误。</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">error[E0277]: the trait bound `String: std::marker::Copy` is not satisfied</span><br><span class="line"><span class="meta prompt_"> --&gt; </span><span class="language-bash">src/main.rs:7:18</span></span><br><span class="line">  |</span><br><span class="line">7 |     let array = [String::from(&quot;rust is good!&quot;); 8];</span><br><span class="line">  |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `std::marker::Copy` is not implemented for `String`</span><br><span class="line">  |</span><br><span class="line">  = note: the `Copy` trait is required because this value will be copied for each element of the array</span><br></pre></td></tr></table></figure>
+
+<p>有些还没有看过特征的小伙伴，有可能不太明白这个报错，不过这个目前可以不提，我们就拿之前所学的<a target="_blank" rel="noopener" href="https://course.rs/basic/ownership/ownership.html">所有权</a>知识，就可以思考明白，前面几个例子都是Rust的基本类型，而<strong>基本类型在Rust中赋值是以Copy的形式</strong>，这时候你就懂了吧，<code>let array=[3;5]</code>底层就是不断的Copy出来的，但很可惜复杂类型都没有深拷贝，只能一个个创建。</p>
+<p>接着就有小伙伴会这样写。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">array</span> = [<span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;rust is good!&quot;</span>),<span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;rust is good!&quot;</span>),<span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;rust is good!&quot;</span>)];</span><br><span class="line"></span><br><span class="line"><span class="built_in">println!</span>(<span class="string">&quot;&#123;:#?&#125;&quot;</span>, array);</span><br></pre></td></tr></table></figure>
+
+<p>作为一个追求极致完美的Rust开发者，怎么能容忍上面这么难看的代码存在！</p>
+<p><strong>正确的写法</strong>，应该调用<code>std::array::from_fn</code></p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">array</span>: [<span class="type">String</span>; <span class="number">8</span>] = std::array::<span class="title function_ invoke__">from_fn</span>(|_i| <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;rust is good!&quot;</span>));</span><br><span class="line"></span><br><span class="line"><span class="built_in">println!</span>(<span class="string">&quot;&#123;:#?&#125;&quot;</span>, array);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>闭包的参数 <code>i</code> 表示索引值，也就是数组的长度</p>
+</blockquote>
+<h4 id="数组切片"><a href="#数组切片" class="headerlink" title="数组切片"></a>数组切片</h4><p><code>切片</code> 它允许你引用集合中的部分连续片段，而不是整个集合，对于数组也是，数组切片允许我们引用数组的一部分：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">a</span>: [<span class="type">i32</span>; <span class="number">5</span>] = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="variable">slice</span>: &amp;[<span class="type">i32</span>] = &amp;a[<span class="number">1</span>..<span class="number">3</span>];</span><br><span class="line"></span><br><span class="line"><span class="built_in">assert_eq!</span>(slice, &amp;[<span class="number">2</span>, <span class="number">3</span>]);</span><br></pre></td></tr></table></figure>
+
+<p>上面的数组切片 <code>slice</code> 的类型是<code>&amp;[i32]</code>，与之对比，数组的类型是<code>[i32;5]</code>，简单总结下切片的特点：</p>
+<ul>
+<li><p>切片的长度可以与数组不同，并不是固定的，而是取决于你使用时指定的起始和结束位置</p>
+</li>
+<li><p>创建切片的代价非常小，因为<strong>切片只是针对底层数组的一个引用</strong></p>
+</li>
+<li><p>切片类型[T]拥有不固定的大小，而切片引用类型&amp;[T]则具有固定的大小，因为 Rust 很多时候都需要固定大小数据类型，因此&amp;[T]更有用,<code>&amp;str</code>字符串切片也同理</p>
+<blockquote>
+<p>在 Rust 中，切片本身的大小不是在编译时确定的，而是在运行时根据切片所引用的数据的实际大小进行动态计算的。这是因为切片只是对某个数据片段的引用，它的长度可以根据所引用的数据的长度变化而变化。</p>
+<p>这意味着，当我们创建一个切片时，编译器并不会直接知道切片的确切大小。相反，它会在切片创建的时候计算并记录切片引用的数据的长度，以便在运行时正确操作切片。</p>
+<p>由于切片的大小不是静态固定的，因此我们可以使用切片来引用任意长度的数据片段。不论是引用一个数组的部分元素、某个容器类型的子集，还是其他动态长度的数据结构，切片都可以适应不同大小的数据。</p>
+<p>这种动态计算切片大小的机制使得我们可以方便地进行切片操作，而无需预先知道切片的准确大小。这在处理数据集合、字符串操作、网络传输等场景中非常有用。需要注意的是，尽管切片本身的大小可以动态确定，但是切片引用的数据的大小是固定的。切片通过指针和长度来描述这个固定的数据部分，以提供安全的访问和操作。</p>
+</blockquote>
+</li>
+</ul>
+
+    
+  </article>
+
+  
+      
+    <div class="nexmoe-post-copyright">
+        <strong>本文作者：</strong>kay<br>
+        <strong>本文链接：</strong><a href="https://www.tooupper.com/content/Rust/learning-Rust/rust-Basic/%E5%A4%8D%E5%90%88%E7%B1%BB%E5%9E%8B.html" title="https:&#x2F;&#x2F;www.tooupper.com&#x2F;content&#x2F;Rust&#x2F;learning-Rust&#x2F;rust-Basic&#x2F;%E5%A4%8D%E5%90%88%E7%B1%BB%E5%9E%8B.html" target="_blank" rel="noopener">https:&#x2F;&#x2F;www.tooupper.com&#x2F;content&#x2F;Rust&#x2F;learning-Rust&#x2F;rust-Basic&#x2F;%E5%A4%8D%E5%90%88%E7%B1%BB%E5%9E%8B.html</a><br>
+        
+            <strong>版权声明：</strong>本文采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/deed.zh" target="_blank">CC BY-NC-SA 3.0 CN</a> 协议进行许可
+
+        
+    </div>
+
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+   
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/Rust%E5%9F%BA%E7%A1%80/" rel="tag">Rust基础</a>
+    
+</div>
+  
+  
+    <script async src="/js/copy-codeblock.js?v=1698918460964"></script>
+  
+
+  
+      <div class="nexmoe-post-footer">
+          
+      </div>
+  
+</div></div><div class="nexmoe-post-right">    <div class="nexmoe-fixed">
+        <div class="nexmoe-tool">
+
+            
+
+            
+            
+            <button class="mdui-fab catalog" style="overflow:unset;">
+                <i class="nexmoefont icon-i-catalog"></i>
+                <div class="nexmoe-toc">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A4%8D%E5%90%88%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.</span> <span class="toc-text">复合类型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%8E%E5%88%87%E7%89%87"><span class="toc-number">1.1.</span> <span class="toc-text">字符串与切片</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%87%E7%89%87"><span class="toc-number">1.1.1.</span> <span class="toc-text">切片</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#range-%E5%BA%8F%E5%88%97%E8%AF%AD%E6%B3%95"><span class="toc-number">1.1.2.</span> <span class="toc-text">..range 序列语法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="toc-number">1.1.3.</span> <span class="toc-text">字符串</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#String-%E4%B8%8E-str-%E4%BA%92%E8%BD%AC"><span class="toc-number">1.1.3.1.</span> <span class="toc-text">String 与 &amp;str 互转</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%B4%A2%E5%BC%95"><span class="toc-number">1.1.3.2.</span> <span class="toc-text">字符串索引</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%B7%B1%E5%85%A5%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%86%85%E9%83%A8"><span class="toc-number">1.1.3.2.1.</span> <span class="toc-text">深入字符串内部</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%88%87%E7%89%87"><span class="toc-number">1.1.3.3.</span> <span class="toc-text">字符串切片</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%93%8D%E4%BD%9C"><span class="toc-number">1.1.3.4.</span> <span class="toc-text">字符串操作</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%BF%BD%E5%8A%A0-push"><span class="toc-number">1.1.3.4.1.</span> <span class="toc-text">追加(push)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%8F%92%E5%85%A5-insert"><span class="toc-number">1.1.3.4.2.</span> <span class="toc-text">插入(insert)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%9B%BF%E6%8D%A2-replace"><span class="toc-number">1.1.3.4.3.</span> <span class="toc-text">替换(replace)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%88%A0%E9%99%A4-delete"><span class="toc-number">1.1.3.4.4.</span> <span class="toc-text">删除(delete)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%BF%9E%E6%8E%A5-concatenate"><span class="toc-number">1.1.3.4.5.</span> <span class="toc-text">连接(concatenate)</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%BD%AC%E4%B9%89"><span class="toc-number">1.1.3.5.</span> <span class="toc-text">字符串转义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%93%8D%E4%BD%9CUTF-8%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="toc-number">1.1.3.6.</span> <span class="toc-text">操作UTF-8字符串</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90"><span class="toc-number">1.1.3.7.</span> <span class="toc-text">字符串深度剖析</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%83%E7%BB%84"><span class="toc-number">1.2.</span> <span class="toc-text">元组</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E6%A8%A1%E5%BC%8F%E5%8C%B9%E9%85%8D%E8%A7%A3%E6%9E%84%E5%85%83%E7%BB%84"><span class="toc-number">1.2.1.</span> <span class="toc-text">用模式匹配解构元组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8-%E6%9D%A5%E8%AE%BF%E9%97%AE%E5%85%83%E7%BB%84"><span class="toc-number">1.2.2.</span> <span class="toc-text">用 . 来访问元组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B"><span class="toc-number">1.2.3.</span> <span class="toc-text">使用示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9E%84%E4%BD%93"><span class="toc-number">1.3.</span> <span class="toc-text">结构体</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89"><span class="toc-number">1.3.1.</span> <span class="toc-text">定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%AE%9E%E4%BE%8B"><span class="toc-number">1.3.2.</span> <span class="toc-text">创建实例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BF%E9%97%AE%E7%BB%93%E6%9E%84%E4%BD%93%E5%AD%97%E6%AE%B5"><span class="toc-number">1.3.3.</span> <span class="toc-text">访问结构体字段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%80%E5%8C%96%E7%BB%93%E6%9E%84%E4%BD%93%E5%88%9B%E5%BB%BA"><span class="toc-number">1.3.4.</span> <span class="toc-text">简化结构体创建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%93%E6%9E%84%E4%BD%93%E6%9B%B4%E6%96%B0%E8%AF%AD%E6%B3%95"><span class="toc-number">1.3.5.</span> <span class="toc-text">结构体更新语法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%93%E6%9E%84%E4%BD%93%E7%9A%84%E5%86%85%E5%AD%98%E6%8E%92%E5%88%97"><span class="toc-number">1.3.6.</span> <span class="toc-text">结构体的内存排列</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%83%E7%BB%84%E7%BB%93%E6%9E%84%E4%BD%93"><span class="toc-number">1.3.7.</span> <span class="toc-text">元组结构体</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%95%E5%85%83%E7%BB%93%E6%9E%84%E4%BD%93"><span class="toc-number">1.3.8.</span> <span class="toc-text">单元结构体</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%93%E6%9E%84%E4%BD%93%E6%95%B0%E6%8D%AE%E7%9A%84%E6%89%80%E6%9C%89%E6%9D%83"><span class="toc-number">1.3.9.</span> <span class="toc-text">结构体数据的所有权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-derive-Debug-%E6%9D%A5%E6%89%93%E5%8D%B0%E7%BB%93%E6%9E%84%E4%BD%93%E4%BF%A1%E6%81%AF"><span class="toc-number">1.3.10.</span> <span class="toc-text">使用 #[derive(Debug)]来打印结构体信息</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#dbg-%E5%AE%8F"><span class="toc-number">1.3.10.1.</span> <span class="toc-text">dbg! 宏</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%9A%E4%B8%BE"><span class="toc-number">1.4.</span> <span class="toc-text">枚举</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%9A%E4%B8%BE%E5%80%BC"><span class="toc-number">1.4.1.</span> <span class="toc-text">枚举值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8C%E4%B8%80%E5%8C%96%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.4.2.</span> <span class="toc-text">同一化类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Option-%E6%9E%9A%E4%B8%BE%E7%94%A8%E4%BA%8E%E5%A4%84%E7%90%86%E7%A9%BA%E5%80%BC"><span class="toc-number">1.4.3.</span> <span class="toc-text">Option 枚举用于处理空值</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E7%BB%84"><span class="toc-number">1.5.</span> <span class="toc-text">数组</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#array"><span class="toc-number">1.5.1.</span> <span class="toc-text">array</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E6%95%B0%E7%BB%84"><span class="toc-number">1.5.1.1.</span> <span class="toc-text">创建数组</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%BF%E9%97%AE%E6%95%B0%E7%BB%84%E5%85%83%E7%B4%A0"><span class="toc-number">1.5.1.2.</span> <span class="toc-text">访问数组元素</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E5%85%83%E7%B4%A0%E4%B8%BA%E9%9D%9E%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.5.1.3.</span> <span class="toc-text">数组元素为非基本类型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E5%88%87%E7%89%87"><span class="toc-number">1.5.1.4.</span> <span class="toc-text">数组切片</span></a></li></ol></li></ol></li></ol></li></ol>
+                </div>
+            </button>
+            
+
+            
+
+            <a href="#nexmoe-content" class="backtop toc-link" aria-label="Back To Top" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+        </div>
+    </div>
+</div></div><div id="nexmoe-footer"><!--!--></div><div><div id="nexmoe-search-space">
+	<div class="search-container">
+		<div class="search-header">
+			<div class="search-input-container">
+				<input
+					class="search-input"
+					type="text"
+					placeholder="搜索"
+					oninput="sinput();"
+				/>
+			</div>
+			<a class="search-close" onclick="sclose();">×</a>
+		</div>
+		<div class="search-body"></div>
+	</div>
+</div>
+</div><div><script async src="https://www.TooUpper.com" crossorigin="anonymous"></script>
+</div></body></html>

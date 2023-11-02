@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="zh"><head>
+<title>rCore环境搭建 - 成祠的个人博客</title>
+<meta charset="UTF-8">
+<meta name="keywords" content="blog">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+
+<link rel="shortcut icon" href="/image/favicon.png" type="image/png" />
+<meta name="description" content="WSL2 搭建 rCore 环境 (ArchLinux)win11 开启 WSL2 win后键入启用或关闭 windows 功能在弹窗中分别勾选Hyper-V、适用于 Linux 的 windows 子系统、虚拟机平台点击确认；等待重启后启用。 安装 WSL 内核升级包；傻瓜下一步就好了。 设置 WSL2；在 终端中键入wsl --set-default-version 2 这里建议再次更新一下W">
+<meta property="og:type" content="article">
+<meta property="og:title" content="rCore环境搭建">
+<meta property="og:url" content="https://www.tooupper.com/content/RISC-V/rcore/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA.html">
+<meta property="og:site_name" content="成祠的个人博客">
+<meta property="og:description" content="WSL2 搭建 rCore 环境 (ArchLinux)win11 开启 WSL2 win后键入启用或关闭 windows 功能在弹窗中分别勾选Hyper-V、适用于 Linux 的 windows 子系统、虚拟机平台点击确认；等待重启后启用。 安装 WSL 内核升级包；傻瓜下一步就好了。 设置 WSL2；在 终端中键入wsl --set-default-version 2 这里建议再次更新一下W">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.tooupper.com/image/RISC-V/rcore/rcore2.png">
+<meta property="article:published_time" content="2023-10-23T05:40:32.000Z">
+<meta property="article:modified_time" content="2023-10-23T07:44:06.592Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="rcore">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.tooupper.com/image/RISC-V/rcore/rcore2.png">
+
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+<link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
+
+
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1698918461687">
+
+<link rel="stylesheet" href="/css/style.css?v=1698918461687">
+
+
+
+
+    
+        <link rel="stylesheet" href="/custom.css?v=1698918461687">
+    
+
+
+
+<script src="/lib/mdui_043tiny/mdui.js" async></script>
+<script src="/lib/fancybox/fancybox.umd.js" async></script>
+<script src="/lib/lax.min.js" async></script>
+
+
+<script async src="/js/app.js?v=1698918461687"></script>
+
+ 
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4D4ZJ9G024"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+
+  gtag("config", "G-4D4ZJ9G024");
+</script>
+
+<meta name="generator" content="Hexo 6.3.0"></head><body class="nexmoe mdui-drawer-body-left"><div id="nexmoe-background"><div class="nexmoe-bg" style="background-image: url(/image/banner.png)"></div><div class="mdui-appbar mdui-shadow-0"><div class="mdui-toolbar"><a class="mdui-btn mdui-btn-icon mdui-ripple" mdui-drawer="{target: &#039;#drawer&#039;, swipe: true}" title="menu"><i class="mdui-icon nexmoefont icon-menu"></i></a><div class="mdui-toolbar-spacer"></div><a class="mdui-btn mdui-btn-icon" href="/" title="kay"><img src="/image/Logo.png" alt="kay"></a></div></div></div><div id="nexmoe-header"><div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="kay">
+            <img src="/image/Logo.png" alt="kay" alt="kay">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>文章</span>29</div>
+        <div><span>标签</span>4</div>
+        <div><span>分类</span>2</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/aboutMe.html" title="关于博主">
+            <i class="mdui-list-item-icon nexmoefont icon-info-circle"></i>
+            <div class="mdui-list-item-content">
+                关于博主
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archives.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/downloads.html" title="下载中心">
+            <i class="mdui-list-item-icon nexmoefont icon-coffee"></i>
+            <div class="mdui-list-item-content">
+                下载中心
+            </div>
+        </a>
+        
+    </div>
+    
+    
+        
+        <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+        
+            <form id="search_form">
+                <label><input class="st-default-search-input" id="search_value" name="q" type="search" placeholder="搜索" style="
+                    font-size: 15px !important;
+                    height: 56px !important;
+                    background-image: none;
+                "></label>
+            </form>
+         
+    </div>
+</div>
+
+
+	<script async src="/js/search.js?v=1698918461688"></script>
+
+
+
+    
+        
+        <div class="nexmoe-widget-wrap">
+	<div class="nexmoe-widget nexmoe-social">
+		<a
+			class="mdui-ripple"
+			href="/image/QQOrWeChat.png"
+			target="_blank"
+			mdui-tooltip="{content: 'QQ'}"
+			style="
+				color: rgb(249, 174, 8);
+				background-color: rgba(249, 174, 8, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-QQ"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="/image/QQOrWeChat.png"
+			target="_blank"
+			mdui-tooltip="{content: 'WeChat'}"
+			style="
+				color: rgb(59, 151, 239);
+				background-color: rgba(59, 151, 239, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-wechat-fill"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://github.com/TooUpper/"
+			target="_blank"
+			mdui-tooltip="{content: 'GitHub'}"
+			style="
+				color: rgb(25, 23, 23);
+				background-color: rgba(25, 23, 23, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-github"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="/www.TooUpper.com"
+			target="_blank"
+			mdui-tooltip="{content: 'Blog'}"
+			style="
+				color: rgb(30, 136, 229);
+				background-color: rgba(30, 136, 229, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-home"
+			></i> </a
+		>
+	</div>
+</div>
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章分类</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/RISC-V/">RISC-V</a>
+          <span class="category-list-count">4</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Rust/">Rust</a>
+          <span class="category-list-count">25</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/Rust%E5%9F%BA%E7%A1%80/" style="font-size: 20px;">Rust基础</a> <a href="/tags/Rust%E8%BF%9B%E9%98%B6/" style="font-size: 15px;">Rust进阶</a> <a href="/tags/rcore/" style="font-size: 10px;">rcore</a> <a href="/tags/riscv/" style="font-size: 10px;">riscv</a>
+    </div>
+    
+  </div>
+
+    
+        
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章归档</h3>
+    <div class="nexmoe-widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/">2023</a><span class="archive-list-count">29</span></li></ul>
+    </div>
+  </div>
+
+
+
+    
+   
+    <div class="nexmoe-copyright">
+        &copy; 2023 kay
+        Powered by <a href="https://www.TooUpper.com" target="_blank">成祠</a>
+        & <a href="https://github.com/TooUpper" target="_blank">TooUpper</a>
+        <br><a target="_blank" href="https://www.TooUpper.com">鄂ICP备2020018486号</a>
+<br><a target="_blank" href="https://www.TooUpper.com">加油做一个不会被优化掉的程序员</a>
+
+    </div>
+</div><!-- .nexmoe-drawer --></div><div id="nexmoe-content"><div class="nexmoe-primary"><div class="nexmoe-post">
+  <article>
+    
+        <div class="nexmoe-post-cover absolute" style="padding-top: 62.5%;"> 
+            <img src="/image/RISC-V/rcore/rcore.jpg" alt="rCore环境搭建" loading="lazy">
+            <h1>rCore环境搭建</h1>
+        </div>
+    
+    
+    <div class="nexmoe-post-meta">
+    <div class="nexmoe-rainbow">
+        <a class="nexmoefont icon-calendar-fill">2023年10月23日</a>
+        
+            <a class="nexmoefont icon-appstore-fill -link" href="/categories/RISC-V/">RISC-V</a>
+        
+        
+    <a><i class="nexmoefont icon-areachart"></i>约536字</a>
+    <a><i class="nexmoefont icon-time-circle-fill"></i>预计需要2分钟</a>
+
+    </div>
+    
+    
+    
+    
+    
+</div>
+
+    <h1 id="WSL2-搭建-rCore-环境-ArchLinux"><a href="#WSL2-搭建-rCore-环境-ArchLinux" class="headerlink" title="WSL2 搭建 rCore 环境 (ArchLinux)"></a>WSL2 搭建 rCore 环境 (ArchLinux)</h1><h2 id="win11-开启-WSL2"><a href="#win11-开启-WSL2" class="headerlink" title="win11 开启 WSL2"></a>win11 开启 WSL2</h2><ol>
+<li><code>win</code>后键入<code>启用或关闭 windows 功能</code>在弹窗中分别勾选<code>Hyper-V</code>、<code>适用于 Linux 的 windows 子系统</code>、<code>虚拟机平台</code>点击<code>确认</code>；等待重启后启用。</li>
+<li>安装 WSL <a target="_blank" rel="noopener" href="https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi">内核升级包</a>；傻瓜下一步就好了。</li>
+<li>设置 WSL2；在 终端中键入<code>wsl --set-default-version 2</code></li>
+<li>这里建议再次更新一下<code>WSL2</code>以防后面出现不必要的错误；键入<code>wsl.exe --update</code>。</li>
+</ol>
+<h2 id="wsl2-并安装-arch"><a href="#wsl2-并安装-arch" class="headerlink" title="wsl2 并安装 arch"></a>wsl2 并安装 arch</h2><ol>
+<li>在商店(<code>Microsoft Store</code>)中下载Linux子系统，我这里用的是<code>ArchLinux</code>；直接在商店中搜索<code>arch</code>下载。</li>
+<li>下载完成后不要直接打开；<code>win</code>后搜索<code>arch</code>然后点击<code>以管理员身份运行</code>。(这里如果安装的是其他<code>linux</code>子系统搜索对应的子系统,以管理员身份打开)</li>
+<li>设置<code>username</code>和<code>Password</code>即可。</li>
+</ol>
+<h2 id="rCore环境配置"><a href="#rCore环境配置" class="headerlink" title="rCore环境配置"></a>rCore环境配置</h2><h3 id="配置国内镜像"><a href="#配置国内镜像" class="headerlink" title="配置国内镜像"></a>配置国内镜像</h3><ol>
+<li><p>下载文本编辑器<code>sudo pacman -S neovim</code></p>
+</li>
+<li><p>打开配置文件<code>sudovim /etc/pacman.conf</code></p>
+</li>
+<li><p>尾部添加</p>
+</li>
+</ol>
+   <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[archlinuxcn]</span><br><span class="line">SigLevel = Never</span><br><span class="line">Server = https://mirrors.ustc.edu.cn/$repo/$arch</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">顺便开启 (找到这两行删掉前面的 <span class="comment"># 即可)</span></span></span><br><span class="line">[multilib]</span><br><span class="line">Include = /etc/pacman.d/mirrorlist</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">检查更新</span></span><br><span class="line">sudo pacman -Syyu</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装-Rust-工具链"><a href="#安装-Rust-工具链" class="headerlink" title="安装 Rust 工具链"></a>安装 Rust 工具链</h3><ol>
+<li><p><code>curl https://sh.rustup.rs -sSf | sh</code>;提示都默认<code>1</code>即可。</p>
+</li>
+<li><p><code>rustc --version</code>确认下是否安装成功</p>
+</li>
+<li><p>安装 rustc 的 nightly 版本，并把该版本设置为 rustc 的缺省版本</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rustup install nightly</span><br><span class="line">rustup default nightly</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置<code>cargo</code>国内源；打开（如果没有就新建） <code>~/.cargo/config</code> 文件，并把内容修改为：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[source.crates-io]</span><br><span class="line">registry = &quot;https://github.com/rust-lang/crates.io-index&quot;</span><br><span class="line">replace-with = &#x27;ustc&#x27;</span><br><span class="line">[source.ustc]</span><br><span class="line">registry = &quot;git://mirrors.ustc.edu.cn/crates.io-index&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装一些Rust相关的软件包</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">rustup target add riscv64gc-unknown-none-elf</span><br><span class="line">cargo install cargo-binutils</span><br><span class="line">rustup component add llvm-tools-preview</span><br><span class="line">rustup component add rust-src</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="安装-QEMU-模拟器"><a href="#安装-QEMU-模拟器" class="headerlink" title="安装 QEMU 模拟器"></a>安装 QEMU 模拟器</h3><ol>
+<li><p><code>sudo pacman -S qemu</code>;第一个提示中提示中选择<code>3</code>，第二个提示默认<code>1</code>即可</p>
+</li>
+<li><p>确认 QEMU 的版本</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">qemu-system-riscv64 --version</span><br><span class="line">qemu-riscv64 --version</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="QEMU-中运行-rCore"><a href="#QEMU-中运行-rCore" class="headerlink" title="QEMU 中运行 rCore"></a>QEMU 中运行 rCore</h2><p>此处安装 classroom 中操作即可</p>
+<h2 id="解疑"><a href="#解疑" class="headerlink" title="解疑"></a>解疑</h2><h3 id="网络问题"><a href="#网络问题" class="headerlink" title="网络问题"></a>网络问题</h3><h3 id="make-run-之后出错"><a href="#make-run-之后出错" class="headerlink" title="make run 之后出错"></a>make run 之后出错</h3><p>如图：</p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="/image/RISC-V/rcore/rcore2.png" alt="image-rcore2" data-caption="image-rcore2" loading="lazy"></p>
+<p>解决：</p>
+<p>下载<a target="_blank" rel="noopener" href="https://github.com/rustsbi/rustsbi-qemu/releases/tag/Unreleased">rustsbi-qemu</a>用压缩包中的<code>rustsbi-qemu.bin</code>替换项目bootloader目录下的<code>rustsbi-qemu.bin</code>即可。</p>
+
+    
+  </article>
+
+  
+      
+    <div class="nexmoe-post-copyright">
+        <strong>本文作者：</strong>kay<br>
+        <strong>本文链接：</strong><a href="https://www.tooupper.com/content/RISC-V/rcore/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA.html" title="https:&#x2F;&#x2F;www.tooupper.com&#x2F;content&#x2F;RISC-V&#x2F;rcore&#x2F;%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA.html" target="_blank" rel="noopener">https:&#x2F;&#x2F;www.tooupper.com&#x2F;content&#x2F;RISC-V&#x2F;rcore&#x2F;%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA.html</a><br>
+        
+            <strong>版权声明：</strong>本文采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/deed.zh" target="_blank">CC BY-NC-SA 3.0 CN</a> 协议进行许可
+
+        
+    </div>
+
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+   
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/rcore/" rel="tag">rcore</a>
+    
+</div>
+  
+  
+    <script async src="/js/copy-codeblock.js?v=1698918460921"></script>
+  
+
+  
+      <div class="nexmoe-post-footer">
+          
+      </div>
+  
+</div></div><div class="nexmoe-post-right">    <div class="nexmoe-fixed">
+        <div class="nexmoe-tool">
+
+            
+
+            
+            
+            <button class="mdui-fab catalog" style="overflow:unset;">
+                <i class="nexmoefont icon-i-catalog"></i>
+                <div class="nexmoe-toc">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#WSL2-%E6%90%AD%E5%BB%BA-rCore-%E7%8E%AF%E5%A2%83-ArchLinux"><span class="toc-number">1.</span> <span class="toc-text">WSL2 搭建 rCore 环境 (ArchLinux)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#win11-%E5%BC%80%E5%90%AF-WSL2"><span class="toc-number">1.1.</span> <span class="toc-text">win11 开启 WSL2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#wsl2-%E5%B9%B6%E5%AE%89%E8%A3%85-arch"><span class="toc-number">1.2.</span> <span class="toc-text">wsl2 并安装 arch</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#rCore%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="toc-number">1.3.</span> <span class="toc-text">rCore环境配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E5%9B%BD%E5%86%85%E9%95%9C%E5%83%8F"><span class="toc-number">1.3.1.</span> <span class="toc-text">配置国内镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-Rust-%E5%B7%A5%E5%85%B7%E9%93%BE"><span class="toc-number">1.3.2.</span> <span class="toc-text">安装 Rust 工具链</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-QEMU-%E6%A8%A1%E6%8B%9F%E5%99%A8"><span class="toc-number">1.3.3.</span> <span class="toc-text">安装 QEMU 模拟器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#QEMU-%E4%B8%AD%E8%BF%90%E8%A1%8C-rCore"><span class="toc-number">1.4.</span> <span class="toc-text">QEMU 中运行 rCore</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E7%96%91"><span class="toc-number">1.5.</span> <span class="toc-text">解疑</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E9%97%AE%E9%A2%98"><span class="toc-number">1.5.1.</span> <span class="toc-text">网络问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#make-run-%E4%B9%8B%E5%90%8E%E5%87%BA%E9%94%99"><span class="toc-number">1.5.2.</span> <span class="toc-text">make run 之后出错</span></a></li></ol></li></ol></li></ol>
+                </div>
+            </button>
+            
+
+            
+
+            <a href="#nexmoe-content" class="backtop toc-link" aria-label="Back To Top" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+        </div>
+    </div>
+</div></div><div id="nexmoe-footer"><!--!--></div><div><div id="nexmoe-search-space">
+	<div class="search-container">
+		<div class="search-header">
+			<div class="search-input-container">
+				<input
+					class="search-input"
+					type="text"
+					placeholder="搜索"
+					oninput="sinput();"
+				/>
+			</div>
+			<a class="search-close" onclick="sclose();">×</a>
+		</div>
+		<div class="search-body"></div>
+	</div>
+</div>
+</div><div><script async src="https://www.TooUpper.com" crossorigin="anonymous"></script>
+</div></body></html>

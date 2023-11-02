@@ -1,0 +1,638 @@
+<!doctype html>
+<html lang="zh"><head>
+<title>包和模块 - 成祠的个人博客</title>
+<meta charset="UTF-8">
+<meta name="keywords" content="blog">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+
+<link rel="shortcut icon" href="/image/favicon.png" type="image/png" />
+<meta name="description" content="包和模块当工程规模变大时，把代码写到一个甚至几个文件中，都是不太聪明的做法，可能存在以下问题：  单个文件过大，导致打开、翻页速度大幅变慢 查询和定位效率大幅降低，类比下，你会把所有知识内容放在一个几十万字的文档中吗？ 只有一个代码层次：函数，难以维护和协作，想象一下你的操作系统只有一个根目录，剩下的都是单层子目录会如何：disaster 容易滋生 Bug  同时，将大的代码文件拆分成包和模块，还">
+<meta property="og:type" content="article">
+<meta property="og:title" content="包和模块">
+<meta property="og:url" content="https://www.tooupper.com/content/Rust/learning-Rust/rust-Basic/%E5%8C%85%E5%92%8C%E6%A8%A1%E5%9D%97.html">
+<meta property="og:site_name" content="成祠的个人博客">
+<meta property="og:description" content="包和模块当工程规模变大时，把代码写到一个甚至几个文件中，都是不太聪明的做法，可能存在以下问题：  单个文件过大，导致打开、翻页速度大幅变慢 查询和定位效率大幅降低，类比下，你会把所有知识内容放在一个几十万字的文档中吗？ 只有一个代码层次：函数，难以维护和协作，想象一下你的操作系统只有一个根目录，剩下的都是单层子目录会如何：disaster 容易滋生 Bug  同时，将大的代码文件拆分成包和模块，还">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-09-25T12:01:14.000Z">
+<meta property="article:modified_time" content="2023-11-02T03:01:40.407Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="Rust基础">
+<meta name="twitter:card" content="summary">
+
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+<link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
+
+
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1698918461736">
+
+<link rel="stylesheet" href="/css/style.css?v=1698918461736">
+
+
+
+
+    
+        <link rel="stylesheet" href="/custom.css?v=1698918461736">
+    
+
+
+
+<script src="/lib/mdui_043tiny/mdui.js" async></script>
+<script src="/lib/fancybox/fancybox.umd.js" async></script>
+<script src="/lib/lax.min.js" async></script>
+
+
+<script async src="/js/app.js?v=1698918461736"></script>
+
+ 
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4D4ZJ9G024"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+
+  gtag("config", "G-4D4ZJ9G024");
+</script>
+
+<meta name="generator" content="Hexo 6.3.0"></head><body class="nexmoe mdui-drawer-body-left"><div id="nexmoe-background"><div class="nexmoe-bg" style="background-image: url(/image/banner.png)"></div><div class="mdui-appbar mdui-shadow-0"><div class="mdui-toolbar"><a class="mdui-btn mdui-btn-icon mdui-ripple" mdui-drawer="{target: &#039;#drawer&#039;, swipe: true}" title="menu"><i class="mdui-icon nexmoefont icon-menu"></i></a><div class="mdui-toolbar-spacer"></div><a class="mdui-btn mdui-btn-icon" href="/" title="kay"><img src="/image/Logo.png" alt="kay"></a></div></div></div><div id="nexmoe-header"><div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="kay">
+            <img src="/image/Logo.png" alt="kay" alt="kay">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>文章</span>29</div>
+        <div><span>标签</span>4</div>
+        <div><span>分类</span>2</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/aboutMe.html" title="关于博主">
+            <i class="mdui-list-item-icon nexmoefont icon-info-circle"></i>
+            <div class="mdui-list-item-content">
+                关于博主
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archives.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/downloads.html" title="下载中心">
+            <i class="mdui-list-item-icon nexmoefont icon-coffee"></i>
+            <div class="mdui-list-item-content">
+                下载中心
+            </div>
+        </a>
+        
+    </div>
+    
+    
+        
+        <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+        
+            <form id="search_form">
+                <label><input class="st-default-search-input" id="search_value" name="q" type="search" placeholder="搜索" style="
+                    font-size: 15px !important;
+                    height: 56px !important;
+                    background-image: none;
+                "></label>
+            </form>
+         
+    </div>
+</div>
+
+
+	<script async src="/js/search.js?v=1698918461736"></script>
+
+
+
+    
+        
+        <div class="nexmoe-widget-wrap">
+	<div class="nexmoe-widget nexmoe-social">
+		<a
+			class="mdui-ripple"
+			href="/image/QQOrWeChat.png"
+			target="_blank"
+			mdui-tooltip="{content: 'QQ'}"
+			style="
+				color: rgb(249, 174, 8);
+				background-color: rgba(249, 174, 8, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-QQ"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="/image/QQOrWeChat.png"
+			target="_blank"
+			mdui-tooltip="{content: 'WeChat'}"
+			style="
+				color: rgb(59, 151, 239);
+				background-color: rgba(59, 151, 239, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-wechat-fill"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://github.com/TooUpper/"
+			target="_blank"
+			mdui-tooltip="{content: 'GitHub'}"
+			style="
+				color: rgb(25, 23, 23);
+				background-color: rgba(25, 23, 23, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-github"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="/www.TooUpper.com"
+			target="_blank"
+			mdui-tooltip="{content: 'Blog'}"
+			style="
+				color: rgb(30, 136, 229);
+				background-color: rgba(30, 136, 229, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-home"
+			></i> </a
+		>
+	</div>
+</div>
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章分类</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/RISC-V/">RISC-V</a>
+          <span class="category-list-count">4</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Rust/">Rust</a>
+          <span class="category-list-count">25</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/Rust%E5%9F%BA%E7%A1%80/" style="font-size: 20px;">Rust基础</a> <a href="/tags/Rust%E8%BF%9B%E9%98%B6/" style="font-size: 15px;">Rust进阶</a> <a href="/tags/rcore/" style="font-size: 10px;">rcore</a> <a href="/tags/riscv/" style="font-size: 10px;">riscv</a>
+    </div>
+    
+  </div>
+
+    
+        
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章归档</h3>
+    <div class="nexmoe-widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/">2023</a><span class="archive-list-count">29</span></li></ul>
+    </div>
+  </div>
+
+
+
+    
+   
+    <div class="nexmoe-copyright">
+        &copy; 2023 kay
+        Powered by <a href="https://www.TooUpper.com" target="_blank">成祠</a>
+        & <a href="https://github.com/TooUpper" target="_blank">TooUpper</a>
+        <br><a target="_blank" href="https://www.TooUpper.com">鄂ICP备2020018486号</a>
+<br><a target="_blank" href="https://www.TooUpper.com">加油做一个不会被优化掉的程序员</a>
+
+    </div>
+</div><!-- .nexmoe-drawer --></div><div id="nexmoe-content"><div class="nexmoe-primary"><div class="nexmoe-post">
+  <article>
+    
+        <div class="nexmoe-post-cover absolute" style="padding-top: 62.5%;"> 
+            <img src="/image/Rust/RustCrab.png" alt="包和模块" loading="lazy">
+            <h1>包和模块</h1>
+        </div>
+    
+    
+    <div class="nexmoe-post-meta">
+    <div class="nexmoe-rainbow">
+        <a class="nexmoefont icon-calendar-fill">2023年09月25日</a>
+        
+            <a class="nexmoefont icon-appstore-fill -link" href="/categories/Rust/">Rust</a>
+        
+        
+    <a><i class="nexmoefont icon-areachart"></i>约9k字</a>
+    <a><i class="nexmoefont icon-time-circle-fill"></i>预计需要34分钟</a>
+
+    </div>
+    
+    
+    
+    
+    
+</div>
+
+    <h1 id="包和模块"><a href="#包和模块" class="headerlink" title="包和模块"></a>包和模块</h1><p>当工程规模变大时，把代码写到一个甚至几个文件中，都是不太聪明的做法，可能存在以下问题：</p>
+<ol>
+<li>单个文件过大，导致打开、翻页速度大幅变慢</li>
+<li>查询和定位效率大幅降低，类比下，你会把所有知识内容放在一个几十万字的文档中吗？</li>
+<li>只有一个代码层次：函数，难以维护和协作，想象一下你的操作系统只有一个根目录，剩下的都是单层子目录会如何：<code>disaster</code></li>
+<li>容易滋生 Bug</li>
+</ol>
+<p>同时，将大的代码文件拆分成包和模块，还允许我们实现代码抽象和复用：将你的代码封装好后提供给用户，那么用户只需要调用公共接口即可，无需知道内部该如何实现。</p>
+<p>因此，跟其它语言一样，Rust 也提供了相应概念用于代码的组织管理：</p>
+<ul>
+<li>项目(Packages)：一个 <code>Cargo</code> 提供的 <code>feature</code>，可以用来构建、测试和分享包</li>
+<li>包(Crate)：一个由多个模块组成的树形结构，可以作为三方库进行分发，也可以生成可执行文件进行运行</li>
+<li>模块(Module)：可以一个文件多个模块，也可以一个文件一个模块，模块可以被认为是真实项目中的代码组织单元</li>
+</ul>
+<h2 id="包-Crate"><a href="#包-Crate" class="headerlink" title="包 Crate"></a>包 Crate</h2><p>真实项目远比我们之前的 <code>cargo new</code> 的默认目录结构要复杂，好在，Rust 为我们提供了强大的包管理工具：</p>
+<ul>
+<li><code>项目(Package)</code>：可以用来构建、测试和分享包</li>
+<li><code>工作空间(WorkSpace)</code>：对于大型项目，可以进一步将多个包联合在一起，组织成工作空间</li>
+<li><code>包(Crate)</code>：一个由多个模块组成的树形结构，可以作为三方库进行分发，也可以生成可执行文件进行运行</li>
+<li><code>模块(Module)</code>：可以一个文件多个模块，也可以一个文件一个模块，模块可以被认为是真实项目中的代码组织单元</li>
+</ul>
+<h3 id="包-Crate-1"><a href="#包-Crate-1" class="headerlink" title="包 Crate"></a>包 Crate</h3><p>对于 Rust 而言，包是一个<strong>独立的可编译单元</strong>，它编译后会生成一个可执行文件或者一个库。</p>
+<p>一个包会将相关联的功能打包在一起，使得该功能可以很方便的在多个项目中分享。例如标准库中没有提供但是在三方库中提供的 <code>rand</code> 包，它提供了随机数生成的功能，我们只需要将该包通过 <code>use rand;</code> 引入到当前项目的作用域中，就可以在项目中使用 <code>rand</code> 的功能：<code>rand::XXX</code>。</p>
+<p>同一个包中不能有同名的类型，但是在不同包中就可以。例如，虽然 <code>rand</code> 包中，有一个 <code>Rng</code> 特征，可是我们依然可以在自己的项目中定义一个 <code>Rng</code>，前者通过 <code>rand::Rng</code> 访问，后者通过 <code>Rng</code> 访问，对于编译器而言，这两者的边界非常清晰，不会存在引用歧义。</p>
+<h3 id="项目-Package"><a href="#项目-Package" class="headerlink" title="项目 Package"></a>项目 Package</h3><p> <code>Package</code> 就是一个项目，因此它包含有独立的 <code>Cargo.toml</code> 文件，以及因为功能性被组织在一起的一个或多个包。一个 <code>Package</code> 只能包含<strong>一个</strong>库(library)类型的包，但是可以包含<strong>多个</strong>二进制可执行类型的包。</p>
+<h4 id="二进制-Package"><a href="#二进制-Package" class="headerlink" title="二进制 Package"></a>二进制 Package</h4><p>让我们来创建一个二进制 <code>Package</code>：</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">cargo new my-project</span></span><br><span class="line">     Created binary (application) `my-project` package</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">ls</span> my-project</span></span><br><span class="line">Cargo.toml</span><br><span class="line">src</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">ls</span> my-project/src</span></span><br><span class="line">main.rs</span><br></pre></td></tr></table></figure>
+
+<p>这里，Cargo 为我们创建了一个名称是 <code>my-project</code> 的 <code>Package</code>，同时在其中创建了 <code>Cargo.toml</code> 文件，可以看一下该文件，里面并没有提到 <code>src/main.rs</code> 作为程序的入口，原因是 Cargo 有一个惯例：**<code>src/main.rs</code> 是二进制包的根文件，该二进制包的包名跟所属 <code>Package</code> 相同，在这里都是 <code>my-project</code>**，所有的代码执行都从该文件中的 <code>fn main()</code> 函数开始。</p>
+<p>使用 <code>cargo run</code> 可以运行该项目，输出：<code>Hello, world!</code>。</p>
+<h4 id="库-Package"><a href="#库-Package" class="headerlink" title="库 Package"></a>库 Package</h4><p>再来创建一个库类型的 <code>Package</code>：</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">cargo new my-lib --lib</span></span><br><span class="line">     Created library `my-lib` package</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">ls</span> my-lib</span></span><br><span class="line">Cargo.toml</span><br><span class="line">src</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">ls</span> my-lib/src</span></span><br><span class="line">lib.rs</span><br></pre></td></tr></table></figure>
+
+<p>首先，如果你试图运行 <code>my-lib</code>，会报错：</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">cargo run</span></span><br><span class="line">error: a bin target must be available for `cargo run`</span><br></pre></td></tr></table></figure>
+
+<p>原因是<strong>库类型的 <code>Package</code> 只能作为三方库被其它项目引用，而不能独立运行，只有之前的二进制 <code>Package</code> 才可以运行</strong>。</p>
+<p>与 <code>src/main.rs</code> 一样，Cargo 知道，如果一个 <code>Package</code> 包含有 <code>src/lib.rs</code>，意味它包含有一个库类型的同名包 <code>my-lib</code>，该包的根文件是 <code>src/lib.rs</code>。</p>
+<h4 id="易混淆的-Package-和-包"><a href="#易混淆的-Package-和-包" class="headerlink" title="易混淆的 Package 和 包"></a>易混淆的 Package 和 包</h4><p>看完上面，相信大家看出来为何 <code>Package</code> 和包容易被混淆了吧？因为你用 <code>cargo new</code> 创建的 <code>Package</code> 和它其中包含的包是同名的！</p>
+<p>不过，只要你牢记 <code>Package</code> 是一个项目工程，而包只是一个编译单元，基本上也就不会混淆这个两个概念了：<code>src/main.rs</code> 和 <code>src/lib.rs</code> 都是编译单元，因此它们都是包。</p>
+<h4 id="典型的-Package-结构"><a href="#典型的-Package-结构" class="headerlink" title="典型的 Package 结构"></a>典型的 Package 结构</h4><p>上面创建的 <code>Package</code> 中仅包含 <code>src/main.rs</code> 文件，意味着它仅包含一个二进制同名包 <code>my-project</code>。</p>
+<p>如果一个 <code>Package</code> 同时拥有 <code>src/main.rs</code> 和 <code>src/lib.rs</code>，那就意味着它包含两个包：库包和二进制包，这两个包名也都是 <code>my-project</code> —— 都与 <code>Package</code> 同名。</p>
+<p>一个真实项目中典型的 <code>Package</code>，会包含多个二进制包，这些包文件被放在 <code>src/bin</code> 目录下，每一个文件都是独立的二进制包，同时也会包含一个库包，该包只能存在一个 <code>src/lib.rs</code>：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── Cargo<span class="selector-class">.toml</span></span><br><span class="line">├── Cargo<span class="selector-class">.lock</span></span><br><span class="line">├── <span class="attribute">src</span></span><br><span class="line">│   ├── <span class="selector-tag">main</span><span class="selector-class">.rs</span></span><br><span class="line">│   ├── lib<span class="selector-class">.rs</span></span><br><span class="line">│   └── bin</span><br><span class="line">│       └── main1<span class="selector-class">.rs</span></span><br><span class="line">│       └── main2<span class="selector-class">.rs</span></span><br><span class="line">├── tests</span><br><span class="line">│   └── some_integration_tests<span class="selector-class">.rs</span></span><br><span class="line">├── benches</span><br><span class="line">│   └── simple_bench<span class="selector-class">.rs</span></span><br><span class="line">└── examples</span><br><span class="line">    └── simple_example<span class="selector-class">.rs</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>唯一库包：<code>src/lib.rs</code></li>
+<li>默认二进制包：<code>src/main.rs</code>，编译后生成的可执行文件与 <code>Package</code> 同名</li>
+<li>其余二进制包：<code>src/bin/main1.rs</code> 和 <code>src/bin/main2.rs</code>，它们会分别生成一个文件同名的二进制可执行文件</li>
+<li>集成测试文件：<code>tests</code> 目录下</li>
+<li>基准性能测试 <code>benchmark</code> 文件：<code>benches</code> 目录下</li>
+<li>项目示例：<code>examples</code> 目录下</li>
+</ul>
+<p>这种目录结构基本上是 Rust 的标准目录结构，在 <code>GitHub</code> 的大多数项目上，你都将看到它的身影。</p>
+<p><strong>当main.rs 和 lib.rs 同时存在时</strong></p>
+<ul>
+<li><strong>crate关键字在不同crate中含义不同。</strong></li>
+</ul>
+<p>在库crate中，代表的是lib.rs；在二进制crate中，代表的是main.rs。</p>
+<ul>
+<li><strong>使用自己的crate名代表的是其库crate</strong></li>
+</ul>
+<p>假设crate名为<em>xxtest</em>，那么*xxtest::name()*也就是在调用库crate中的函数name。</p>
+<p>值得一提的是，自己的crate名在只有在main.rs和lib.rs同时存在的时候才会赋予特殊的含义，并只在二进制crate中可用；</p>
+<p>值得二提的是，当存在一个和crate名同名的模块时，会优先调用模块里的东西。</p>
+<p>理解了包的概念，我们再来看看构成包的基本单元：模块。</p>
+<h2 id="模块-Module"><a href="#模块-Module" class="headerlink" title="模块 Module"></a>模块 Module</h2><p> Rust 的代码构成单元：模块。使用模块可以将包中的代码按照功能性进行重组，最终实现更好的可读性及易用性。同时，我们还能非常灵活地去控制代码的可见性，进一步强化 Rust 的安全性。</p>
+<h3 id="创建嵌套模块"><a href="#创建嵌套模块" class="headerlink" title="创建嵌套模块"></a>创建嵌套模块</h3><p>小旅馆，sorry，是小餐馆，相信大家都挺熟悉的，学校外的估计也没少去，那么咱就用小餐馆为例，来看看 Rust 的模块该如何使用。</p>
+<p>使用 <code>cargo new --lib restaurant</code> 创建一个小餐馆，注意，这里创建的是一个库类型的 <code>Package</code></p>
+<p>然后将以下代码放入 <code>src/lib.rs</code> 中：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 餐厅前厅，用于吃饭</span></span><br><span class="line"><span class="keyword">mod</span> front_of_house &#123;</span><br><span class="line">    <span class="keyword">mod</span> hosting &#123;</span><br><span class="line">        <span class="keyword">fn</span> <span class="title function_">add_to_waitlist</span>() &#123;&#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">fn</span> <span class="title function_">seat_at_table</span>() &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">mod</span> serving &#123;</span><br><span class="line">        <span class="keyword">fn</span> <span class="title function_">take_order</span>() &#123;&#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">fn</span> <span class="title function_">serve_order</span>() &#123;&#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">fn</span> <span class="title function_">take_payment</span>() &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>以上的代码创建了三个模块，有几点需要注意的：</p>
+<ul>
+<li>使用 <code>mod</code> 关键字来创建新模块，后面紧跟着模块名称</li>
+<li>模块可以嵌套，这里嵌套的原因是招待客人和服务都发生在前厅，因此我们的代码模拟了真实场景</li>
+<li>模块中可以定义各种 Rust 类型，例如函数、结构体、枚举、特征等</li>
+<li>所有模块均定义在同一个文件中</li>
+</ul>
+<p>类似上述代码中所做的，使用模块，我们就能将功能相关的代码组织到一起，然后通过一个模块名称来说明这些代码为何被组织在一起。这样其它程序员在使用你的模块时，就可以更快地理解和上手。</p>
+<h3 id="模块树"><a href="#模块树" class="headerlink" title="模块树"></a>模块树</h3><p>在上一节中，我们提到过 <code>src/main.rs</code> 和 <code>src/lib.rs</code> 被称为包根(crate root)，这个奇葩名称的来源是由于这两个文件的内容形成了一个模块 <code>crate</code>，该模块位于包的树形结构(由模块组成的树形结构)的根部：</p>
+<blockquote>
+<p><code>src/main.rs</code> 和 <code>src/lib.rs</code> 分别是二进制包和库包的根文件</p>
+</blockquote>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">crate</span><br><span class="line"> └── front_of_house</span><br><span class="line">     ├── hosting</span><br><span class="line">     │   ├── add_to_waitlist</span><br><span class="line">     │   └── seat_at_table</span><br><span class="line">     └── serving</span><br><span class="line">         ├── take_order</span><br><span class="line">         ├── serve_order</span><br><span class="line">         └── take_payment</span><br></pre></td></tr></table></figure>
+
+<p>这颗树展示了模块之间<strong>彼此的嵌套</strong>关系，因此被称为<strong>模块树</strong>。其中 <code>crate</code> 包根是 <code>src/lib.rs</code> 文件，包根文件中的三个模块分别形成了模块树的剩余部分。</p>
+<h4 id="父子模块"><a href="#父子模块" class="headerlink" title="父子模块"></a>父子模块</h4><p>如果模块 <code>A</code> 包含模块 <code>B</code>，那么 <code>A</code> 是 <code>B</code> 的父模块，<code>B</code> 是 <code>A</code> 的子模块。在上例中，<code>front_of_house</code> 是 <code>hosting</code> 和 <code>serving</code> 的父模块，反之，后两者是前者的子模块。</p>
+<p>聪明的读者，应该能联想到，模块树跟计算机上文件系统目录树的相似之处。不仅仅是组织结构上的相似，就连使用方式都很相似：每个文件都有自己的路径，用户可以通过这些路径使用它们，在 Rust 中，我们也通过路径的方式来引用模块。</p>
+<h3 id="用路径引用模块"><a href="#用路径引用模块" class="headerlink" title="用路径引用模块"></a>用路径引用模块</h3><p>想要调用一个函数，就需要知道它的路径，在 Rust 中，这种路径有两种形式：</p>
+<ul>
+<li><strong>绝对路径</strong>，从包根开始，路径名以包名或者 <code>crate</code> 作为开头</li>
+<li><strong>相对路径</strong>，从当前模块开始，以 <code>self</code>，<code>super</code> 或当前模块的标识符作为开头</li>
+</ul>
+<p>让我们继续经营那个惨淡的小餐馆，这次为它实现一个小功能： 文件名：src&#x2F;lib.rs</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 餐厅前厅，用于吃饭</span></span><br><span class="line"><span class="keyword">mod</span> front_of_house &#123;</span><br><span class="line">    <span class="keyword">mod</span> hosting &#123;</span><br><span class="line">        <span class="keyword">fn</span> <span class="title function_">add_to_waitlist</span>() &#123;&#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">fn</span> <span class="title function_">seat_at_table</span>() &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">mod</span> serving &#123;</span><br><span class="line">        <span class="keyword">fn</span> <span class="title function_">take_order</span>() &#123;&#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">fn</span> <span class="title function_">serve_order</span>() &#123;&#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">fn</span> <span class="title function_">take_payment</span>() &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">eat_at_restaurant</span>() &#123;</span><br><span class="line">    <span class="comment">// 绝对路径</span></span><br><span class="line">    <span class="comment">// hosting 和 add_to_waitlist 会报错，因为二者是 private 的外部模块不可访问</span></span><br><span class="line">    <span class="comment">// 而 front_of_house 模块和 eat_at_restaurant 同在 crate 模块下所以可以访问</span></span><br><span class="line">    crate::front_of_house::hosting::<span class="title function_ invoke__">add_to_waitlist</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 相对路径</span></span><br><span class="line">    front_of_house::hosting::<span class="title function_ invoke__">add_to_waitlist</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="绝对路径引用"><a href="#绝对路径引用" class="headerlink" title="绝对路径引用"></a>绝对路径引用</h4><p>因为 <code>eat_at_restaurant</code> 和 <code>add_to_waitlist</code> 都定义在一个包中，因此在绝对路径引用时，可以直接以 <code>crate</code> 开头，然后逐层引用，每一层之间使用 <code>::</code> 分隔：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">crate::front_of_house::hosting::<span class="title function_ invoke__">add_to_waitlist</span>();</span><br></pre></td></tr></table></figure>
+
+<p>对比下之前的模块树：</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">crate</span><br><span class="line"> └── eat_at_restaurant</span><br><span class="line"> └── front_of_house</span><br><span class="line">     ├── hosting</span><br><span class="line">     │   ├── add_to_waitlist</span><br><span class="line">     │   └── seat_at_table</span><br><span class="line">     └── serving</span><br><span class="line">         ├── take_order</span><br><span class="line">         ├── serve_order</span><br><span class="line">         └── take_payment</span><br></pre></td></tr></table></figure>
+
+<p>可以看出，绝对路径的调用，完全符合了模块树的层级递进，非常符合直觉，如果类比文件系统，就跟使用绝对路径调用可执行程序差不多：<code>/front_of_house/hosting/add_to_waitlist</code>，使用 <code>crate</code> 作为开始就和使用 <code>/</code> 作为开始一样。</p>
+<h4 id="相对路径引用"><a href="#相对路径引用" class="headerlink" title="相对路径引用"></a>相对路径引用</h4><p>再回到模块树中，因为 <code>eat_at_restaurant</code> 和 <code>front_of_house</code> 都处于包根 <code>crate</code> 中，因此相对路径可以使用 <code>front_of_house</code> 作为开头：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">front_of_house::hosting::<span class="title function_ invoke__">add_to_waitlist</span>();</span><br></pre></td></tr></table></figure>
+
+<p>如果类比文件系统，那么它类似于调用同一个目录下的程序，你可以这么做：<code>front_of_house/hosting/add_to_waitlist</code>，嗯也很符合直觉。</p>
+<h4 id="绝对相对的选择"><a href="#绝对相对的选择" class="headerlink" title="绝对相对的选择"></a>绝对相对的选择</h4><p>如果只是为了引用到指定模块中的对象，那么两种都可以，但是在实际使用时，需要遵循一个原则：<strong>当代码被挪动位置时，尽量减少引用路径的修改</strong>，相信大家都遇到过，修改了某处代码，导致所有路径都要挨个替换，这显然不是好的路径选择。</p>
+<p>回到之前的例子，如果我们把 <code>front_of_house</code> 模块和 <code>eat_at_restaurant</code> 移动到一个模块中 <code>customer_experience</code>，那么绝对路径的引用方式就必须进行修改：<code>crate::customer_experience::front_of_house ...</code>，但是假设我们使用的相对路径，那么该路径就无需修改，因为它们两个的相对位置其实没有变：</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">crate</span><br><span class="line"> └── customer_experience</span><br><span class="line">    └── eat_at_restaurant</span><br><span class="line">    └── front_of_house</span><br><span class="line">        ├── hosting</span><br><span class="line">        │   ├── add_to_waitlist</span><br><span class="line">        │   └── seat_at_table</span><br></pre></td></tr></table></figure>
+
+<p>从新的模块树中可以很清晰的看出这一点。</p>
+<p>再比如，其它的都不动，把 <code>eat_at_restaurant</code> 移动到模块 <code>dining</code> 中，如果使用相对路径，你需要修改该路径，但如果使用的是绝对路径，就无需修改：</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">crate</span><br><span class="line"> └── dining</span><br><span class="line">     └── eat_at_restaurant</span><br><span class="line"> └── front_of_house</span><br><span class="line">     ├── hosting</span><br><span class="line">     │   ├── add_to_waitlist</span><br></pre></td></tr></table></figure>
+
+<p>不过，如果不确定哪个好，你可以考虑优先使用绝对路径，因为调用的地方和定义的地方往往是分离的，而定义的地方较少会变动。</p>
+<h3 id="代码可见性"><a href="#代码可见性" class="headerlink" title="代码可见性"></a>代码可见性</h3><p>让我们运行下面(之前)的代码：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">mod</span> front_of_house &#123;</span><br><span class="line">    <span class="keyword">mod</span> hosting &#123;</span><br><span class="line">        <span class="keyword">fn</span> <span class="title function_">add_to_waitlist</span>() &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 上下两个不在同一个目录下</span></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">eat_at_restaurant</span>() &#123;</span><br><span class="line">    <span class="comment">// 绝对路径</span></span><br><span class="line">    crate::front_of_house::hosting::<span class="title function_ invoke__">add_to_waitlist</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 相对路径</span></span><br><span class="line">    front_of_house::hosting::<span class="title function_ invoke__">add_to_waitlist</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>意料之外的报错了，毕竟看上去确实很简单且没有任何问题：</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">error[E0603]: module `hosting` is private</span><br><span class="line"><span class="meta prompt_"> --&gt; </span><span class="language-bash">src/lib.rs:9:28</span></span><br><span class="line">  |</span><br><span class="line">9 |     crate::front_of_house::hosting::add_to_waitlist();</span><br><span class="line">  |                            ^^^^^^^ private module</span><br></pre></td></tr></table></figure>
+
+<p>错误信息很清晰：<code>hosting</code> 模块是私有的，无法在包根进行访问，那么为何 <code>front_of_house</code> 模块就可以访问？因为它和 <code>eat_at_restaurant</code> 同属于一个包根作用域内，同一个模块内的代码自然不存在私有化问题(所以我们之前章节的代码都没有报过这个错误！)。</p>
+<p>模块不仅仅对于组织代码很有用，它还能定义代码的私有化边界：在这个边界内，什么内容能让外界看到，什么内容不能，都有很明确的定义。因此，如果希望让函数或者结构体等类型变成私有化的，可以使用模块。</p>
+<p>Rust 出于安全的考虑，默认情况下，所有的类型都是私有化的，包括函数、方法、结构体、枚举、常量，是的，就连模块本身也是私有化的。在中国，父亲往往不希望孩子拥有小秘密，但是在 Rust 中，<strong>父模块完全无法访问子模块中的私有项，但是子模块却可以访问父模块、父父..模块的私有项</strong>。</p>
+<h4 id="pub-关键字"><a href="#pub-关键字" class="headerlink" title="pub 关键字"></a>pub 关键字</h4><p>类似其它语言的 <code>public</code> 或者 Go 语言中的首字母大写，Rust 提供了 <code>pub</code> 关键字，通过它你可以控制模块和模块中指定项的可见性。</p>
+<p>由于之前的解释，我们知道了只需要将 <code>hosting</code> 模块标记为对外可见即可：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">mod</span> front_of_house &#123;</span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">mod</span> hosting &#123;</span><br><span class="line">        <span class="keyword">fn</span> <span class="title function_">add_to_waitlist</span>() &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*--- snip ----*/</span></span><br></pre></td></tr></table></figure>
+
+<p>但是不幸的是，又报错了：</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">error[E0603]: function `add_to_waitlist` is private</span><br><span class="line"><span class="meta prompt_">  --&gt; </span><span class="language-bash">src/lib.rs:12:30</span></span><br><span class="line">   |</span><br><span class="line">12 |     front_of_house::hosting::add_to_waitlist();</span><br><span class="line">   |                              ^^^^^^^^^^^^^^^ private function</span><br></pre></td></tr></table></figure>
+
+<p>哦？难道模块可见还不够，还需要将函数 <code>add_to_waitlist</code> 标记为可见的吗？ 是的，没错，模块可见性不代表模块内部项的可见性，模块的可见性仅仅是允许其它模块去引用它，但是想要引用它内部的项，还得继续将对应的项标记为 <code>pub</code>。</p>
+<p>在实际项目中，一个模块需要对外暴露的数据和 API 往往就寥寥数个，如果将模块标记为可见代表着内部项也全部对外可见，那你是不是还得把那些不可见的，一个一个标记为 <code>private</code>？反而是更麻烦的多。</p>
+<p>既然知道了如何解决，那么我们为函数也标记上 <code>pub</code>：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">mod</span> front_of_house &#123;</span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">mod</span> hosting &#123;</span><br><span class="line">        <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">add_to_waitlist</span>() &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*--- snip ----*/</span></span><br></pre></td></tr></table></figure>
+
+<p>Bang，顺利通过编译，感觉自己又变强了。</p>
+<h3 id="使用-super-引用模块"><a href="#使用-super-引用模块" class="headerlink" title="使用 super 引用模块"></a>使用 super 引用模块</h3><p>在用路径引用模块中，我们提到了相对路径有三种方式开始：<code>self</code>、<code>super</code>和 <code>crate</code> 或者模块名，其中第三种在前面已经讲到过，现在来看看通过 <code>super</code> 的方式引用模块项。</p>
+<p><code>super</code> 代表的是父模块为开始的引用方式，非常类似于文件系统中的 <code>..</code> 语法：<code>../a/b</code> 文件名：src&#x2F;lib.rs</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">serve_order</span>() &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 厨房模块</span></span><br><span class="line"><span class="keyword">mod</span> back_of_house &#123;</span><br><span class="line">    </span><br><span class="line">    super::<span class="title function_ invoke__">serve_order</span>();<span class="comment">//Error 函数调用不可以直接放在模块中</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">fix_incorrect_order</span>() &#123;</span><br><span class="line">        <span class="title function_ invoke__">cook_order</span>();</span><br><span class="line">        super::<span class="title function_ invoke__">serve_order</span>();<span class="comment">//函数调用不可以直接放在模块中</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">cook_order</span>() &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>嗯，我们的小餐馆又完善了，终于有厨房了！看来第一个客人也快可以有了。。。在厨房模块中，使用 <code>super::serve_order</code> 语法，调用了父模块(包根)中的 <code>serve_order</code> 函数。</p>
+<p>那么你可能会问，为何不使用 <code>crate::serve_order</code> 的方式？额，其实也可以，不过如果你确定未来这种层级关系不会改变，那么 <code>super::serve_order</code> 的方式会更稳定，未来就算它们都不在包根了，依然无需修改引用路径。所以路径的选用，往往还是取决于场景，以及未来代码的可能走向。</p>
+<h3 id="使用-self-引用模块"><a href="#使用-self-引用模块" class="headerlink" title="使用 self 引用模块"></a>使用 self 引用模块</h3><p><code>self</code> 其实就是引用自身模块中的项，也就是说和我们之前章节的代码类似，都调用同一模块中的内容，区别在于之前章节中直接通过名称调用即可，而 <code>self</code>，你得多此一举：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">serve_order</span>() &#123;</span><br><span class="line">    self::back_of_house::<span class="title function_ invoke__">cook_order</span>()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">mod</span> back_of_house &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">fix_incorrect_order</span>() &#123;</span><br><span class="line">        <span class="title function_ invoke__">cook_order</span>();</span><br><span class="line">        crate::<span class="title function_ invoke__">serve_order</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">cook_order</span>() &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>是的，多此一举，因为完全可以直接调用 <code>back_of_house</code>，但是 <code>self</code> 还有一个大用处，在下一节中我们会讲。</p>
+<h3 id="结构体和枚举的可见性"><a href="#结构体和枚举的可见性" class="headerlink" title="结构体和枚举的可见性"></a>结构体和枚举的可见性</h3><p>为何要把结构体和枚举的可见性单独拎出来讲呢？因为这两个家伙的成员字段拥有完全不同的可见性：</p>
+<ul>
+<li>将结构体设置为 <code>pub</code>，但它的所有字段依然是私有的</li>
+<li>将枚举设置为 <code>pub</code>，它的所有字段也将对外可见</li>
+</ul>
+<p>原因在于，枚举和结构体的使用方式不一样。如果枚举的成员对外不可见，那该枚举将一点用都没有，因此<strong>枚举成员的可见性自动跟枚举可见性保持一致</strong>，这样可以简化用户的使用。</p>
+<p>而结构体的应用场景比较复杂，其中的字段也往往部分在 A 处被使用，部分在 B 处被使用，因此无法确定成员的可见性，那索性就设置为全部不可见，将选择权交给程序员。</p>
+<h3 id="模块与文件分离"><a href="#模块与文件分离" class="headerlink" title="模块与文件分离"></a>模块与文件分离</h3><p>在之前的例子中，我们所有的模块都定义在 <code>src/lib.rs</code> 中，但是当模块变多或者变大时，需要将模块放入一个单独的文件中，让代码更好维护。</p>
+<p>现在，把 <code>front_of_house</code> 前厅分离出来，放入一个单独的文件中 <code>src/front_of_house.rs</code>：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">pub</span> <span class="keyword">mod</span> hosting &#123;</span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">add_to_waitlist</span>() &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后，将以下代码留在 <code>src/lib.rs</code> 中：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">mod</span> front_of_house;</span><br><span class="line"></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">use</span> crate::front_of_house::hosting; <span class="comment">//这样其他模块也通过我们可以访问到该模块或者函数</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">eat_at_restaurant</span>() &#123;</span><br><span class="line">    hosting::<span class="title function_ invoke__">add_to_waitlist</span>();</span><br><span class="line">    hosting::<span class="title function_ invoke__">add_to_waitlist</span>();</span><br><span class="line">    hosting::<span class="title function_ invoke__">add_to_waitlist</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>so easy！其实跟之前在同一个文件中也没有太大的不同，但是有几点值得注意：</p>
+<ul>
+<li><code>mod front_of_house;</code> 告诉 Rust 从另一个和模块 <code>front_of_house</code> 同名的文件中加载该模块的内容</li>
+<li>使用绝对路径的方式来引用 <code>hosting</code> 模块：<code>crate::front_of_house::hosting;</code></li>
+</ul>
+<p>需要注意的是，和之前代码中 <code>mod front_of_house&#123;..&#125;</code> 的完整模块不同，现在的代码中，模块的声明和实现是分离的，实现是在单独的 <code>front_of_house.rs</code> 文件中，然后通过 <code>mod front_of_house;</code> 这条声明语句从该文件中把模块内容加载进来。因此我们可以认为，模块 <code>front_of_house</code> 的定义还是在 <code>src/lib.rs</code> 中，只不过模块的具体内容被移动到了 <code>src/front_of_house.rs</code> 文件中。</p>
+<p>在这里出现了一个新的关键字 <code>use</code>，联想到其它章节我们见过的标准库引入 <code>use std::fmt;</code>，可以大致猜测，该关键字用来将外部模块中的项引入到当前作用域中来，这样无需冗长的父模块前缀即可调用：<code>hosting::add_to_waitlist();</code>，在下节中，我们将对 <code>use</code> 进行详细的讲解。</p>
+<p>当一个模块有许多子模块时，我们也可以通过文件夹的方式来组织这些子模块。</p>
+<p>假设我们可以创建一个目录 <code>front_of_house</code>，然后在文件夹里创建一个 <code>hosting.rs</code> 文件，<code>hosting.rs</code> 文件现在就剩下：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">add_to_waitlist</span>() &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在，我们尝试编译程序，很遗憾，编译器报错：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">error[E0583]: file not found for module `front_of_house`</span><br><span class="line"> --&gt; src/lib.rs:3:1</span><br><span class="line">  |</span><br><span class="line">1 | mod front_of_house;</span><br><span class="line">  | ^^^^^^^^^^^^^^^^^^</span><br><span class="line">  |</span><br><span class="line">  = help: to create the module `front_of_house`, create file &quot;src/front_of_house.rs&quot; or &quot;src/front_of_house/mod.rs&quot;</span><br></pre></td></tr></table></figure>
+
+<p>是的，如果需要将文件夹作为一个模块，我们需要进行显示指定暴露哪些子模块。按照上述的报错信息，我们有两种方法：</p>
+<ul>
+<li>在 <code>front_of_house</code> 目录里创建一个 <code>mod.rs</code>，如果你使用的 <code>rustc</code> 版本 <code>1.30</code> 之前，这是唯一的方法。</li>
+<li>在 <code>front_of_house</code> 同级目录里创建一个与模块（目录）同名的 rs 文件 <code>front_of_house.rs</code>，在新版本里，更建议使用这样的命名方式来避免项目中存在大量同名的 <code>mod.rs</code> 文件（ Python 点了个 <code>踩</code>）。</li>
+</ul>
+<p>而无论是上述哪个方式创建的文件，其内容都是一样的，你需要定义你的子模块（子模块名与文件名相同）：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">pub</span> <span class="keyword">mod</span> hosting;</span><br><span class="line"><span class="comment">// pub mod serving;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="使用-use-引入模块及受限可见性"><a href="#使用-use-引入模块及受限可见性" class="headerlink" title="使用 use 引入模块及受限可见性"></a>使用 use 引入模块及受限可见性</h2><p>如果代码中，通篇都是 <code>crate::front_of_house::hosting::add_to_waitlist</code> 这样的函数调用形式，我不知道有谁会喜欢，也许靠代码行数赚工资的人会很喜欢，但是强迫症肯定受不了，悲伤的是程序员大多都有强迫症。。。</p>
+<p>因此我们需要一个办法来简化这种使用方式，在 Rust 中，可以使用 <code>use</code> 关键字把路径提前引入到当前作用域中，随后的调用就可以省略该路径，极大地简化了代码。</p>
+<h3 id="基本引入方式"><a href="#基本引入方式" class="headerlink" title="基本引入方式"></a>基本引入方式</h3><p>在 Rust 中，引入模块中的项有两种方式：绝对路径和相对路径</p>
+<h4 id="绝对路径引入模块"><a href="#绝对路径引入模块" class="headerlink" title="绝对路径引入模块"></a>绝对路径引入模块</h4><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">mod</span> front_of_house &#123;</span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">mod</span> hosting &#123;</span><br><span class="line">        <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">add_to_waitlist</span>() &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> crate::front_of_house::hosting;</span><br><span class="line"></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">eat_at_restaurant</span>() &#123;</span><br><span class="line">    hosting::<span class="title function_ invoke__">add_to_waitlist</span>();</span><br><span class="line">    hosting::<span class="title function_ invoke__">add_to_waitlist</span>();</span><br><span class="line">    hosting::<span class="title function_ invoke__">add_to_waitlist</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里，我们使用 <code>use</code> 和绝对路径的方式，将 <code>hosting</code> 模块引入到当前作用域中，然后只需通过 <code>hosting::add_to_waitlist</code> 的方式，即可调用目标模块中的函数，相比 <code>crate::front_of_house::hosting::add_to_waitlist()</code> 的方式要简单的多，那么还能更简单吗？</p>
+<h4 id="相对路径引入模块中的函数"><a href="#相对路径引入模块中的函数" class="headerlink" title="相对路径引入模块中的函数"></a>相对路径引入模块中的函数</h4><p>在下面代码中，我们不仅要使用相对路径进行引入，而且与上面引入 <code>hosting</code> 模块不同，直接引入该模块中的 <code>add_to_waitlist</code> 函数：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">mod</span> front_of_house &#123;</span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">mod</span> hosting &#123;</span><br><span class="line">        <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">add_to_waitlist</span>() &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> front_of_house::hosting::add_to_waitlist;</span><br><span class="line"></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">eat_at_restaurant</span>() &#123;</span><br><span class="line">    <span class="title function_ invoke__">add_to_waitlist</span>();</span><br><span class="line">    <span class="title function_ invoke__">add_to_waitlist</span>();</span><br><span class="line">    <span class="title function_ invoke__">add_to_waitlist</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="引入模块还是函数"><a href="#引入模块还是函数" class="headerlink" title="引入模块还是函数"></a>引入模块还是函数</h4><p>从使用简洁性来说，引入函数自然是更甚一筹，但是在某些时候，引入模块会更好：</p>
+<ul>
+<li>需要引入同一个模块的多个函数</li>
+<li>作用域中存在同名函数</li>
+</ul>
+<p>在以上两种情况中，使用 <code>use front_of_house::hosting;</code> 引入模块要比 <code>use front_of_house::hosting::add_to_waitlist;</code> 引入函数更好。</p>
+<p>例如，如果想使用 <code>HashMap</code>，那么直接引入该结构体是比引入模块更好的选择，因为在 <code>collections</code> 模块中，我们只需要使用一个 <code>HashMap</code> 结构体：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::collections::HashMap;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">map</span> = HashMap::<span class="title function_ invoke__">new</span>();</span><br><span class="line">    map.<span class="title function_ invoke__">insert</span>(<span class="number">1</span>, <span class="number">2</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其实严格来说，对于引用方式并没有需要遵守的惯例，主要还是取决于你的喜好，不过我们建议：<strong>优先使用最细粒度(引入函数、结构体等)的引用方式，如果引起了某种麻烦(例如前面两种情况)，再使用引入模块的方式</strong>。</p>
+<h3 id="避免同名引用"><a href="#避免同名引用" class="headerlink" title="避免同名引用"></a>避免同名引用</h3><p>根据上一章节的内容，我们只要保证同一个模块中不存在同名项就行，模块之间、包之间的同名，谁管得着谁啊，话虽如此，一起看看，如果遇到同名的情况该如何处理。</p>
+<h4 id="模块-函数"><a href="#模块-函数" class="headerlink" title="模块::函数"></a>模块::函数</h4><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::fmt;</span><br><span class="line"><span class="keyword">use</span> std::io;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">function1</span>() <span class="punctuation">-&gt;</span> fmt::<span class="type">Result</span> &#123;</span><br><span class="line">    <span class="comment">// --snip--</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">function2</span>() <span class="punctuation">-&gt;</span> io::<span class="type">Result</span>&lt;()&gt; &#123;</span><br><span class="line">    <span class="comment">// --snip--</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面的例子给出了很好的解决方案，使用模块引入的方式，具体的 <code>Result</code> 通过 <code>模块::Result</code> 的方式进行调用。</p>
+<p>可以看出，避免同名冲突的关键，就是使用<strong>父模块的方式来调用</strong>，除此之外，还可以给予引入的项起一个别名。</p>
+<h4 id="as-别名引用"><a href="#as-别名引用" class="headerlink" title="as 别名引用"></a>as 别名引用</h4><p>对于同名冲突问题，还可以使用 <code>as</code> 关键字来解决，它可以赋予引入项一个全新的名称：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::fmt::<span class="type">Result</span>;</span><br><span class="line"><span class="keyword">use</span> std::io::<span class="type">Result</span> <span class="keyword">as</span> IoResult;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">function1</span>() <span class="punctuation">-&gt;</span> <span class="type">Result</span> &#123;</span><br><span class="line">    <span class="comment">// --snip--</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">function2</span>() <span class="punctuation">-&gt;</span> IoResult&lt;()&gt; &#123;</span><br><span class="line">    <span class="comment">// --snip--</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如上所示，首先通过 <code>use std::io::Result</code> 将 <code>Result</code> 引入到作用域，然后使用 <code>as</code> 给予它一个全新的名称 <code>IoResult</code>，这样就不会再产生冲突：</p>
+<ul>
+<li><code>Result</code> 代表 <code>std::fmt::Result</code></li>
+<li><code>IoResult</code> 代表 <code>std:io::Result</code></li>
+</ul>
+<h3 id="引入项再导出"><a href="#引入项再导出" class="headerlink" title="引入项再导出"></a>引入项再导出</h3><p>当外部的模块项 <code>A</code> 被引入到当前模块中时，它的可见性自动被设置为私有的，如果你希望允许其它外部代码引用我们的模块项 <code>A</code>，那么可以对它进行再导出：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">mod</span> front_of_house &#123;</span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">mod</span> hosting &#123;</span><br><span class="line">        <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">add_to_waitlist</span>() &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">use</span> crate::front_of_house::hosting;</span><br><span class="line"></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">eat_at_restaurant</span>() &#123;</span><br><span class="line">    hosting::<span class="title function_ invoke__">add_to_waitlist</span>();</span><br><span class="line">    hosting::<span class="title function_ invoke__">add_to_waitlist</span>();</span><br><span class="line">    hosting::<span class="title function_ invoke__">add_to_waitlist</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如上，使用 <code>pub use</code> 即可实现。这里 <code>use</code> 代表引入 <code>hosting</code> 模块到当前作用域，<code>pub</code> 表示将该引入的内容再度设置为可见。</p>
+<p>当你希望将内部的实现细节隐藏起来或者按照某个目的组织代码时，可以使用 <code>pub use</code> 再导出，例如统一使用一个模块来提供对外的 API，那该模块就可以引入其它模块中的 API，然后进行再导出，最终对于用户来说，所有的 API 都是由一个模块统一提供的。</p>
+<h3 id="使用第三方包"><a href="#使用第三方包" class="headerlink" title="使用第三方包"></a>使用第三方包</h3><p>之前我们一直在引入标准库模块或者自定义模块，现在来引入下第三方包中的模块，关于如何引入外部依赖，我们在 Cargo 入门中就有讲，这里直接给出操作步骤：</p>
+<ol>
+<li>修改 <code>Cargo.toml</code> 文件，在 <code>[dependencies]</code> 区域添加一行：<code>rand = &quot;0.8.3&quot;</code></li>
+<li>此时，如果你用的是 <code>VSCode</code> 和 <code>rust-analyzer</code> 插件，该插件会自动拉取该库，你可能需要等它完成后，再进行下一步（VSCode 左下角有提示）</li>
+</ol>
+<p>好了，此时，<code>rand</code> 包已经被我们添加到依赖中，下一步就是在代码中使用：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> rand::Rng;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">secret_number</span> = rand::<span class="title function_ invoke__">thread_rng</span>().<span class="title function_ invoke__">gen_range</span>(<span class="number">1</span>..<span class="number">101</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里使用 <code>use</code> 引入了第三方包 <code>rand</code> 中的 <code>Rng</code> 特征，因为我们需要调用的 <code>gen_range</code> 方法定义在该特征中。</p>
+<h4 id="crates-io-lib-rs"><a href="#crates-io-lib-rs" class="headerlink" title="crates.io, lib.rs"></a>crates.io, lib.rs</h4><p>Rust 社区已经为我们贡献了大量高质量的第三方包，你可以在 <code>crates.io</code> 或者 <code>lib.rs</code> 中检索和使用，从目前来说查找包更推荐 <code>lib.rs</code>，搜索功能更强大，内容展示也更加合理，但是下载依赖包还是得用<code>crates.io</code>。</p>
+<p>你可以在网站上搜索 <code>rand</code> 包，看看它的文档使用方式是否和我们之前引入方式相一致：在网上找到想要的包，然后将你想要的包和版本信息写入到 <code>Cargo.toml</code> 中。</p>
+<h3 id="使用-简化引入方式"><a href="#使用-简化引入方式" class="headerlink" title="使用 {} 简化引入方式"></a>使用 {} 简化引入方式</h3><p>对于以下一行一行的引入方式：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::collections::HashMap;</span><br><span class="line"><span class="keyword">use</span> std::collections::BTreeMap;</span><br><span class="line"><span class="keyword">use</span> std::collections::HashSet;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> std::cmp::Ordering;</span><br><span class="line"><span class="keyword">use</span> std::io;</span><br></pre></td></tr></table></figure>
+
+<p>可以使用 <code>&#123;&#125;</code> 来一起引入进来，在大型项目中，使用这种方式来引入，可以减少大量 <code>use</code> 的使用：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::collections::&#123;HashMap,BTreeMap,HashSet&#125;;</span><br><span class="line"><span class="keyword">use</span> std::&#123;cmp::Ordering, io&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>对于下面的同时引入模块和模块中的项：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::io;</span><br><span class="line"><span class="keyword">use</span> std::io::Write;</span><br></pre></td></tr></table></figure>
+
+<p>可以使用 <code>&#123;&#125;</code> 的方式进行简化:</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::io::&#123;<span class="keyword">self</span>, Write&#125;;</span><br></pre></td></tr></table></figure>
+
+<h4 id="self"><a href="#self" class="headerlink" title="self"></a>self</h4><p>上面使用到了模块章节提到的 <code>self</code> 关键字，用来替代模块自身，结合上一节中的 <code>self</code>，可以得出它在模块中的两个用途：</p>
+<ul>
+<li><code>use self::xxx</code>，表示加载当前模块中的 <code>xxx</code>。此时 <code>self</code> 可省略</li>
+<li><code>use xxx::&#123;self, yyy&#125;</code>，表示，加载当前路径下模块 <code>xxx</code> 本身，以及模块 <code>xxx</code> 下的 <code>yyy</code></li>
+</ul>
+<h3 id="使用-引入模块下的所有项"><a href="#使用-引入模块下的所有项" class="headerlink" title="使用 * 引入模块下的所有项"></a>使用 * 引入模块下的所有项</h3><p>对于之前一行一行引入 <code>std::collections</code> 的方式，我们还可以使用</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::collections::*;</span><br></pre></td></tr></table></figure>
+
+<p>以上这种方式来引入 <code>std::collections</code> 模块下的所有公共项，这些公共项自然包含了 <code>HashMap</code>，<code>HashSet</code> 等想手动引入的集合类型。</p>
+<p>当使用 <code>*</code> 来引入的时候要格外小心，因为你很难知道到底哪些被引入到了当前作用域中，有哪些会和你自己程序中的名称相冲突：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::collections::*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">HashMap</span>;</span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">   <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">v</span> =  HashMap::<span class="title function_ invoke__">new</span>();</span><br><span class="line">   v.<span class="title function_ invoke__">insert</span>(<span class="string">&quot;a&quot;</span>, <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上代码中，<code>std::collection::HashMap</code> 被 <code>*</code> 引入到当前作用域，但是由于存在另一个同名的结构体，因此 <code>HashMap::new</code> 根本不存在，因为对于编译器来说，本地同名类型的优先级更高。</p>
+<p>在实际项目中，这种引用方式往往用于快速写测试代码，它可以把所有东西一次性引入到 <code>tests</code> 模块中。</p>
+<h3 id="受限的可见性"><a href="#受限的可见性" class="headerlink" title="受限的可见性"></a>受限的可见性</h3><p>在上一节中，我们学习了可见性这个概念，这也是模块体系中最为核心的概念，控制了模块中哪些内容可以被外部看见，但是在实际使用时，光被外面看到还不行，我们还想控制哪些人能看，这就是 Rust 提供的受限可见性。</p>
+<p>例如，在 Rust 中，包是一个模块树，我们可以通过 <code>pub(crate) item;</code> 这种方式来实现：<code>item</code> 虽然是对外可见的，但是只在当前包内可见，外部包无法引用到该 <code>item</code>。</p>
+<p>所以，如果我们想要让某一项可以在整个包中都可以被使用，那么有两种办法：</p>
+<ul>
+<li>在包根中定义一个非 <code>pub</code> 类型的 <code>X</code>(父模块的项对子模块都是可见的，因此包根中的项对模块树上的所有模块都可见)</li>
+<li>在子模块中定义一个 <code>pub</code> 类型的 <code>Y</code>，同时通过 <code>use</code> 将其引入到包根</li>
+</ul>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">mod</span> a &#123;</span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">mod</span> b &#123;</span><br><span class="line">        <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">c</span>() &#123;</span><br><span class="line">            <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>,crate::X);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">#[derive(Debug)]</span></span><br><span class="line">        <span class="keyword">pub</span> <span class="keyword">struct</span> <span class="title class_">Y</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#[derive(Debug)]</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">X</span>;</span><br><span class="line"><span class="keyword">use</span> a::b::Y;</span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">d</span>() &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>,Y);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上代码充分说明了之前两种办法的使用方式，但是有时我们会遇到这两种方法都不太好用的时候。例如希望对于某些特定的模块可见，但是对于其他模块又不可见：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 目标：`a` 导出 `I`、`bar` and `foo`，其他的不导出</span></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">mod</span> a &#123;</span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">const</span> I: <span class="type">i32</span> = <span class="number">3</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">semisecret</span>(x: <span class="type">i32</span>) <span class="punctuation">-&gt;</span> <span class="type">i32</span> &#123;</span><br><span class="line">        <span class="keyword">use</span> self::b::c::J;</span><br><span class="line">        x + J</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">bar</span>(z: <span class="type">i32</span>) <span class="punctuation">-&gt;</span> <span class="type">i32</span> &#123;</span><br><span class="line">        <span class="title function_ invoke__">semisecret</span>(I) * z</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">foo</span>(y: <span class="type">i32</span>) <span class="punctuation">-&gt;</span> <span class="type">i32</span> &#123;</span><br><span class="line">        <span class="title function_ invoke__">semisecret</span>(I) + y</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">mod</span> b &#123;</span><br><span class="line">        <span class="keyword">mod</span> c &#123;</span><br><span class="line">            <span class="keyword">const</span> J: <span class="type">i32</span> = <span class="number">4</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这段代码会报错，因为与父模块中的项对子模块可见相反，子模块中的项对父模块是不可见的。这里 <code>semisecret</code> 方法中，<code>a</code> -&gt; <code>b</code> -&gt; <code>c</code> 形成了父子模块链，那 <code>c</code> 中的 <code>J</code> 自然对 <code>a</code> 模块不可见。</p>
+<p>如果使用之前的可见性方式，那么想保持 <code>J</code> 私有，同时让 <code>a</code> 继续使用 <code>semisecret</code> 函数的办法是将该函数移动到 <code>c</code> 模块中，然后用 <code>pub use</code> 将 <code>semisecret</code> 函数进行再导出：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">pub</span> <span class="keyword">mod</span> a &#123;</span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">const</span> I: <span class="type">i32</span> = <span class="number">3</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">use</span> self::b::semisecret;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">bar</span>(z: <span class="type">i32</span>) <span class="punctuation">-&gt;</span> <span class="type">i32</span> &#123;</span><br><span class="line">        <span class="title function_ invoke__">semisecret</span>(I) * z</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">foo</span>(y: <span class="type">i32</span>) <span class="punctuation">-&gt;</span> <span class="type">i32</span> &#123;</span><br><span class="line">        <span class="title function_ invoke__">semisecret</span>(I) + y</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">mod</span> b &#123;</span><br><span class="line">        <span class="keyword">pub</span> <span class="keyword">use</span> self::c::semisecret;</span><br><span class="line">        <span class="keyword">mod</span> c &#123;</span><br><span class="line">            <span class="keyword">const</span> J: <span class="type">i32</span> = <span class="number">4</span>;</span><br><span class="line">            <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">semisecret</span>(x: <span class="type">i32</span>) <span class="punctuation">-&gt;</span> <span class="type">i32</span> &#123;</span><br><span class="line">                x + J</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这段代码说实话问题不大，但是有些破坏了我们之前的逻辑，如果想保持代码逻辑，同时又只让 <code>J</code> 在 <code>a</code> 内可见该怎么办？</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">pub</span> <span class="keyword">mod</span> a &#123;</span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">const</span> I: <span class="type">i32</span> = <span class="number">3</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">semisecret</span>(x: <span class="type">i32</span>) <span class="punctuation">-&gt;</span> <span class="type">i32</span> &#123;</span><br><span class="line">        <span class="keyword">use</span> self::b::c::J;</span><br><span class="line">        x + J</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">bar</span>(z: <span class="type">i32</span>) <span class="punctuation">-&gt;</span> <span class="type">i32</span> &#123;</span><br><span class="line">        <span class="title function_ invoke__">semisecret</span>(I) * z</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">foo</span>(y: <span class="type">i32</span>) <span class="punctuation">-&gt;</span> <span class="type">i32</span> &#123;</span><br><span class="line">        <span class="title function_ invoke__">semisecret</span>(I) + y</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">mod</span> b &#123;</span><br><span class="line">        <span class="title function_ invoke__">pub</span>(<span class="keyword">in</span> crate::a) <span class="keyword">mod</span> c &#123;</span><br><span class="line">            <span class="title function_ invoke__">pub</span>(<span class="keyword">in</span> crate::a) <span class="keyword">const</span> J: <span class="type">i32</span> = <span class="number">4</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过 <code>pub(in crate::a)</code> 的方式，我们指定了模块 <code>c</code> 和常量 <code>J</code> 的可见范围都只是 <code>a</code> 模块中，<code>a</code> 之外的模块是完全访问不到它们的。</p>
+<h4 id="限制可见性语法"><a href="#限制可见性语法" class="headerlink" title="限制可见性语法"></a>限制可见性语法</h4><p><code>pub(crate)</code> 或 <code>pub(in crate::a)</code> 就是限制可见性语法，前者是限制在整个包内可见，后者是通过绝对路径，限制在包内的某个模块内可见，总结一下：</p>
+<ul>
+<li><code>pub</code> 意味着可见性无任何限制</li>
+<li><code>pub(crate)</code> 表示在当前包可见</li>
+<li><code>pub(self)</code> 在当前模块可见</li>
+<li><code>pub(super)</code> 在父模块可见</li>
+<li><code>pub(in &lt;path&gt;)</code> 表示在某个路径代表的模块中可见，其中 <code>path</code> 必须是父模块或者祖先模块</li>
+</ul>
+<h4 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h4><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 一个名为 `my_mod` 的模块</span></span><br><span class="line"><span class="keyword">mod</span> my_mod &#123;</span><br><span class="line">    <span class="comment">// 模块中的项默认具有私有的可见性</span></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">private_function</span>() &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;called `my_mod::private_function()`&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用 `pub` 修饰语来改变默认可见性。</span></span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">function</span>() &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;called `my_mod::function()`&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 在同一模块中，项可以访问其它项，即使它是私有的。</span></span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">indirect_access</span>() &#123;</span><br><span class="line">        <span class="built_in">print!</span>(<span class="string">&quot;called `my_mod::indirect_access()`, that\n&gt; &quot;</span>);</span><br><span class="line">        <span class="title function_ invoke__">private_function</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 模块也可以嵌套</span></span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">mod</span> nested &#123;</span><br><span class="line">        <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">function</span>() &#123;</span><br><span class="line">            <span class="built_in">println!</span>(<span class="string">&quot;called `my_mod::nested::function()`&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">#[allow(dead_code)]</span></span><br><span class="line">        <span class="keyword">fn</span> <span class="title function_">private_function</span>() &#123;</span><br><span class="line">            <span class="built_in">println!</span>(<span class="string">&quot;called `my_mod::nested::private_function()`&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 使用 `pub(in path)` 语法定义的函数只在给定的路径中可见。</span></span><br><span class="line">        <span class="comment">// `path` 必须是父模块（parent module）或祖先模块（ancestor module）</span></span><br><span class="line">        <span class="title function_ invoke__">pub</span>(<span class="keyword">in</span> crate::my_mod) <span class="keyword">fn</span> <span class="title function_">public_function_in_my_mod</span>() &#123;</span><br><span class="line">            <span class="built_in">print!</span>(<span class="string">&quot;called `my_mod::nested::public_function_in_my_mod()`, that\n &gt; &quot;</span>);</span><br><span class="line">            <span class="title function_ invoke__">public_function_in_nested</span>()</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 使用 `pub(self)` 语法定义的函数则只在当前模块中可见。</span></span><br><span class="line">        <span class="title function_ invoke__">pub</span>(<span class="keyword">self</span>) <span class="keyword">fn</span> <span class="title function_">public_function_in_nested</span>() &#123;</span><br><span class="line">            <span class="built_in">println!</span>(<span class="string">&quot;called `my_mod::nested::public_function_in_nested&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 使用 `pub(super)` 语法定义的函数只在父模块中可见。</span></span><br><span class="line">        <span class="title function_ invoke__">pub</span>(<span class="keyword">super</span>) <span class="keyword">fn</span> <span class="title function_">public_function_in_super_mod</span>() &#123;</span><br><span class="line">            <span class="built_in">println!</span>(<span class="string">&quot;called my_mod::nested::public_function_in_super_mod&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">call_public_function_in_my_mod</span>() &#123;</span><br><span class="line">        <span class="built_in">print!</span>(<span class="string">&quot;called `my_mod::call_public_funcion_in_my_mod()`, that\n&gt; &quot;</span>);</span><br><span class="line">        nested::<span class="title function_ invoke__">public_function_in_my_mod</span>();</span><br><span class="line">        <span class="built_in">print!</span>(<span class="string">&quot;&gt; &quot;</span>);</span><br><span class="line">        nested::<span class="title function_ invoke__">public_function_in_super_mod</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// `pub(crate)` 使得函数只在当前包中可见</span></span><br><span class="line">    <span class="title function_ invoke__">pub</span>(<span class="keyword">crate</span>) <span class="keyword">fn</span> <span class="title function_">public_function_in_crate</span>() &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;called `my_mod::public_function_in_crate()&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 嵌套模块的可见性遵循相同的规则</span></span><br><span class="line">    <span class="keyword">mod</span> private_nested &#123;</span><br><span class="line">        <span class="meta">#[allow(dead_code)]</span></span><br><span class="line">        <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">function</span>() &#123;</span><br><span class="line">            <span class="built_in">println!</span>(<span class="string">&quot;called `my_mod::private_nested::function()`&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">function</span>() &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;called `function()`&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="comment">// 模块机制消除了相同名字的项之间的歧义。</span></span><br><span class="line">    <span class="title function_ invoke__">function</span>();</span><br><span class="line">    my_mod::<span class="title function_ invoke__">function</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 公有项，包括嵌套模块内的，都可以在父模块外部访问。</span></span><br><span class="line">    my_mod::<span class="title function_ invoke__">indirect_access</span>();</span><br><span class="line">    my_mod::nested::<span class="title function_ invoke__">function</span>();</span><br><span class="line">    my_mod::<span class="title function_ invoke__">call_public_function_in_my_mod</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// pub(crate) 项可以在同一个 crate 中的任何地方访问</span></span><br><span class="line">    my_mod::<span class="title function_ invoke__">public_function_in_crate</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// pub(in path) 项只能在指定的模块中访问</span></span><br><span class="line">    <span class="comment">// 报错！函数 `public_function_in_my_mod` 是私有的</span></span><br><span class="line">    <span class="comment">//my_mod::nested::public_function_in_my_mod();</span></span><br><span class="line">    <span class="comment">// 试一试 ^ 取消该行的注释</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 模块的私有项不能直接访问，即便它是嵌套在公有模块内部的</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 报错！`private_function` 是私有的</span></span><br><span class="line">    <span class="comment">//my_mod::private_function();</span></span><br><span class="line">    <span class="comment">// 试一试 ^ 取消此行注释</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 报错！`private_function` 是私有的</span></span><br><span class="line">    <span class="comment">//my_mod::nested::private_function();</span></span><br><span class="line">    <span class="comment">// 试一试 ^ 取消此行的注释</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 报错！ `private_nested` 是私有的</span></span><br><span class="line">    <span class="comment">//my_mod::private_nested::function();</span></span><br><span class="line">    <span class="comment">// 试一试 ^ 取消此行的注释</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+    
+  </article>
+
+  
+      
+    <div class="nexmoe-post-copyright">
+        <strong>本文作者：</strong>kay<br>
+        <strong>本文链接：</strong><a href="https://www.tooupper.com/content/Rust/learning-Rust/rust-Basic/%E5%8C%85%E5%92%8C%E6%A8%A1%E5%9D%97.html" title="https:&#x2F;&#x2F;www.tooupper.com&#x2F;content&#x2F;Rust&#x2F;learning-Rust&#x2F;rust-Basic&#x2F;%E5%8C%85%E5%92%8C%E6%A8%A1%E5%9D%97.html" target="_blank" rel="noopener">https:&#x2F;&#x2F;www.tooupper.com&#x2F;content&#x2F;Rust&#x2F;learning-Rust&#x2F;rust-Basic&#x2F;%E5%8C%85%E5%92%8C%E6%A8%A1%E5%9D%97.html</a><br>
+        
+            <strong>版权声明：</strong>本文采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/deed.zh" target="_blank">CC BY-NC-SA 3.0 CN</a> 协议进行许可
+
+        
+    </div>
+
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+   
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/Rust%E5%9F%BA%E7%A1%80/" rel="tag">Rust基础</a>
+    
+</div>
+  
+  
+    <script async src="/js/copy-codeblock.js?v=1698918460950"></script>
+  
+
+  
+      <div class="nexmoe-post-footer">
+          
+      </div>
+  
+</div></div><div class="nexmoe-post-right">    <div class="nexmoe-fixed">
+        <div class="nexmoe-tool">
+
+            
+
+            
+            
+            <button class="mdui-fab catalog" style="overflow:unset;">
+                <i class="nexmoefont icon-i-catalog"></i>
+                <div class="nexmoe-toc">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8C%85%E5%92%8C%E6%A8%A1%E5%9D%97"><span class="toc-number">1.</span> <span class="toc-text">包和模块</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8C%85-Crate"><span class="toc-number">1.1.</span> <span class="toc-text">包 Crate</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8C%85-Crate-1"><span class="toc-number">1.1.1.</span> <span class="toc-text">包 Crate</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE-Package"><span class="toc-number">1.1.2.</span> <span class="toc-text">项目 Package</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%8C%E8%BF%9B%E5%88%B6-Package"><span class="toc-number">1.1.2.1.</span> <span class="toc-text">二进制 Package</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BA%93-Package"><span class="toc-number">1.1.2.2.</span> <span class="toc-text">库 Package</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%98%93%E6%B7%B7%E6%B7%86%E7%9A%84-Package-%E5%92%8C-%E5%8C%85"><span class="toc-number">1.1.2.3.</span> <span class="toc-text">易混淆的 Package 和 包</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B8%E5%9E%8B%E7%9A%84-Package-%E7%BB%93%E6%9E%84"><span class="toc-number">1.1.2.4.</span> <span class="toc-text">典型的 Package 结构</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9D%97-Module"><span class="toc-number">1.2.</span> <span class="toc-text">模块 Module</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%B5%8C%E5%A5%97%E6%A8%A1%E5%9D%97"><span class="toc-number">1.2.1.</span> <span class="toc-text">创建嵌套模块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A8%A1%E5%9D%97%E6%A0%91"><span class="toc-number">1.2.2.</span> <span class="toc-text">模块树</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%88%B6%E5%AD%90%E6%A8%A1%E5%9D%97"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">父子模块</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E8%B7%AF%E5%BE%84%E5%BC%95%E7%94%A8%E6%A8%A1%E5%9D%97"><span class="toc-number">1.2.3.</span> <span class="toc-text">用路径引用模块</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%9D%E5%AF%B9%E8%B7%AF%E5%BE%84%E5%BC%95%E7%94%A8"><span class="toc-number">1.2.3.1.</span> <span class="toc-text">绝对路径引用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9B%B8%E5%AF%B9%E8%B7%AF%E5%BE%84%E5%BC%95%E7%94%A8"><span class="toc-number">1.2.3.2.</span> <span class="toc-text">相对路径引用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%9D%E5%AF%B9%E7%9B%B8%E5%AF%B9%E7%9A%84%E9%80%89%E6%8B%A9"><span class="toc-number">1.2.3.3.</span> <span class="toc-text">绝对相对的选择</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%8F%AF%E8%A7%81%E6%80%A7"><span class="toc-number">1.2.4.</span> <span class="toc-text">代码可见性</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#pub-%E5%85%B3%E9%94%AE%E5%AD%97"><span class="toc-number">1.2.4.1.</span> <span class="toc-text">pub 关键字</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-super-%E5%BC%95%E7%94%A8%E6%A8%A1%E5%9D%97"><span class="toc-number">1.2.5.</span> <span class="toc-text">使用 super 引用模块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-self-%E5%BC%95%E7%94%A8%E6%A8%A1%E5%9D%97"><span class="toc-number">1.2.6.</span> <span class="toc-text">使用 self 引用模块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%93%E6%9E%84%E4%BD%93%E5%92%8C%E6%9E%9A%E4%B8%BE%E7%9A%84%E5%8F%AF%E8%A7%81%E6%80%A7"><span class="toc-number">1.2.7.</span> <span class="toc-text">结构体和枚举的可见性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A8%A1%E5%9D%97%E4%B8%8E%E6%96%87%E4%BB%B6%E5%88%86%E7%A6%BB"><span class="toc-number">1.2.8.</span> <span class="toc-text">模块与文件分离</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-use-%E5%BC%95%E5%85%A5%E6%A8%A1%E5%9D%97%E5%8F%8A%E5%8F%97%E9%99%90%E5%8F%AF%E8%A7%81%E6%80%A7"><span class="toc-number">1.3.</span> <span class="toc-text">使用 use 引入模块及受限可见性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E5%BC%95%E5%85%A5%E6%96%B9%E5%BC%8F"><span class="toc-number">1.3.1.</span> <span class="toc-text">基本引入方式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%9D%E5%AF%B9%E8%B7%AF%E5%BE%84%E5%BC%95%E5%85%A5%E6%A8%A1%E5%9D%97"><span class="toc-number">1.3.1.1.</span> <span class="toc-text">绝对路径引入模块</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9B%B8%E5%AF%B9%E8%B7%AF%E5%BE%84%E5%BC%95%E5%85%A5%E6%A8%A1%E5%9D%97%E4%B8%AD%E7%9A%84%E5%87%BD%E6%95%B0"><span class="toc-number">1.3.1.2.</span> <span class="toc-text">相对路径引入模块中的函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BC%95%E5%85%A5%E6%A8%A1%E5%9D%97%E8%BF%98%E6%98%AF%E5%87%BD%E6%95%B0"><span class="toc-number">1.3.1.3.</span> <span class="toc-text">引入模块还是函数</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%81%BF%E5%85%8D%E5%90%8C%E5%90%8D%E5%BC%95%E7%94%A8"><span class="toc-number">1.3.2.</span> <span class="toc-text">避免同名引用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A8%A1%E5%9D%97-%E5%87%BD%E6%95%B0"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">模块::函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#as-%E5%88%AB%E5%90%8D%E5%BC%95%E7%94%A8"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">as 别名引用</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%95%E5%85%A5%E9%A1%B9%E5%86%8D%E5%AF%BC%E5%87%BA"><span class="toc-number">1.3.3.</span> <span class="toc-text">引入项再导出</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E7%AC%AC%E4%B8%89%E6%96%B9%E5%8C%85"><span class="toc-number">1.3.4.</span> <span class="toc-text">使用第三方包</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#crates-io-lib-rs"><span class="toc-number">1.3.4.1.</span> <span class="toc-text">crates.io, lib.rs</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-%E7%AE%80%E5%8C%96%E5%BC%95%E5%85%A5%E6%96%B9%E5%BC%8F"><span class="toc-number">1.3.5.</span> <span class="toc-text">使用 {} 简化引入方式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#self"><span class="toc-number">1.3.5.1.</span> <span class="toc-text">self</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-%E5%BC%95%E5%85%A5%E6%A8%A1%E5%9D%97%E4%B8%8B%E7%9A%84%E6%89%80%E6%9C%89%E9%A1%B9"><span class="toc-number">1.3.6.</span> <span class="toc-text">使用 * 引入模块下的所有项</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%97%E9%99%90%E7%9A%84%E5%8F%AF%E8%A7%81%E6%80%A7"><span class="toc-number">1.3.7.</span> <span class="toc-text">受限的可见性</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%99%90%E5%88%B6%E5%8F%AF%E8%A7%81%E6%80%A7%E8%AF%AD%E6%B3%95"><span class="toc-number">1.3.7.1.</span> <span class="toc-text">限制可见性语法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BE%8B%E5%AD%90"><span class="toc-number">1.3.7.2.</span> <span class="toc-text">例子</span></a></li></ol></li></ol></li></ol></li></ol>
+                </div>
+            </button>
+            
+
+            
+
+            <a href="#nexmoe-content" class="backtop toc-link" aria-label="Back To Top" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+        </div>
+    </div>
+</div></div><div id="nexmoe-footer"><!--!--></div><div><div id="nexmoe-search-space">
+	<div class="search-container">
+		<div class="search-header">
+			<div class="search-input-container">
+				<input
+					class="search-input"
+					type="text"
+					placeholder="搜索"
+					oninput="sinput();"
+				/>
+			</div>
+			<a class="search-close" onclick="sclose();">×</a>
+		</div>
+		<div class="search-body"></div>
+	</div>
+</div>
+</div><div><script async src="https://www.TooUpper.com" crossorigin="anonymous"></script>
+</div></body></html>

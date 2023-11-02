@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="zh"><head>
+<title>集合类型 - 成祠的个人博客</title>
+<meta charset="UTF-8">
+<meta name="keywords" content="blog">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+
+<link rel="shortcut icon" href="/image/favicon.png" type="image/png" />
+<meta name="description" content="集合类型集合在 Rust 中是一类比较特殊的类型，因为 Rust 中大多数数据类型都只能代表一个特定的值，但是集合却可以代表一大堆值。而且与语言级别的数组、字符串类型不同，标准库里的这些家伙是分配在堆上，因此都可以进行动态的增加和减少。 动态数组 Vector动态数组允许你存储多个值，这些值在内存中一个紧挨着另一个排列，因此访问其中某个元素的成本非常低。动态数组只能存储相同类型的元素，如果你想存储">
+<meta property="og:type" content="article">
+<meta property="og:title" content="集合类型">
+<meta property="og:url" content="https://www.tooupper.com/content/Rust/learning-Rust/rust-Basic/%E9%9B%86%E5%90%88%E7%B1%BB%E5%9E%8B.html">
+<meta property="og:site_name" content="成祠的个人博客">
+<meta property="og:description" content="集合类型集合在 Rust 中是一类比较特殊的类型，因为 Rust 中大多数数据类型都只能代表一个特定的值，但是集合却可以代表一大堆值。而且与语言级别的数组、字符串类型不同，标准库里的这些家伙是分配在堆上，因此都可以进行动态的增加和减少。 动态数组 Vector动态数组允许你存储多个值，这些值在内存中一个紧挨着另一个排列，因此访问其中某个元素的成本非常低。动态数组只能存储相同类型的元素，如果你想存储">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-09-25T12:01:14.000Z">
+<meta property="article:modified_time" content="2023-10-13T06:54:13.945Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="Rust基础">
+<meta name="twitter:card" content="summary">
+
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+<link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
+
+
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1698918461796">
+
+<link rel="stylesheet" href="/css/style.css?v=1698918461796">
+
+
+
+
+    
+        <link rel="stylesheet" href="/custom.css?v=1698918461796">
+    
+
+
+
+<script src="/lib/mdui_043tiny/mdui.js" async></script>
+<script src="/lib/fancybox/fancybox.umd.js" async></script>
+<script src="/lib/lax.min.js" async></script>
+
+
+<script async src="/js/app.js?v=1698918461796"></script>
+
+ 
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4D4ZJ9G024"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+
+  gtag("config", "G-4D4ZJ9G024");
+</script>
+
+<meta name="generator" content="Hexo 6.3.0"></head><body class="nexmoe mdui-drawer-body-left"><div id="nexmoe-background"><div class="nexmoe-bg" style="background-image: url(/image/banner.png)"></div><div class="mdui-appbar mdui-shadow-0"><div class="mdui-toolbar"><a class="mdui-btn mdui-btn-icon mdui-ripple" mdui-drawer="{target: &#039;#drawer&#039;, swipe: true}" title="menu"><i class="mdui-icon nexmoefont icon-menu"></i></a><div class="mdui-toolbar-spacer"></div><a class="mdui-btn mdui-btn-icon" href="/" title="kay"><img src="/image/Logo.png" alt="kay"></a></div></div></div><div id="nexmoe-header"><div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="kay">
+            <img src="/image/Logo.png" alt="kay" alt="kay">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>文章</span>29</div>
+        <div><span>标签</span>4</div>
+        <div><span>分类</span>2</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/aboutMe.html" title="关于博主">
+            <i class="mdui-list-item-icon nexmoefont icon-info-circle"></i>
+            <div class="mdui-list-item-content">
+                关于博主
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archives.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/downloads.html" title="下载中心">
+            <i class="mdui-list-item-icon nexmoefont icon-coffee"></i>
+            <div class="mdui-list-item-content">
+                下载中心
+            </div>
+        </a>
+        
+    </div>
+    
+    
+        
+        <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+        
+            <form id="search_form">
+                <label><input class="st-default-search-input" id="search_value" name="q" type="search" placeholder="搜索" style="
+                    font-size: 15px !important;
+                    height: 56px !important;
+                    background-image: none;
+                "></label>
+            </form>
+         
+    </div>
+</div>
+
+
+	<script async src="/js/search.js?v=1698918461796"></script>
+
+
+
+    
+        
+        <div class="nexmoe-widget-wrap">
+	<div class="nexmoe-widget nexmoe-social">
+		<a
+			class="mdui-ripple"
+			href="/image/QQOrWeChat.png"
+			target="_blank"
+			mdui-tooltip="{content: 'QQ'}"
+			style="
+				color: rgb(249, 174, 8);
+				background-color: rgba(249, 174, 8, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-QQ"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="/image/QQOrWeChat.png"
+			target="_blank"
+			mdui-tooltip="{content: 'WeChat'}"
+			style="
+				color: rgb(59, 151, 239);
+				background-color: rgba(59, 151, 239, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-wechat-fill"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://github.com/TooUpper/"
+			target="_blank"
+			mdui-tooltip="{content: 'GitHub'}"
+			style="
+				color: rgb(25, 23, 23);
+				background-color: rgba(25, 23, 23, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-github"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="/www.TooUpper.com"
+			target="_blank"
+			mdui-tooltip="{content: 'Blog'}"
+			style="
+				color: rgb(30, 136, 229);
+				background-color: rgba(30, 136, 229, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-home"
+			></i> </a
+		>
+	</div>
+</div>
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章分类</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/RISC-V/">RISC-V</a>
+          <span class="category-list-count">4</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Rust/">Rust</a>
+          <span class="category-list-count">25</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/Rust%E5%9F%BA%E7%A1%80/" style="font-size: 20px;">Rust基础</a> <a href="/tags/Rust%E8%BF%9B%E9%98%B6/" style="font-size: 15px;">Rust进阶</a> <a href="/tags/rcore/" style="font-size: 10px;">rcore</a> <a href="/tags/riscv/" style="font-size: 10px;">riscv</a>
+    </div>
+    
+  </div>
+
+    
+        
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章归档</h3>
+    <div class="nexmoe-widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/">2023</a><span class="archive-list-count">29</span></li></ul>
+    </div>
+  </div>
+
+
+
+    
+   
+    <div class="nexmoe-copyright">
+        &copy; 2023 kay
+        Powered by <a href="https://www.TooUpper.com" target="_blank">成祠</a>
+        & <a href="https://github.com/TooUpper" target="_blank">TooUpper</a>
+        <br><a target="_blank" href="https://www.TooUpper.com">鄂ICP备2020018486号</a>
+<br><a target="_blank" href="https://www.TooUpper.com">加油做一个不会被优化掉的程序员</a>
+
+    </div>
+</div><!-- .nexmoe-drawer --></div><div id="nexmoe-content"><div class="nexmoe-primary"><div class="nexmoe-post">
+  <article>
+    
+        <div class="nexmoe-post-cover absolute" style="padding-top: 62.5%;"> 
+            <img src="/image/Rust/RustCrab.png" alt="集合类型" loading="lazy">
+            <h1>集合类型</h1>
+        </div>
+    
+    
+    <div class="nexmoe-post-meta">
+    <div class="nexmoe-rainbow">
+        <a class="nexmoefont icon-calendar-fill">2023年09月25日</a>
+        
+            <a class="nexmoefont icon-appstore-fill -link" href="/categories/Rust/">Rust</a>
+        
+        
+    <a><i class="nexmoefont icon-areachart"></i>约6.7k字</a>
+    <a><i class="nexmoefont icon-time-circle-fill"></i>预计需要27分钟</a>
+
+    </div>
+    
+    
+    
+    
+    
+</div>
+
+    <h1 id="集合类型"><a href="#集合类型" class="headerlink" title="集合类型"></a>集合类型</h1><p>集合在 Rust 中是一类比较特殊的类型，因为 Rust 中大多数数据类型都只能代表一个特定的值，但是集合却可以代表一大堆值。而且与语言级别的数组、字符串类型不同，标准库里的这些家伙是<strong>分配在堆上</strong>，因此都可以进行动态的增加和减少。</p>
+<h2 id="动态数组-Vector"><a href="#动态数组-Vector" class="headerlink" title="动态数组 Vector"></a>动态数组 Vector</h2><p>动态数组允许你存储多个值，这些值在内存中一个紧挨着另一个排列，因此访问其中某个元素的成本非常低。<strong>动态数组只能存储相同类型的元素</strong>，如果你想存储不同类型的元素，可以使用之前讲过的枚举类型或者特征对象。</p>
+<h3 id="创建动态数组"><a href="#创建动态数组" class="headerlink" title="创建动态数组"></a>创建动态数组</h3><h4 id="Vec-new"><a href="#Vec-new" class="headerlink" title="Vec::new"></a>Vec::new</h4><p>使用 <code>Vec::new</code> 创建动态数组是最 rusty 的方式，它调用了 <code>Vec</code> 中的 <code>new</code> 关联函数：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">v</span>: <span class="type">Vec</span>&lt;<span class="type">i32</span>&gt; = <span class="type">Vec</span>::<span class="title function_ invoke__">new</span>();</span><br></pre></td></tr></table></figure>
+
+<p>这里，<code>v</code> 被显式地声明了类型 <code>Vec&lt;i32&gt;</code>，这是因为 Rust 编译器无法从 <code>Vec::new()</code> 中得到任何关于类型的暗示信息，因此也无法推导出 <code>v</code> 的具体类型，但是当你向里面增加一个元素后，一切又不同了：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">v</span> = <span class="type">Vec</span>::<span class="title function_ invoke__">new</span>();</span><br><span class="line">v.<span class="title function_ invoke__">push</span>(<span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+
+<p>此时，<code>v</code> 就无需手动声明类型，因为编译器通过 <code>v.push(1)</code>，推测出 <code>v</code> 中的元素类型是 <code>i32</code>，因此推导出 <code>v</code> 的类型是 <code>Vec&lt;i32&gt;</code>。</p>
+<blockquote>
+<p>如果预先知道要存储的元素个数，可以使用 <code>Vec::with_capacity(capacity)</code> 创建动态数组，这样可以避免因为插入大量新数据导致频繁的内存分配和拷贝，提升性能</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">let capacity = 10;</span><br><span class="line"></span><br><span class="line">// 创建一个具有指定容量的空 Vec</span><br><span class="line">let mut vec = Vec::with_capacity(capacity);</span><br></pre></td></tr></table></figure>
+
+<p>capacity: 容量</p>
+</blockquote>
+<h4 id="vec"><a href="#vec" class="headerlink" title="vec![]"></a>vec![]</h4><p>还可以使用宏 <code>vec!</code> 来创建数组，与 <code>Vec::new</code> 有所不同，前者能在创建同时给予初始化值：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">v</span> = <span class="built_in">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>];</span><br></pre></td></tr></table></figure>
+
+<p>同样，此处的 <code>v</code> 也无需标注类型，编译器只需检查它内部的元素即可自动推导出 <code>v</code> 的类型是 <code>Vec&lt;i32&gt;</code></p>
+<blockquote>
+<p>Rust 中，整数默认类型是 <code>i32</code></p>
+</blockquote>
+<h3 id="更新-Vector"><a href="#更新-Vector" class="headerlink" title="更新 Vector"></a>更新 Vector</h3><p>向数组尾部添加元素，可以使用 <code>push</code> 方法：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">v</span> = <span class="type">Vec</span>::<span class="title function_ invoke__">new</span>();</span><br><span class="line">v.<span class="title function_ invoke__">push</span>(<span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+
+<p>与其它类型一样，必须将 <code>v</code> 声明为 <code>mut</code> 后，才能进行修改。</p>
+<h3 id="Vector-与其元素共存亡"><a href="#Vector-与其元素共存亡" class="headerlink" title="Vector 与其元素共存亡"></a>Vector 与其元素共存亡</h3><p>跟结构体一样，<code>Vector</code> 类型在超出作用域范围后，会被自动删除：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">v</span> = <span class="built_in">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125; <span class="comment">// &lt;- v超出作用域并在此处被删除</span></span><br></pre></td></tr></table></figure>
+
+<p>当 <code>Vector</code> 被删除后，它内部存储的所有内容也会随之被删除。目前来看，这种解决方案简单直白，但是当 <code>Vector</code> 中的元素被引用后，事情可能会没那么简单。</p>
+<h3 id="从-Vector-中读取元素"><a href="#从-Vector-中读取元素" class="headerlink" title="从 Vector 中读取元素"></a>从 Vector 中读取元素</h3><p>读取指定位置的元素有两种方式可选：</p>
+<ul>
+<li>通过下标索引访问。</li>
+<li>使用 <code>get</code> 方法。</li>
+</ul>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">v</span> = <span class="built_in">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="variable">third</span>: &amp;<span class="type">i32</span> = &amp;v[<span class="number">2</span>];</span><br><span class="line"><span class="built_in">println!</span>(<span class="string">&quot;第三个元素是 &#123;&#125;&quot;</span>, third);</span><br><span class="line"></span><br><span class="line"><span class="keyword">match</span> v.<span class="title function_ invoke__">get</span>(<span class="number">2</span>) &#123;</span><br><span class="line">    <span class="title function_ invoke__">Some</span>(third) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;第三个元素是 &#123;third&#125;&quot;</span>),</span><br><span class="line">    <span class="literal">None</span> =&gt; <span class="built_in">println!</span>(<span class="string">&quot;去你的第三个元素，根本没有！&quot;</span>),</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>和其它语言一样，集合类型的索引下标都是从 <code>0</code> 开始，<code>&amp;v[2]</code> 表示借用 <code>v</code> 中的第三个元素，最终会获得该元素的引用。而 <code>v.get(2)</code> 也是访问第三个元素，但是有所不同的是，它返回了 <code>Option&lt;&amp;T&gt;</code>，因此还需要额外的 <code>match</code> 来匹配解构出具体的值。</p>
+<h4 id="下标索引与-get-的区别"><a href="#下标索引与-get-的区别" class="headerlink" title="下标索引与 .get 的区别"></a>下标索引与 .get 的区别</h4><p>这两种方式都能成功的读取到指定的数组元素，既然如此为什么会存在两种方法？何况 <code>.get</code> 还会增加使用复杂度，这就涉及到数组越界的问题了，让我们通过示例说明：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">v</span> = <span class="built_in">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="variable">does_not_exist</span> = &amp;v[<span class="number">100</span>];</span><br><span class="line"><span class="keyword">let</span> <span class="variable">does_not_exist</span> = v.<span class="title function_ invoke__">get</span>(<span class="number">100</span>);</span><br></pre></td></tr></table></figure>
+
+<p>运行以上代码，<code>&amp;v[100]</code> 的访问方式会导致程序无情报错退出，因为发生了数组越界访问。 但是 <code>v.get</code> 就不会，它在内部做了处理，有值的时候返回 <code>Some(T)</code>，无值的时候返回 <code>None</code>，因此 <code>v.get</code> 的使用方式非常安全。</p>
+<p>既然如此，为何不统一使用 <code>v.get</code> 的形式？因为实在是有些啰嗦，Rust 语言的设计者和使用者在审美这方面还是相当统一的：简洁即正义，何况性能上也会有轻微的损耗。</p>
+<p>既然有两个选择，肯定就有如何选择的问题，答案很简单，当你确保索引不会越界的时候，就用索引访问，否则用 <code>.get</code>。例如，访问第几个数组元素并不取决于我们，而是取决于用户的输入时，用 <code>.get</code> 会非常适合，天知道那些可爱的用户会输入一个什么样的数字进来！</p>
+<h3 id="同时借用多个数组元素"><a href="#同时借用多个数组元素" class="headerlink" title="同时借用多个数组元素"></a>同时借用多个数组元素</h3><p>既然涉及到借用数组元素，那么很可能会遇到同时借用多个数组元素的情况，看看下面的代码 :)</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">v</span> = <span class="built_in">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="variable">first</span> = &amp;v[<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">v.<span class="title function_ invoke__">push</span>(<span class="number">6</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">println!</span>(<span class="string">&quot;The first element is: &#123;first&#125;&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>先不运行，来推断下结果，首先 <code>first = &amp;v[0]</code> 进行了不可变借用，<code>v.push</code> 进行了可变借用，如果 <code>first</code> 在 <code>v.push</code> 之后不再使用，那么该段代码可以成功编译</p>
+<p>可是上面的代码中，<code>first</code> 这个不可变借用在可变借用 <code>v.push</code> 后被使用了，那么妥妥的，编译器就会报错：</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">cargo run</span></span><br><span class="line">Compiling collections v0.1.0 (file:///projects/collections)</span><br><span class="line">error[E0502]: cannot borrow `v` as mutable because it is also borrowed as immutable 无法对v进行可变借用，因此之前已经进行了不可变借用</span><br><span class="line"><span class="meta prompt_">--&gt; </span><span class="language-bash">src/main.rs:6:5</span></span><br><span class="line">|</span><br><span class="line">4 |     let first = &amp;v[0];</span><br><span class="line">|                  - immutable borrow occurs here // 不可变借用发生在此处</span><br><span class="line">5 |</span><br><span class="line">6 |     v.push(6);</span><br><span class="line">|     ^^^^^^^^^ mutable borrow occurs here // 可变借用发生在此处</span><br><span class="line">7 |</span><br><span class="line">8 |     println!(&quot;The first element is: &#123;&#125;&quot;, first);</span><br><span class="line">|                                          ----- immutable borrow later used here // 不可变借用在这里被使用</span><br><span class="line"></span><br><span class="line">For more information about this error, try `rustc --explain E0502`.</span><br><span class="line">error: could not compile `collections` due to previous error</span><br></pre></td></tr></table></figure>
+
+<p>其实，按理来说，这两个引用不应该互相影响的：一个是查询元素，一个是在数组尾部插入元素，完全不相干的操作，为何编译器要这么严格呢？</p>
+<p>原因在于：数组的大小是可变的，当旧数组的大小不够用时，Rust 会重新分配一块更大的内存空间，然后把旧数组拷贝过来。这种情况下，之前的引用显然会指向一块无效的内存，这非常 rusty —— 对用户进行严格的教育。</p>
+<h3 id="迭代遍历-Vector-中的元素"><a href="#迭代遍历-Vector-中的元素" class="headerlink" title="迭代遍历 Vector 中的元素"></a>迭代遍历 Vector 中的元素</h3><p>如果想要依次访问数组中的元素，可以使用迭代的方式去遍历数组，这种方式比用下标的方式去遍历数组更安全也更高效（每次下标访问都会触发数组边界检查）：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">v</span> = <span class="built_in">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>];</span><br><span class="line"><span class="keyword">for</span> <span class="variable">i</span> <span class="keyword">in</span> &amp;v &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;i&#125;&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>也可以在迭代过程中，修改 <code>Vector</code> 中的元素：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">v</span> = <span class="built_in">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>];</span><br><span class="line"><span class="keyword">for</span> <span class="variable">i</span> <span class="keyword">in</span> &amp;<span class="keyword">mut</span> v &#123;</span><br><span class="line">    *i += <span class="number">10</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="存储不同类型的元素"><a href="#存储不同类型的元素" class="headerlink" title="存储不同类型的元素"></a>存储不同类型的元素</h3><p>在本节开头，有讲到数组的元素必须类型相同，但是也提到了解决方案：那就是通过使用枚举类型和特征对象来实现不同类型元素的存储。先来看看通过枚举如何实现：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#[derive(Debug)]</span></span><br><span class="line"><span class="keyword">enum</span> <span class="title class_">IpAddr</span> &#123;</span><br><span class="line">    <span class="title function_ invoke__">V4</span>(<span class="type">String</span>),</span><br><span class="line">    <span class="title function_ invoke__">V6</span>(<span class="type">String</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">v</span> = <span class="built_in">vec!</span>[</span><br><span class="line">        IpAddr::<span class="title function_ invoke__">V4</span>(<span class="string">&quot;127.0.0.1&quot;</span>.<span class="title function_ invoke__">to_string</span>()),</span><br><span class="line">        IpAddr::<span class="title function_ invoke__">V6</span>(<span class="string">&quot;::1&quot;</span>.<span class="title function_ invoke__">to_string</span>())</span><br><span class="line">    ];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> <span class="variable">ip</span> <span class="keyword">in</span> v &#123;</span><br><span class="line">        <span class="title function_ invoke__">show_addr</span>(ip)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">show_addr</span>(ip: IpAddr) &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>,ip);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>数组 <code>v</code> 中存储了两种不同的 <code>ip</code> 地址，但是这两种都属于 <code>IpAddr</code> 枚举类型的成员，因此可以存储在数组中。</p>
+<p>再来看看特征对象的实现：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">trait</span> <span class="title class_">IpAddr</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">display</span>(&amp;<span class="keyword">self</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">V4</span>(<span class="type">String</span>);</span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">IpAddr</span> <span class="keyword">for</span> <span class="title class_">V4</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">display</span>(&amp;<span class="keyword">self</span>) &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;ipv4: &#123;:?&#125;&quot;</span>,<span class="keyword">self</span>.<span class="number">0</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">V6</span>(<span class="type">String</span>);</span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">IpAddr</span> <span class="keyword">for</span> <span class="title class_">V6</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">display</span>(&amp;<span class="keyword">self</span>) &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;ipv6: &#123;:?&#125;&quot;</span>,<span class="keyword">self</span>.<span class="number">0</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">v</span>: <span class="type">Vec</span>&lt;<span class="type">Box</span>&lt;<span class="keyword">dyn</span> IpAddr&gt;&gt; = <span class="built_in">vec!</span>[</span><br><span class="line">        <span class="type">Box</span>::<span class="title function_ invoke__">new</span>(<span class="title function_ invoke__">V4</span>(<span class="string">&quot;127.0.0.1&quot;</span>.<span class="title function_ invoke__">to_string</span>())),</span><br><span class="line">        <span class="type">Box</span>::<span class="title function_ invoke__">new</span>(<span class="title function_ invoke__">V6</span>(<span class="string">&quot;::1&quot;</span>.<span class="title function_ invoke__">to_string</span>())),</span><br><span class="line">    ];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> <span class="variable">ip</span> <span class="keyword">in</span> v &#123;</span><br><span class="line">        ip.<span class="title function_ invoke__">display</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>比枚举实现要稍微复杂一些，我们为 <code>V4</code> 和 <code>V6</code> 都实现了特征 <code>IpAddr</code>，然后将它俩的实例用 <code>Box::new</code> 包裹后，存在了数组 <code>v</code> 中，需要注意的是，这里必须手动地指定类型：<code>Vec&lt;Box&lt;dyn IpAddr&gt;&gt;</code>，表示数组 <code>v</code> 存储的是特征 <code>IpAddr</code> 的对象，这样就实现了在数组中存储不同的类型。</p>
+<p>在实际使用场景中，<strong>特征对象数组要比枚举数组常见很多</strong>，主要原因在于特征对象非常灵活，而编译器对枚举的限制较多，且无法动态增加类型。</p>
+<h3 id="Vector-的排序"><a href="#Vector-的排序" class="headerlink" title="Vector 的排序"></a>Vector 的排序</h3><p>在 rust 里，实现了两种排序算法，分别为稳定的排序 <code>sort</code> 和 <code>sort_by</code>，以及非稳定排序 <code>sort_unstable</code> 和 <code>sort_unstable_by</code>。</p>
+<p>当然，这个所谓的 <code>非稳定</code> 并不是指排序算法本身不稳定，而是指在排序过程中对相等元素的处理方式。在 <code>稳定</code> 排序算法里，对相等的元素，不会对其进行重新排序。而在 <code>不稳定</code> 的算法里则不保证这点。</p>
+<p>总体而言，<code>非稳定</code> 排序的算法的速度会优于 <code>稳定</code> 排序算法，同时，<code>稳定</code> 排序还会额外分配原数组一半的空间。</p>
+<h4 id="整数数组的排序"><a href="#整数数组的排序" class="headerlink" title="整数数组的排序"></a>整数数组的排序</h4><p>以下是对整数列进行排序的例子。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">vec</span> = <span class="built_in">vec!</span>[<span class="number">1</span>, <span class="number">5</span>, <span class="number">10</span>, <span class="number">2</span>, <span class="number">15</span>];    </span><br><span class="line">    vec.<span class="title function_ invoke__">sort_unstable</span>();    </span><br><span class="line">    <span class="built_in">assert_eq!</span>(vec, <span class="built_in">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">5</span>, <span class="number">10</span>, <span class="number">15</span>]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="浮点数数组的排序"><a href="#浮点数数组的排序" class="headerlink" title="浮点数数组的排序"></a>浮点数数组的排序</h4><p>我们尝试使用上面的方法来对浮点数进行排序：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">vec</span> = <span class="built_in">vec!</span>[<span class="number">1.0</span>, <span class="number">5.6</span>, <span class="number">10.3</span>, <span class="number">2.0</span>, <span class="number">15f32</span>];    </span><br><span class="line">    vec.<span class="title function_ invoke__">sort_unstable</span>();    </span><br><span class="line">    <span class="built_in">assert_eq!</span>(vec, <span class="built_in">vec!</span>[<span class="number">1.0</span>, <span class="number">2.0</span>, <span class="number">5.6</span>, <span class="number">10.3</span>, <span class="number">15f32</span>]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果，居然报错了，</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">error[E0277]: the trait bound `f32: Ord` is not satisfied</span><br><span class="line">    --&gt; src/main.rs:29:13</span><br><span class="line">     |</span><br><span class="line">29   |         vec.sort_unstable();</span><br><span class="line">     |             ^^^^^^^^^^^^^ the trait `Ord` is not implemented for `f32`</span><br><span class="line">     |</span><br><span class="line">     = help: the following other types implement trait `Ord`:</span><br><span class="line">               i128</span><br><span class="line">               i16</span><br><span class="line">               i32</span><br><span class="line">               i64</span><br><span class="line">               i8</span><br><span class="line">               isize</span><br><span class="line">               u128</span><br><span class="line">               u16</span><br><span class="line">             and 4 others</span><br><span class="line">note: required by a bound in `core::slice::&lt;impl [T]&gt;::sort_unstable`</span><br><span class="line">    --&gt; /home/keijack/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/slice/mod.rs:2635:12</span><br><span class="line">     |</span><br><span class="line">2635 |         T: Ord,</span><br><span class="line">     |            ^^^ required by this bound in `core::slice::&lt;impl [T]&gt;::sort_unstable`</span><br><span class="line"></span><br><span class="line">For more information about this error, try `rustc --explain E0277`.</span><br></pre></td></tr></table></figure>
+
+<p>原来，在浮点数当中，存在一个 <code>NAN</code> 的值，这个值无法与其他的浮点数进行对比，因此，浮点数类型并没有实现全数值可比较 <code>Ord</code> 的特性，而是实现了部分可比较的特性 <code>PartialOrd</code>。</p>
+<p>如此，如果我们确定在我们的浮点数数组当中，不包含 <code>NAN</code> 值，那么我们可以使用 <code>partial_cmp</code> 来作为大小判断的依据。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">vec</span> = <span class="built_in">vec!</span>[<span class="number">1.0</span>, <span class="number">5.6</span>, <span class="number">10.3</span>, <span class="number">2.0</span>, <span class="number">15f32</span>];    </span><br><span class="line">    vec.<span class="title function_ invoke__">sort_unstable_by</span>(|a, b| a.<span class="title function_ invoke__">partial_cmp</span>(b).<span class="title function_ invoke__">unwrap</span>());    </span><br><span class="line">    <span class="built_in">assert_eq!</span>(vec, <span class="built_in">vec!</span>[<span class="number">1.0</span>, <span class="number">2.0</span>, <span class="number">5.6</span>, <span class="number">10.3</span>, <span class="number">15f32</span>]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>OK，现在可以正确执行了。</p>
+<blockquote>
+<ul>
+<li><code>|a, b|</code> 是闭包的参数列表，表示闭包接受两个参数 <code>a</code> 和 <code>b</code>，这两个参数表示向量中的两个元素。</li>
+<li><code>a.partial_cmp(b)</code> 是对 <code>a</code> 和 <code>b</code> 进行部分比较（partial comparison）的方法调用。这个方法会返回一个 <code>Option&lt;Ordering&gt;</code> 值，指示 <code>a</code> 和 <code>b</code> 之间的大小关系。</li>
+<li><code>partial_cmp()</code> 是一个浮点数的方法，用于比较两个浮点数的大小关系。由于浮点数的比较可能涉及到 NaN（非数字）值，所以 <code>partial_cmp()</code> 方法返回的是一个可选的比较结果（<code>Option&lt;Ordering&gt;</code>）。</li>
+<li><code>.unwrap()</code> 是对 <code>Option&lt;Ordering&gt;</code> 进行解包操作，将可选的比较结果转换为具体的 <code>Ordering</code> 类型（<code>Less</code>, <code>Equal</code>, <code>Greater</code>）。这个方法会取出 <code>Option</code> 中的值。由于我们知道比较结果不会是 <code>None</code>，因此可以安全地使用 <code>unwrap()</code> 解包。</li>
+</ul>
+</blockquote>
+<h4 id="对结构体数组进行排序"><a href="#对结构体数组进行排序" class="headerlink" title="对结构体数组进行排序"></a>对结构体数组进行排序</h4><p>有了上述浮点数排序的经验，我们推而广之，那么对结构是否也可以使用这种自定义对比函数的方式来进行呢？马上来试一下：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#[derive(Debug)]</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">    name: <span class="type">String</span>,</span><br><span class="line">    age: <span class="type">u32</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">new</span>(name: <span class="type">String</span>, age: <span class="type">u32</span>) <span class="punctuation">-&gt;</span> Person &#123;</span><br><span class="line">        Person &#123; name, age &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">people</span> = <span class="built_in">vec!</span>[</span><br><span class="line">        Person::<span class="title function_ invoke__">new</span>(<span class="string">&quot;Zoe&quot;</span>.<span class="title function_ invoke__">to_string</span>(), <span class="number">25</span>),</span><br><span class="line">        Person::<span class="title function_ invoke__">new</span>(<span class="string">&quot;Al&quot;</span>.<span class="title function_ invoke__">to_string</span>(), <span class="number">60</span>),</span><br><span class="line">        Person::<span class="title function_ invoke__">new</span>(<span class="string">&quot;John&quot;</span>.<span class="title function_ invoke__">to_string</span>(), <span class="number">1</span>),</span><br><span class="line">    ];</span><br><span class="line">    <span class="comment">// 定义一个按照年龄倒序排序的对比函数 cmp() 方法用于比较两个值的全序，并返回一个 Ordering 枚举，表示比较结果。</span></span><br><span class="line">    people.<span class="title function_ invoke__">sort_unstable_by</span>(|a, b| b.age.<span class="title function_ invoke__">cmp</span>(&amp;a.age));</span><br><span class="line">   </span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, people);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>执行后输出：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[Person &#123; name: &quot;Al&quot;, age: 60 &#125;, Person &#123; name: &quot;Zoe&quot;, age: 25 &#125;, Person &#123; name: &quot;John&quot;, age: 1 &#125;]</span><br></pre></td></tr></table></figure>
+
+<p>结果正确。</p>
+<p>从上面我们学习过程当中，排序需要我们实现 <code>Ord</code> 特性，那么如果我们把我们的结构体实现了该特性，是否就不需要我们自定义对比函数了呢？</p>
+<p>是，但不完全是，实现 <code>Ord</code> 需要我们实现 <code>Ord</code>、<code>Eq</code>、<code>PartialEq</code>、<code>PartialOrd</code> 这些属性。好消息是，你可以 <code>derive</code> 这些属性：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#[derive(Debug, Ord, Eq, PartialEq, PartialOrd)]</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">    name: <span class="type">String</span>,</span><br><span class="line">    age: <span class="type">u32</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">new</span>(name: <span class="type">String</span>, age: <span class="type">u32</span>) <span class="punctuation">-&gt;</span> Person &#123;</span><br><span class="line">        Person &#123; name, age &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">people</span> = <span class="built_in">vec!</span>[</span><br><span class="line">        Person::<span class="title function_ invoke__">new</span>(<span class="string">&quot;Zoe&quot;</span>.<span class="title function_ invoke__">to_string</span>(), <span class="number">25</span>),</span><br><span class="line">        Person::<span class="title function_ invoke__">new</span>(<span class="string">&quot;Al&quot;</span>.<span class="title function_ invoke__">to_string</span>(), <span class="number">60</span>),</span><br><span class="line">        Person::<span class="title function_ invoke__">new</span>(<span class="string">&quot;Al&quot;</span>.<span class="title function_ invoke__">to_string</span>(), <span class="number">30</span>),</span><br><span class="line">        Person::<span class="title function_ invoke__">new</span>(<span class="string">&quot;John&quot;</span>.<span class="title function_ invoke__">to_string</span>(), <span class="number">1</span>),</span><br><span class="line">        Person::<span class="title function_ invoke__">new</span>(<span class="string">&quot;John&quot;</span>.<span class="title function_ invoke__">to_string</span>(), <span class="number">25</span>),</span><br><span class="line">    ];</span><br><span class="line"></span><br><span class="line">    people.<span class="title function_ invoke__">sort_unstable</span>();</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, people);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>执行输出</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[Person &#123; name: &quot;Al&quot;, age: 30 &#125;, Person &#123; name: &quot;Al&quot;, age: 60 &#125;, Person &#123; name: &quot;John&quot;, age: 1 &#125;, Person &#123; name: &quot;John&quot;, age: 25 &#125;, Person &#123; name: &quot;Zoe&quot;, age: 25 &#125;]</span><br></pre></td></tr></table></figure>
+
+<p>需要 <code>derive</code> <code>Ord</code> 相关特性，需要确保你的结构体中所有的属性均实现了 <code>Ord</code> 相关特性，否则会发生编译错误。<code>derive</code> 的默认实现会依据属性的顺序依次进行比较，如上述例子中，当 <code>Person</code> 的 <code>name</code> 值相同，则会使用 <code>age</code> 进行比较。</p>
+<h2 id="KV-存储-HashMap"><a href="#KV-存储-HashMap" class="headerlink" title="KV 存储 HashMap"></a>KV 存储 HashMap</h2><p>和动态数组一样，<code>HashMap</code> 也是 Rust 标准库中提供的集合类型，但是又与动态数组不同，<code>HashMap</code> 中存储的是一一映射的 <code>KV</code> 键值对，并提供了平均复杂度为 <code>O(1)</code> 的查询方法，当我们希望通过一个 <code>Key</code> 去查询值时，该类型非常有用。</p>
+<h3 id="创建-HashMap"><a href="#创建-HashMap" class="headerlink" title="创建 HashMap"></a>创建 HashMap</h3><p>跟创建动态数组 <code>Vec</code> 的方法类似，可以使用 <code>new</code> 方法来创建 <code>HashMap</code>，然后通过 <code>insert</code> 方法插入键值对。</p>
+<h4 id="使用-new-方法创建"><a href="#使用-new-方法创建" class="headerlink" title="使用 new 方法创建"></a>使用 new 方法创建</h4><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::collections::HashMap;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建一个HashMap，用于存储宝石种类和对应的数量</span></span><br><span class="line"><span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">my_gems</span> = HashMap::<span class="title function_ invoke__">new</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 将宝石类型和对应的数量写入表中</span></span><br><span class="line">my_gems.<span class="title function_ invoke__">insert</span>(<span class="string">&quot;红宝石&quot;</span>, <span class="number">1</span>);</span><br><span class="line">my_gems.<span class="title function_ invoke__">insert</span>(<span class="string">&quot;蓝宝石&quot;</span>, <span class="number">2</span>);</span><br><span class="line">my_gems.<span class="title function_ invoke__">insert</span>(<span class="string">&quot;河边捡的误以为是宝石的破石头&quot;</span>, <span class="number">18</span>);</span><br></pre></td></tr></table></figure>
+
+<p>很简单对吧？跟其它语言没有区别，聪明的同学甚至能够猜到该 <code>HashMap</code> 的类型：<code>HashMap&lt;&amp;str,i32&gt;</code>。</p>
+<p>但是还有一点，你可能没有注意，那就是使用 <code>HashMap</code> 需要手动通过 <code>use ...</code> 从标准库中引入到我们当前的作用域中来，仔细回忆下，之前使用另外两个集合类型 <code>String</code> 和 <code>Vec</code> 时，我们是否有手动引用过？答案是 <strong>No</strong>，因为 <code>HashMap</code> 并没有包含在 Rust 的 <a target="_blank" rel="noopener" href="https://course.rs/appendix/prelude.html"><code>prelude</code></a> 中（Rust 为了简化用户使用，提前将最常用的类型自动引入到作用域中）。</p>
+<p>所有的集合类型都是动态的，意味着它们没有固定的内存大小，因此它们底层的数据都存储在内存堆上，然后通过一个存储在栈中的引用类型来访问。同时，跟其它集合类型一致，<code>HashMap</code> 也是内聚性的，即所有的 <code>K</code> 必须拥有同样的类型，<code>V</code> 也是如此。</p>
+<blockquote>
+<p>跟 <code>Vec</code> 一样，如果预先知道要存储的 <code>KV</code> 对个数，可以使用 <code>HashMap::with_capacity(capacity)</code> 创建指定大小的 <code>HashMap</code>，避免频繁的内存分配和拷贝，提升性能。</p>
+</blockquote>
+<h4 id="使用迭代器和-collect-方法创建"><a href="#使用迭代器和-collect-方法创建" class="headerlink" title="使用迭代器和 collect 方法创建"></a>使用迭代器和 collect 方法创建</h4><p>在实际使用中，不是所有的场景都能 <code>new</code> 一个哈希表后，然后悠哉悠哉的依次插入对应的键值对，而是可能会从另外一个数据结构中，获取到对应的数据，最终生成 <code>HashMap</code>。</p>
+<p>例如考虑一个场景，有一张表格中记录了足球联赛中各队伍名称和积分的信息，这张表如果被导入到 Rust 项目中，一个合理的数据结构是 <code>Vec&lt;(String, u32)&gt;</code> 类型，该数组中的元素是一个个元组，该数据结构跟表格数据非常契合：表格中的数据都是逐行存储，每一个行都存有一个 <code>(队伍名称, 积分)</code> 的信息。</p>
+<p>但是在很多时候，又需要通过队伍名称来查询对应的积分，此时动态数组就不适用了，因此可以用 <code>HashMap</code> 来保存相关的<strong>队伍名称 -&gt; 积分</strong>映射关系。 理想很丰满，现实很骨感，如何将 <code>Vec&lt;(String, u32)&gt;</code> 中的数据快速写入到 <code>HashMap&lt;String, u32&gt;</code> 中？</p>
+<p>笨方法</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">use</span> std::collections::HashMap;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">teams_list</span> = <span class="built_in">vec!</span>[</span><br><span class="line">        (<span class="string">&quot;中国队&quot;</span>.<span class="title function_ invoke__">to_string</span>(), <span class="number">100</span>),</span><br><span class="line">        (<span class="string">&quot;美国队&quot;</span>.<span class="title function_ invoke__">to_string</span>(), <span class="number">10</span>),</span><br><span class="line">        (<span class="string">&quot;日本队&quot;</span>.<span class="title function_ invoke__">to_string</span>(), <span class="number">50</span>),</span><br><span class="line">    ];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">teams_map</span> = HashMap::<span class="title function_ invoke__">new</span>();</span><br><span class="line">    <span class="keyword">for</span> <span class="variable">team</span> <span class="keyword">in</span> &amp;teams_list &#123;</span><br><span class="line">        teams_map.<span class="title function_ invoke__">insert</span>(&amp;team.<span class="number">0</span>, team.<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>,teams_map)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>遍历列表，将每一个元组作为一对 <code>KV </code>插入到 <code>HashMap</code> 中，很简单，但是……也不太聪明的样子，换个词说就是 —— 不够 rusty。</p>
+<p>好在，Rust 为我们提供了一个非常精妙的解决办法：先将 <code>Vec</code> 转为迭代器，接着通过 <code>collect</code> 方法，将迭代器中的元素收集后，转成 <code>HashMap</code>：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">use</span> std::collections::HashMap;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">teams_list</span> = <span class="built_in">vec!</span>[</span><br><span class="line">        (<span class="string">&quot;中国队&quot;</span>.<span class="title function_ invoke__">to_string</span>(), <span class="number">100</span>),</span><br><span class="line">        (<span class="string">&quot;美国队&quot;</span>.<span class="title function_ invoke__">to_string</span>(), <span class="number">10</span>),</span><br><span class="line">        (<span class="string">&quot;日本队&quot;</span>.<span class="title function_ invoke__">to_string</span>(), <span class="number">50</span>),</span><br><span class="line">    ];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">teams_map</span>: HashMap&lt;_,_&gt; = teams_list.<span class="title function_ invoke__">into_iter</span>().<span class="title function_ invoke__">collect</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>,teams_map)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>代码很简单，<code>into_iter</code> 方法将列表转为迭代器，接着通过 <code>collect</code> 进行收集，不过需要注意的是，<code>collect</code> 方法在内部实际上支持生成多种类型的目标集合，因此我们需要通过类型标注 <code>HashMap&lt;_,_&gt;</code> 来告诉编译器：请帮我们收集为 <code>HashMap</code> 集合类型，具体的 <code>KV</code> 类型，麻烦编译器您老人家帮我们推导。</p>
+<p>由此可见，Rust 中的编译器时而小聪明，时而大聪明，不过好在，它大聪明的时候，会自家人知道自己事，总归会通知你一声：</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">error[E0282]: type annotations needed // 需要类型标注</span><br><span class="line"><span class="meta prompt_">  --&gt; </span><span class="language-bash">src/main.rs:10:9</span></span><br><span class="line">   |</span><br><span class="line">10 |     let teams_map = teams_list.into_iter().collect();</span><br><span class="line">   |         ^^^^^^^^^ consider giving `teams_map` a type // 给予 `teams_map` 一个具体的类型</span><br></pre></td></tr></table></figure>
+
+<h3 id="所有权转移"><a href="#所有权转移" class="headerlink" title="所有权转移"></a>所有权转移</h3><p><code>HashMap</code> 的所有权规则与其它 Rust 类型没有区别：</p>
+<ul>
+<li>若类型实现 <code>Copy</code> 特征，该类型会被复制进 <code>HashMap</code>，因此无所谓所有权</li>
+<li>若没实现 <code>Copy</code> 特征，所有权将被转移给 <code>HashMap</code> 中</li>
+</ul>
+<p>例如我参选帅气男孩时的场景再现：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">use</span> std::collections::HashMap;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">name</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;Sunface&quot;</span>);</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">age</span> = <span class="number">18</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">handsome_boys</span> = HashMap::<span class="title function_ invoke__">new</span>();</span><br><span class="line">    handsome_boys.<span class="title function_ invoke__">insert</span>(name, age);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;因为过于无耻，&#123;&#125;已经被从帅气男孩名单中除名&quot;</span>, name);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;还有，他的真实年龄远远不止&#123;&#125;岁&quot;</span>, age);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行代码，报错如下：</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">error[E0382]: borrow of moved value: `name`</span><br><span class="line"><span class="meta prompt_">  --&gt; </span><span class="language-bash">src/main.rs:10:32</span></span><br><span class="line">   |</span><br><span class="line">4  |     let name = String::from(&quot;Sunface&quot;);</span><br><span class="line">   |         ---- move occurs because `name` has type `String`, which does not implement the `Copy` trait</span><br><span class="line">...</span><br><span class="line">8  |     handsome_boys.insert(name, age);</span><br><span class="line">   |                          ---- value moved here</span><br><span class="line">9  |</span><br><span class="line">10 |     println!(&quot;因为过于无耻，&#123;&#125;已经被除名&quot;, name);</span><br><span class="line">   |                                            ^^^^ value borrowed here after move</span><br></pre></td></tr></table></figure>
+
+<p>提示很清晰，<code>name</code> 是 <code>String</code> 类型，因此它受到所有权的限制，在 <code>insert</code> 时，它的所有权被转移给 <code>handsome_boys</code>，所以最后在使用时，会遇到这个无情但是意料之中的报错。</p>
+<p><strong>如果你使用引用类型放入 HashMap 中</strong>，请确保该引用的生命周期至少跟 <code>HashMap</code> 活得一样久：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">use</span> std::collections::HashMap;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">name</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;Sunface&quot;</span>);</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">age</span> = <span class="number">18</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">handsome_boys</span> = HashMap::<span class="title function_ invoke__">new</span>();</span><br><span class="line">    handsome_boys.<span class="title function_ invoke__">insert</span>(&amp;name, age);</span><br><span class="line"></span><br><span class="line">    std::mem::<span class="title function_ invoke__">drop</span>(name);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;因为过于无耻，&#123;:?&#125;已经被除名&quot;</span>, handsome_boys); <span class="comment">// Error </span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;还有，他的真实年龄远远不止&#123;&#125;岁&quot;</span>, age);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面代码，我们借用 <code>name</code> 获取了它的引用，然后插入到 <code>handsome_boys</code> 中，至此一切都很完美。但是紧接着，就通过 <code>drop</code> 函数手动将 <code>name</code> 字符串从内存中移除，再然后就报错了：</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"> handsome_boys.insert(&amp;name, age);</span><br><span class="line">   |                          ----- borrow of `name` occurs here // name借用发生在此处</span><br><span class="line">9  |</span><br><span class="line">10 |     std::mem::drop(name);</span><br><span class="line">   |                    ^^^^ move out of `name` occurs here // name的所有权被转移走</span><br><span class="line">11 |     println!(&quot;因为过于无耻，&#123;:?&#125;已经被除名&quot;, handsome_boys);</span><br><span class="line">   |                                              ------------- borrow later used here // 所有权转移后，还试图使用name</span><br></pre></td></tr></table></figure>
+
+<p>最终，某人因为过于无耻，真正的被除名了 :)</p>
+<h3 id="查询-HashMap"><a href="#查询-HashMap" class="headerlink" title="查询 HashMap"></a>查询 HashMap</h3><p>通过 <code>get</code> 方法可以获取元素：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::collections::HashMap;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">scores</span> = HashMap::<span class="title function_ invoke__">new</span>();</span><br><span class="line"></span><br><span class="line">scores.<span class="title function_ invoke__">insert</span>(<span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;Blue&quot;</span>), <span class="number">10</span>);</span><br><span class="line">scores.<span class="title function_ invoke__">insert</span>(<span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;Yellow&quot;</span>), <span class="number">50</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="variable">team_name</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;Blue&quot;</span>);</span><br><span class="line"><span class="keyword">let</span> <span class="variable">score</span>: <span class="type">Option</span>&lt;&amp;<span class="type">i32</span>&gt; = scores.<span class="title function_ invoke__">get</span>(&amp;team_name);</span><br></pre></td></tr></table></figure>
+
+<p>上面有几点需要注意：</p>
+<ul>
+<li><code>get</code> 方法返回一个 <code>Option&lt;&amp;i32&gt;</code> 类型：当查询不到时，会返回一个 <code>None</code>，查询到时返回 <code>Some(&amp;i32)</code></li>
+<li><code>&amp;i32</code> 是对 <code>HashMap</code> 中值的借用，如果不使用借用，可能会发生所有权的转移</li>
+</ul>
+<p>还可以继续拓展下，上面的代码中，如果我们想直接获得值类型的 <code>score</code> 该怎么办，答案简约但不简单:</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">score</span>: <span class="type">i32</span> = scores.<span class="title function_ invoke__">get</span>(&amp;team_name).<span class="title function_ invoke__">copied</span>().<span class="title function_ invoke__">unwrap_or</span>(<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>.copied()</code> 方法将引用的值复制到一个新的 <code>Some(value)</code> 中，如果值存在的话。最后，如果获取值成功，则返回复制的值，否则返回默认值 <code>0</code>。</p>
+</blockquote>
+<p>还可以通过循环的方式依次遍历 <code>KV</code> 对：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::collections::HashMap;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">scores</span> = HashMap::<span class="title function_ invoke__">new</span>();</span><br><span class="line"></span><br><span class="line">scores.<span class="title function_ invoke__">insert</span>(<span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;Blue&quot;</span>), <span class="number">10</span>);</span><br><span class="line">scores.<span class="title function_ invoke__">insert</span>(<span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;Yellow&quot;</span>), <span class="number">50</span>);</span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">for</span> (key, value) <span class="keyword">in</span> &amp;scores &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;: &#123;&#125;&quot;</span>, key, value);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最终输出：</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Yellow: 50</span><br><span class="line">Blue: 10</span><br></pre></td></tr></table></figure>
+
+<h3 id="更新-HashMap-中的值"><a href="#更新-HashMap-中的值" class="headerlink" title="更新 HashMap 中的值"></a>更新 HashMap 中的值</h3><p>更新值的时候，涉及多种情况：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">use</span> std::collections::HashMap;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">scores</span> = HashMap::<span class="title function_ invoke__">new</span>();</span><br><span class="line"></span><br><span class="line">    scores.<span class="title function_ invoke__">insert</span>(<span class="string">&quot;Blue&quot;</span>, <span class="number">10</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 覆盖已有的值</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">old</span> = scores.<span class="title function_ invoke__">insert</span>(<span class="string">&quot;Blue&quot;</span>, <span class="number">20</span>);</span><br><span class="line">    <span class="built_in">assert_eq!</span>(old, <span class="title function_ invoke__">Some</span>(<span class="number">10</span>));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 查询新插入的值</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">new</span> = scores.<span class="title function_ invoke__">get</span>(<span class="string">&quot;Blue&quot;</span>);</span><br><span class="line">    <span class="built_in">assert_eq!</span>(new, <span class="title function_ invoke__">Some</span>(&amp;<span class="number">20</span>));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 查询Yellow对应的值，若不存在则插入新值</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">v</span> = scores.<span class="title function_ invoke__">entry</span>(<span class="string">&quot;Yellow&quot;</span>).<span class="title function_ invoke__">or_insert</span>(<span class="number">5</span>);</span><br><span class="line">    <span class="built_in">assert_eq!</span>(*v, <span class="number">5</span>); <span class="comment">// 不存在，插入5</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 查询Yellow对应的值，若不存在则插入新值</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">v</span> = scores.<span class="title function_ invoke__">entry</span>(<span class="string">&quot;Yellow&quot;</span>).<span class="title function_ invoke__">or_insert</span>(<span class="number">50</span>);</span><br><span class="line">    <span class="built_in">assert_eq!</span>(*v, <span class="number">5</span>); <span class="comment">// 已经存在，因此50没有插入</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="在已有值的基础上更新"><a href="#在已有值的基础上更新" class="headerlink" title="在已有值的基础上更新"></a>在已有值的基础上更新</h4><p>另一个常用场景如下：查询某个 <code>key</code> 对应的值，若不存在则插入新值，若存在则对已有的值进行更新，例如在文本中统计词语出现的次数：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::collections::HashMap;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="variable">text</span> = <span class="string">&quot;hello world wonderful world&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">map</span> = HashMap::<span class="title function_ invoke__">new</span>();</span><br><span class="line"><span class="comment">// 根据空格来切分字符串(英文单词都是通过空格切分)</span></span><br><span class="line"><span class="keyword">for</span> <span class="variable">word</span> <span class="keyword">in</span> text.<span class="title function_ invoke__">split_whitespace</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">count</span> = map.<span class="title function_ invoke__">entry</span>(word).<span class="title function_ invoke__">or_insert</span>(<span class="number">0</span>);</span><br><span class="line">    *count += <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, map);</span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，新建一个 <code>map</code> 用于保存词语出现的次数，插入一个词语时会进行判断：若之前没有插入过，则使用该词语作 <code>Key</code>，插入次数 0 作为 <code>Value</code>，若之前插入过则取出之前统计的该词语出现的次数，对其加一。</p>
+<p>有两点值得注意：</p>
+<ul>
+<li><code>or_insert</code> 返回了 <code>&amp;mut v</code> 引用，因此可以通过该可变引用直接修改 <code>map</code> 中对应的值</li>
+<li>使用 <code>count</code> 引用时，需要先进行解引用 <code>*count</code>，否则会出现类型不匹配</li>
+</ul>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">x</span> = <span class="number">5</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">mut_ref</span> = &amp;<span class="keyword">mut</span> x; <span class="comment">// 正确：可变变量接收可变引用</span></span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="哈希函数"><a href="#哈希函数" class="headerlink" title="哈希函数"></a>哈希函数</h3><p>你肯定比较好奇，为何叫哈希表，到底什么是哈希。</p>
+<p>先来设想下，如果要实现 <code>Key</code> 与 <code>Value</code> 的一一对应，是不是意味着我们要能比较两个 <code>Key</code> 的相等性？例如 “a” 和 “b”，1 和 2，当这些类型做 <code>Key</code> 且能比较时，可以很容易知道 <code>1</code> 对应的值不会错误的映射到 <code>2</code> 上，因为 <code>1</code> 不等于 <code>2</code>。因此，一个类型能否作为 <code>Key</code> 的关键就是是否能进行相等比较，或者说该类型是否实现了 <code>std::cmp::Eq</code> 特征。</p>
+<blockquote>
+<p>f32 和 f64 浮点数，没有实现 <code>std::cmp::Eq</code> 特征，因此不可以用作 <code>HashMap</code> 的 <code>Key</code>。</p>
+</blockquote>
+<p>好了，理解完这个，再来设想一点，若一个复杂点的类型作为 <code>Key</code>，那怎么在底层对它进行存储，怎么使用它进行查询和比较？ 是不是很棘手？好在我们有哈希函数：通过它把 <code>Key</code> 计算后映射为哈希值，然后使用该哈希值来进行存储、查询、比较等操作。</p>
+<p>但是问题又来了，如何保证不同 <code>Key</code> 通过哈希后的两个值不会相同？如果相同，那意味着我们使用不同的 <code>Key</code>，却查到了同一个结果，这种明显是错误的行为。 此时，就涉及到安全性跟性能的取舍了。</p>
+<p>若要追求安全，尽可能减少冲突，同时防止拒绝服务（Denial of Service, DoS）攻击，就要使用密码学安全的哈希函数，<code>HashMap</code> 就是使用了这样的哈希函数。反之若要追求性能，就需要使用没有那么安全的算法。</p>
+<h4 id="高性能三方库"><a href="#高性能三方库" class="headerlink" title="高性能三方库"></a>高性能三方库</h4><p>因此若性能测试显示当前标准库默认的哈希函数不能满足你的性能需求，就需要去 <a target="_blank" rel="noopener" href="https://crates.io/"><code>crates.io</code></a> 上寻找其它的哈希函数实现，使用方法很简单：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::hash::BuildHasherDefault;</span><br><span class="line"><span class="keyword">use</span> std::collections::HashMap;</span><br><span class="line"><span class="comment">// 引入第三方的哈希函数</span></span><br><span class="line"><span class="keyword">use</span> twox_hash::XxHash64;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 指定HashMap使用第三方的哈希函数XxHash64</span></span><br><span class="line"><span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">hash</span>: HashMap&lt;_, _, BuildHasherDefault&lt;XxHash64&gt;&gt; = <span class="built_in">Default</span>::<span class="title function_ invoke__">default</span>();</span><br><span class="line">hash.<span class="title function_ invoke__">insert</span>(<span class="number">42</span>, <span class="string">&quot;the answer&quot;</span>);</span><br><span class="line"><span class="built_in">assert_eq!</span>(hash.<span class="title function_ invoke__">get</span>(&amp;<span class="number">42</span>), <span class="title function_ invoke__">Some</span>(&amp;<span class="string">&quot;the answer&quot;</span>));</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>目前，<code>HashMap</code> 使用的哈希函数是 <code>SipHash</code>，它的性能不是很高，但是安全性很高。<code>SipHash</code> 在中等大小的 <code>Key</code> 上，性能相当不错，但是对于小型的 <code>Key</code> （例如整数）或者大型 <code>Key</code> （例如字符串）来说，性能还是不够好。若你需要极致性能，例如实现算法，可以考虑这个库：ahash。</p>
+</blockquote>
+
+    
+  </article>
+
+  
+      
+    <div class="nexmoe-post-copyright">
+        <strong>本文作者：</strong>kay<br>
+        <strong>本文链接：</strong><a href="https://www.tooupper.com/content/Rust/learning-Rust/rust-Basic/%E9%9B%86%E5%90%88%E7%B1%BB%E5%9E%8B.html" title="https:&#x2F;&#x2F;www.tooupper.com&#x2F;content&#x2F;Rust&#x2F;learning-Rust&#x2F;rust-Basic&#x2F;%E9%9B%86%E5%90%88%E7%B1%BB%E5%9E%8B.html" target="_blank" rel="noopener">https:&#x2F;&#x2F;www.tooupper.com&#x2F;content&#x2F;Rust&#x2F;learning-Rust&#x2F;rust-Basic&#x2F;%E9%9B%86%E5%90%88%E7%B1%BB%E5%9E%8B.html</a><br>
+        
+            <strong>版权声明：</strong>本文采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/deed.zh" target="_blank">CC BY-NC-SA 3.0 CN</a> 协议进行许可
+
+        
+    </div>
+
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+   
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/Rust%E5%9F%BA%E7%A1%80/" rel="tag">Rust基础</a>
+    
+</div>
+  
+  
+    <script async src="/js/copy-codeblock.js?v=1698918460991"></script>
+  
+
+  
+      <div class="nexmoe-post-footer">
+          
+      </div>
+  
+</div></div><div class="nexmoe-post-right">    <div class="nexmoe-fixed">
+        <div class="nexmoe-tool">
+
+            
+
+            
+            
+            <button class="mdui-fab catalog" style="overflow:unset;">
+                <i class="nexmoefont icon-i-catalog"></i>
+                <div class="nexmoe-toc">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%9B%86%E5%90%88%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.</span> <span class="toc-text">集合类型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%A8%E6%80%81%E6%95%B0%E7%BB%84-Vector"><span class="toc-number">1.1.</span> <span class="toc-text">动态数组 Vector</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%8A%A8%E6%80%81%E6%95%B0%E7%BB%84"><span class="toc-number">1.1.1.</span> <span class="toc-text">创建动态数组</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Vec-new"><span class="toc-number">1.1.1.1.</span> <span class="toc-text">Vec::new</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#vec"><span class="toc-number">1.1.1.2.</span> <span class="toc-text">vec![]</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0-Vector"><span class="toc-number">1.1.2.</span> <span class="toc-text">更新 Vector</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Vector-%E4%B8%8E%E5%85%B6%E5%85%83%E7%B4%A0%E5%85%B1%E5%AD%98%E4%BA%A1"><span class="toc-number">1.1.3.</span> <span class="toc-text">Vector 与其元素共存亡</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8E-Vector-%E4%B8%AD%E8%AF%BB%E5%8F%96%E5%85%83%E7%B4%A0"><span class="toc-number">1.1.4.</span> <span class="toc-text">从 Vector 中读取元素</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%8B%E6%A0%87%E7%B4%A2%E5%BC%95%E4%B8%8E-get-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">1.1.4.1.</span> <span class="toc-text">下标索引与 .get 的区别</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8C%E6%97%B6%E5%80%9F%E7%94%A8%E5%A4%9A%E4%B8%AA%E6%95%B0%E7%BB%84%E5%85%83%E7%B4%A0"><span class="toc-number">1.1.5.</span> <span class="toc-text">同时借用多个数组元素</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%AD%E4%BB%A3%E9%81%8D%E5%8E%86-Vector-%E4%B8%AD%E7%9A%84%E5%85%83%E7%B4%A0"><span class="toc-number">1.1.6.</span> <span class="toc-text">迭代遍历 Vector 中的元素</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E4%B8%8D%E5%90%8C%E7%B1%BB%E5%9E%8B%E7%9A%84%E5%85%83%E7%B4%A0"><span class="toc-number">1.1.7.</span> <span class="toc-text">存储不同类型的元素</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Vector-%E7%9A%84%E6%8E%92%E5%BA%8F"><span class="toc-number">1.1.8.</span> <span class="toc-text">Vector 的排序</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%B4%E6%95%B0%E6%95%B0%E7%BB%84%E7%9A%84%E6%8E%92%E5%BA%8F"><span class="toc-number">1.1.8.1.</span> <span class="toc-text">整数数组的排序</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B5%AE%E7%82%B9%E6%95%B0%E6%95%B0%E7%BB%84%E7%9A%84%E6%8E%92%E5%BA%8F"><span class="toc-number">1.1.8.2.</span> <span class="toc-text">浮点数数组的排序</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AF%B9%E7%BB%93%E6%9E%84%E4%BD%93%E6%95%B0%E7%BB%84%E8%BF%9B%E8%A1%8C%E6%8E%92%E5%BA%8F"><span class="toc-number">1.1.8.3.</span> <span class="toc-text">对结构体数组进行排序</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#KV-%E5%AD%98%E5%82%A8-HashMap"><span class="toc-number">1.2.</span> <span class="toc-text">KV 存储 HashMap</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA-HashMap"><span class="toc-number">1.2.1.</span> <span class="toc-text">创建 HashMap</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-new-%E6%96%B9%E6%B3%95%E5%88%9B%E5%BB%BA"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">使用 new 方法创建</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E8%BF%AD%E4%BB%A3%E5%99%A8%E5%92%8C-collect-%E6%96%B9%E6%B3%95%E5%88%9B%E5%BB%BA"><span class="toc-number">1.2.1.2.</span> <span class="toc-text">使用迭代器和 collect 方法创建</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%80%E6%9C%89%E6%9D%83%E8%BD%AC%E7%A7%BB"><span class="toc-number">1.2.2.</span> <span class="toc-text">所有权转移</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2-HashMap"><span class="toc-number">1.2.3.</span> <span class="toc-text">查询 HashMap</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0-HashMap-%E4%B8%AD%E7%9A%84%E5%80%BC"><span class="toc-number">1.2.4.</span> <span class="toc-text">更新 HashMap 中的值</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9C%A8%E5%B7%B2%E6%9C%89%E5%80%BC%E7%9A%84%E5%9F%BA%E7%A1%80%E4%B8%8A%E6%9B%B4%E6%96%B0"><span class="toc-number">1.2.4.1.</span> <span class="toc-text">在已有值的基础上更新</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%93%88%E5%B8%8C%E5%87%BD%E6%95%B0"><span class="toc-number">1.2.5.</span> <span class="toc-text">哈希函数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%AB%98%E6%80%A7%E8%83%BD%E4%B8%89%E6%96%B9%E5%BA%93"><span class="toc-number">1.2.5.1.</span> <span class="toc-text">高性能三方库</span></a></li></ol></li></ol></li></ol></li></ol>
+                </div>
+            </button>
+            
+
+            
+
+            <a href="#nexmoe-content" class="backtop toc-link" aria-label="Back To Top" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+        </div>
+    </div>
+</div></div><div id="nexmoe-footer"><!--!--></div><div><div id="nexmoe-search-space">
+	<div class="search-container">
+		<div class="search-header">
+			<div class="search-input-container">
+				<input
+					class="search-input"
+					type="text"
+					placeholder="搜索"
+					oninput="sinput();"
+				/>
+			</div>
+			<a class="search-close" onclick="sclose();">×</a>
+		</div>
+		<div class="search-body"></div>
+	</div>
+</div>
+</div><div><script async src="https://www.TooUpper.com" crossorigin="anonymous"></script>
+</div></body></html>

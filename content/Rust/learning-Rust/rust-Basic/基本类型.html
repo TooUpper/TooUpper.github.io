@@ -1,0 +1,590 @@
+<!doctype html>
+<html lang="zh"><head>
+<title>基本类型 - 成祠的个人博客</title>
+<meta charset="UTF-8">
+<meta name="keywords" content="blog">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+
+<link rel="shortcut icon" href="/image/favicon.png" type="image/png" />
+<meta name="description" content="基本类型Rust 数据类型可分为两类：基本类型和复合类型 基本类型为：  数值类型: 有符号整数 (i8, i16, i32, i64, isize)、 无符号整数 (u8, u16, u32, u64, usize) 、浮点数 (f32, f64)、以及有理数、复数 字符串：字符串字面量和字符串切片 &amp;str 布尔类型： true和false 字符类型: 表示单个 Unicode 字符，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基本类型">
+<meta property="og:url" content="https://www.tooupper.com/content/Rust/learning-Rust/rust-Basic/%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%9E%8B.html">
+<meta property="og:site_name" content="成祠的个人博客">
+<meta property="og:description" content="基本类型Rust 数据类型可分为两类：基本类型和复合类型 基本类型为：  数值类型: 有符号整数 (i8, i16, i32, i64, isize)、 无符号整数 (u8, u16, u32, u64, usize) 、浮点数 (f32, f64)、以及有理数、复数 字符串：字符串字面量和字符串切片 &amp;str 布尔类型： true和false 字符类型: 表示单个 Unicode 字符，">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-09-25T12:01:14.000Z">
+<meta property="article:modified_time" content="2023-10-06T09:33:06.841Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="Rust基础">
+<meta name="twitter:card" content="summary">
+
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+<link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
+
+
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1698918461741">
+
+<link rel="stylesheet" href="/css/style.css?v=1698918461741">
+
+
+
+
+    
+        <link rel="stylesheet" href="/custom.css?v=1698918461741">
+    
+
+
+
+<script src="/lib/mdui_043tiny/mdui.js" async></script>
+<script src="/lib/fancybox/fancybox.umd.js" async></script>
+<script src="/lib/lax.min.js" async></script>
+
+
+<script async src="/js/app.js?v=1698918461741"></script>
+
+ 
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4D4ZJ9G024"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+
+  gtag("config", "G-4D4ZJ9G024");
+</script>
+
+<meta name="generator" content="Hexo 6.3.0"></head><body class="nexmoe mdui-drawer-body-left"><div id="nexmoe-background"><div class="nexmoe-bg" style="background-image: url(/image/banner.png)"></div><div class="mdui-appbar mdui-shadow-0"><div class="mdui-toolbar"><a class="mdui-btn mdui-btn-icon mdui-ripple" mdui-drawer="{target: &#039;#drawer&#039;, swipe: true}" title="menu"><i class="mdui-icon nexmoefont icon-menu"></i></a><div class="mdui-toolbar-spacer"></div><a class="mdui-btn mdui-btn-icon" href="/" title="kay"><img src="/image/Logo.png" alt="kay"></a></div></div></div><div id="nexmoe-header"><div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="kay">
+            <img src="/image/Logo.png" alt="kay" alt="kay">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>文章</span>29</div>
+        <div><span>标签</span>4</div>
+        <div><span>分类</span>2</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/aboutMe.html" title="关于博主">
+            <i class="mdui-list-item-icon nexmoefont icon-info-circle"></i>
+            <div class="mdui-list-item-content">
+                关于博主
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archives.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/downloads.html" title="下载中心">
+            <i class="mdui-list-item-icon nexmoefont icon-coffee"></i>
+            <div class="mdui-list-item-content">
+                下载中心
+            </div>
+        </a>
+        
+    </div>
+    
+    
+        
+        <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+        
+            <form id="search_form">
+                <label><input class="st-default-search-input" id="search_value" name="q" type="search" placeholder="搜索" style="
+                    font-size: 15px !important;
+                    height: 56px !important;
+                    background-image: none;
+                "></label>
+            </form>
+         
+    </div>
+</div>
+
+
+	<script async src="/js/search.js?v=1698918461741"></script>
+
+
+
+    
+        
+        <div class="nexmoe-widget-wrap">
+	<div class="nexmoe-widget nexmoe-social">
+		<a
+			class="mdui-ripple"
+			href="/image/QQOrWeChat.png"
+			target="_blank"
+			mdui-tooltip="{content: 'QQ'}"
+			style="
+				color: rgb(249, 174, 8);
+				background-color: rgba(249, 174, 8, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-QQ"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="/image/QQOrWeChat.png"
+			target="_blank"
+			mdui-tooltip="{content: 'WeChat'}"
+			style="
+				color: rgb(59, 151, 239);
+				background-color: rgba(59, 151, 239, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-wechat-fill"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://github.com/TooUpper/"
+			target="_blank"
+			mdui-tooltip="{content: 'GitHub'}"
+			style="
+				color: rgb(25, 23, 23);
+				background-color: rgba(25, 23, 23, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-github"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="/www.TooUpper.com"
+			target="_blank"
+			mdui-tooltip="{content: 'Blog'}"
+			style="
+				color: rgb(30, 136, 229);
+				background-color: rgba(30, 136, 229, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-home"
+			></i> </a
+		>
+	</div>
+</div>
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章分类</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/RISC-V/">RISC-V</a>
+          <span class="category-list-count">4</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Rust/">Rust</a>
+          <span class="category-list-count">25</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/Rust%E5%9F%BA%E7%A1%80/" style="font-size: 20px;">Rust基础</a> <a href="/tags/Rust%E8%BF%9B%E9%98%B6/" style="font-size: 15px;">Rust进阶</a> <a href="/tags/rcore/" style="font-size: 10px;">rcore</a> <a href="/tags/riscv/" style="font-size: 10px;">riscv</a>
+    </div>
+    
+  </div>
+
+    
+        
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章归档</h3>
+    <div class="nexmoe-widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/">2023</a><span class="archive-list-count">29</span></li></ul>
+    </div>
+  </div>
+
+
+
+    
+   
+    <div class="nexmoe-copyright">
+        &copy; 2023 kay
+        Powered by <a href="https://www.TooUpper.com" target="_blank">成祠</a>
+        & <a href="https://github.com/TooUpper" target="_blank">TooUpper</a>
+        <br><a target="_blank" href="https://www.TooUpper.com">鄂ICP备2020018486号</a>
+<br><a target="_blank" href="https://www.TooUpper.com">加油做一个不会被优化掉的程序员</a>
+
+    </div>
+</div><!-- .nexmoe-drawer --></div><div id="nexmoe-content"><div class="nexmoe-primary"><div class="nexmoe-post">
+  <article>
+    
+        <div class="nexmoe-post-cover absolute" style="padding-top: 62.5%;"> 
+            <img src="/image/Rust/RustCrab.png" alt="基本类型" loading="lazy">
+            <h1>基本类型</h1>
+        </div>
+    
+    
+    <div class="nexmoe-post-meta">
+    <div class="nexmoe-rainbow">
+        <a class="nexmoefont icon-calendar-fill">2023年09月25日</a>
+        
+            <a class="nexmoefont icon-appstore-fill -link" href="/categories/Rust/">Rust</a>
+        
+        
+    <a><i class="nexmoefont icon-areachart"></i>约3.4k字</a>
+    <a><i class="nexmoefont icon-time-circle-fill"></i>预计需要13分钟</a>
+
+    </div>
+    
+    
+    
+    
+    
+</div>
+
+    <h1 id="基本类型"><a href="#基本类型" class="headerlink" title="基本类型"></a>基本类型</h1><p>Rust 数据类型可分为两类：<strong>基本类型</strong>和<strong>复合类型</strong></p>
+<p>基本类型为：</p>
+<ul>
+<li>数值类型: 有符号整数 (<code>i8</code>, <code>i16</code>, <code>i32</code>, <code>i64</code>, <code>isize</code>)、 无符号整数 (<code>u8</code>, <code>u16</code>, <code>u32</code>, <code>u64</code>, <code>usize</code>) 、浮点数 (<code>f32</code>, <code>f64</code>)、以及有理数、复数</li>
+<li>字符串：字符串字面量和字符串切片 <code>&amp;str</code></li>
+<li>布尔类型： <code>true</code>和<code>false</code></li>
+<li>字符类型: 表示单个 Unicode 字符，存储为 4 个字节</li>
+<li>单元类型: 即 <code>()</code> ，其唯一的值也是 <code>()</code></li>
+</ul>
+<h2 id="类型推导与标注"><a href="#类型推导与标注" class="headerlink" title="类型推导与标注"></a>类型推导与标注</h2><p>Rust 编译器<strong>在某些情况下可以根据变量的值和上下文环境中的使用方式来自动推导出变量的类型</strong>，但有些时候他也无法推导出变量的类型这时候就需要<strong>手动进行类型标注</strong>。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">guess</span> = <span class="string">&quot;42&quot;</span>.<span class="title function_ invoke__">parse</span>().<span class="title function_ invoke__">expect</span>(<span class="string">&quot;Not a number!&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>.parse()：用于将字符串解析为其他类型的值</p>
+</blockquote>
+<p><code>cago run</code>运行</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ cargo build</span><br><span class="line">   Compiling no_type_annotations v0.<span class="number">1.0</span> (file:<span class="comment">///projects/no_type_annotations)</span></span><br><span class="line">error[E0282]: <span class="keyword">type</span> <span class="title class_">annotations</span> needed</span><br><span class="line"> -<span class="punctuation">-&gt;</span> src/main.rs:<span class="number">2</span>:<span class="number">9</span></span><br><span class="line">  |</span><br><span class="line"><span class="number">2</span> |     <span class="keyword">let</span> <span class="variable">guess</span> = <span class="string">&quot;42&quot;</span>.<span class="title function_ invoke__">parse</span>().<span class="title function_ invoke__">expect</span>(<span class="string">&quot;Not a number!&quot;</span>);</span><br><span class="line">  |         ^^^^^ consider giving `guess` a <span class="keyword">type</span></span><br></pre></td></tr></table></figure>
+
+<p>因此我们需要提供给编译器更多的信息，例如给 <code>guess</code> 变量一个<strong>显式的类型标注</strong>：<code>let guess: i32 = ...</code> 或者 <code>&quot;42&quot;.parse::&lt;i32&gt;()</code>。</p>
+<h2 id="数值类型"><a href="#数值类型" class="headerlink" title="数值类型"></a>数值类型</h2><h3 id="整数类型"><a href="#整数类型" class="headerlink" title="整数类型"></a>整数类型</h3><table>
+<thead>
+<tr>
+<th>长度</th>
+<th>有符号类型</th>
+<th>无符号类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>8 位</td>
+<td><code>i8</code></td>
+<td><code>u8</code></td>
+</tr>
+<tr>
+<td>16 位</td>
+<td><code>i16</code></td>
+<td><code>u16</code></td>
+</tr>
+<tr>
+<td>32 位</td>
+<td><code>i32</code></td>
+<td><code>u32</code></td>
+</tr>
+<tr>
+<td>64 位</td>
+<td><code>i64</code></td>
+<td><code>u64</code></td>
+</tr>
+<tr>
+<td>128 位</td>
+<td><code>i128</code></td>
+<td><code>u128</code></td>
+</tr>
+<tr>
+<td>视架构而定</td>
+<td><code>isize</code></td>
+<td><code>usize</code></td>
+</tr>
+</tbody></table>
+<p>类型定义的形式统一为：<code>有无符号 + 类型大小(位数)</code>。<strong>无符号数</strong>表示数字只能取正数和0，而<strong>有符号</strong>则表示数字可以取正数、负数还有0。就像在纸上写数字一样：当要强调符号时，数字前面可以带上正号或负号；然而，当很明显确定数字为正数时，就不需要加上正号了。有符号数字以<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Two's_complement">补码</a>形式存储。</p>
+<p>每个有符号类型规定的数字范围是 -(2n - 1) ~ 2n - 1 - 1，其中 <code>n</code> 是该定义形式的位长度。因此 <code>i8</code> 可存储数字范围是 -(27) ~ 27 - 1，即 -128 ~ 127。无符号类型可以存储的数字范围是 0 ~ 2n - 1，所以 <code>u8</code> 能够存储的数字为 0 ~ 28 - 1，即 0 ~ 255。</p>
+<p>此外，<code>isize</code> 和 <code>usize</code> 类型取决于程序运行的计算机 CPU 类型： 若 CPU 是 32 位的，则这两个类型是 32 位的，同理，若 CPU 是 64 位，那么它们则是 64 位。</p>
+<p>对于字面量为了方便阅读可以采用以下形式进行书写</p>
+<table>
+<thead>
+<tr>
+<th>数字字面量</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>十进制</td>
+<td><code>98_222</code></td>
+</tr>
+<tr>
+<td>十六进制</td>
+<td><code>0xff</code></td>
+</tr>
+<tr>
+<td>八进制</td>
+<td><code>0o77</code></td>
+</tr>
+<tr>
+<td>二进制</td>
+<td><code>0b1111_0000</code></td>
+</tr>
+<tr>
+<td>字节 (仅限于 <code>u8</code>)</td>
+<td><code>b&#39;A&#39;</code></td>
+</tr>
+</tbody></table>
+<p>Rust 整型默认使用 <code>i32</code>，例如 <code>let i = 1</code>，那 <code>i</code> 就是 <code>i32</code> 类型。</p>
+<h4 id="整数溢出"><a href="#整数溢出" class="headerlink" title="整数溢出"></a>整数溢出</h4><p>假设有一个 <code>u8</code> ，它可以存放从 0 到 255 的值。那么当你将其修改为范围之外的值，比如 256，则会发生<strong>整型溢出</strong>。关于这一行为 Rust 有一些有趣的规则：当在 debug 模式编译时，Rust 会检查整型溢出，若存在这些问题，则使程序在编译时 <em>panic</em>(崩溃,Rust 使用这个术语来表明程序因错误而退出)。</p>
+<p>在当使用 <code>--release</code> 参数进行 release 模式构建时，Rust <strong>不</strong>检测溢出。相反，当检测到整型溢出时，Rust 会按照补码循环溢出（<em>two’s complement wrapping</em>）的规则处理。简而言之，大于该类型最大值的数值会被补码转换成该类型能够支持的对应数字的最小值。比如在 <code>u8</code> 的情况下，256 变成 0，257 变成 1，依此类推。程序不会 <em>panic</em>，但是该变量的值可能不是你期望的值。依赖这种默认行为的代码都应该被认为是错误的代码。</p>
+<p>要显式处理可能的溢出，可以使用标准库针对原始数字类型提供的这些方法：</p>
+<ul>
+<li>使用 <code>wrapping_*</code> 方法在所有模式下都按照补码循环溢出规则处理，例如 <code>wrapping_add</code></li>
+<li>如果使用 <code>checked_*</code> 方法时发生溢出，则返回 <code>None</code> 值</li>
+<li>使用 <code>overflowing_*</code> 方法返回该值和一个指示是否存在溢出的布尔值</li>
+<li>使用 <code>saturating_*</code> 方法使值达到最小值或最大值</li>
+</ul>
+<p>下面是一个演示<code>wrapping_*</code>方法的示例：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">a</span> : <span class="type">u8</span> = <span class="number">255</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">b</span> = a.<span class="title function_ invoke__">wrapping_add</span>(<span class="number">20</span>);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, b);  <span class="comment">// 19</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="浮点类型"><a href="#浮点类型" class="headerlink" title="浮点类型"></a>浮点类型</h3><table>
+<thead>
+<tr>
+<th>长度</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>32 位</td>
+<td><code>f32</code></td>
+</tr>
+<tr>
+<td>64 位</td>
+<td><code>f64</code></td>
+</tr>
+</tbody></table>
+<p>浮点数根据 <code>IEEE-754</code> 标准实现，<code>f32</code> 类型是单精度浮点型，<code>f64</code> 为双精度。默认浮点类型是<code>f64</code>。</p>
+<h4 id="浮点数陷阱"><a href="#浮点数陷阱" class="headerlink" title="浮点数陷阱"></a>浮点数陷阱</h4><p>浮点数由于底层格式的特殊性，导致了如果在使用浮点数时不够谨慎，就可能造成危险，有两个原因：</p>
+<p>1.<strong>浮点数往往是你想要数字的近似表达</strong>对于想要完全表达精准的数字，不要使用浮点类型，除非浮点数的精度为无限。</p>
+<p>2.<strong>浮点数在某些特性上是反直觉的</strong></p>
+<p>浮点数并没有实现<code>std::cmp::Eq</code> 特征只实现了<code>std::cmp::PartialEq</code>特征，所以在进行结果比对时会出现与实际不相符甚至完全相反的情况。</p>
+<p><strong>std::cmp::PartialEq</strong></p>
+<ul>
+<li>定义了一个<strong>偏序相等关系，即两个值可以比较相等，也可以比较不等</strong>。</li>
+<li>重载了<code>==</code>和<code>!=</code>运算符，用于比较相等性和不等性。</li>
+</ul>
+<p><strong>std::cmp::Eq</strong></p>
+<ul>
+<li>定义了一个<strong>不可再分的相等关系，即两个值要么完全相等，要么完全不等</strong>。</li>
+<li>重载了<code>==</code>运算符，用于比较相等性。</li>
+</ul>
+<p>所以 基于此的浮点类型在进行比较时可能会现与实际不相符甚至完全相反的情况。</p>
+<p>例如：<code>a == b</code>为<code>true</code>，但<code>b == a</code>却可能为为<code>false</code>，这会导致混淆和意外的结果。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 例1</span></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">  <span class="comment">// 断言0.1 + 0.2与0.3相等</span></span><br><span class="line">  <span class="built_in">assert!</span>(<span class="number">0.1</span> + <span class="number">0.2</span> == <span class="number">0.3</span>); </span><br><span class="line"> <span class="comment">// 报错 panic </span></span><br><span class="line"> <span class="comment">// 二进制无法准确表示十进制小数会在 N 位数后存在误差。</span></span><br><span class="line"> <span class="comment">// 导致了 0.1 + 0.2 并不严格等于 0.3。</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>那如果非要进行比较呢？可以考虑用这种方式 <code>(0.1_f64 + 0.2 - 0.3).abs() &lt; 0.00001</code> ，具体小于多少，取决于你对精度的需求。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">abc</span>: (<span class="type">f32</span>, <span class="type">f32</span>, <span class="type">f32</span>) = (<span class="number">0.1</span>, <span class="number">0.2</span>, <span class="number">0.3</span>);</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">xyz</span>: (<span class="type">f64</span>, <span class="type">f64</span>, <span class="type">f64</span>) = (<span class="number">0.1</span>, <span class="number">0.2</span>, <span class="number">0.3</span>);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;abc (f32)&quot;</span>);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;   0.1 + 0.2: &#123;:x&#125;&quot;</span>, (abc.<span class="number">0</span> + abc.<span class="number">1</span>).<span class="title function_ invoke__">to_bits</span>());</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;         0.3: &#123;:x&#125;&quot;</span>, (abc.<span class="number">2</span>).<span class="title function_ invoke__">to_bits</span>());</span><br><span class="line">    <span class="built_in">println!</span>();</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;xyz (f64)&quot;</span>);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;   0.1 + 0.2: &#123;:x&#125;&quot;</span>, (xyz.<span class="number">0</span> + xyz.<span class="number">1</span>).<span class="title function_ invoke__">to_bits</span>());</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;         0.3: &#123;:x&#125;&quot;</span>, (xyz.<span class="number">2</span>).<span class="title function_ invoke__">to_bits</span>());</span><br><span class="line">    <span class="built_in">println!</span>();</span><br><span class="line"></span><br><span class="line">    <span class="built_in">assert!</span>(abc.<span class="number">0</span> + abc.<span class="number">1</span> == abc.<span class="number">2</span>);</span><br><span class="line">    <span class="built_in">assert!</span>(xyz.<span class="number">0</span> + xyz.<span class="number">1</span> == xyz.<span class="number">2</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>cargo run</code>运行</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_ invoke__">abc</span> (<span class="type">f32</span>)</span><br><span class="line">   <span class="number">0.1</span> + <span class="number">0.2</span>: <span class="number">3e99999</span>a</span><br><span class="line">         <span class="number">0.3</span>: <span class="number">3e99999</span>a</span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">xyz</span> (<span class="type">f64</span>)</span><br><span class="line">   <span class="number">0.1</span> + <span class="number">0.2</span>: <span class="number">3</span>fd3333333333334</span><br><span class="line">         <span class="number">0.3</span>: <span class="number">3</span>fd3333333333333</span><br><span class="line"></span><br><span class="line">thread <span class="symbol">&#x27;main</span>&#x27; panicked at <span class="symbol">&#x27;assertion</span> failed: xyz.<span class="number">0</span> + xyz.<span class="number">1</span> == xyz.<span class="number">2</span>&#x27;,</span><br><span class="line">➥ch2-add-floats.rs.rs:<span class="number">14</span>:<span class="number">5</span></span><br><span class="line">note: run with `RUST_BACKTRACE=<span class="number">1</span>` environment variable to display</span><br><span class="line">➥a backtrace</span><br></pre></td></tr></table></figure>
+
+<p>仔细看，对 <code>f32</code> 类型做加法时，<code>0.1 + 0.2</code> 的结果是 <code>3e99999a</code>，<code>0.3</code> 也是 <code>3e99999a</code>，因此 <code>f32</code> 下的 <code>0.1 + 0.2 == 0.3</code> 通过测试，但是到了 <code>f64</code> 类型时，结果就不一样了，因为 <code>f64</code> 精度高很多，因此在小数点非常后面发生了一点微小的变化，<code>0.1 + 0.2</code> 以 <code>4</code> 结尾，但是 <code>0.3</code> 以<code>3</code>结尾，这个细微区别导致 <code>f64</code> 下的测试失败了，并且抛出了异常。</p>
+<h4 id="NaN"><a href="#NaN" class="headerlink" title="NaN"></a>NaN</h4><p>对于数学上未定义的结果，例如对负数取平方根 <code>-42.1.sqrt()</code> ，会产生一个特殊的结果：Rust 的浮点数类型使用 <code>NaN</code> (not a number)来处理这些情况。</p>
+<p>**所有跟 <code>NaN</code> 交互的操作，都会返回一个 <code>NaN</code>**，而且 <code>NaN</code> 不能用来比较。</p>
+<p>出于防御性编程的考虑，可以使用 <code>is_nan()</code> 等方法，可以用来判断一个数值是否是 <code>NaN</code> ：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">x</span> = (-<span class="number">42.0_f32</span>).<span class="title function_ invoke__">sqrt</span>();</span><br><span class="line">    <span class="keyword">if</span> x.<span class="title function_ invoke__">is_nan</span>() &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;未定义的数学行为&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="运算符"><a href="#运算符" class="headerlink" title="运算符"></a>运算符</h3><table>
+<thead>
+<tr>
+<th>运算符</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&amp; 位与</td>
+<td>相同位置均为1时则为1，否则为0</td>
+</tr>
+<tr>
+<td>| 位或</td>
+<td>相同位置只要有1时则为1，否则为0</td>
+</tr>
+<tr>
+<td>^ 异或</td>
+<td>相同位置不相同则为1，相同则为0</td>
+</tr>
+<tr>
+<td>! 位非</td>
+<td>把位中的0和1相互取反，即0置为1，1置为0</td>
+</tr>
+<tr>
+<td>&lt;&lt; 左移</td>
+<td>所有位向左移动指定位数，右位补0</td>
+</tr>
+<tr>
+<td>&gt;&gt; 右移</td>
+<td>所有位向右移动指定位数，带符号移动（正数补0，负数补1）</td>
+</tr>
+</tbody></table>
+<h3 id="序列-Range"><a href="#序列-Range" class="headerlink" title="序列(Range)"></a>序列(Range)</h3><p>Rust 提供了一个非常简洁的方式，用来生成连续的数值。</p>
+<p>列如： <code>1..5</code>，生成从 1 到 4 的连续数字，不包含 5 ；<code>1..=5</code>，生成从 1 到 5 的连续数字，包含 5。</p>
+<p>序列只允许用于数字或字符类型，原因是：它们可以连续，同时编译器在编译期可以检查该序列是否为空，字符和数字值是 Rust 中仅有的可以用于判断是否为空的类型。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> <span class="variable">i</span> <span class="keyword">in</span> <span class="number">1</span>..=<span class="number">5</span> &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>,i);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//	1</span></span><br><span class="line"><span class="comment">//	2</span></span><br><span class="line"><span class="comment">//	3</span></span><br><span class="line"><span class="comment">//	4</span></span><br><span class="line"><span class="comment">//	5</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 如下是一个使用字符类型序列的例子：</span></span><br><span class="line"><span class="keyword">for</span> <span class="variable">i</span> <span class="keyword">in</span> <span class="string">&#x27;a&#x27;</span>..=<span class="string">&#x27;z&#x27;</span> &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>,i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用-As-完成类型转换"><a href="#使用-As-完成类型转换" class="headerlink" title="使用 As 完成类型转换"></a>使用 As 完成类型转换</h3><p>Rust 中可以使用 As 来完成一个类型到另一个类型的转换，其最常用于将原始类型转换为其他原始类型，但是它也可以完成诸如将指针转换为地址、地址转换为指针以及将指针转换为其他指针等功能。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">   <span class="keyword">let</span> <span class="variable">a</span> = <span class="number">3.1</span> <span class="keyword">as</span> <span class="type">i8</span>; <span class="comment">// 将 i32转为 i8</span></span><br><span class="line">   <span class="keyword">let</span> <span class="variable">b</span> = <span class="number">100_i8</span> <span class="keyword">as</span> <span class="type">i32</span>; <span class="comment">// 将 i8 转为 i32</span></span><br><span class="line">   <span class="keyword">let</span> <span class="variable">c</span> = <span class="string">&#x27;a&#x27;</span> <span class="keyword">as</span> <span class="type">u8</span>; <span class="comment">// 将字符&#x27;a&#x27;转换为整数，97</span></span><br><span class="line"></span><br><span class="line">   <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;,&#123;&#125;,&#123;&#125;&quot;</span>,a,b,c)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="有理数和复数"><a href="#有理数和复数" class="headerlink" title="有理数和复数"></a>有理数和复数</h3><p>Rust 的标准库相比其它语言，准入门槛较高，因此有理数和复数并未包含在标准库中：</p>
+<ul>
+<li>有理数和复数</li>
+<li>任意大小的整数和任意精度的浮点数</li>
+<li>固定精度的十进制小数，常用于货币相关的场景</li>
+</ul>
+<p>好在社区已经开发出高质量的 Rust 数值库：<a target="_blank" rel="noopener" href="https://crates.io/crates/num">num</a>。</p>
+<p>按照以下步骤来引入 <code>num</code> 库：</p>
+<ol>
+<li>创建新工程 <code>cargo new complex-num &amp;&amp; cd complex-num</code></li>
+<li>在 <code>Cargo.toml</code> 中的 <code>[dependencies]</code> 下添加一行 <code>num = &quot;0.4.0&quot;</code></li>
+<li>将 <code>src/main.rs</code> 文件中的 <code>main</code> 函数替换为下面的代码</li>
+<li>运行 <code>cargo run</code></li>
+</ol>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> num::complex::Complex;</span><br><span class="line"></span><br><span class="line"> <span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">   <span class="keyword">let</span> <span class="variable">a</span> = Complex &#123; re: <span class="number">2.1</span>, im: -<span class="number">1.2</span> &#125;;</span><br><span class="line">   <span class="keyword">let</span> <span class="variable">b</span> = Complex::<span class="title function_ invoke__">new</span>(<span class="number">11.1</span>, <span class="number">22.2</span>);</span><br><span class="line">   <span class="keyword">let</span> <span class="variable">result</span> = a + b;</span><br><span class="line"></span><br><span class="line">   <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125; + &#123;&#125;i&quot;</span>, result.re, result.im)</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>之前提到了过 Rust 的数值类型和运算跟其他语言较为相似，但是实际上，除了语法上的不同之外，还是存在一些差异点：</p>
+<ul>
+<li><strong>Rust 拥有相当多的数值类型</strong>. 因此你需要熟悉这些类型所占用的字节数，这样就知道该类型允许的大小范围以及你选择的类型是否能表达负数</li>
+<li><strong>类型转换必须是显式的</strong>. Rust 永远也不会偷偷把你的 16bit 整数转换成 32bit 整数</li>
+<li><strong>Rust 的数值上可以使用方法</strong>. 例如你可以用以下方法来将 <code>13.14</code> 取整：<code>13.14_f32.round()</code>，在这里我们使用了类型后缀，因为编译器需要知道 <code>13.14</code> 的具体类型</li>
+</ul>
+<h2 id="字符、布尔、单元类型"><a href="#字符、布尔、单元类型" class="headerlink" title="字符、布尔、单元类型"></a>字符、布尔、单元类型</h2><p>Rust使用<code>Unicode</code>编码集，使用 UTF-8编码方式。UTF-8是一种可变长度的编码方式，它使用 1 到 4 个字节来表示不同的 Unicode 字符。</p>
+<h3 id="字符-char"><a href="#字符-char" class="headerlink" title="字符(char)"></a>字符(char)</h3><p>由于 Rust 内对<code>Unicode</code>的实现方式占 4 个字节编码，因此字符类型也是占用 4 个字节。</p>
+<blockquote>
+<p>这里说的是 Rust 内对 Unicode 的实现方式</p>
+</blockquote>
+<p><strong>Rust 中的 char 类型占 4 个字节</strong>，是一个<strong>标准的 <code>Unicode</code>标量值</strong>。</p>
+<h3 id="布尔-bool"><a href="#布尔-bool" class="headerlink" title="布尔(bool)"></a>布尔(bool)</h3><p><strong>Rust 中的 bool 类型占 1 个字节</strong>，值为 <code>true</code> 和 <code>false</code></p>
+<h3 id="单元类型"><a href="#单元类型" class="headerlink" title="单元类型"></a>单元类型</h3><p>单元类型就是<code>()</code>。</p>
+<p>常见的<code>fn main()</code>方法返回的就是<code>()</code>，他并不是无返回，Rust 对于无返回的函数称为<code>发散函数(diverge function)</code>。</p>
+<p><code>()</code>作为值使用时，完全<strong>不占</strong>任何内存，可以当占位使用。</p>
+<h2 id="语句与表达式"><a href="#语句与表达式" class="headerlink" title="语句与表达式"></a>语句与表达式</h2><p>Rust 的函数体是由一系列<strong>语句</strong>组成，最后由一个<strong>表达式来</strong>返回值。<strong>表达式总要返回值</strong>。</p>
+<h3 id="语句"><a href="#语句" class="headerlink" title="语句"></a>语句</h3><p><strong>完成了一个具体的操作，但是并没有返回值</strong></p>
+<p><code>let</code>是语句，因此不能将<code>let</code>语句赋值给其他值。</p>
+<h3 id="表达式"><a href="#表达式" class="headerlink" title="表达式"></a>表达式</h3><p>表达式会进行求值，然后<strong>返回一个值</strong>。</p>
+<p><strong>表达式可以成为语句的一部分</strong>。</p>
+<p>调用一个函数是表达式，因为会返回一个值，调用宏也是表达式，用花括号包裹最终返回一个值的语句块也是表达式，总之，能返回值，它就是表达式。</p>
+<p><strong>表达式不包含分号</strong>。</p>
+<h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><p>在 Rust 中函数和变量名使用蛇形命名法，且每个函数参数都需要标注类型。</p>
+<h3 id="函数返回"><a href="#函数返回" class="headerlink" title="函数返回"></a>函数返回</h3><p>Rust 中函数就是表达式，因此可以将函数体的最后一条表达式的直接返回给调用者，也可以使用<code>return</code>提前返回</p>
+<h4 id="Rust-中的特殊返回类型"><a href="#Rust-中的特殊返回类型" class="headerlink" title="Rust 中的特殊返回类型"></a>Rust 中的特殊返回类型</h4><p>单元类型<code>()</code>,是一个零长度的元组。可以用来表达一个函数没有返回值：</p>
+<ul>
+<li>函数没有返回值，那么返回一个 <code>()</code></li>
+<li>通过 <code>;</code> 结尾的表达式会返回一个 <code>()</code></li>
+</ul>
+<p><strong>永不返回的发散函数</strong></p>
+<p>当用 <code>!</code> 作函数返回类型的时候，表示该函数永不返回( diverge function )，特别的，这种语法往往用做会导致程序崩溃的函数：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">forever</span>() <span class="punctuation">-&gt;</span> ! &#123;</span><br><span class="line">  <span class="keyword">loop</span> &#123;</span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+    
+  </article>
+
+  
+      
+    <div class="nexmoe-post-copyright">
+        <strong>本文作者：</strong>kay<br>
+        <strong>本文链接：</strong><a href="https://www.tooupper.com/content/Rust/learning-Rust/rust-Basic/%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%9E%8B.html" title="https:&#x2F;&#x2F;www.tooupper.com&#x2F;content&#x2F;Rust&#x2F;learning-Rust&#x2F;rust-Basic&#x2F;%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%9E%8B.html" target="_blank" rel="noopener">https:&#x2F;&#x2F;www.tooupper.com&#x2F;content&#x2F;Rust&#x2F;learning-Rust&#x2F;rust-Basic&#x2F;%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%9E%8B.html</a><br>
+        
+            <strong>版权声明：</strong>本文采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/deed.zh" target="_blank">CC BY-NC-SA 3.0 CN</a> 协议进行许可
+
+        
+    </div>
+
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+   
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/Rust%E5%9F%BA%E7%A1%80/" rel="tag">Rust基础</a>
+    
+</div>
+  
+  
+    <script async src="/js/copy-codeblock.js?v=1698918460954"></script>
+  
+
+  
+      <div class="nexmoe-post-footer">
+          
+      </div>
+  
+</div></div><div class="nexmoe-post-right">    <div class="nexmoe-fixed">
+        <div class="nexmoe-tool">
+
+            
+
+            
+            
+            <button class="mdui-fab catalog" style="overflow:unset;">
+                <i class="nexmoefont icon-i-catalog"></i>
+                <div class="nexmoe-toc">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.</span> <span class="toc-text">基本类型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC%E4%B8%8E%E6%A0%87%E6%B3%A8"><span class="toc-number">1.1.</span> <span class="toc-text">类型推导与标注</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E5%80%BC%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.2.</span> <span class="toc-text">数值类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B4%E6%95%B0%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.2.1.</span> <span class="toc-text">整数类型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%B4%E6%95%B0%E6%BA%A2%E5%87%BA"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">整数溢出</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%AE%E7%82%B9%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.2.2.</span> <span class="toc-text">浮点类型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B5%AE%E7%82%B9%E6%95%B0%E9%99%B7%E9%98%B1"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">浮点数陷阱</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#NaN"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">NaN</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">1.2.3.</span> <span class="toc-text">运算符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BA%8F%E5%88%97-Range"><span class="toc-number">1.2.4.</span> <span class="toc-text">序列(Range)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-As-%E5%AE%8C%E6%88%90%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2"><span class="toc-number">1.2.5.</span> <span class="toc-text">使用 As 完成类型转换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%89%E7%90%86%E6%95%B0%E5%92%8C%E5%A4%8D%E6%95%B0"><span class="toc-number">1.2.6.</span> <span class="toc-text">有理数和复数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">1.2.7.</span> <span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E3%80%81%E5%B8%83%E5%B0%94%E3%80%81%E5%8D%95%E5%85%83%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.3.</span> <span class="toc-text">字符、布尔、单元类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6-char"><span class="toc-number">1.3.1.</span> <span class="toc-text">字符(char)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%83%E5%B0%94-bool"><span class="toc-number">1.3.2.</span> <span class="toc-text">布尔(bool)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%95%E5%85%83%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.3.3.</span> <span class="toc-text">单元类型</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%AD%E5%8F%A5%E4%B8%8E%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="toc-number">1.4.</span> <span class="toc-text">语句与表达式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%AD%E5%8F%A5"><span class="toc-number">1.4.1.</span> <span class="toc-text">语句</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="toc-number">1.4.2.</span> <span class="toc-text">表达式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%BD%E6%95%B0"><span class="toc-number">1.5.</span> <span class="toc-text">函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E8%BF%94%E5%9B%9E"><span class="toc-number">1.5.1.</span> <span class="toc-text">函数返回</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Rust-%E4%B8%AD%E7%9A%84%E7%89%B9%E6%AE%8A%E8%BF%94%E5%9B%9E%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.5.1.1.</span> <span class="toc-text">Rust 中的特殊返回类型</span></a></li></ol></li></ol></li></ol></li></ol>
+                </div>
+            </button>
+            
+
+            
+
+            <a href="#nexmoe-content" class="backtop toc-link" aria-label="Back To Top" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+        </div>
+    </div>
+</div></div><div id="nexmoe-footer"><!--!--></div><div><div id="nexmoe-search-space">
+	<div class="search-container">
+		<div class="search-header">
+			<div class="search-input-container">
+				<input
+					class="search-input"
+					type="text"
+					placeholder="搜索"
+					oninput="sinput();"
+				/>
+			</div>
+			<a class="search-close" onclick="sclose();">×</a>
+		</div>
+		<div class="search-body"></div>
+	</div>
+</div>
+</div><div><script async src="https://www.TooUpper.com" crossorigin="anonymous"></script>
+</div></body></html>

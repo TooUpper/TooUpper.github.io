@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="zh"><head>
+<title>借用与所有权 - 成祠的个人博客</title>
+<meta charset="UTF-8">
+<meta name="keywords" content="blog">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+
+<link rel="shortcut icon" href="/image/favicon.png" type="image/png" />
+<meta name="description" content="所有权与借用所有权在计算机的发展过程中对于内存的管理基本分为三个流派：  **垃圾回收机制(GC)**，在程序运行时不断寻找不再使用的内存，典型代表：Java、Go 手动管理内存的分配和释放, 在程序中，通过函数调用的方式来申请和释放内存，典型代表：C++ 通过所有权来管理内存，编译器在编译时会根据一系列规则进行检查  不安全代码演示123456int* foo() &amp;#123;    int a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="借用与所有权">
+<meta property="og:url" content="https://www.tooupper.com/content/Rust/learning-Rust/rust-Basic/%E5%80%9F%E7%94%A8%E4%B8%8E%E6%89%80%E6%9C%89%E6%9D%83.html">
+<meta property="og:site_name" content="成祠的个人博客">
+<meta property="og:description" content="所有权与借用所有权在计算机的发展过程中对于内存的管理基本分为三个流派：  **垃圾回收机制(GC)**，在程序运行时不断寻找不再使用的内存，典型代表：Java、Go 手动管理内存的分配和释放, 在程序中，通过函数调用的方式来申请和释放内存，典型代表：C++ 通过所有权来管理内存，编译器在编译时会根据一系列规则进行检查  不安全代码演示123456int* foo() &amp;#123;    int a">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pic1.zhimg.com/80/v2-3ec77951de6a17584b5eb4a3838b4b61_1440w.jpg">
+<meta property="og:image" content="https://pic1.zhimg.com/80/v2-fc68ea4a1fe2e3fe4c5bb523a0a8247c_1440w.jpg">
+<meta property="article:published_time" content="2023-09-25T12:01:14.000Z">
+<meta property="article:modified_time" content="2023-10-06T13:08:34.388Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="Rust基础">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pic1.zhimg.com/80/v2-3ec77951de6a17584b5eb4a3838b4b61_1440w.jpg">
+
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+<link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
+
+
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1698918461732">
+
+<link rel="stylesheet" href="/css/style.css?v=1698918461732">
+
+
+
+
+    
+        <link rel="stylesheet" href="/custom.css?v=1698918461732">
+    
+
+
+
+<script src="/lib/mdui_043tiny/mdui.js" async></script>
+<script src="/lib/fancybox/fancybox.umd.js" async></script>
+<script src="/lib/lax.min.js" async></script>
+
+
+<script async src="/js/app.js?v=1698918461732"></script>
+
+ 
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4D4ZJ9G024"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+
+  gtag("config", "G-4D4ZJ9G024");
+</script>
+
+<meta name="generator" content="Hexo 6.3.0"></head><body class="nexmoe mdui-drawer-body-left"><div id="nexmoe-background"><div class="nexmoe-bg" style="background-image: url(/image/banner.png)"></div><div class="mdui-appbar mdui-shadow-0"><div class="mdui-toolbar"><a class="mdui-btn mdui-btn-icon mdui-ripple" mdui-drawer="{target: &#039;#drawer&#039;, swipe: true}" title="menu"><i class="mdui-icon nexmoefont icon-menu"></i></a><div class="mdui-toolbar-spacer"></div><a class="mdui-btn mdui-btn-icon" href="/" title="kay"><img src="/image/Logo.png" alt="kay"></a></div></div></div><div id="nexmoe-header"><div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="kay">
+            <img src="/image/Logo.png" alt="kay" alt="kay">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>文章</span>29</div>
+        <div><span>标签</span>4</div>
+        <div><span>分类</span>2</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/aboutMe.html" title="关于博主">
+            <i class="mdui-list-item-icon nexmoefont icon-info-circle"></i>
+            <div class="mdui-list-item-content">
+                关于博主
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archives.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/downloads.html" title="下载中心">
+            <i class="mdui-list-item-icon nexmoefont icon-coffee"></i>
+            <div class="mdui-list-item-content">
+                下载中心
+            </div>
+        </a>
+        
+    </div>
+    
+    
+        
+        <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+        
+            <form id="search_form">
+                <label><input class="st-default-search-input" id="search_value" name="q" type="search" placeholder="搜索" style="
+                    font-size: 15px !important;
+                    height: 56px !important;
+                    background-image: none;
+                "></label>
+            </form>
+         
+    </div>
+</div>
+
+
+	<script async src="/js/search.js?v=1698918461733"></script>
+
+
+
+    
+        
+        <div class="nexmoe-widget-wrap">
+	<div class="nexmoe-widget nexmoe-social">
+		<a
+			class="mdui-ripple"
+			href="/image/QQOrWeChat.png"
+			target="_blank"
+			mdui-tooltip="{content: 'QQ'}"
+			style="
+				color: rgb(249, 174, 8);
+				background-color: rgba(249, 174, 8, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-QQ"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="/image/QQOrWeChat.png"
+			target="_blank"
+			mdui-tooltip="{content: 'WeChat'}"
+			style="
+				color: rgb(59, 151, 239);
+				background-color: rgba(59, 151, 239, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-wechat-fill"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://github.com/TooUpper/"
+			target="_blank"
+			mdui-tooltip="{content: 'GitHub'}"
+			style="
+				color: rgb(25, 23, 23);
+				background-color: rgba(25, 23, 23, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-github"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="/www.TooUpper.com"
+			target="_blank"
+			mdui-tooltip="{content: 'Blog'}"
+			style="
+				color: rgb(30, 136, 229);
+				background-color: rgba(30, 136, 229, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-home"
+			></i> </a
+		>
+	</div>
+</div>
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章分类</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/RISC-V/">RISC-V</a>
+          <span class="category-list-count">4</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Rust/">Rust</a>
+          <span class="category-list-count">25</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/Rust%E5%9F%BA%E7%A1%80/" style="font-size: 20px;">Rust基础</a> <a href="/tags/Rust%E8%BF%9B%E9%98%B6/" style="font-size: 15px;">Rust进阶</a> <a href="/tags/rcore/" style="font-size: 10px;">rcore</a> <a href="/tags/riscv/" style="font-size: 10px;">riscv</a>
+    </div>
+    
+  </div>
+
+    
+        
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章归档</h3>
+    <div class="nexmoe-widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/">2023</a><span class="archive-list-count">29</span></li></ul>
+    </div>
+  </div>
+
+
+
+    
+   
+    <div class="nexmoe-copyright">
+        &copy; 2023 kay
+        Powered by <a href="https://www.TooUpper.com" target="_blank">成祠</a>
+        & <a href="https://github.com/TooUpper" target="_blank">TooUpper</a>
+        <br><a target="_blank" href="https://www.TooUpper.com">鄂ICP备2020018486号</a>
+<br><a target="_blank" href="https://www.TooUpper.com">加油做一个不会被优化掉的程序员</a>
+
+    </div>
+</div><!-- .nexmoe-drawer --></div><div id="nexmoe-content"><div class="nexmoe-primary"><div class="nexmoe-post">
+  <article>
+    
+        <div class="nexmoe-post-cover absolute" style="padding-top: 62.5%;"> 
+            <img src="/image/Rust/RustCrab.png" alt="借用与所有权" loading="lazy">
+            <h1>借用与所有权</h1>
+        </div>
+    
+    
+    <div class="nexmoe-post-meta">
+    <div class="nexmoe-rainbow">
+        <a class="nexmoefont icon-calendar-fill">2023年09月25日</a>
+        
+            <a class="nexmoefont icon-appstore-fill -link" href="/categories/Rust/">Rust</a>
+        
+        
+    <a><i class="nexmoefont icon-areachart"></i>约4.8k字</a>
+    <a><i class="nexmoefont icon-time-circle-fill"></i>预计需要18分钟</a>
+
+    </div>
+    
+    
+    
+    
+    
+</div>
+
+    <h1 id="所有权与借用"><a href="#所有权与借用" class="headerlink" title="所有权与借用"></a>所有权与借用</h1><h2 id="所有权"><a href="#所有权" class="headerlink" title="所有权"></a>所有权</h2><p>在计算机的发展过程中对于内存的管理基本分为三个流派：</p>
+<ul>
+<li>**垃圾回收机制(GC)**，在程序运行时不断寻找不再使用的内存，典型代表：Java、Go</li>
+<li><strong>手动管理内存的分配和释放</strong>, 在程序中，通过函数调用的方式来申请和释放内存，典型代表：C++</li>
+<li><strong>通过所有权来管理内存</strong>，编译器在编译时会根据一系列规则进行检查</li>
+</ul>
+<h3 id="不安全代码演示"><a href="#不安全代码演示" class="headerlink" title="不安全代码演示"></a>不安全代码演示</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span>* <span class="title function_">foo</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">int</span> a;          <span class="comment">// 变量a的作用域开始</span></span><br><span class="line">    a = <span class="number">100</span>;</span><br><span class="line">    <span class="type">char</span> *c = <span class="string">&quot;xyz&quot;</span>;   <span class="comment">// 变量c的作用域开始</span></span><br><span class="line">    <span class="keyword">return</span> &amp;a;</span><br><span class="line">&#125;                   <span class="comment">// 变量a和c的作用域结束</span></span><br></pre></td></tr></table></figure>
+
+<p>这段代码虽然可以编译通过，但是其实非常糟糕，变量 <code>a</code> 和 <code>c</code> 都是局部变量，<strong>函数结束后将局部变量 <code>a</code> 的地址返回，但局部变量 <code>a</code> 存在栈中，在离开作用域后，<code>a</code> 所申请的栈上内存都会被系统回收</strong>，从而造成了 <code>悬空指针(Dangling Pointer)</code> 的问题。</p>
+<h3 id="栈-Stack-与堆-Heap"><a href="#栈-Stack-与堆-Heap" class="headerlink" title="栈(Stack)与堆(Heap)"></a>栈(Stack)与堆(Heap)</h3><p>栈和堆的核心目标就是为程序在运行时提供可供使用的内存空间。</p>
+<h4 id="栈"><a href="#栈" class="headerlink" title="栈"></a>栈</h4><p>栈按照顺序存储并以相反的顺序取出，这也被称为<strong>先进后出</strong>。只能从顶部增减不能从中间也不能从底部进行增减。</p>
+<p>增加数据叫做<strong>进栈</strong>，移出数据叫做<strong>出栈</strong>。</p>
+<p>基于上述的实现方式，栈中的所有数据都<strong>必须占用已知且固定大小的内存空间</strong>，假设数据大小是未知的，那么在取出数据时，你将无法取到你想要的数据。</p>
+<h4 id="堆"><a href="#堆" class="headerlink" title="堆"></a>堆</h4><p>与栈不同，对于<strong>大小未知或者可能变化的数据，我们需要将它存储在堆上</strong>。</p>
+<p>当向堆上放入数据时，需要<strong>请求一定大小的内存空间</strong>。操作系统在堆的某处找到一块足够大的空位，把它标记为已使用，并返回一个表示该位置地址的<strong>指针</strong>, 该过程被称为<strong>在堆上分配内存</strong>，有时简称为 “分配”(allocating)。</p>
+<p>接着，该指针会被推入<strong>栈</strong>中，因为指针的大小是已知且固定的，在后续使用过程中，你将通过栈中的<strong>指针</strong>，来获取数据在堆上的实际内存位置，进而访问该数据。</p>
+<p>由上可知，堆是一种缺乏组织的数据结构。想象一下去餐馆就座吃饭: 进入餐馆，告知服务员有几个人，然后服务员找到一个够大的空桌子（堆上分配的内存空间）并领你们过去。如果有人来迟了，他们也可以通过桌号（栈上的指针）来找到你们坐在哪。</p>
+<h4 id="性能区别"><a href="#性能区别" class="headerlink" title="性能区别"></a>性能区别</h4><p><strong>写入方面</strong>：<strong>入栈比在堆上分配内存要快</strong>，因为入栈时操作系统无需分配新的空间，只需要将新数据放入栈顶即可。相比之下，在堆上分配内存则需要更多的工作，这是因为操作系统必须首先找到一块足够存放数据的内存空间，接着做一些记录为下一次分配做准备。</p>
+<p><strong>读取方面</strong>：得益于 CPU 高速缓存，使得处理器可以减少对内存的访问，高速缓存和内存的访问速度差异在 10 倍以上！<strong>栈数据往往可以直接存储在 CPU 高速缓存中，而堆数据只能存储在内存中</strong>。访问堆上的数据比访问栈上的数据慢，因为必须先访问栈再通过栈上的指针来访问内存。</p>
+<p>因此，<strong>处理器处理分配在栈上数据会比在堆上的数据更加高效</strong>。</p>
+<h4 id="所有权与堆栈"><a href="#所有权与堆栈" class="headerlink" title="所有权与堆栈"></a>所有权与堆栈</h4><p>当你的代码调用一个函数时，传递给函数的参数（包括可能指向堆上数据的指针和函数的局部变量）依次被压入栈中，当函数调用结束时，这些值将被从栈中按照相反的顺序依次移除。</p>
+<p>因为堆上的数据缺乏组织，因此跟踪这些数据何时分配和释放是非常重要的，否则堆上的数据将产生内存泄漏 —— 这些数据将永远无法被回收。这就是 Rust 所有权系统为我们提供的强大保障。</p>
+<p>对于其他很多编程语言，你确实无需理解堆栈的原理，但是<strong>在 Rust 中，明白堆栈的原理，对于我们理解所有权的工作原理会有很大的帮助</strong>。</p>
+<h3 id="所有权规则"><a href="#所有权规则" class="headerlink" title="所有权规则"></a>所有权规则</h3><p>规则：</p>
+<ol>
+<li>Rust 中每一个值都被一个变量所有，该变量称为值的所有者。</li>
+<li>一个值同时只能被一个变量所拥有，或者说一个值只能拥有一个所有者。</li>
+<li>当<strong>所有者</strong>离开作用域时，这个值会被丢弃(drop)。</li>
+</ol>
+<h4 id="变量作用域"><a href="#变量作用域" class="headerlink" title="变量作用域"></a>变量作用域</h4><p>作用域是指一个变量在程序内的有效范围。</p>
+<h4 id="简单介绍-String-类型"><a href="#简单介绍-String-类型" class="headerlink" title="简单介绍 String 类型"></a>简单介绍 String 类型</h4><p>字符串字面值<code>let s =  &quot;hello&quot;</code>，<code>s</code> 是被硬编码进程序里的字符串值（类型为 <code>&amp;str</code> ）。字符串字面值是很方便的，但是它并不适用于所有场景。原因有二：</p>
+<ul>
+<li><strong>字符串字面值是不可变的</strong>，因为被硬编码到程序代码中</li>
+<li>并非所有字符串的值都能在编写代码时得知。</li>
+</ul>
+<p>当需要在运行时确认或输入字符串时，字符串字面值就无法使用了。这时候我们需要使用 Rust 为我们提供的动态的字符串类型<code>String</code>。该类型被分配到堆上，因此可以动态伸缩，也就能存储编译时未知大小的的文本。</p>
+<p>示例：<code>let s = String::from(&quot;hello&quot;);</code></p>
+<p><code>::</code>是一种调用操作符，表示调用<code>String</code>中的<code>from</code>方法。</p>
+<p>因为<code>String</code>存储在堆上是动态的，所以我们可以这样修改：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">s</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;hello&quot;</span>);</span><br><span class="line"></span><br><span class="line">s.<span class="title function_ invoke__">push_str</span>(<span class="string">&quot;, world!&quot;</span>); <span class="comment">// push_str() 在字符串后追加字面值</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, s); <span class="comment">// 将打印 `hello, world!`</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="变量绑定背后的数据交互"><a href="#变量绑定背后的数据交互" class="headerlink" title="变量绑定背后的数据交互"></a>变量绑定背后的数据交互</h3><h4 id="转移所有权-移动"><a href="#转移所有权-移动" class="headerlink" title="转移所有权(移动)"></a>转移所有权(移动)</h4><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">x</span> = <span class="number">5</span>;</span><br><span class="line"><span class="keyword">let</span> <span class="variable">y</span> = x;</span><br></pre></td></tr></table></figure>
+
+<p>基本类型的大小是固定的，因此这两个值都是通过自动<strong>拷贝</strong>的方式来赋值的，都被存在栈中，完全无需在堆上分配内存。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">s1</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;hello&quot;</span>);</span><br><span class="line"><span class="keyword">let</span> <span class="variable">s2</span> = s1;</span><br></pre></td></tr></table></figure>
+
+<p><code>String</code>是一个复杂类型，由存储在<strong>栈中的指针</strong>、<strong>字符串长度</strong>、<strong>字符串容量</strong>共同组成，其中<strong>堆指针</strong>指向了真实存储字符串内容的堆内存。长度为已近使用的大小，容量是堆内存分配到空间大小。</p>
+<p>所以对于<code>String</code>类型的拷贝分为两种：</p>
+<ol>
+<li>拷贝 <code>String</code> 和存储在堆上的字节数组 如果该语句是拷贝所有数据(深拷贝)，那么无论是 <code>String</code> 本身还是底层的堆上数据，都会被全部拷贝，这对于性能而言会造成非常大的影响</li>
+<li>只拷贝 <code>String</code> 本身 这样的拷贝非常快，因为在 64 位机器上就拷贝了 <code>8字节的指针</code>、<code>8字节的长度</code>、<code>8字节的容量</code>，总计 24 字节，但是带来了新的问题，还记得我们之前提到的所有权规则吧？其中有一条就是：<strong>一个值只允许有一个所有者</strong>，而现在这个值（堆上的真实字符串数据）有了两个所有者：<code>s1</code> 和 <code>s2</code>。</li>
+</ol>
+<p>当变量离开作用域后，Rust 会自动调用 <code>drop</code> 函数并清理变量的堆内存。不过由于两个 <code>String</code> 变量指向了同一位置。这就有了一个问题：当 <code>s1</code> 和 <code>s2</code> 离开作用域，它们都会尝试释放相同的内存。这是一个叫做 <strong>二次释放（double free）</strong> 的错误，也是之前提到过的内存安全性 BUG 之一。两次释放（相同）内存会导致内存污染，它可能会导致潜在的安全漏洞。</p>
+<p>因此，Rust 这样解决问题：<strong>当 <code>s1</code> 赋予 <code>s2</code> 后，Rust 认为 <code>s1</code> 不再有效，因此也无需在 <code>s1</code> 离开作用域后 <code>drop</code> 任何东西，这就是把所有权从 <code>s1</code> 转移给了 <code>s2</code>，<code>s1</code> 在被赋予 <code>s2</code> 后就马上失效了</strong>。**也被称之为移动(Move)**。</p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="https://pic1.zhimg.com/80/v2-3ec77951de6a17584b5eb4a3838b4b61_1440w.jpg" alt="s1 moved to s2" data-caption="s1 moved to s2" loading="lazy"></p>
+<p>再来看一段代码:</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">x</span>: &amp;<span class="type">str</span> = <span class="string">&quot;hello, world&quot;</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">y</span> = x; <span class="comment">// x本身是个切片引用，所以此处也是 y 对于 x 的引用</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;,&#123;&#125;&quot;</span>,x,y);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这段代码，大家觉得会否报错？如果参考之前的 <code>String</code> 所有权转移的例子，那这段代码也应该报错才是，但是实际上呢？</p>
+<p>这段代码和之前的 <code>String</code> 有一个本质上的区别：在 <code>String</code> 的例子中 <code>s1</code> 持有了通过<code>String::from(&quot;hello&quot;)</code> 创建的值的所有权，而这个例子中，<code>x</code> 只是引用了存储在二进制中的字符串 <code>&quot;hello, world&quot;</code>，并没有持有所有权。</p>
+<p>因此 <code>let y = x</code> 中，仅仅是对该引用进行了拷贝，此时 <code>y</code> 和 <code>x</code> 都引用了同一个字符串。<strong>如果还不理解也没关系，当学习了下一章节 “引用与借用” 后，大家自然而言就会理解。</strong></p>
+<h4 id="克隆-深拷贝"><a href="#克隆-深拷贝" class="headerlink" title="克隆(深拷贝)"></a>克隆(深拷贝)</h4><p><strong>Rust 永远不会自动创建数据的”深拷贝“</strong>。因此任何<strong>自动</strong>的复制都不是深拷贝。</p>
+<p>如果确定要进行<strong>深拷贝</strong>可使用<code>clone</code>方法。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">s1</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;hello&quot;</span>);</span><br><span class="line"><span class="keyword">let</span> <span class="variable">s2</span> = s1.<span class="title function_ invoke__">clone</span>();</span><br><span class="line"></span><br><span class="line"><span class="built_in">println!</span>(<span class="string">&quot;s1 = &#123;&#125;, s2 = &#123;&#125;&quot;</span>, s1, s2);</span><br></pre></td></tr></table></figure>
+
+<h4 id="拷贝-浅拷贝"><a href="#拷贝-浅拷贝" class="headerlink" title="拷贝(浅拷贝)"></a>拷贝(浅拷贝)</h4><p><strong>浅拷贝只发生在栈上</strong>，因此性能很高，在日常编程中，浅拷贝无处不在。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">x</span> = <span class="number">5</span>;</span><br><span class="line"><span class="keyword">let</span> <span class="variable">y</span> = x;</span><br><span class="line"></span><br><span class="line"><span class="built_in">println!</span>(<span class="string">&quot;x = &#123;&#125;, y = &#123;&#125;&quot;</span>, x, y);</span><br></pre></td></tr></table></figure>
+
+<p>整型这样的基本类型在编译时是已知大小的，会被存储在栈上，所以拷贝其实际的值是快速的。这意味着没有理由在创建变量 <code>y</code> 后使 <code>x</code> 无效（<code>x</code>、<code>y</code> 都仍然有效）。换句话说，这里没有深浅拷贝的区别，因此<strong>这里调用 <code>clone</code> 并不会与通常的浅拷贝有什么不同</strong>，我们可以不用管它（可以理解成在栈上做了深拷贝）。</p>
+<p>Rust 有一个叫做 <code>Copy</code> 的特征，可以用在类似整型这样在栈中存储的类型。如果一个类型拥有 <code>Copy</code> 特征，一个旧的变量在被赋值给其他变量后仍然可用。</p>
+<p>那么什么类型是可 <code>Copy</code> 的呢？可以查看给定类型的文档来确认，不过作为一个通用的规则： <strong>任何基本类型的组合可以 <code>Copy</code> ，不需要分配内存或某种形式资源的类型是可以 <code>Copy</code> 的</strong>。如下是一些 <code>Copy</code> 的类型：</p>
+<ul>
+<li>所有整数类型，比如 <code>u32</code></li>
+<li>布尔类型，<code>bool</code>，它的值是 <code>true</code> 和 <code>false</code></li>
+<li>所有浮点数类型，比如 <code>f64</code></li>
+<li>字符类型，<code>char</code></li>
+<li>元组，当且仅当其包含的类型也都是 <code>Copy</code> 的时候。比如，<code>(i32, i32)</code> 是 <code>Copy</code> 的，但 <code>(i32, String)</code> 就不是</li>
+<li>不可变引用 <code>&amp;T</code> ，<strong>但是注意: 可变引用 <code>&amp;mut T</code> 是不可以 Copy的</strong></li>
+</ul>
+<h3 id="函数传递与返回值"><a href="#函数传递与返回值" class="headerlink" title="函数传递与返回值"></a>函数传递与返回值</h3><p>将值传递给函数，一样会发生 <code>移动</code> 或者 <code>拷贝</code>，就跟 <code>let</code> 语句一样，下面的代码展示了所有权、作用域的规则：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;hello&quot;</span>);  <span class="comment">// s 进入作用域</span></span><br><span class="line"></span><br><span class="line">    <span class="title function_ invoke__">takes_ownership</span>(s);             <span class="comment">// s 的值移动到函数里 ...</span></span><br><span class="line">                                    <span class="comment">// ... 所以到这里不再有效</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">x</span> = <span class="number">5</span>;                      <span class="comment">// x 进入作用域</span></span><br><span class="line"></span><br><span class="line">    <span class="title function_ invoke__">makes_copy</span>(x);                  <span class="comment">// x 应该移动函数里，</span></span><br><span class="line">                                    <span class="comment">// 但 i32 是 Copy 的，所以在后面可继续使用 x</span></span><br><span class="line"></span><br><span class="line">&#125; <span class="comment">// 这里, x 先移出了作用域，然后是 s。但因为 s 的值已被移走，</span></span><br><span class="line">  <span class="comment">// 所以不会有特殊操作</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">takes_ownership</span>(some_string: <span class="type">String</span>) &#123; <span class="comment">// some_string 进入作用域</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, some_string);</span><br><span class="line">&#125; <span class="comment">// 这里，some_string 移出作用域并调用 `drop` 方法。占用的内存被释放</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">makes_copy</span>(some_integer: <span class="type">i32</span>) &#123; <span class="comment">// some_integer 进入作用域</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, some_integer);</span><br><span class="line">&#125; <span class="comment">// 这里，some_integer 移出作用域。不会有特殊操作</span></span><br></pre></td></tr></table></figure>
+
+<p>你可以尝试在 <code>takes_ownership</code> 之后，再使用 <code>s</code>，看看如何报错？例如添加一行 <code>println!(&quot;在move进函数后继续使用s: &#123;&#125;&quot;,s);</code>。</p>
+<p>同样的，函数返回值也有所有权，例如:</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s1</span> = <span class="title function_ invoke__">gives_ownership</span>();         <span class="comment">// gives_ownership 将返回值</span></span><br><span class="line">                                        <span class="comment">// 移给 s1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s2</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;hello&quot;</span>);     <span class="comment">// s2 进入作用域</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s3</span> = <span class="title function_ invoke__">takes_and_gives_back</span>(s2);  <span class="comment">// s2 被移动到</span></span><br><span class="line">                                        <span class="comment">// takes_and_gives_back 中,</span></span><br><span class="line">                                        <span class="comment">// 它也将返回值移给 s3</span></span><br><span class="line">&#125; <span class="comment">// 这里, s3 移出作用域并被丢弃。s2 也移出作用域，但已被移走，</span></span><br><span class="line">  <span class="comment">// 所以什么也不会发生。s1 移出作用域并被丢弃</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">gives_ownership</span>() <span class="punctuation">-&gt;</span> <span class="type">String</span> &#123;             <span class="comment">// gives_ownership 将返回值移动给</span></span><br><span class="line">                                             <span class="comment">// 调用它的函数</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">some_string</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;hello&quot;</span>); <span class="comment">// some_string 进入作用域.</span></span><br><span class="line"></span><br><span class="line">    some_string                              <span class="comment">// 返回 some_string 并移出给调用的函数</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// takes_and_gives_back 将传入字符串并返回该值</span></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">takes_and_gives_back</span>(a_string: <span class="type">String</span>) <span class="punctuation">-&gt;</span> <span class="type">String</span> &#123; <span class="comment">// a_string 进入作用域</span></span><br><span class="line"></span><br><span class="line">    a_string  <span class="comment">// 返回 a_string 并移出给调用的函数</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>所有权很强大，避免了内存的不安全性，但是也带来了一个新麻烦： <strong>总是把一个值传来传去来使用它</strong>。 传入一个函数，很可能还要从该函数传出去，结果就是语言表达变得非常啰嗦，幸运的是，Rust 提供了新功能解决这个问题。</p>
+<h2 id="引用与借用"><a href="#引用与借用" class="headerlink" title="引用与借用"></a>引用与借用</h2><p><code>借用(Borrowing)</code>:<strong>获取变量的引用，称之为借用</strong></p>
+<h3 id="引用与解引用"><a href="#引用与解引用" class="headerlink" title="引用与解引用"></a>引用与解引用</h3><p>常规引用是一个指针类型，指向了对象存储的内存地址。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">x</span> = <span class="number">5</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">y</span> = &amp;x;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">assert_eq!</span>(<span class="number">5</span>, x);	<span class="comment">// true</span></span><br><span class="line">    <span class="built_in">assert_eq!</span>(<span class="number">5</span>, *y);	<span class="comment">// true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>变量 <code>x</code> 存放了一个 <code>i32</code> 值 <code>5</code>。<code>y</code> 是 <code>x</code> 的一个引用。可以断言 <code>x</code> 等于 <code>5</code>。然而，如果希望对 <code>y</code> 的值做出断言，必须使用 <code>*y</code> 来解出引用所指向的值（也就是<strong>解引用</strong>）。一旦解引用了 <code>y</code>，就可以访问 <code>y</code> 所指向的整型值并可以与 <code>5</code> 做比较。</p>
+<p>相反如果尝试编写 <code>assert_eq!(5, y);</code>，则会得到如下编译错误：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">error[E0277]: can&#x27;t compare `&#123;integer&#125;` with `&amp;&#123;integer&#125;`</span><br><span class="line"> --&gt; src/main.rs:6:5</span><br><span class="line">  |</span><br><span class="line">6 |     assert_eq!(5, y);</span><br><span class="line">  |     ^^^^^^^^^^^^^^^^^ no implementation for `&#123;integer&#125; == &amp;&#123;integer&#125;` // 无法比较整数类型和引用类型</span><br><span class="line">  |</span><br><span class="line">  = help: the trait `std::cmp::PartialEq&lt;&amp;&#123;integer&#125;&gt;` is not implemented for</span><br><span class="line">  `&#123;integer&#125;`</span><br></pre></td></tr></table></figure>
+
+<p>不允许比较整数与引用，因为它们是不同的类型。必须使用解引用运算符解出引用所指向的值。</p>
+<h3 id="不可变引用"><a href="#不可变引用" class="headerlink" title="不可变引用"></a>不可变引用</h3><p>使用<code>s1</code>的引用做完参数进行传递，而不是转移所有权：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s1</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;hello&quot;</span>);</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">len</span> = <span class="title function_ invoke__">calculate_length</span>(&amp;s1);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;The length of &#x27;&#123;&#125;&#x27; is &#123;&#125;.&quot;</span>, s1, len);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">calculate_length</span>(s: &amp;<span class="type">String</span>) <span class="punctuation">-&gt;</span> <span class="type">usize</span> &#123;</span><br><span class="line">    s.<span class="title function_ invoke__">len</span>()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>&amp;</code> 符号即是引用，它们允许你使用值，但是不获取所有权，如图所示：</p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="https://pic1.zhimg.com/80/v2-fc68ea4a1fe2e3fe4c5bb523a0a8247c_1440w.jpg" alt="&amp;String s pointing at String s1" data-caption="&amp;String s pointing at String s1" loading="lazy"></p>
+<p>通过 <code>&amp;s1</code> 语法，我们创建了一个<strong>指向 <code>s1</code> 的引用</strong><code>s</code>，但是并不拥有它。因为并不拥有这个值，当引用离开作用域后，其指向的值也不会被丢弃。</p>
+<h3 id="可变引用"><a href="#可变引用" class="headerlink" title="可变引用"></a>可变引用</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">s</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;hello&quot;</span>);</span><br><span class="line">    <span class="title function_ invoke__">change</span>(&amp;<span class="keyword">mut</span> s);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">change</span>(some_string: &amp;<span class="keyword">mut</span> <span class="type">String</span>) &#123;</span><br><span class="line">    some_string.<span class="title function_ invoke__">push_str</span>(<span class="string">&quot;, world&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>首先，声明 <code>s</code> 是可变类型，其次创建一个可变的引用 <code>&amp;mut s</code> 和接受可变引用参数 <code>some_string: &amp;mut String</code> 的函数。</p>
+<p><strong>同一个作用域中，数据的可变引用只能存在一个</strong>。</p>
+<p><strong>可变引用与不可变引用不能同时存在</strong></p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">   <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">s</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;hello&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">r1</span> = &amp;s;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">r2</span> = &amp;s;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125; and &#123;&#125;&quot;</span>, r1, r2);</span><br><span class="line">    <span class="comment">// 新编译器中，r1,r2作用域在这里结束</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">r3</span> = &amp;<span class="keyword">mut</span> s;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, r3);</span><br><span class="line">&#125; <span class="comment">// 老编译器中，r1、r2、r3作用域在这里结束</span></span><br><span class="line">  <span class="comment">// 新编译器中，r3作用域在这里结束</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意，<strong>引用的作用域 <code>s</code> 从创建开始，一直持续到它最后一次使用的地方</strong>，这个跟变量的作用域有所不同，变量的作用域从创建持续到某一个花括号 <code>&#125;</code></p>
+</blockquote>
+<p>Rust 的编译器一直在优化，早期的时候，引用的作用域跟变量作用域是一致的，这对日常使用带来了很大的困扰，你必须非常小心的去安排可变、不可变变量的借用，免得无法通过编译，例如以下代码：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">   <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">s</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;hello&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">r1</span> = &amp;s;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">r2</span> = &amp;s;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125; and &#123;&#125;&quot;</span>, r1, r2);</span><br><span class="line">    <span class="comment">// 新编译器中，r1,r2作用域在这里结束</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">r3</span> = &amp;<span class="keyword">mut</span> s;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, r3);</span><br><span class="line">&#125; <span class="comment">// 老编译器中，r1、r2、r3作用域在这里结束</span></span><br><span class="line">  <span class="comment">// 新编译器中，r3作用域在这里结束</span></span><br></pre></td></tr></table></figure>
+
+<p>在老版本的编译器中（Rust 1.31 前），将会报错，因为 <code>r1</code> 和 <code>r2</code> 的作用域在花括号 <code>&#125;</code> 处结束，那么 <code>r3</code> 的借用就会触发 <strong>无法同时借用可变和不可变</strong>的规则。</p>
+<p>但是在新的编译器中，该代码将顺利通过，因为 <strong>引用作用域的结束位置从花括号变成最后一次使用的位置</strong>，因此 <code>r1</code> 借用和 <code>r2</code> 借用在 <code>println!</code> 后，就结束了，此时 <code>r3</code> 可以顺利借用到可变引用。</p>
+<h3 id="NLL"><a href="#NLL" class="headerlink" title="NLL"></a>NLL</h3><p>对于这种编译器优化行为，Rust 专门起了一个名字 —— **Non-Lexical Lifetimes(NLL)**，专门用于找到某个引用在作用域(<code>&#125;</code>)结束前就不再被使用的代码位置。</p>
+<p>虽然这种借用错误有的时候会让我们很郁闷，但是你只要想想这是 Rust 提前帮你发现了潜在的 BUG，其实就开心了，虽然减慢了开发速度，但是从长期来看，大幅减少了后续开发和运维成本。</p>
+<h3 id="悬垂引用（Dangling-Reference"><a href="#悬垂引用（Dangling-Reference" class="headerlink" title="悬垂引用（Dangling Reference)"></a>悬垂引用（Dangling Reference)</h3><p>悬垂引用也叫做悬垂指针，意思为<strong>指针指向某个值后，这个值被释放掉了，而指针仍然存在，其指向的内存可能不存在任何值或已被其它变量重新使用</strong>。在 Rust 中编译器可以确保引用永远也不会变成悬垂状态：当你获取数据的引用后，编译器可以确保数据不会在引用结束前被释放，要想释放数据，必须先停止其引用的使用。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">reference_to_nothing</span> = <span class="title function_ invoke__">dangle</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">dangle</span>() <span class="punctuation">-&gt;</span> &amp;<span class="type">String</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;hello&quot;</span>);</span><br><span class="line"></span><br><span class="line">    &amp;s</span><br><span class="line">&#125; <span class="comment">//// 这里 s 离开作用域并被丢弃。其内存被释放。</span></span><br></pre></td></tr></table></figure>
+
+<p> <code>s</code> 是在 <code>dangle</code> 函数内创建的，当 <code>dangle</code> 的代码执行完毕后，<code>s</code> 将被释放，但是此时我们又尝试去返回它的引用。这意味着这个引用会指向一个无效的 <code>String</code>。</p>
+<p>解决方法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">fn no_dangle() -&gt; String &#123;</span><br><span class="line">    let s = String::from(&quot;hello&quot;);</span><br><span class="line"></span><br><span class="line">    s</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样就没有任何错误了，最终 <code>String</code> 的 <strong>所有权被转移给外面的调用者</strong>。</p>
+
+    
+  </article>
+
+  
+      
+    <div class="nexmoe-post-copyright">
+        <strong>本文作者：</strong>kay<br>
+        <strong>本文链接：</strong><a href="https://www.tooupper.com/content/Rust/learning-Rust/rust-Basic/%E5%80%9F%E7%94%A8%E4%B8%8E%E6%89%80%E6%9C%89%E6%9D%83.html" title="https:&#x2F;&#x2F;www.tooupper.com&#x2F;content&#x2F;Rust&#x2F;learning-Rust&#x2F;rust-Basic&#x2F;%E5%80%9F%E7%94%A8%E4%B8%8E%E6%89%80%E6%9C%89%E6%9D%83.html" target="_blank" rel="noopener">https:&#x2F;&#x2F;www.tooupper.com&#x2F;content&#x2F;Rust&#x2F;learning-Rust&#x2F;rust-Basic&#x2F;%E5%80%9F%E7%94%A8%E4%B8%8E%E6%89%80%E6%9C%89%E6%9D%83.html</a><br>
+        
+            <strong>版权声明：</strong>本文采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/deed.zh" target="_blank">CC BY-NC-SA 3.0 CN</a> 协议进行许可
+
+        
+    </div>
+
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+   
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/Rust%E5%9F%BA%E7%A1%80/" rel="tag">Rust基础</a>
+    
+</div>
+  
+  
+    <script async src="/js/copy-codeblock.js?v=1698918460946"></script>
+  
+
+  
+      <div class="nexmoe-post-footer">
+          
+      </div>
+  
+</div></div><div class="nexmoe-post-right">    <div class="nexmoe-fixed">
+        <div class="nexmoe-tool">
+
+            
+
+            
+            
+            <button class="mdui-fab catalog" style="overflow:unset;">
+                <i class="nexmoefont icon-i-catalog"></i>
+                <div class="nexmoe-toc">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%89%80%E6%9C%89%E6%9D%83%E4%B8%8E%E5%80%9F%E7%94%A8"><span class="toc-number">1.</span> <span class="toc-text">所有权与借用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%80%E6%9C%89%E6%9D%83"><span class="toc-number">1.1.</span> <span class="toc-text">所有权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8D%E5%AE%89%E5%85%A8%E4%BB%A3%E7%A0%81%E6%BC%94%E7%A4%BA"><span class="toc-number">1.1.1.</span> <span class="toc-text">不安全代码演示</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%88-Stack-%E4%B8%8E%E5%A0%86-Heap"><span class="toc-number">1.1.2.</span> <span class="toc-text">栈(Stack)与堆(Heap)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A0%88"><span class="toc-number">1.1.2.1.</span> <span class="toc-text">栈</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A0%86"><span class="toc-number">1.1.2.2.</span> <span class="toc-text">堆</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%80%A7%E8%83%BD%E5%8C%BA%E5%88%AB"><span class="toc-number">1.1.2.3.</span> <span class="toc-text">性能区别</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%89%80%E6%9C%89%E6%9D%83%E4%B8%8E%E5%A0%86%E6%A0%88"><span class="toc-number">1.1.2.4.</span> <span class="toc-text">所有权与堆栈</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%80%E6%9C%89%E6%9D%83%E8%A7%84%E5%88%99"><span class="toc-number">1.1.3.</span> <span class="toc-text">所有权规则</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%98%E9%87%8F%E4%BD%9C%E7%94%A8%E5%9F%9F"><span class="toc-number">1.1.3.1.</span> <span class="toc-text">变量作用域</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E4%BB%8B%E7%BB%8D-String-%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.1.3.2.</span> <span class="toc-text">简单介绍 String 类型</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%98%E9%87%8F%E7%BB%91%E5%AE%9A%E8%83%8C%E5%90%8E%E7%9A%84%E6%95%B0%E6%8D%AE%E4%BA%A4%E4%BA%92"><span class="toc-number">1.1.4.</span> <span class="toc-text">变量绑定背后的数据交互</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BD%AC%E7%A7%BB%E6%89%80%E6%9C%89%E6%9D%83-%E7%A7%BB%E5%8A%A8"><span class="toc-number">1.1.4.1.</span> <span class="toc-text">转移所有权(移动)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%8B%E9%9A%86-%E6%B7%B1%E6%8B%B7%E8%B4%9D"><span class="toc-number">1.1.4.2.</span> <span class="toc-text">克隆(深拷贝)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8B%B7%E8%B4%9D-%E6%B5%85%E6%8B%B7%E8%B4%9D"><span class="toc-number">1.1.4.3.</span> <span class="toc-text">拷贝(浅拷贝)</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E4%BC%A0%E9%80%92%E4%B8%8E%E8%BF%94%E5%9B%9E%E5%80%BC"><span class="toc-number">1.1.5.</span> <span class="toc-text">函数传递与返回值</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E7%94%A8%E4%B8%8E%E5%80%9F%E7%94%A8"><span class="toc-number">1.2.</span> <span class="toc-text">引用与借用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%95%E7%94%A8%E4%B8%8E%E8%A7%A3%E5%BC%95%E7%94%A8"><span class="toc-number">1.2.1.</span> <span class="toc-text">引用与解引用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8D%E5%8F%AF%E5%8F%98%E5%BC%95%E7%94%A8"><span class="toc-number">1.2.2.</span> <span class="toc-text">不可变引用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%AF%E5%8F%98%E5%BC%95%E7%94%A8"><span class="toc-number">1.2.3.</span> <span class="toc-text">可变引用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NLL"><span class="toc-number">1.2.4.</span> <span class="toc-text">NLL</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%82%AC%E5%9E%82%E5%BC%95%E7%94%A8%EF%BC%88Dangling-Reference"><span class="toc-number">1.2.5.</span> <span class="toc-text">悬垂引用（Dangling Reference)</span></a></li></ol></li></ol></li></ol>
+                </div>
+            </button>
+            
+
+            
+
+            <a href="#nexmoe-content" class="backtop toc-link" aria-label="Back To Top" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+        </div>
+    </div>
+</div></div><div id="nexmoe-footer"><!--!--></div><div><div id="nexmoe-search-space">
+	<div class="search-container">
+		<div class="search-header">
+			<div class="search-input-container">
+				<input
+					class="search-input"
+					type="text"
+					placeholder="搜索"
+					oninput="sinput();"
+				/>
+			</div>
+			<a class="search-close" onclick="sclose();">×</a>
+		</div>
+		<div class="search-body"></div>
+	</div>
+</div>
+</div><div><script async src="https://www.TooUpper.com" crossorigin="anonymous"></script>
+</div></body></html>

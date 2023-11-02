@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="zh"><head>
+<title>注释和文档 - 成祠的个人博客</title>
+<meta charset="UTF-8">
+<meta name="keywords" content="blog">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+
+<link rel="shortcut icon" href="/image/favicon.png" type="image/png" />
+<meta name="description" content="注释的种类在 Rust 中，注释分为三类：  代码注释，用于说明某一块代码的功能，读者往往是同一个项目的协作开发者 文档注释，支持 Markdown，对项目描述、公共 API 等用户关心的功能进行介绍，同时还能提供示例代码，目标读者往往是想要了解你项目的人 包和模块注释，严格来说这也是文档注释中的一种，它主要用于说明当前包和模块的功能，方便用户迅速了解一个项目  代码注释行注释 &#x2F;&amp;#x">
+<meta property="og:type" content="article">
+<meta property="og:title" content="注释和文档">
+<meta property="og:url" content="https://www.tooupper.com/content/Rust/learning-Rust/rust-Basic/%E6%B3%A8%E9%87%8A%E5%92%8C%E6%96%87%E6%A1%A3.html">
+<meta property="og:site_name" content="成祠的个人博客">
+<meta property="og:description" content="注释的种类在 Rust 中，注释分为三类：  代码注释，用于说明某一块代码的功能，读者往往是同一个项目的协作开发者 文档注释，支持 Markdown，对项目描述、公共 API 等用户关心的功能进行介绍，同时还能提供示例代码，目标读者往往是想要了解你项目的人 包和模块注释，严格来说这也是文档注释中的一种，它主要用于说明当前包和模块的功能，方便用户迅速了解一个项目  代码注释行注释 &#x2F;&amp;#x">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pic2.zhimg.com/80/v2-926c91d429e2933a6a3ae3233fc56b1c_1440w.png">
+<meta property="og:image" content="https://pic3.zhimg.com/80/v2-38dbea938884c159e74f777c6f49e3af_1440w.png">
+<meta property="og:image" content="https://pic1.zhimg.com/80/v2-d1b98f5e70b7f8c8fb9aecce325dba0e_1440w.png">
+<meta property="og:image" content="https://pic1.zhimg.com/80/v2-1ab5b19d2bd06f3d83204d062b399bcd_1440w.png">
+<meta property="og:image" content="https://pic1.zhimg.com/80/v2-e9ef7351458fd01020b35990c3daf222_1440w.png">
+<meta property="article:published_time" content="2023-09-25T12:01:14.000Z">
+<meta property="article:modified_time" content="2023-09-25T12:26:01.293Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="Rust基础">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pic2.zhimg.com/80/v2-926c91d429e2933a6a3ae3233fc56b1c_1440w.png">
+
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+<link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
+
+
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1698918461761">
+
+<link rel="stylesheet" href="/css/style.css?v=1698918461761">
+
+
+
+
+    
+        <link rel="stylesheet" href="/custom.css?v=1698918461761">
+    
+
+
+
+<script src="/lib/mdui_043tiny/mdui.js" async></script>
+<script src="/lib/fancybox/fancybox.umd.js" async></script>
+<script src="/lib/lax.min.js" async></script>
+
+
+<script async src="/js/app.js?v=1698918461761"></script>
+
+ 
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4D4ZJ9G024"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+
+  gtag("config", "G-4D4ZJ9G024");
+</script>
+
+<meta name="generator" content="Hexo 6.3.0"></head><body class="nexmoe mdui-drawer-body-left"><div id="nexmoe-background"><div class="nexmoe-bg" style="background-image: url(/image/banner.png)"></div><div class="mdui-appbar mdui-shadow-0"><div class="mdui-toolbar"><a class="mdui-btn mdui-btn-icon mdui-ripple" mdui-drawer="{target: &#039;#drawer&#039;, swipe: true}" title="menu"><i class="mdui-icon nexmoefont icon-menu"></i></a><div class="mdui-toolbar-spacer"></div><a class="mdui-btn mdui-btn-icon" href="/" title="kay"><img src="/image/Logo.png" alt="kay"></a></div></div></div><div id="nexmoe-header"><div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="kay">
+            <img src="/image/Logo.png" alt="kay" alt="kay">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>文章</span>29</div>
+        <div><span>标签</span>4</div>
+        <div><span>分类</span>2</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/aboutMe.html" title="关于博主">
+            <i class="mdui-list-item-icon nexmoefont icon-info-circle"></i>
+            <div class="mdui-list-item-content">
+                关于博主
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archives.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/downloads.html" title="下载中心">
+            <i class="mdui-list-item-icon nexmoefont icon-coffee"></i>
+            <div class="mdui-list-item-content">
+                下载中心
+            </div>
+        </a>
+        
+    </div>
+    
+    
+        
+        <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+        
+            <form id="search_form">
+                <label><input class="st-default-search-input" id="search_value" name="q" type="search" placeholder="搜索" style="
+                    font-size: 15px !important;
+                    height: 56px !important;
+                    background-image: none;
+                "></label>
+            </form>
+         
+    </div>
+</div>
+
+
+	<script async src="/js/search.js?v=1698918461762"></script>
+
+
+
+    
+        
+        <div class="nexmoe-widget-wrap">
+	<div class="nexmoe-widget nexmoe-social">
+		<a
+			class="mdui-ripple"
+			href="/image/QQOrWeChat.png"
+			target="_blank"
+			mdui-tooltip="{content: 'QQ'}"
+			style="
+				color: rgb(249, 174, 8);
+				background-color: rgba(249, 174, 8, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-QQ"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="/image/QQOrWeChat.png"
+			target="_blank"
+			mdui-tooltip="{content: 'WeChat'}"
+			style="
+				color: rgb(59, 151, 239);
+				background-color: rgba(59, 151, 239, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-wechat-fill"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://github.com/TooUpper/"
+			target="_blank"
+			mdui-tooltip="{content: 'GitHub'}"
+			style="
+				color: rgb(25, 23, 23);
+				background-color: rgba(25, 23, 23, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-github"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="/www.TooUpper.com"
+			target="_blank"
+			mdui-tooltip="{content: 'Blog'}"
+			style="
+				color: rgb(30, 136, 229);
+				background-color: rgba(30, 136, 229, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-home"
+			></i> </a
+		>
+	</div>
+</div>
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章分类</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/RISC-V/">RISC-V</a>
+          <span class="category-list-count">4</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Rust/">Rust</a>
+          <span class="category-list-count">25</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/Rust%E5%9F%BA%E7%A1%80/" style="font-size: 20px;">Rust基础</a> <a href="/tags/Rust%E8%BF%9B%E9%98%B6/" style="font-size: 15px;">Rust进阶</a> <a href="/tags/rcore/" style="font-size: 10px;">rcore</a> <a href="/tags/riscv/" style="font-size: 10px;">riscv</a>
+    </div>
+    
+  </div>
+
+    
+        
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章归档</h3>
+    <div class="nexmoe-widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/">2023</a><span class="archive-list-count">29</span></li></ul>
+    </div>
+  </div>
+
+
+
+    
+   
+    <div class="nexmoe-copyright">
+        &copy; 2023 kay
+        Powered by <a href="https://www.TooUpper.com" target="_blank">成祠</a>
+        & <a href="https://github.com/TooUpper" target="_blank">TooUpper</a>
+        <br><a target="_blank" href="https://www.TooUpper.com">鄂ICP备2020018486号</a>
+<br><a target="_blank" href="https://www.TooUpper.com">加油做一个不会被优化掉的程序员</a>
+
+    </div>
+</div><!-- .nexmoe-drawer --></div><div id="nexmoe-content"><div class="nexmoe-primary"><div class="nexmoe-post">
+  <article>
+    
+        <div class="nexmoe-post-cover absolute" style="padding-top: 62.5%;"> 
+            <img src="/image/Rust/RustCrab.png" alt="注释和文档" loading="lazy">
+            <h1>注释和文档</h1>
+        </div>
+    
+    
+    <div class="nexmoe-post-meta">
+    <div class="nexmoe-rainbow">
+        <a class="nexmoefont icon-calendar-fill">2023年09月25日</a>
+        
+            <a class="nexmoefont icon-appstore-fill -link" href="/categories/Rust/">Rust</a>
+        
+        
+    <a><i class="nexmoefont icon-areachart"></i>约3.1k字</a>
+    <a><i class="nexmoefont icon-time-circle-fill"></i>预计需要12分钟</a>
+
+    </div>
+    
+    
+    
+    
+    
+</div>
+
+    <h1 id="注释的种类"><a href="#注释的种类" class="headerlink" title="注释的种类"></a>注释的种类</h1><p>在 Rust 中，注释分为三类：</p>
+<ul>
+<li>代码注释，用于说明某一块代码的功能，读者往往是同一个项目的协作开发者</li>
+<li>文档注释，支持 <code>Markdown</code>，对项目描述、公共 API 等用户关心的功能进行介绍，同时还能提供示例代码，目标读者往往是想要了解你项目的人</li>
+<li>包和模块注释，严格来说这也是文档注释中的一种，它主要用于说明当前包和模块的功能，方便用户迅速了解一个项目</li>
+</ul>
+<h1 id="代码注释"><a href="#代码注释" class="headerlink" title="代码注释"></a>代码注释</h1><h2 id="行注释"><a href="#行注释" class="headerlink" title="行注释 &#x2F;&#x2F;"></a>行注释 &#x2F;&#x2F;</h2><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="comment">// 我是Sun...</span></span><br><span class="line">    <span class="comment">// face</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">name</span> = <span class="string">&quot;sunface&quot;</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">age</span> = <span class="number">18</span>; <span class="comment">// 今年好像是18岁</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如上所示，行注释可以放在某一行代码的上方，也可以放在当前代码行的后方。如果超出一行的长度，需要在新行的开头也加上 <code>//</code>。</p>
+<p>当注释行数较多时，你还可以使用<strong>块注释</strong></p>
+<h2 id="块注释-…"><a href="#块注释-…" class="headerlink" title="块注释 &#x2F;* …*&#x2F;"></a>块注释 &#x2F;* …*&#x2F;</h2><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">        我</span></span><br><span class="line"><span class="comment">        是</span></span><br><span class="line"><span class="comment">        S</span></span><br><span class="line"><span class="comment">        u</span></span><br><span class="line"><span class="comment">        n</span></span><br><span class="line"><span class="comment">        ... 哎，好长!</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">name</span> = <span class="string">&quot;sunface&quot;</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">age</span> = <span class="string">&quot;???&quot;</span>; <span class="comment">// 今年其实。。。挺大了</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如上所示，只需要将注释内容使用 <code>/* */</code> 进行包裹即可。</p>
+<p>你会发现，Rust 的代码注释跟其它语言并没有区别，主要区别其实在于文档注释这一块，也是本章节内容的重点</p>
+<h1 id="文档注释"><a href="#文档注释" class="headerlink" title="文档注释"></a>文档注释</h1><p>当查看一个 <code>crates.io</code> 上的包时，往往需要通过它提供的文档来浏览相关的功能特性、使用方式，这种文档就是通过文档注释实现的。</p>
+<p>Rust 提供了 <code>cargo doc</code> 的命令，可以用于把这些文档注释转换成 <code>HTML</code> 网页文件，最终展示给用户浏览，这样用户就知道这个包是做什么的以及该如何使用。</p>
+<h2 id="文档行注释"><a href="#文档行注释" class="headerlink" title="文档行注释 &#x2F;&#x2F;&#x2F;"></a>文档行注释 &#x2F;&#x2F;&#x2F;</h2><p>本书的一大特点就是废话不多，因此我们开门见山：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/// `add_one` 将指定值加1</span></span><br><span class="line"><span class="comment">///</span></span><br><span class="line"><span class="comment">/// # Examples</span></span><br><span class="line"><span class="comment">///</span></span><br><span class="line"><span class="comment">/// ```</span></span><br><span class="line"><span class="comment">/// let arg = 5;</span></span><br><span class="line"><span class="comment">/// let answer = my_crate::add_one(arg);</span></span><br><span class="line"><span class="comment">///</span></span><br><span class="line"><span class="comment">/// assert_eq!(6, answer);</span></span><br><span class="line"><span class="comment">/// ```</span></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">add_one</span>(x: <span class="type">i32</span>) <span class="punctuation">-&gt;</span> <span class="type">i32</span> &#123;</span><br><span class="line">    x + <span class="number">1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上代码有几点需要注意：</p>
+<ul>
+<li>文档注释需要位于 <code>lib</code> 类型的包中，例如 <code>src/lib.rs</code> 中</li>
+<li>文档注释可以使用 <code>markdown</code>语法！例如 <code># Examples</code> 的标题，以及代码块高亮</li>
+<li>被注释的对象需要使用 <code>pub</code> 对外可见，记住：文档注释是给用户看的，<strong>内部实现细节不应该被暴露出去</strong></li>
+</ul>
+<h2 id="文档块注释-…"><a href="#文档块注释-…" class="headerlink" title="文档块注释 &#x2F;** … *&#x2F;"></a>文档块注释 &#x2F;** … *&#x2F;</h2><p>与代码注释一样，文档也有块注释，当注释内容多时，使用块注释可以减少 <code>///</code> 的使用：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** `add_two` 将指定值加2</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">```</span></span><br><span class="line"><span class="comment">let arg = 5;</span></span><br><span class="line"><span class="comment">let answer = my_crate::add_two(arg);</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">assert_eq!(7, answer);</span></span><br><span class="line"><span class="comment">```</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">add_two</span>(x: <span class="type">i32</span>) <span class="punctuation">-&gt;</span> <span class="type">i32</span> &#123;</span><br><span class="line">    x + <span class="number">2</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="查看文档-cargo-doc"><a href="#查看文档-cargo-doc" class="headerlink" title="查看文档 cargo doc"></a>查看文档 cargo doc</h2><p>锦衣不夜行，这是中国人的传统美德。我们写了这么漂亮的文档注释，当然要看看网页中是什么效果咯。</p>
+<p>很简单，运行 <code>cargo doc</code> 可以直接生成 <code>HTML</code> 文件，放入<em>target&#x2F;doc</em>目录下。</p>
+<p>当然，为了方便，我们使用 <code>cargo doc --open</code> 命令，可以在生成文档后，自动在浏览器中打开网页，最终效果如图所示：</p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="https://pic2.zhimg.com/80/v2-926c91d429e2933a6a3ae3233fc56b1c_1440w.png" alt="img" data-caption="img" loading="lazy"></p>
+<p>非常棒，而且非常简单，这就是 Rust 工具链的强大之处。</p>
+<h2 id="常用文档标题"><a href="#常用文档标题" class="headerlink" title="常用文档标题"></a>常用文档标题</h2><p>之前我们见到了在文档注释中该如何使用 <code>markdown</code>，其中包括 <code># Examples</code> 标题。除了这个标题，还有一些常用的，你可以在项目中酌情使用：</p>
+<ul>
+<li><strong>Panics</strong>：函数可能会出现的异常状况，这样调用函数的人就可以提前规避</li>
+<li><strong>Errors</strong>：描述可能出现的错误及什么情况会导致错误，有助于调用者针对不同的错误采取不同的处理方式</li>
+<li><strong>Safety</strong>：如果函数使用 <code>unsafe</code> 代码，那么调用者就需要注意一些使用条件，以确保 <code>unsafe</code> 代码块的正常工作</li>
+</ul>
+<p>话说回来，这些标题更多的是一种惯例，如果你非要用中文标题也没问题，但是最好在团队中保持同样的风格 :)</p>
+<h1 id="包和模块级别的注释"><a href="#包和模块级别的注释" class="headerlink" title="包和模块级别的注释"></a>包和模块级别的注释</h1><p>除了函数、结构体等 Rust 项的注释，你还可以给包和模块添加注释，需要注意的是，<strong>这些注释要添加到包、模块的最上方</strong>！</p>
+<p>与之前的任何注释一样，包级别的注释也分为两种：行注释 <code>//!</code> 和块注释 <code>/*! ... */</code>。</p>
+<p>现在，为我们的包增加注释，在 <code>src/lib.rs</code> 包根的最上方，添加：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*! lib包是world_hello二进制包的依赖包，</span></span><br><span class="line"><span class="comment"> 里面包含了compute等有用模块 */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">mod</span> compute;</span><br></pre></td></tr></table></figure>
+
+<p>然后再为该包根的子模块 <code>src/compute.rs</code> 添加注释：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//! 计算一些你口算算不出来的复杂算术题</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/// `add_one`将指定值加1</span></span><br><span class="line"><span class="comment">///</span></span><br></pre></td></tr></table></figure>
+
+<p>运行 <code>cargo doc --open</code> 查看下效果：</p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="https://pic3.zhimg.com/80/v2-38dbea938884c159e74f777c6f49e3af_1440w.png" alt="img" data-caption="img" loading="lazy"></p>
+<p>包模块注释，可以让用户从整体的角度理解包的用途，对于用户来说是非常友好的，就和一篇文章的开头一样，总是要对文章的内容进行大致的介绍，让用户在看的时候心中有数。</p>
+<h1 id="文档测试-Doc-Test"><a href="#文档测试-Doc-Test" class="headerlink" title="文档测试(Doc Test)"></a>文档测试(Doc Test)</h1><p>相信读者之前都写过单元测试用例，其中一个很蛋疼的问题就是，随着代码的进化，单元测试用例经常会失效，过段时间后(为何是过段时间？应该这么问，有几个开发喜欢写测试用例 &#x3D;,&#x3D;)，你发现需要连续修改不少处代码，才能让测试重新工作起来。然而，在 Rust 中，大可不必。</p>
+<p>在之前的 <code>add_one</code> 中，我们写的示例代码非常像是一个单元测试的用例，这是偶然吗？并不是。因为 Rust 允许我们在文档注释中写单元测试用例！方法就如同之前做的：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/// `add_one` 将指定值加1</span></span><br><span class="line"><span class="comment">///</span></span><br><span class="line"><span class="comment">/// # Examples11</span></span><br><span class="line"><span class="comment">///</span></span><br><span class="line"><span class="comment">/// ```</span></span><br><span class="line"><span class="comment">/// let arg = 5;</span></span><br><span class="line"><span class="comment">/// let answer = world_hello::compute::add_one(arg);</span></span><br><span class="line"><span class="comment">///</span></span><br><span class="line"><span class="comment">/// assert_eq!(6, answer);</span></span><br><span class="line"><span class="comment">/// ```</span></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">add_one</span>(x: <span class="type">i32</span>) <span class="punctuation">-&gt;</span> <span class="type">i32</span> &#123;</span><br><span class="line">    x + <span class="number">1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上的注释不仅仅是文档，还可以作为单元测试的用例运行，使用 <code>cargo test</code> 运行测试：</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Doc-tests world_hello</span><br><span class="line"></span><br><span class="line">running 2 tests</span><br><span class="line">test src/compute.rs - compute::add_one (line 8) ... ok</span><br><span class="line">test src/compute.rs - compute::add_two (line 22) ... ok</span><br><span class="line"></span><br><span class="line">test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.00s</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，文档中的测试用例被完美运行，而且输出中也明确提示了 <code>Doc-tests world_hello</code>，意味着这些测试的名字叫 <code>Doc test</code> 文档测试。</p>
+<blockquote>
+<p>需要注意的是，你可能需要使用类如 <code>world_hello::compute::add_one(arg)</code> 的完整路径来调用函数，因为测试是在另外一个独立的线程中运行的</p>
+</blockquote>
+<h2 id="造成-panic-的文档测试"><a href="#造成-panic-的文档测试" class="headerlink" title="造成 panic 的文档测试"></a>造成 panic 的文档测试</h2><p>文档测试中的用例还可以造成 <code>panic</code>：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/// # Panics</span></span><br><span class="line"><span class="comment">///</span></span><br><span class="line"><span class="comment">/// The function panics if the second argument is zero.</span></span><br><span class="line"><span class="comment">///</span></span><br><span class="line"><span class="comment">/// ```rust</span></span><br><span class="line"><span class="comment">/// // panics on division by zero</span></span><br><span class="line"><span class="comment">/// world_hello::compute::div(10, 0);</span></span><br><span class="line"><span class="comment">/// ```</span></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">div</span>(a: <span class="type">i32</span>, b: <span class="type">i32</span>) <span class="punctuation">-&gt;</span> <span class="type">i32</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> b == <span class="number">0</span> &#123;</span><br><span class="line">        <span class="built_in">panic!</span>(<span class="string">&quot;Divide-by-zero error&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    a / b</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上测试运行后会 <code>panic</code>：</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">---- src/compute.rs - compute::div (line 38) stdout ----</span><br><span class="line">Test executable failed (exit code 101).</span><br><span class="line"></span><br><span class="line">stderr:</span><br><span class="line">thread &#x27;main&#x27; panicked at &#x27;Divide-by-zero error&#x27;, src/compute.rs:44:9</span><br><span class="line">note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace</span><br></pre></td></tr></table></figure>
+
+<p>如果想要通过这种测试，可以添加 <code>should_panic</code>：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/// # Panics</span></span><br><span class="line"><span class="comment">///</span></span><br><span class="line"><span class="comment">/// The function panics if the second argument is zero.</span></span><br><span class="line"><span class="comment">///</span></span><br><span class="line"><span class="comment">/// ```rust,should_panic</span></span><br><span class="line"><span class="comment">/// // panics on division by zero</span></span><br><span class="line"><span class="comment">/// world_hello::compute::div(10, 0);</span></span><br><span class="line"><span class="comment">/// ```</span></span><br></pre></td></tr></table></figure>
+
+<p>通过 <code>should_panic</code>，告诉 Rust 我们这个用例会导致 <code>panic</code>，这样测试用例就能顺利通过。</p>
+<h2 id="保留测试，隐藏文档"><a href="#保留测试，隐藏文档" class="headerlink" title="保留测试，隐藏文档"></a>保留测试，隐藏文档</h2><p>在某些时候，我们希望保留文档测试的功能，但是又要将某些测试用例的内容从文档中隐藏起来：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/// ```</span></span><br><span class="line"><span class="comment">/// # // 使用#开头的行会在文档中被隐藏起来，但是依然会在文档测试中运行</span></span><br><span class="line"><span class="comment">/// # fn try_main() -&gt; Result&lt;(), String&gt; &#123;</span></span><br><span class="line"><span class="comment">/// let res = world_hello::compute::try_div(10, 0)?;</span></span><br><span class="line"><span class="comment">/// # Ok(()) // returning from try_main</span></span><br><span class="line"><span class="comment">/// # &#125;</span></span><br><span class="line"><span class="comment">/// # fn main() &#123;</span></span><br><span class="line"><span class="comment">/// #    try_main().unwrap();</span></span><br><span class="line"><span class="comment">/// #</span></span><br><span class="line"><span class="comment">/// # &#125;</span></span><br><span class="line"><span class="comment">/// ```</span></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">try_div</span>(a: <span class="type">i32</span>, b: <span class="type">i32</span>) <span class="punctuation">-&gt;</span> <span class="type">Result</span>&lt;<span class="type">i32</span>, <span class="type">String</span>&gt; &#123;</span><br><span class="line">    <span class="keyword">if</span> b == <span class="number">0</span> &#123;</span><br><span class="line">        <span class="title function_ invoke__">Err</span>(<span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;Divide-by-zero&quot;</span>))</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="title function_ invoke__">Ok</span>(a / b)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上文档注释中，我们使用 <code>#</code> 将不想让用户看到的内容隐藏起来，但是又不影响测试用例的运行，最终用户将只能看到那行没有隐藏的 <code>let res = world_hello::compute::try_div(10, 0)?;</code>：</p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="https://pic1.zhimg.com/80/v2-d1b98f5e70b7f8c8fb9aecce325dba0e_1440w.png" alt="img" data-caption="img" loading="lazy"></p>
+<h1 id="文档注释中的代码跳转"><a href="#文档注释中的代码跳转" class="headerlink" title="文档注释中的代码跳转"></a>文档注释中的代码跳转</h1><p>Rust 在文档注释中还提供了一个非常强大的功能，那就是可以实现对外部项的链接：</p>
+<h2 id="跳转到标准库"><a href="#跳转到标准库" class="headerlink" title="跳转到标准库"></a>跳转到标准库</h2><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/// `add_one` 返回一个[`Option`]类型</span></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">add_one</span>(x: <span class="type">i32</span>) <span class="punctuation">-&gt;</span> <span class="type">Option</span>&lt;<span class="type">i32</span>&gt; &#123;</span><br><span class="line">    <span class="title function_ invoke__">Some</span>(x + <span class="number">1</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>此处的 <strong>[<code>Option</code>]</strong> 就是一个链接，指向了标准库中的 <code>Option</code> 枚举类型，有两种方式可以进行跳转:</p>
+<ul>
+<li>在 IDE 中，使用 <code>Command + 鼠标左键</code>(macOS)，<code>CTRL + 鼠标左键</code>(Windows)</li>
+<li>在文档中直接点击链接</li>
+</ul>
+<p>再比如，还可以使用路径的方式跳转：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::sync::mpsc::Receiver;</span><br><span class="line"></span><br><span class="line"><span class="comment">/// [`Receiver&lt;T&gt;`]   [`std::future`].</span></span><br><span class="line"><span class="comment">///</span></span><br><span class="line"><span class="comment">///  [`std::future::Future`] [`Self::recv()`].</span></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">struct</span> <span class="title class_">AsyncReceiver</span>&lt;T&gt; &#123;</span><br><span class="line">    sender: Receiver&lt;T&gt;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span>&lt;T&gt; AsyncReceiver&lt;T&gt; &#123;</span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">async</span> <span class="keyword">fn</span> <span class="title function_">recv</span>() <span class="punctuation">-&gt;</span> T &#123;</span><br><span class="line">        <span class="built_in">unimplemented!</span>()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="使用完整路径跳转到指定项"><a href="#使用完整路径跳转到指定项" class="headerlink" title="使用完整路径跳转到指定项"></a>使用完整路径跳转到指定项</h2><p>除了跳转到标准库，你还可以通过指定具体的路径跳转到自己代码或者其它库的指定项，例如在 <code>lib.rs</code> 中添加以下代码：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">pub</span> <span class="keyword">mod</span> a &#123;</span><br><span class="line">    <span class="comment">/// `add_one` 返回一个[`Option`]类型</span></span><br><span class="line">    <span class="comment">/// 跳转到[`crate::MySpecialFormatter`]</span></span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">add_one</span>(x: <span class="type">i32</span>) <span class="punctuation">-&gt;</span> <span class="type">Option</span>&lt;<span class="type">i32</span>&gt; &#123;</span><br><span class="line">        <span class="title function_ invoke__">Some</span>(x + <span class="number">1</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">struct</span> <span class="title class_">MySpecialFormatter</span>;</span><br></pre></td></tr></table></figure>
+
+<p>使用 <code>crate::MySpecialFormatter</code> 这种路径就可以实现跳转到 <code>lib.rs</code> 中定义的结构体上。</p>
+<h2 id="同名项的跳转"><a href="#同名项的跳转" class="headerlink" title="同名项的跳转"></a>同名项的跳转</h2><p>如果遇到同名项，可以使用标示类型的方式进行跳转：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/// 跳转到结构体  [`Foo`](struct@Foo)</span></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">struct</span> <span class="title class_">Bar</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/// 跳转到同名函数 [`Foo`](fn@Foo)</span></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">struct</span> <span class="title class_">Foo</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/// 跳转到同名宏 [`foo!`]</span></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">Foo</span>() &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#[macro_export]</span></span><br><span class="line"><span class="built_in">macro_rules!</span> foo &#123;</span><br><span class="line">  () =&gt; &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="文档搜索别名"><a href="#文档搜索别名" class="headerlink" title="文档搜索别名"></a>文档搜索别名</h1><p>Rust 文档支持搜索功能，我们可以为自己的类型定义几个别名，以实现更好的搜索展现，当别名命中时，搜索结果会被放在第一位：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#[doc(alias = <span class="string">&quot;x&quot;</span>)]</span></span><br><span class="line"><span class="meta">#[doc(alias = <span class="string">&quot;big&quot;</span>)]</span></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">struct</span> <span class="title class_">BigX</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">#[doc(alias(<span class="string">&quot;y&quot;</span>, <span class="string">&quot;big&quot;</span>))]</span></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">struct</span> <span class="title class_">BigY</span>;</span><br></pre></td></tr></table></figure>
+
+<p>结果如下图所示： <img onerror="imgOnError(this);" data-fancybox="gallery" src="https://pic1.zhimg.com/80/v2-1ab5b19d2bd06f3d83204d062b399bcd_1440w.png" alt="img" data-caption="img" loading="lazy"></p>
+<h1 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h1><p>这个例子我们将重点应用几个知识点：</p>
+<ul>
+<li>文档注释</li>
+<li>一个项目可以包含两个包：二进制可执行包和 <code>lib</code> 包（库包），它们的包根分别是 <code>src/main.rs</code> 和 <code>src/lib.rs</code></li>
+<li>在二进制包中引用 <code>lib</code> 包</li>
+<li>使用 <code>pub use</code> 再导出 API，并观察文档</li>
+</ul>
+<p>首先，使用 <code>cargo new art</code> 创建一个 Package <code>art</code>：</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Created binary (application) `art` package</span><br></pre></td></tr></table></figure>
+
+<p>系统提示我们创建了一个二进制 <code>Package</code>，根据<a target="_blank" rel="noopener" href="https://course.rs/basic/crate-module/crate.html">之前章节</a>学过的内容，可以知道该 <code>Package</code> 包含一个同名的二进制包：包名为 <code>art</code>，包根为 <code>src/main.rs</code>，该包可以编译成二进制然后运行。</p>
+<p>现在，在 <code>src</code> 目录下创建一个 <code>lib.rs</code> 文件，同样，根据之前学习的知识，创建该文件等于又创建了一个库类型的包，包名也是 <code>art</code>，包根为 <code>src/lib.rs</code>，该包是是库类型的，因此往往作为依赖库被引入。</p>
+<p>将以下内容添加到 <code>src/lib.rs</code> 中：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//! # Art</span></span><br><span class="line"><span class="comment">//!</span></span><br><span class="line"><span class="comment">//!  未来的艺术建模库，现在的调色库</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">use</span> self::kinds::PrimaryColor;</span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">use</span> self::kinds::SecondaryColor;</span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">use</span> self::utils::mix;</span><br><span class="line"></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">mod</span> kinds &#123;</span><br><span class="line">    <span class="comment">//! 定义颜色的类型</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/// 主色</span></span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">enum</span> <span class="title class_">PrimaryColor</span> &#123;</span><br><span class="line">        Red,</span><br><span class="line">        Yellow,</span><br><span class="line">        Blue,</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/// 副色</span></span><br><span class="line">    <span class="meta">#[derive(Debug,PartialEq)]</span></span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">enum</span> <span class="title class_">SecondaryColor</span> &#123;</span><br><span class="line">        Orange,</span><br><span class="line">        Green,</span><br><span class="line">        Purple,</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">mod</span> utils &#123;</span><br><span class="line">    <span class="comment">//! 实用工具，目前只实现了调色板</span></span><br><span class="line">    <span class="keyword">use</span> crate::kinds::*;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/// 将两种主色调成副色</span></span><br><span class="line">    <span class="comment">/// ```rust</span></span><br><span class="line">    <span class="comment">/// use art::utils::mix;</span></span><br><span class="line">    <span class="comment">/// use art::kinds::&#123;PrimaryColor,SecondaryColor&#125;;</span></span><br><span class="line">    <span class="comment">/// assert!(matches!(mix(PrimaryColor::Yellow, PrimaryColor::Blue), SecondaryColor::Green));</span></span><br><span class="line">    <span class="comment">/// ```</span></span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">mix</span>(c1: PrimaryColor, c2: PrimaryColor) <span class="punctuation">-&gt;</span> SecondaryColor &#123;</span><br><span class="line">        SecondaryColor::Green</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在库包的包根 <code>src/lib.rs</code> 下，我们又定义了几个子模块，同时将子模块中的三个项通过 <code>pub use</code> 进行了再导出。</p>
+<p>接着，将下面内容添加到 <code>src/main.rs</code> 中：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> art::kinds::PrimaryColor;</span><br><span class="line"><span class="keyword">use</span> art::utils::mix;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">blue</span> = PrimaryColor::Blue;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">yellow</span> = PrimaryColor::Yellow;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>,<span class="title function_ invoke__">mix</span>(blue, yellow));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在二进制可执行包的包根 <code>src/main.rs</code> 下，我们引入了库包 <code>art</code> 中的模块项，同时使用 <code>main</code> 函数作为程序的入口，该二进制包可以使用 <code>cargo run</code> 运行：</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Green</span><br></pre></td></tr></table></figure>
+
+<p>至此，库包完美提供了用于调色的 API，二进制包引入这些 API 完美的实现了调色并打印输出。</p>
+<p>最后，再来看看文档长啥样：</p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="https://pic1.zhimg.com/80/v2-e9ef7351458fd01020b35990c3daf222_1440w.png" alt="img" data-caption="img" loading="lazy"></p>
+
+    
+  </article>
+
+  
+      
+    <div class="nexmoe-post-copyright">
+        <strong>本文作者：</strong>kay<br>
+        <strong>本文链接：</strong><a href="https://www.tooupper.com/content/Rust/learning-Rust/rust-Basic/%E6%B3%A8%E9%87%8A%E5%92%8C%E6%96%87%E6%A1%A3.html" title="https:&#x2F;&#x2F;www.tooupper.com&#x2F;content&#x2F;Rust&#x2F;learning-Rust&#x2F;rust-Basic&#x2F;%E6%B3%A8%E9%87%8A%E5%92%8C%E6%96%87%E6%A1%A3.html" target="_blank" rel="noopener">https:&#x2F;&#x2F;www.tooupper.com&#x2F;content&#x2F;Rust&#x2F;learning-Rust&#x2F;rust-Basic&#x2F;%E6%B3%A8%E9%87%8A%E5%92%8C%E6%96%87%E6%A1%A3.html</a><br>
+        
+            <strong>版权声明：</strong>本文采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/deed.zh" target="_blank">CC BY-NC-SA 3.0 CN</a> 协议进行许可
+
+        
+    </div>
+
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+   
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/Rust%E5%9F%BA%E7%A1%80/" rel="tag">Rust基础</a>
+    
+</div>
+  
+  
+    <script async src="/js/copy-codeblock.js?v=1698918460968"></script>
+  
+
+  
+      <div class="nexmoe-post-footer">
+          
+      </div>
+  
+</div></div><div class="nexmoe-post-right">    <div class="nexmoe-fixed">
+        <div class="nexmoe-tool">
+
+            
+
+            
+            
+            <button class="mdui-fab catalog" style="overflow:unset;">
+                <i class="nexmoefont icon-i-catalog"></i>
+                <div class="nexmoe-toc">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B3%A8%E9%87%8A%E7%9A%84%E7%A7%8D%E7%B1%BB"><span class="toc-number">1.</span> <span class="toc-text">注释的种类</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E6%B3%A8%E9%87%8A"><span class="toc-number">2.</span> <span class="toc-text">代码注释</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A1%8C%E6%B3%A8%E9%87%8A"><span class="toc-number">2.1.</span> <span class="toc-text">行注释 &#x2F;&#x2F;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9D%97%E6%B3%A8%E9%87%8A-%E2%80%A6"><span class="toc-number">2.2.</span> <span class="toc-text">块注释 &#x2F;* …*&#x2F;</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%87%E6%A1%A3%E6%B3%A8%E9%87%8A"><span class="toc-number">3.</span> <span class="toc-text">文档注释</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E6%A1%A3%E8%A1%8C%E6%B3%A8%E9%87%8A"><span class="toc-number">3.1.</span> <span class="toc-text">文档行注释 &#x2F;&#x2F;&#x2F;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E6%A1%A3%E5%9D%97%E6%B3%A8%E9%87%8A-%E2%80%A6"><span class="toc-number">3.2.</span> <span class="toc-text">文档块注释 &#x2F;** … *&#x2F;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%96%87%E6%A1%A3-cargo-doc"><span class="toc-number">3.3.</span> <span class="toc-text">查看文档 cargo doc</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E6%96%87%E6%A1%A3%E6%A0%87%E9%A2%98"><span class="toc-number">3.4.</span> <span class="toc-text">常用文档标题</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8C%85%E5%92%8C%E6%A8%A1%E5%9D%97%E7%BA%A7%E5%88%AB%E7%9A%84%E6%B3%A8%E9%87%8A"><span class="toc-number">4.</span> <span class="toc-text">包和模块级别的注释</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%87%E6%A1%A3%E6%B5%8B%E8%AF%95-Doc-Test"><span class="toc-number">5.</span> <span class="toc-text">文档测试(Doc Test)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%A0%E6%88%90-panic-%E7%9A%84%E6%96%87%E6%A1%A3%E6%B5%8B%E8%AF%95"><span class="toc-number">5.1.</span> <span class="toc-text">造成 panic 的文档测试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%9D%E7%95%99%E6%B5%8B%E8%AF%95%EF%BC%8C%E9%9A%90%E8%97%8F%E6%96%87%E6%A1%A3"><span class="toc-number">5.2.</span> <span class="toc-text">保留测试，隐藏文档</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%87%E6%A1%A3%E6%B3%A8%E9%87%8A%E4%B8%AD%E7%9A%84%E4%BB%A3%E7%A0%81%E8%B7%B3%E8%BD%AC"><span class="toc-number">6.</span> <span class="toc-text">文档注释中的代码跳转</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B7%B3%E8%BD%AC%E5%88%B0%E6%A0%87%E5%87%86%E5%BA%93"><span class="toc-number">6.1.</span> <span class="toc-text">跳转到标准库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E5%AE%8C%E6%95%B4%E8%B7%AF%E5%BE%84%E8%B7%B3%E8%BD%AC%E5%88%B0%E6%8C%87%E5%AE%9A%E9%A1%B9"><span class="toc-number">6.2.</span> <span class="toc-text">使用完整路径跳转到指定项</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8C%E5%90%8D%E9%A1%B9%E7%9A%84%E8%B7%B3%E8%BD%AC"><span class="toc-number">6.3.</span> <span class="toc-text">同名项的跳转</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%87%E6%A1%A3%E6%90%9C%E7%B4%A2%E5%88%AB%E5%90%8D"><span class="toc-number">7.</span> <span class="toc-text">文档搜索别名</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BE%8B%E5%AD%90"><span class="toc-number">8.</span> <span class="toc-text">例子</span></a></li></ol>
+                </div>
+            </button>
+            
+
+            
+
+            <a href="#nexmoe-content" class="backtop toc-link" aria-label="Back To Top" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+        </div>
+    </div>
+</div></div><div id="nexmoe-footer"><!--!--></div><div><div id="nexmoe-search-space">
+	<div class="search-container">
+		<div class="search-header">
+			<div class="search-input-container">
+				<input
+					class="search-input"
+					type="text"
+					placeholder="搜索"
+					oninput="sinput();"
+				/>
+			</div>
+			<a class="search-close" onclick="sclose();">×</a>
+		</div>
+		<div class="search-body"></div>
+	</div>
+</div>
+</div><div><script async src="https://www.TooUpper.com" crossorigin="anonymous"></script>
+</div></body></html>

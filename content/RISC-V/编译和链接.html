@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="zh"><head>
+<title>编译和链接 - 成祠的个人博客</title>
+<meta charset="UTF-8">
+<meta name="keywords" content="blog">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+
+<link rel="shortcut icon" href="/image/favicon.png" type="image/png" />
+<meta name="description" content="编译和链接GCCGCC 简介 GCC（GNU Compiler Collection） https:&#x2F;&#x2F;gcc.gnu.org&#x2F; 由 GNU 开发的，遵循 GPL 许可证发行的编译器套件。 支持 C、C++、Objective-C、Fortran、Ada 和 Go 语言等多种语言前端，已被移植到多种计算机体系架构上，如 x86、ARM、RISC-V 等。 GCC 的初衷是为 GUN 操作系统专门编">
+<meta property="og:type" content="article">
+<meta property="og:title" content="编译和链接">
+<meta property="og:url" content="https://www.tooupper.com/content/RISC-V/%E7%BC%96%E8%AF%91%E5%92%8C%E9%93%BE%E6%8E%A5.html">
+<meta property="og:site_name" content="成祠的个人博客">
+<meta property="og:description" content="编译和链接GCCGCC 简介 GCC（GNU Compiler Collection） https:&#x2F;&#x2F;gcc.gnu.org&#x2F; 由 GNU 开发的，遵循 GPL 许可证发行的编译器套件。 支持 C、C++、Objective-C、Fortran、Ada 和 Go 语言等多种语言前端，已被移植到多种计算机体系架构上，如 x86、ARM、RISC-V 等。 GCC 的初衷是为 GUN 操作系统专门编">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.tooupper.com/image/RISC-V/byhlj01.png">
+<meta property="og:image" content="https://www.tooupper.com/image/RISC-V/byhlj02.png">
+<meta property="og:image" content="https://www.tooupper.com/image/RISC-V/byhlj03.png">
+<meta property="og:image" content="https://www.tooupper.com/image/RISC-V/byhlj04.png">
+<meta property="og:image" content="https://www.tooupper.com/image/RISC-V/byhlj05.png">
+<meta property="og:image" content="https://www.tooupper.com/image/RISC-V/byhlj06.png">
+<meta property="article:published_time" content="2023-10-27T05:12:36.000Z">
+<meta property="article:modified_time" content="2023-10-27T07:25:58.838Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="riscv">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.tooupper.com/image/RISC-V/byhlj01.png">
+
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+<link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
+
+
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1698918461646">
+
+<link rel="stylesheet" href="/css/style.css?v=1698918461646">
+
+
+
+
+    
+        <link rel="stylesheet" href="/custom.css?v=1698918461646">
+    
+
+
+
+<script src="/lib/mdui_043tiny/mdui.js" async></script>
+<script src="/lib/fancybox/fancybox.umd.js" async></script>
+<script src="/lib/lax.min.js" async></script>
+
+
+<script async src="/js/app.js?v=1698918461646"></script>
+
+ 
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4D4ZJ9G024"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+
+  gtag("config", "G-4D4ZJ9G024");
+</script>
+
+<meta name="generator" content="Hexo 6.3.0"></head><body class="nexmoe mdui-drawer-body-left"><div id="nexmoe-background"><div class="nexmoe-bg" style="background-image: url(/image/banner.png)"></div><div class="mdui-appbar mdui-shadow-0"><div class="mdui-toolbar"><a class="mdui-btn mdui-btn-icon mdui-ripple" mdui-drawer="{target: &#039;#drawer&#039;, swipe: true}" title="menu"><i class="mdui-icon nexmoefont icon-menu"></i></a><div class="mdui-toolbar-spacer"></div><a class="mdui-btn mdui-btn-icon" href="/" title="kay"><img src="/image/Logo.png" alt="kay"></a></div></div></div><div id="nexmoe-header"><div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="kay">
+            <img src="/image/Logo.png" alt="kay" alt="kay">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>文章</span>29</div>
+        <div><span>标签</span>4</div>
+        <div><span>分类</span>2</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/aboutMe.html" title="关于博主">
+            <i class="mdui-list-item-icon nexmoefont icon-info-circle"></i>
+            <div class="mdui-list-item-content">
+                关于博主
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archives.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/downloads.html" title="下载中心">
+            <i class="mdui-list-item-icon nexmoefont icon-coffee"></i>
+            <div class="mdui-list-item-content">
+                下载中心
+            </div>
+        </a>
+        
+    </div>
+    
+    
+        
+        <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+        
+            <form id="search_form">
+                <label><input class="st-default-search-input" id="search_value" name="q" type="search" placeholder="搜索" style="
+                    font-size: 15px !important;
+                    height: 56px !important;
+                    background-image: none;
+                "></label>
+            </form>
+         
+    </div>
+</div>
+
+
+	<script async src="/js/search.js?v=1698918461646"></script>
+
+
+
+    
+        
+        <div class="nexmoe-widget-wrap">
+	<div class="nexmoe-widget nexmoe-social">
+		<a
+			class="mdui-ripple"
+			href="/image/QQOrWeChat.png"
+			target="_blank"
+			mdui-tooltip="{content: 'QQ'}"
+			style="
+				color: rgb(249, 174, 8);
+				background-color: rgba(249, 174, 8, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-QQ"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="/image/QQOrWeChat.png"
+			target="_blank"
+			mdui-tooltip="{content: 'WeChat'}"
+			style="
+				color: rgb(59, 151, 239);
+				background-color: rgba(59, 151, 239, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-wechat-fill"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://github.com/TooUpper/"
+			target="_blank"
+			mdui-tooltip="{content: 'GitHub'}"
+			style="
+				color: rgb(25, 23, 23);
+				background-color: rgba(25, 23, 23, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-github"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="/www.TooUpper.com"
+			target="_blank"
+			mdui-tooltip="{content: 'Blog'}"
+			style="
+				color: rgb(30, 136, 229);
+				background-color: rgba(30, 136, 229, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-home"
+			></i> </a
+		>
+	</div>
+</div>
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章分类</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/RISC-V/">RISC-V</a>
+          <span class="category-list-count">4</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Rust/">Rust</a>
+          <span class="category-list-count">25</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/Rust%E5%9F%BA%E7%A1%80/" style="font-size: 20px;">Rust基础</a> <a href="/tags/Rust%E8%BF%9B%E9%98%B6/" style="font-size: 15px;">Rust进阶</a> <a href="/tags/rcore/" style="font-size: 10px;">rcore</a> <a href="/tags/riscv/" style="font-size: 10px;">riscv</a>
+    </div>
+    
+  </div>
+
+    
+        
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章归档</h3>
+    <div class="nexmoe-widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/">2023</a><span class="archive-list-count">29</span></li></ul>
+    </div>
+  </div>
+
+
+
+    
+   
+    <div class="nexmoe-copyright">
+        &copy; 2023 kay
+        Powered by <a href="https://www.TooUpper.com" target="_blank">成祠</a>
+        & <a href="https://github.com/TooUpper" target="_blank">TooUpper</a>
+        <br><a target="_blank" href="https://www.TooUpper.com">鄂ICP备2020018486号</a>
+<br><a target="_blank" href="https://www.TooUpper.com">加油做一个不会被优化掉的程序员</a>
+
+    </div>
+</div><!-- .nexmoe-drawer --></div><div id="nexmoe-content"><div class="nexmoe-primary"><div class="nexmoe-post">
+  <article>
+    
+        <div class="nexmoe-post-cover absolute" style="padding-top: 62.5%;"> 
+            <img src="/image/RISC-V/risc-logo.png" alt="编译和链接" loading="lazy">
+            <h1>编译和链接</h1>
+        </div>
+    
+    
+    <div class="nexmoe-post-meta">
+    <div class="nexmoe-rainbow">
+        <a class="nexmoefont icon-calendar-fill">2023年10月27日</a>
+        
+            <a class="nexmoefont icon-appstore-fill -link" href="/categories/RISC-V/">RISC-V</a>
+        
+        
+    <a><i class="nexmoefont icon-areachart"></i>约1.2k字</a>
+    <a><i class="nexmoefont icon-time-circle-fill"></i>预计需要4分钟</a>
+
+    </div>
+    
+    
+    
+    
+    
+</div>
+
+    <h1 id="编译和链接"><a href="#编译和链接" class="headerlink" title="编译和链接"></a>编译和链接</h1><h2 id="GCC"><a href="#GCC" class="headerlink" title="GCC"></a>GCC</h2><h3 id="GCC-简介"><a href="#GCC-简介" class="headerlink" title="GCC 简介"></a>GCC 简介</h3><ul>
+<li>GCC（GNU Compiler Collection）<ul>
+<li><a target="_blank" rel="noopener" href="https://gcc.gnu.org/">https://gcc.gnu.org/</a></li>
+<li>由 GNU 开发的，遵循 GPL 许可证发行的编译器套件。</li>
+<li>支持 C、C++、Objective-C、Fortran、Ada 和 Go 语言等多种语言前端，已被移植到多种计算机体系架构上，如 x86、ARM、RISC-V 等。</li>
+<li>GCC 的初衷是为 GUN 操作系统专门编写一款编译器，现已被大多数 “Unix-like” 操作系统（如 Linux、BSD、MacOS等）采纳为标准的编译器。</li>
+</ul>
+</li>
+</ul>
+<h3 id="GCC-的命令格式"><a href="#GCC-的命令格式" class="headerlink" title="GCC 的命令格式"></a>GCC 的命令格式</h3><ul>
+<li>gcc [options] [filenames]<ul>
+<li><code>-E</code> ：只做预处理(在 C语言 中就是把 # 开头的 宏语言 转为标准的 C语言)</li>
+<li><code>-c</code>：只编译不链接，生成目标文件”.O”。(编译是将C语言转为对应的机器指令，链接是最后生成可执行程序的时候，将.O文件和其他的一些库文件链接起来。)</li>
+<li><code>-S</code>：生成汇编代码。（C -&gt; 汇编 -&gt; 机器指令）</li>
+<li><code>-o file</code>：把输出生成到由 <code>file</code> 指定文件名的文件中。</li>
+<li><code>-g</code>：在输出的文件中加入支持调试的信息 (只有加了，程序才可以进行调试，不然不可以)。</li>
+<li><code>-v</code>：显示输出详细的命令执行过程。</li>
+</ul>
+</li>
+</ul>
+<h3 id="GCC-的主要执行步骤"><a href="#GCC-的主要执行步骤" class="headerlink" title="GCC 的主要执行步骤"></a>GCC 的主要执行步骤</h3><ul>
+<li><code>编译(cc1，这里针对 C语言，不同的语言有自己的编译器)</code>：编译器完成 “预处理” 和 “编译”。“预处理” 指处理源文件中以 “#” 开头的预处理指令，譬如 <code>#include</code>、<code>#define</code>等。“编译” 则针对预处理的结果进行一系列的词法分析、语法分析、语义分析，优化后生成汇编指令，存放在<code>.O</code>为后缀的目标文件中。</li>
+<li><code>汇编(as)</code>：汇编器将汇编语言代码转换为机器(CPU)可以执行的指令。</li>
+<li><code>链接(ld)</code>：链接器将汇编器生成的目标文件和一些标准库 (譬如 libc) 文件组合，形成最终可执行的应用程序。</li>
+<li><img onerror="imgOnError(this);" data-fancybox="gallery" src="/image/RISC-V/byhlj01.png" alt="image-byhlj01" data-caption="image-byhlj01" loading="lazy"></li>
+</ul>
+<h3 id="GCC-涉及的文件类型"><a href="#GCC-涉及的文件类型" class="headerlink" title="GCC 涉及的文件类型"></a>GCC 涉及的文件类型</h3><ul>
+<li>.c：C 源文件</li>
+<li>.cc &#x2F; .cxx &#x2F; .cpp：C++ 源文件</li>
+<li>.s &#x2F; .S：汇编语言源文件（大 S 的也会包含一些 # 开头的预处理指令，小 S 就是纯的汇编指令）</li>
+<li>.h：头（header）文件</li>
+<li>.o：目标（object）：文件</li>
+<li>.a &#x2F; .so：编译后的静态库（archive）文件和共享库（shared object）文件</li>
+<li>a.out：可执行文件</li>
+</ul>
+<h3 id="针对多个源文件的处理"><a href="#针对多个源文件的处理" class="headerlink" title="针对多个源文件的处理"></a>针对多个源文件的处理</h3><p><img onerror="imgOnError(this);" data-fancybox="gallery" src="/image/RISC-V/byhlj02.png" alt="image-byhlj02" data-caption="image-byhlj02" loading="lazy"></p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="/image/RISC-V/byhlj03.png" alt="image-byhlj03" data-caption="image-byhlj03" loading="lazy"></p>
+<h2 id="EFL"><a href="#EFL" class="headerlink" title="EFL"></a>EFL</h2><h3 id="EFL-简介"><a href="#EFL-简介" class="headerlink" title="EFL 简介"></a>EFL 简介</h3><ul>
+<li><p>EFL（Executable Linkable Format）是一种 Unix-like 系统上的二进制文件标准格式</p>
+</li>
+<li><p>EFL 标准中定义的采用 EFL 格式的文件分为 4 类：</p>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="/image/RISC-V/byhlj04.png" alt="image-byhlj04" data-caption="image-byhlj04" loading="lazy"></p>
+</li>
+</ul>
+<h3 id="EFL-文件格式"><a href="#EFL-文件格式" class="headerlink" title="EFL 文件格式"></a>EFL 文件格式</h3><p><img onerror="imgOnError(this);" data-fancybox="gallery" src="/image/RISC-V/byhlj05.png" alt="image-byhlj05" data-caption="image-byhlj05" loading="lazy"></p>
+<ul>
+<li>ELF Header：包含该文件的一些基本信息，如：文件运行在哪种体系架构上的，版本号信息等。</li>
+<li>Program Header Table：存放运行时信息（运行试图）</li>
+<li>.text：放一些程序的指令</li>
+<li>.init：初始化指令</li>
+<li>.data：放一些数据，全局变量</li>
+<li>.bss：</li>
+<li>…</li>
+<li>Section Header Table：定义了 EFL 文件中有那些 节(上面的 白色的 Section ) ，节有多大，在什么位置，都通过该文件进行描述；从链接的角度去描述了文件的内容。</li>
+</ul>
+<p><img onerror="imgOnError(this);" data-fancybox="gallery" src="/image/RISC-V/byhlj06.png" alt="image-byhlj06" data-caption="image-byhlj06" loading="lazy"></p>
+<p><strong>运行视图</strong>：当 EFL 加载到内存时，如果对于一个个 结 不加区分的分别加载进内存可能会引入一个问题：(操作系统在加载 节 的时候，会按照一定的宽度进行对齐；假设系统按照 4k 进行对齐，text 这个 节 大小只有 40 个字节，但是他也会占一个 4k 大小的区域，不会再放其他东了，那么一个本来很小的程序，展开后就会变得很大，造成空间的浪费。所以真正在加载到内存中的时候会根据 节 的属性来做一些归并，如 text 和 init 节 中放的都是一些可执行程序指令，那么就将二者放在一起继续归并称之为 段(Segment)；所以在加载入内存的时候，实际是按段进行加载的，每个段中包含一个或多个 节(Secction)，因为上述的内容是在运行时才会用到的，所以称之为：运行视图)。</p>
+<h3 id="EFL-文件处理相关工具：Binutils"><a href="#EFL-文件处理相关工具：Binutils" class="headerlink" title="EFL 文件处理相关工具：Binutils"></a>EFL 文件处理相关工具：Binutils</h3><p>这些 EFL 文件格式如果手动去分析内容会非常的麻烦，所以 GNU 提供了一些配套的工具软件<code>binutils</code></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.gun.org/software/binutils">https://www.gun.org/software/binutils</a><ul>
+<li>ar：归档文件，将多个文件打包成一个大文件。</li>
+<li>as：被 gcc 调用，输入汇编程序，输出目标文件供链接器 ld 连接。</li>
+<li>ld：GUN 链接器。被 gcc 调用，他把目标文件和各种库文件结合在一起，重定位数据，并链接符号引用。</li>
+<li>objcopy：执行文件格式转换。</li>
+<li>bojdump：显示 EFL 文件的信息。</li>
+<li>readelf：显示更多 EFL 格式文件的信息（包括 DWARF 调试信息）</li>
+<li>…</li>
+</ul>
+</li>
+</ul>
+
+    
+  </article>
+
+  
+      
+    <div class="nexmoe-post-copyright">
+        <strong>本文作者：</strong>kay<br>
+        <strong>本文链接：</strong><a href="https://www.tooupper.com/content/RISC-V/%E7%BC%96%E8%AF%91%E5%92%8C%E9%93%BE%E6%8E%A5.html" title="https:&#x2F;&#x2F;www.tooupper.com&#x2F;content&#x2F;RISC-V&#x2F;%E7%BC%96%E8%AF%91%E5%92%8C%E9%93%BE%E6%8E%A5.html" target="_blank" rel="noopener">https:&#x2F;&#x2F;www.tooupper.com&#x2F;content&#x2F;RISC-V&#x2F;%E7%BC%96%E8%AF%91%E5%92%8C%E9%93%BE%E6%8E%A5.html</a><br>
+        
+            <strong>版权声明：</strong>本文采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/deed.zh" target="_blank">CC BY-NC-SA 3.0 CN</a> 协议进行许可
+
+        
+    </div>
+
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+   
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/riscv/" rel="tag">riscv</a>
+    
+</div>
+  
+  
+    <script async src="/js/copy-codeblock.js?v=1698918460904"></script>
+  
+
+  
+      <div class="nexmoe-post-footer">
+          
+      </div>
+  
+</div></div><div class="nexmoe-post-right">    <div class="nexmoe-fixed">
+        <div class="nexmoe-tool">
+
+            
+
+            
+            
+            <button class="mdui-fab catalog" style="overflow:unset;">
+                <i class="nexmoefont icon-i-catalog"></i>
+                <div class="nexmoe-toc">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E5%92%8C%E9%93%BE%E6%8E%A5"><span class="toc-number">1.</span> <span class="toc-text">编译和链接</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#GCC"><span class="toc-number">1.1.</span> <span class="toc-text">GCC</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#GCC-%E7%AE%80%E4%BB%8B"><span class="toc-number">1.1.1.</span> <span class="toc-text">GCC 简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GCC-%E7%9A%84%E5%91%BD%E4%BB%A4%E6%A0%BC%E5%BC%8F"><span class="toc-number">1.1.2.</span> <span class="toc-text">GCC 的命令格式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GCC-%E7%9A%84%E4%B8%BB%E8%A6%81%E6%89%A7%E8%A1%8C%E6%AD%A5%E9%AA%A4"><span class="toc-number">1.1.3.</span> <span class="toc-text">GCC 的主要执行步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GCC-%E6%B6%89%E5%8F%8A%E7%9A%84%E6%96%87%E4%BB%B6%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.1.4.</span> <span class="toc-text">GCC 涉及的文件类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%92%88%E5%AF%B9%E5%A4%9A%E4%B8%AA%E6%BA%90%E6%96%87%E4%BB%B6%E7%9A%84%E5%A4%84%E7%90%86"><span class="toc-number">1.1.5.</span> <span class="toc-text">针对多个源文件的处理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#EFL"><span class="toc-number">1.2.</span> <span class="toc-text">EFL</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#EFL-%E7%AE%80%E4%BB%8B"><span class="toc-number">1.2.1.</span> <span class="toc-text">EFL 简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#EFL-%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F"><span class="toc-number">1.2.2.</span> <span class="toc-text">EFL 文件格式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#EFL-%E6%96%87%E4%BB%B6%E5%A4%84%E7%90%86%E7%9B%B8%E5%85%B3%E5%B7%A5%E5%85%B7%EF%BC%9ABinutils"><span class="toc-number">1.2.3.</span> <span class="toc-text">EFL 文件处理相关工具：Binutils</span></a></li></ol></li></ol></li></ol>
+                </div>
+            </button>
+            
+
+            
+
+            <a href="#nexmoe-content" class="backtop toc-link" aria-label="Back To Top" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+        </div>
+    </div>
+</div></div><div id="nexmoe-footer"><!--!--></div><div><div id="nexmoe-search-space">
+	<div class="search-container">
+		<div class="search-header">
+			<div class="search-input-container">
+				<input
+					class="search-input"
+					type="text"
+					placeholder="搜索"
+					oninput="sinput();"
+				/>
+			</div>
+			<a class="search-close" onclick="sclose();">×</a>
+		</div>
+		<div class="search-body"></div>
+	</div>
+</div>
+</div><div><script async src="https://www.TooUpper.com" crossorigin="anonymous"></script>
+</div></body></html>

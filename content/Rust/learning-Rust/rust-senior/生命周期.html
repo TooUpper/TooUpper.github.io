@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="zh"><head>
+<title>深入生命周期 - 成祠的个人博客</title>
+<meta charset="UTF-8">
+<meta name="keywords" content="blog">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+
+<link rel="shortcut icon" href="/image/favicon.png" type="image/png" />
+<meta name="description" content="深入生命周期不太聪明的生命周期检查一些因为生命周期系统不够聪明导致编译失败的代码： 例112345678910111213141516#[derive(Debug)]struct Foo;impl Foo &amp;#123;    fn mutate_and_share(&amp;mut self) -&gt; &amp;Self &amp;#123;        &amp;*self    &amp;#125;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入生命周期">
+<meta property="og:url" content="https://www.tooupper.com/content/Rust/learning-Rust/rust-senior/%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.html">
+<meta property="og:site_name" content="成祠的个人博客">
+<meta property="og:description" content="深入生命周期不太聪明的生命周期检查一些因为生命周期系统不够聪明导致编译失败的代码： 例112345678910111213141516#[derive(Debug)]struct Foo;impl Foo &amp;#123;    fn mutate_and_share(&amp;mut self) -&gt; &amp;Self &amp;#123;        &amp;*self    &amp;#125;">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-09-30T12:01:14.000Z">
+<meta property="article:modified_time" content="2023-10-16T06:43:27.173Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="Rust进阶">
+<meta name="twitter:card" content="summary">
+
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+<link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
+
+
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1698918461727">
+
+<link rel="stylesheet" href="/css/style.css?v=1698918461727">
+
+
+
+
+    
+        <link rel="stylesheet" href="/custom.css?v=1698918461727">
+    
+
+
+
+<script src="/lib/mdui_043tiny/mdui.js" async></script>
+<script src="/lib/fancybox/fancybox.umd.js" async></script>
+<script src="/lib/lax.min.js" async></script>
+
+
+<script async src="/js/app.js?v=1698918461727"></script>
+
+ 
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4D4ZJ9G024"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+
+  gtag("config", "G-4D4ZJ9G024");
+</script>
+
+<meta name="generator" content="Hexo 6.3.0"></head><body class="nexmoe mdui-drawer-body-left"><div id="nexmoe-background"><div class="nexmoe-bg" style="background-image: url(/image/banner.png)"></div><div class="mdui-appbar mdui-shadow-0"><div class="mdui-toolbar"><a class="mdui-btn mdui-btn-icon mdui-ripple" mdui-drawer="{target: &#039;#drawer&#039;, swipe: true}" title="menu"><i class="mdui-icon nexmoefont icon-menu"></i></a><div class="mdui-toolbar-spacer"></div><a class="mdui-btn mdui-btn-icon" href="/" title="kay"><img src="/image/Logo.png" alt="kay"></a></div></div></div><div id="nexmoe-header"><div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="kay">
+            <img src="/image/Logo.png" alt="kay" alt="kay">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>文章</span>29</div>
+        <div><span>标签</span>4</div>
+        <div><span>分类</span>2</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/aboutMe.html" title="关于博主">
+            <i class="mdui-list-item-icon nexmoefont icon-info-circle"></i>
+            <div class="mdui-list-item-content">
+                关于博主
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archives.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/downloads.html" title="下载中心">
+            <i class="mdui-list-item-icon nexmoefont icon-coffee"></i>
+            <div class="mdui-list-item-content">
+                下载中心
+            </div>
+        </a>
+        
+    </div>
+    
+    
+        
+        <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+        
+            <form id="search_form">
+                <label><input class="st-default-search-input" id="search_value" name="q" type="search" placeholder="搜索" style="
+                    font-size: 15px !important;
+                    height: 56px !important;
+                    background-image: none;
+                "></label>
+            </form>
+         
+    </div>
+</div>
+
+
+	<script async src="/js/search.js?v=1698918461727"></script>
+
+
+
+    
+        
+        <div class="nexmoe-widget-wrap">
+	<div class="nexmoe-widget nexmoe-social">
+		<a
+			class="mdui-ripple"
+			href="/image/QQOrWeChat.png"
+			target="_blank"
+			mdui-tooltip="{content: 'QQ'}"
+			style="
+				color: rgb(249, 174, 8);
+				background-color: rgba(249, 174, 8, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-QQ"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="/image/QQOrWeChat.png"
+			target="_blank"
+			mdui-tooltip="{content: 'WeChat'}"
+			style="
+				color: rgb(59, 151, 239);
+				background-color: rgba(59, 151, 239, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-wechat-fill"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://github.com/TooUpper/"
+			target="_blank"
+			mdui-tooltip="{content: 'GitHub'}"
+			style="
+				color: rgb(25, 23, 23);
+				background-color: rgba(25, 23, 23, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-github"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="/www.TooUpper.com"
+			target="_blank"
+			mdui-tooltip="{content: 'Blog'}"
+			style="
+				color: rgb(30, 136, 229);
+				background-color: rgba(30, 136, 229, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-home"
+			></i> </a
+		>
+	</div>
+</div>
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章分类</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/RISC-V/">RISC-V</a>
+          <span class="category-list-count">4</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Rust/">Rust</a>
+          <span class="category-list-count">25</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/Rust%E5%9F%BA%E7%A1%80/" style="font-size: 20px;">Rust基础</a> <a href="/tags/Rust%E8%BF%9B%E9%98%B6/" style="font-size: 15px;">Rust进阶</a> <a href="/tags/rcore/" style="font-size: 10px;">rcore</a> <a href="/tags/riscv/" style="font-size: 10px;">riscv</a>
+    </div>
+    
+  </div>
+
+    
+        
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章归档</h3>
+    <div class="nexmoe-widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/">2023</a><span class="archive-list-count">29</span></li></ul>
+    </div>
+  </div>
+
+
+
+    
+   
+    <div class="nexmoe-copyright">
+        &copy; 2023 kay
+        Powered by <a href="https://www.TooUpper.com" target="_blank">成祠</a>
+        & <a href="https://github.com/TooUpper" target="_blank">TooUpper</a>
+        <br><a target="_blank" href="https://www.TooUpper.com">鄂ICP备2020018486号</a>
+<br><a target="_blank" href="https://www.TooUpper.com">加油做一个不会被优化掉的程序员</a>
+
+    </div>
+</div><!-- .nexmoe-drawer --></div><div id="nexmoe-content"><div class="nexmoe-primary"><div class="nexmoe-post">
+  <article>
+    
+        <div class="nexmoe-post-cover absolute" style="padding-top: 62.5%;"> 
+            <img src="/image/Rust/RustCrab.png" alt="深入生命周期" loading="lazy">
+            <h1>深入生命周期</h1>
+        </div>
+    
+    
+    <div class="nexmoe-post-meta">
+    <div class="nexmoe-rainbow">
+        <a class="nexmoefont icon-calendar-fill">2023年09月30日</a>
+        
+            <a class="nexmoefont icon-appstore-fill -link" href="/categories/Rust/">Rust</a>
+        
+        
+    <a><i class="nexmoefont icon-areachart"></i>约6.6k字</a>
+    <a><i class="nexmoefont icon-time-circle-fill"></i>预计需要28分钟</a>
+
+    </div>
+    
+    
+    
+    
+    
+</div>
+
+    <h1 id="深入生命周期"><a href="#深入生命周期" class="headerlink" title="深入生命周期"></a>深入生命周期</h1><h2 id="不太聪明的生命周期检查"><a href="#不太聪明的生命周期检查" class="headerlink" title="不太聪明的生命周期检查"></a>不太聪明的生命周期检查</h2><p>一些因为生命周期系统不够聪明导致编译失败的代码：</p>
+<h3 id="例1"><a href="#例1" class="headerlink" title="例1"></a>例1</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#[derive(Debug)]</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Foo</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">Foo</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">mutate_and_share</span>(&amp;<span class="keyword">mut</span> <span class="keyword">self</span>) <span class="punctuation">-&gt;</span> &amp;<span class="keyword">Self</span> &#123;</span><br><span class="line">        &amp;*<span class="keyword">self</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">share</span>(&amp;<span class="keyword">self</span>) &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">foo</span> = Foo;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">loan</span> = foo.<span class="title function_ invoke__">mutate_and_share</span>(); <span class="comment">// 可变借用 -&gt; 不可变借用</span></span><br><span class="line">    foo.<span class="title function_ invoke__">share</span>(); <span class="comment">// 不可变借用</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, loan);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面的代码中，<code>foo.mutate_and_share()</code> 虽然借用了 <code>&amp;mut self</code>，但是它最终返回的是一个 <code>&amp;self</code>，然后赋值给 <code>loan</code>，因此理论上来说它最终是进行了不可变借用，同时 <code>foo.share</code> 也进行了不可变借用，那么根据 Rust 的借用规则：多个不可变借用可以同时存在，因此该代码应该编译通过。</p>
+<p>事实上，运行代码后，你将看到一个错误：</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">error[E0502]: cannot borrow `foo` as immutable because it is also borrowed as mutable</span><br><span class="line"><span class="meta prompt_">  --&gt; </span><span class="language-bash">src/main.rs:12:5</span></span><br><span class="line">   |</span><br><span class="line">11 |     let loan = foo.mutate_and_share();</span><br><span class="line">   |                ---------------------- mutable borrow occurs here</span><br><span class="line">12 |     foo.share();</span><br><span class="line">   |     ^^^^^^^^^^^ immutable borrow occurs here</span><br><span class="line">13 |     println!(&quot;&#123;:?&#125;&quot;, loan);</span><br><span class="line">   |                      ---- mutable borrow later used here</span><br></pre></td></tr></table></figure>
+
+<p>编译器的提示在这里其实有些难以理解，因为可变借用仅在 <code>mutate_and_share</code> 方法内部有效，出了该方法后，就只有返回的不可变借用，因此，按理来说可变借用不应该在 <code>main</code> 的作用范围内存在。</p>
+<p>让我们用生命周期来解释下：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Foo</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">Foo</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">mutate_and_share</span>&lt;<span class="symbol">&#x27;a</span>&gt;(&amp;<span class="symbol">&#x27;a</span> <span class="keyword">mut</span> <span class="keyword">self</span>) <span class="punctuation">-&gt;</span> &amp;<span class="symbol">&#x27;a</span> <span class="keyword">Self</span> &#123;</span><br><span class="line">        &amp;<span class="symbol">&#x27;a</span> *<span class="keyword">self</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">share</span>&lt;<span class="symbol">&#x27;a</span>&gt;(&amp;<span class="symbol">&#x27;a</span> <span class="keyword">self</span>) &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="symbol">&#x27;b</span>: &#123;</span><br><span class="line">        <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">foo</span>: Foo = Foo;</span><br><span class="line">        <span class="symbol">&#x27;c</span>: &#123;</span><br><span class="line">            <span class="keyword">let</span> <span class="variable">loan</span>: &amp;<span class="symbol">&#x27;c</span> Foo = Foo::mutate_and_share::&lt;<span class="symbol">&#x27;c</span>&gt;(&amp;<span class="symbol">&#x27;c</span> <span class="keyword">mut</span> foo);</span><br><span class="line">            <span class="symbol">&#x27;d</span>: &#123;</span><br><span class="line">                Foo::share::&lt;<span class="symbol">&#x27;d</span>&gt;(&amp;<span class="symbol">&#x27;d</span> foo);</span><br><span class="line">            &#125; <span class="comment">// d</span></span><br><span class="line">            <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, loan);</span><br><span class="line">        &#125; <span class="comment">// c</span></span><br><span class="line">    &#125; <span class="comment">// b</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上是模拟了编译器的生命周期标注后的代码，可以注意到 <code>&amp;mut foo</code> 和 <code>loan</code> 的生命周期都是 <code>&#39;c</code>。</p>
+<p><strong>还记得生命周期消除规则中的第三条吗？因为该规则，导致了 <code>mutate_and_share</code> 方法中，参数 <code>&amp;mut self</code> 和返回值 <code>&amp;self</code> 的生命周期是相同的，因此，若返回值的生命周期在 <code>main</code> 函数有效，那 <code>&amp;mut self</code> 的借用也是在 <code>main</code> 函数有效</strong>。</p>
+<p>这就解释了可变借用为啥会在 <code>main</code> 函数作用域内有效，最终导致 <code>foo.share()</code> 无法再进行不可变借用。</p>
+<p>总结下：<code>&amp;mut self</code> 借用的生命周期和 <code>loan</code> 的生命周期相同，将持续到 <code>println</code> 结束。而在此期间 <code>foo.share()</code> 又进行了一次不可变 <code>&amp;foo</code> 借用，违背了可变借用与不可变借用不能同时存在的规则，最终导致了编译错误。</p>
+<p>上述代码实际上完全是正确的，但是因为生命周期系统的“粗糙实现”，导致了编译错误，目前来说，遇到这种生命周期系统不够聪明导致的编译错误，我们也没有太好的办法，只能修改代码去满足它的需求，并期待以后它会更聪明。</p>
+<h3 id="例2"><a href="#例2" class="headerlink" title="例2"></a>例2</h3><p>再来看一个例子：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#![allow(unused)]</span></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">use</span> std::collections::HashMap;</span><br><span class="line">    <span class="keyword">use</span> std::hash::Hash;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">get_default</span>&lt;<span class="symbol">&#x27;m</span>, K, V&gt;(map: &amp;<span class="symbol">&#x27;m</span> <span class="keyword">mut</span> HashMap&lt;K, V&gt;, key: K) <span class="punctuation">-&gt;</span> &amp;<span class="symbol">&#x27;m</span> <span class="keyword">mut</span> V</span><br><span class="line">    <span class="keyword">where</span></span><br><span class="line">        K: <span class="built_in">Clone</span> + <span class="built_in">Eq</span> + Hash,</span><br><span class="line">        V: <span class="built_in">Default</span>,</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">match</span> map.<span class="title function_ invoke__">get_mut</span>(&amp;key) &#123;</span><br><span class="line">            <span class="title function_ invoke__">Some</span>(value) =&gt; value,</span><br><span class="line">            <span class="literal">None</span> =&gt; &#123;</span><br><span class="line">                <span class="comment">// V::default()函数：创建V对象的实例，比如v是String类型那么V::default()返回的就是一个&quot;&quot;</span></span><br><span class="line">                map.<span class="title function_ invoke__">insert</span>(key.<span class="title function_ invoke__">clone</span>(), V::<span class="title function_ invoke__">default</span>()); <span class="comment">// .clone需要进行可变借用</span></span><br><span class="line">                map.<span class="title function_ invoke__">get_mut</span>(&amp;key).<span class="title function_ invoke__">unwrap</span>()</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这段代码不能通过编译的原因是编译器未能精确地判断出某个可变借用不再需要，反而谨慎的给该借用安排了一个很大的作用域，结果导致后续的借用失败：</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">error[E0499]: cannot borrow `*map` as mutable more than once at a time</span><br><span class="line"><span class="meta prompt_">  --&gt; </span><span class="language-bash">src/main.rs:13:17</span></span><br><span class="line">   |</span><br><span class="line">5  |       fn get_default&lt;&#x27;m, K, V&gt;(map: &amp;&#x27;m mut HashMap&lt;K, V&gt;, key: K) -&gt; &amp;&#x27;m mut V</span><br><span class="line">   |                      -- lifetime `&#x27;m` defined here</span><br><span class="line">...</span><br><span class="line">10 |           match map.get_mut(&amp;key) &#123;	</span><br><span class="line">   |           -     ----------------- first mutable borrow occurs here</span><br><span class="line">   |  _________|</span><br><span class="line">   | |</span><br><span class="line">11 | |             Some(value) =&gt; value,</span><br><span class="line">12 | |             None =&gt; &#123;</span><br><span class="line">13 | |                 map.insert(key.clone(), V::default());</span><br><span class="line">   | |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ second mutable borrow occurs here</span><br><span class="line">14 | |                 map.get_mut(&amp;key).unwrap()</span><br><span class="line">15 | |             &#125;</span><br><span class="line">16 | |         &#125;</span><br><span class="line">   | |_________- returning this value requires that `*map` is borrowed for `&#x27;m`</span><br></pre></td></tr></table></figure>
+
+<p>分析代码可知在 <code>match map.get_mut(&amp;key)</code> 方法调用完成后，对 <code>map</code> 的可变借用就可以结束了。但从报错看来，编译器不太聪明，它认为该借用会持续到整个 <code>match</code> 语句块的结束(第 16 行处)，这便造成了后续借用的失败。</p>
+<h2 id="无界生命周期"><a href="#无界生命周期" class="headerlink" title="无界生命周期"></a>无界生命周期</h2><p>不安全代码(<code>unsafe</code>)经常会凭空产生引用或生命周期，这些生命周期被称为是 <strong>无界(unbound)</strong> 的。</p>
+<p>无界生命周期往往是在解引用一个裸指针(裸指针 raw pointer)时产生的，换句话说，它是凭空产生的，因为输入参数根本就没有这个生命周期：</p>
+<blockquote>
+<p>裸指针：是一种指向内存的简单指针，它们提供了对内存的直接访问，没有借用规则或所有权的限制</p>
+</blockquote>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">f</span>&lt;<span class="symbol">&#x27;a</span>, T&gt;(x: *<span class="keyword">const</span> T) <span class="punctuation">-&gt;</span> &amp;<span class="symbol">&#x27;a</span> T &#123;</span><br><span class="line">    <span class="keyword">unsafe</span> &#123;</span><br><span class="line">        &amp;*x</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述代码中，参数 <code>x</code> 是一个裸指针，它并没有任何生命周期，然后通过 <code>unsafe</code> 操作后，它被进行了解引用，变成了一个 Rust 的标准引用类型，该类型必须要有生命周期，也就是 <code>&#39;a</code>。</p>
+<p>可以看出 <code>&#39;a</code> 是凭空产生的，因此它是无界生命周期。这种生命周期由于没有受到任何约束，因此它想要多大就多大，这实际上比 <code>&#39;static</code> 要强大。例如 <code>&amp;&#39;static &amp;&#39;a T</code> 是无效类型，但是无界生命周期 <code>&amp;&#39;unbounded &amp;&#39;a T</code> 会被视为 <code>&amp;&#39;a &amp;&#39;a T</code> 从而通过编译检查，因为它可大可小，就像孙猴子的金箍棒一般。</p>
+<p>我们在实际应用中，要尽量避免这种无界生命周期。最简单的避免无界生命周期的方式就是在函数声明中运用生命周期消除规则。<strong>若一个输出生命周期被消除了，那么必定因为有一个输入生命周期与之对应</strong>。</p>
+<h2 id="生命周期约束-HRTB"><a href="#生命周期约束-HRTB" class="headerlink" title="生命周期约束 HRTB"></a>生命周期约束 HRTB</h2><p>生命周期约束跟特征约束类似，都是通过形如 <code>&#39;a: &#39;b</code> 的语法，来说明两个生命周期的长短关系。</p>
+<h3 id="‘a-‘b"><a href="#‘a-‘b" class="headerlink" title="‘a: ‘b"></a>‘a: ‘b</h3><p>假设有两个引用 <code>&amp;&#39;a i32</code> 和 <code>&amp;&#39;b i32</code>，它们的生命周期分别是 <code>&#39;a</code> 和 <code>&#39;b</code>，若 <code>&#39;a</code> &gt;&#x3D; <code>&#39;b</code>，则可以定义 <code>&#39;a:&#39;b</code>，表示 <code>&#39;a</code> 至少要活得跟 <code>&#39;b</code> 一样久。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">DoubleRef</span>&lt;<span class="symbol">&#x27;a</span>,<span class="symbol">&#x27;b</span>:<span class="symbol">&#x27;a</span>, T&gt; &#123;</span><br><span class="line">    r: &amp;<span class="symbol">&#x27;a</span> T,</span><br><span class="line">    s: &amp;<span class="symbol">&#x27;b</span> T</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>例如上述代码定义一个结构体，它拥有两个引用字段，类型都是泛型 <code>T</code>，每个引用都拥有自己的生命周期，由于我们使用了生命周期约束 <code>&#39;b: &#39;a</code>，因此 <code>&#39;b</code> 必须活得比 <code>&#39;a</code> 久，也就是结构体中的 <code>s</code> 字段引用的值必须要比 <code>r</code> 字段引用的值活得要久。</p>
+<h3 id="T-‘a"><a href="#T-‘a" class="headerlink" title="T: ‘a"></a>T: ‘a</h3><p>表示类型 <code>T</code> 必须比 <code>&#39;a</code> 活得要久：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Ref</span>&lt;<span class="symbol">&#x27;a</span>, T: <span class="symbol">&#x27;a</span>&gt; &#123;</span><br><span class="line">    r: &amp;<span class="symbol">&#x27;a</span> T</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>因为结构体字段 <code>r</code> 引用了 <code>T</code>，因此 <code>r</code> 的生命周期 <code>&#39;a</code> 必须要比 <code>T</code> 的生命周期更短(被引用者的生命周期必须要比引用长)。</p>
+<p>在 Rust 1.30 版本之前，该写法是必须的，但是从 1.31 版本开始，编译器可以自动推导 <code>T: &#39;a</code> 类型的约束，因此我们只需这样写即可：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Ref</span>&lt;<span class="symbol">&#x27;a</span>, T&gt; &#123;</span><br><span class="line">    r: &amp;<span class="symbol">&#x27;a</span> T</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>来看一个使用了生命周期约束的综合例子：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">ImportantExcerpt</span>&lt;<span class="symbol">&#x27;a</span>&gt; &#123;</span><br><span class="line">    part: &amp;<span class="symbol">&#x27;a</span> <span class="type">str</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span>&lt;<span class="symbol">&#x27;a</span>: <span class="symbol">&#x27;b</span>, <span class="symbol">&#x27;b</span>&gt; ImportantExcerpt&lt;<span class="symbol">&#x27;a</span>&gt; &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">announce_and_return_part</span>(&amp;<span class="symbol">&#x27;a</span> <span class="keyword">self</span>, announcement: &amp;<span class="symbol">&#x27;b</span> <span class="type">str</span>) <span class="punctuation">-&gt;</span> &amp;<span class="symbol">&#x27;b</span> <span class="type">str</span> &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;Attention please: &#123;&#125;&quot;</span>, announcement);</span><br><span class="line">        <span class="keyword">self</span>.part</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面的例子中必须添加约束 <code>&#39;a: &#39;b</code> 后，才能成功编译，因为 <code>self.part</code> 的生命周期与 <code>self</code>的生命周期一致，将 <code>&amp;&#39;a</code> 类型的生命周期强行转换为 <code>&amp;&#39;b</code> 类型，会报错，只有在 <code>&#39;a</code> &gt;&#x3D; <code>&#39;b</code> 的情况下，<code>&#39;a</code> 才能转换成 <code>&#39;b</code>。</p>
+<h2 id="闭包函数的消除规则"><a href="#闭包函数的消除规则" class="headerlink" title="闭包函数的消除规则"></a>闭包函数的消除规则</h2><p>先来看一段简单的代码：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">fn_elision</span>(x: &amp;<span class="type">i32</span>) <span class="punctuation">-&gt;</span> &amp;<span class="type">i32</span> &#123; x &#125;</span><br><span class="line"><span class="keyword">let</span> <span class="variable">closure_slision</span> = |x: &amp;<span class="type">i32</span>| <span class="punctuation">-&gt;</span> &amp;<span class="type">i32</span> &#123; x &#125;;</span><br></pre></td></tr></table></figure>
+
+<p>乍一看，这段代码比古天乐还平平无奇，能有什么问题呢？来，拄拐走两圈试试：</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">error: lifetime may not live long enough</span><br><span class="line"><span class="meta prompt_">  --&gt; </span><span class="language-bash">src/main.rs:39:39</span></span><br><span class="line">   |</span><br><span class="line">39 |     let closure = |x: &amp;i32| -&gt; &amp;i32 &#123; x &#125;; // fails</span><br><span class="line">   |                       -        -      ^ returning this value requires that `&#x27;1` must outlive `&#x27;2`</span><br><span class="line">   |                       |        |</span><br><span class="line">   |                       |        let&#x27;s call the lifetime of this reference `&#x27;2`</span><br><span class="line">   |                       let&#x27;s call the lifetime of this reference `&#x27;1`</span><br></pre></td></tr></table></figure>
+
+<p>咦？竟然报错了，明明两个一模一样功能的函数，一个正常编译，一个却报错，错误原因是编译器无法推测返回的引用和传入的引用谁活得更久!</p>
+<p>真的是非常奇怪的错误，学过上一节的读者应该都记得这样一条生命周期消除规则：<strong>如果函数参数中只有一个引用类型，那该引用的生命周期会被自动分配给所有的返回引用</strong>。我们当前的情况完美符合， <code>function</code> 函数的顺利编译通过，就充分说明了问题。</p>
+<p>先给出一个结论：<strong>这个问题，可能很难被解决，建议大家遇到后，还是老老实实用正常的函数，不要秀闭包了</strong>。</p>
+<p>对于函数的生命周期而言，它的消除规则之所以能生效是因为它的生命周期完全体现在签名的引用类型上，在函数体中无需任何体现：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">fn_elision</span>(x: &amp;<span class="type">i32</span>) <span class="punctuation">-&gt;</span> &amp;<span class="type">i32</span> &#123;..&#125;</span><br></pre></td></tr></table></figure>
+
+<p>因此编译器可以做各种编译优化，也很容易根据参数和返回值进行生命周期的分析，最终得出消除规则。</p>
+<p>可是闭包，并没有函数那么简单，它的生命周期分散在参数和闭包函数体中(主要是它没有确切的返回值签名：由于闭包的类型通常是通过类型推导自动推断的，并且闭包函数体中可能有多个 <code>return</code> 语句，因此没有确切的返回值签名。)：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">closure_slision</span> = |x: &amp;<span class="type">i32</span>| <span class="punctuation">-&gt;</span> &amp;<span class="type">i32</span> &#123; x &#125;;</span><br></pre></td></tr></table></figure>
+
+<p>编译器就必须深入到闭包函数体中，去分析和推测生命周期，复杂度因此急剧提升：试想一下，编译器该如何从复杂的上下文中分析出参数引用的生命周期和闭包体中生命周期的关系？</p>
+<p>由于上述原因(当然，实际情况复杂的多)，Rust 语言开发者目前其实是有意针对函数和闭包实现了两种不同的生命周期消除规则。</p>
+<p><strong>用 <code>Fn</code> 特征解决闭包生命周期</strong></p>
+<p>之前我们提到了很难解决，但是并没有完全堵死，以下就不失为一个解决方案。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">   <span class="keyword">let</span> <span class="variable">closure_slision</span> = <span class="title function_ invoke__">fun</span>(|x: &amp;<span class="type">i32</span>| <span class="punctuation">-&gt;</span> &amp;<span class="type">i32</span> &#123; x &#125;);</span><br><span class="line">   <span class="built_in">assert_eq!</span>(*<span class="title function_ invoke__">closure_slision</span>(&amp;<span class="number">45</span>), <span class="number">45</span>);</span><br><span class="line">   <span class="comment">// Passed !</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">fun</span>&lt;T, F: <span class="title function_ invoke__">Fn</span>(&amp;T) <span class="punctuation">-&gt;</span> &amp;T&gt;(f: F) <span class="punctuation">-&gt;</span> F &#123;</span><br><span class="line">   f</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="NLL-Non-Lexical-Lifetime"><a href="#NLL-Non-Lexical-Lifetime" class="headerlink" title="NLL(Non-Lexical Lifetime)"></a>NLL(Non-Lexical Lifetime)</h2><p><strong>引用的生命周期正常来说应该从借用开始一直持续到作用域结束</strong>，但是这种规则会让多引用共存的情况变得更复杂：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">   <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">s</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;hello&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">r1</span> = &amp;s;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">r2</span> = &amp;s;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125; and &#123;&#125;&quot;</span>, r1, r2);</span><br><span class="line">    <span class="comment">// 新编译器中，r1,r2作用域在这里结束</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">r3</span> = &amp;<span class="keyword">mut</span> s;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, r3);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>按照上述规则，这段代码将会报错，因为 <code>r1</code> 和 <code>r2</code> 的不可变引用将持续到 <code>main</code> 函数结束，而在此范围内，我们又借用了 <code>r3</code> 的可变引用，这违反了借用的规则：要么多个不可变借用，要么一个可变借用。</p>
+<p>好在，该规则从 1.31 版本引入 <code>NLL</code> 后，就变成了：<strong>引用的生命周期从借用处开始，一直持续到最后一次使用的地方</strong>。</p>
+<p>按照最新的规则，我们再来分析一下上面的代码。<code>r1</code> 和 <code>r2</code> 不可变借用在 <code>println!</code> 后就不再使用，因此生命周期也随之结束，那么 <code>r3</code> 的借用就不再违反借用的规则，皆大欢喜。</p>
+<p>再来看一段关于 <code>NLL</code> 的代码解释：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">u</span> = <span class="number">0i32</span>;</span><br><span class="line"><span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">v</span> = <span class="number">1i32</span>;</span><br><span class="line"><span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">w</span> = <span class="number">2i32</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// lifetime of `a` = α ∪ β ∪ γ</span></span><br><span class="line"><span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">a</span> = &amp;<span class="keyword">mut</span> u;     <span class="comment">// --+ α. lifetime of `&amp;mut u`  --+ lexical &quot;lifetime&quot; of `&amp;mut u`,`&amp;mut u`, `&amp;mut w` and `a`</span></span><br><span class="line"><span class="title function_ invoke__">use</span>(a);                 <span class="comment">//   |                            |</span></span><br><span class="line">*a = <span class="number">3</span>; <span class="comment">// &lt;-----------------+                            |</span></span><br><span class="line">...                     <span class="comment">//                                |</span></span><br><span class="line">a = &amp;<span class="keyword">mut</span> v;             <span class="comment">// --+ β. lifetime of `&amp;mut v`    |</span></span><br><span class="line"><span class="title function_ invoke__">use</span>(a);                 <span class="comment">//   |                            |</span></span><br><span class="line">*a = <span class="number">4</span>; <span class="comment">// &lt;-----------------+                            |</span></span><br><span class="line">...                     <span class="comment">//                                |</span></span><br><span class="line">a = &amp;<span class="keyword">mut</span> w;             <span class="comment">// --+ γ. lifetime of `&amp;mut w`    |</span></span><br><span class="line"><span class="title function_ invoke__">use</span>(a);                 <span class="comment">//   |                            |</span></span><br><span class="line">*a = <span class="number">5</span>; <span class="comment">// &lt;-----------------+ &lt;--------------------------+</span></span><br></pre></td></tr></table></figure>
+
+<p>这段代码一目了然，<code>a</code> 有三段生命周期：<code>α</code>，<code>β</code>，<code>γ</code>，每一段生命周期都随着当前值的最后一次使用而结束。</p>
+<p>在实际项目中，<code>NLL</code> 规则可以大幅减少引用冲突的情况，极大的便利了用户，因此广受欢迎，最终该规则甚至演化成一个独立的项目，未来可能会进一步简化我们的使用，<code>Polonius</code>：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/rust-lang/polonius">项目地址</a></li>
+<li><a target="_blank" rel="noopener" href="http://smallcultfollowing.com/babysteps/blog/2018/04/27/an-alias-based-formulation-of-the-borrow-checker/">具体介绍</a></li>
+</ul>
+<h3 id="Reborrow-再借用"><a href="#Reborrow-再借用" class="headerlink" title="Reborrow 再借用"></a>Reborrow 再借用</h3><p>学完 <code>NLL</code> 后，我们就有了一定的基础，可以继续学习关于借用和生命周期的一个高级内容：<strong>再借用</strong>。</p>
+<p>先来看一段代码：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#[derive(Debug)]</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Point</span> &#123;</span><br><span class="line">    x: <span class="type">i32</span>,</span><br><span class="line">    y: <span class="type">i32</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">Point</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">move_to</span>(&amp;<span class="keyword">mut</span> <span class="keyword">self</span>, x: <span class="type">i32</span>, y: <span class="type">i32</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.x = x;</span><br><span class="line">        <span class="keyword">self</span>.y = y;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">p</span> = Point &#123; x: <span class="number">0</span>, y: <span class="number">0</span> &#125;;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">r</span> = &amp;<span class="keyword">mut</span> p;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">rr</span>: &amp;Point = &amp;*r;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, rr);</span><br><span class="line">    r.<span class="title function_ invoke__">move_to</span>(<span class="number">10</span>, <span class="number">10</span>);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, r);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上代码，大家可能会觉得可变引用 <code>r</code> 和不可变引用 <code>rr</code> 同时存在会报错吧？但是事实上并不会，原因在于 <code>rr</code> 是对 <code>r</code> 的再借用。</p>
+<p>对于再借用而言，<code>rr</code> 再借用时不会破坏借用规则，但是你不能在它的生命周期内再使用原来的借用 <code>r</code>，来看看对上段代码的分析：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">p</span> = Point &#123; x: <span class="number">0</span>, y: <span class="number">0</span> &#125;;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">r</span> = &amp;<span class="keyword">mut</span> p;</span><br><span class="line">    <span class="comment">// reborrow! 此时对`r`的再借用不会导致跟上面的借用冲突</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">rr</span>: &amp;Point = &amp;*r;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 再借用`rr`最后一次使用发生在这里，在它的生命周期中，我们并没有使用原来的借用`r`，因此不会报错</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, rr);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 再借用结束后，才去使用原来的借用`r`</span></span><br><span class="line">    r.<span class="title function_ invoke__">move_to</span>(<span class="number">10</span>, <span class="number">10</span>);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, r);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>再来看一个例子：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::vec::<span class="type">Vec</span>;</span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">read_length</span>(strings: &amp;<span class="keyword">mut</span> <span class="type">Vec</span>&lt;<span class="type">String</span>&gt;) <span class="punctuation">-&gt;</span> <span class="type">usize</span> &#123; <span class="comment">// 对调用者的的可变借用 </span></span><br><span class="line">   strings.<span class="title function_ invoke__">len</span>() <span class="comment">// .len方法是对于调用者的不可变借用</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如上所示，函数体内对参数的二次借用也是典型的 <code>Reborrow</code> 场景。</p>
+<p>那么下面让我们来做件坏事，破坏这条规则，使其报错：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">p</span> = Point &#123; x: <span class="number">0</span>, y: <span class="number">0</span> &#125;;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">r</span> = &amp;<span class="keyword">mut</span> p;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">rr</span>: &amp;Point = &amp;*r;</span><br><span class="line"></span><br><span class="line">    r.<span class="title function_ invoke__">move_to</span>(<span class="number">10</span>, <span class="number">10</span>);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, rr);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, r);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>果然，破坏永远比重建简单 :) 只需要在 <code>rr</code> 再借用的生命周期内使用一次原来的借用 <code>r</code> 即可！</p>
+<h2 id="生命周期消除规则补充"><a href="#生命周期消除规则补充" class="headerlink" title="生命周期消除规则补充"></a>生命周期消除规则补充</h2><h3 id="impl-块消除"><a href="#impl-块消除" class="headerlink" title="impl 块消除"></a>impl 块消除</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">impl</span>&lt;<span class="symbol">&#x27;a</span>&gt; Reader <span class="keyword">for</span> <span class="title class_">BufReader</span>&lt;<span class="symbol">&#x27;a</span>&gt; &#123;</span><br><span class="line">    <span class="comment">// methods go here</span></span><br><span class="line">    <span class="comment">// impl内部实际上没有用到&#x27;a</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果你以前写的<code>impl</code>块长上面这样，同时在 <code>impl</code> 内部的方法中，根本就没有用到 <code>&#39;a</code>，那就可以写成下面的代码形式。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">impl</span> <span class="title class_">Reader</span> <span class="keyword">for</span> <span class="title class_">BufReader</span>&lt;<span class="symbol">&#x27;_</span>&gt; &#123;</span><br><span class="line">    <span class="comment">// methods go here</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>&#39;_</code> 生命周期表示 <code>BufReader</code> 有一个不使用的生命周期，我们可以忽略它，无需为它创建一个名称。</p>
+<p>歪个楼，有读者估计会发问：既然用不到 <code>&#39;a</code>，为何还要写出来？如果你仔细回忆下上一节的内容，里面有一句专门用粗体标注的文字：<strong>生命周期参数也是类型的一部分</strong>，因此 <code>BufReader&lt;&#39;a&gt;</code> 是一个完整的类型，在实现它的时候，你不能把 <code>&#39;a</code> 给丢了！</p>
+<h3 id="生命周期约束消除"><a href="#生命周期约束消除" class="headerlink" title="生命周期约束消除"></a>生命周期约束消除</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Rust 2015</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Ref</span>&lt;<span class="symbol">&#x27;a</span>, T: <span class="symbol">&#x27;a</span>&gt; &#123;</span><br><span class="line">    field: &amp;<span class="symbol">&#x27;a</span> T</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Rust 2018</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Ref</span>&lt;<span class="symbol">&#x27;a</span>, T&gt; &#123;</span><br><span class="line">    field: &amp;<span class="symbol">&#x27;a</span> T</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在本节的生命周期约束中，也提到过，新版本 Rust 中，上面情况中的 <code>T: &#39;a</code> 可以被消除掉，当然，你也可以显式的声明，但是会影响代码可读性。关于类似的场景，Rust 团队计划在未来提供更多的消除规则，但是，你懂的，计划未来就等于未知。</p>
+<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p>下面是一个关于生命周期声明过大的例子，会较为复杂，希望大家能细细阅读，它能帮你对生命周期的理解更加深入。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Interface</span>&lt;<span class="symbol">&#x27;a</span>&gt; &#123;</span><br><span class="line">    manager: &amp;<span class="symbol">&#x27;a</span> <span class="keyword">mut</span> Manager&lt;<span class="symbol">&#x27;a</span>&gt;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span>&lt;<span class="symbol">&#x27;a</span>&gt; Interface&lt;<span class="symbol">&#x27;a</span>&gt; &#123;</span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">noop</span>(<span class="keyword">self</span>) &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;interface consumed&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Manager</span>&lt;<span class="symbol">&#x27;a</span>&gt; &#123;</span><br><span class="line">    text: &amp;<span class="symbol">&#x27;a</span> <span class="type">str</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">List</span>&lt;<span class="symbol">&#x27;a</span>&gt; &#123;</span><br><span class="line">    manager: Manager&lt;<span class="symbol">&#x27;a</span>&gt;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span>&lt;<span class="symbol">&#x27;a</span>&gt; List&lt;<span class="symbol">&#x27;a</span>&gt; &#123;</span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">get_interface</span>(&amp;<span class="symbol">&#x27;a</span> <span class="keyword">mut</span> <span class="keyword">self</span>) <span class="punctuation">-&gt;</span> Interface &#123;</span><br><span class="line">        Interface &#123;</span><br><span class="line">            manager: &amp;<span class="keyword">mut</span> <span class="keyword">self</span>.manager</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">list</span> = List &#123;</span><br><span class="line">        manager: Manager &#123;</span><br><span class="line">            text: <span class="string">&quot;hello&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    list.<span class="title function_ invoke__">get_interface</span>().<span class="title function_ invoke__">noop</span>();</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;Interface should be dropped here and the borrow released&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 下面的调用会失败，因为同时有不可变/可变借用</span></span><br><span class="line">    <span class="comment">// 但是Interface在之前调用完成后就应该被释放了</span></span><br><span class="line">    <span class="comment">// 此处与 get_interface方法 是否有返回值无关</span></span><br><span class="line">    <span class="title function_ invoke__">use_list</span>(&amp;list);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">use_list</span>(list: &amp;List) &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, list.manager.text);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行后报错：</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">error[E0502]: cannot borrow `list` as immutable because it is also borrowed as mutable // `list`无法被借用，因为已经被可变借用</span><br><span class="line"><span class="meta prompt_">  --&gt; </span><span class="language-bash">src/main.rs:40:14</span></span><br><span class="line">   |</span><br><span class="line">34 |     list.get_interface().noop();</span><br><span class="line">   |     ---- mutable borrow occurs here // 可变借用发生在这里</span><br><span class="line">...</span><br><span class="line">40 |     use_list(&amp;list);</span><br><span class="line">   |              ^^^^^</span><br><span class="line">   |              |</span><br><span class="line">   |              immutable borrow occurs here // 新的不可变借用发生在这</span><br><span class="line">   |              mutable borrow later used here // 可变借用在这里结束</span><br></pre></td></tr></table></figure>
+
+<p>这段代码看上去并不复杂，实际上难度挺高的，首先在直觉上，<code>list.get_interface()</code> 借用的可变引用，按理来说应该在这行代码结束后，就归还了，但是为什么还能持续到 <code>use_list(&amp;list)</code> 后面呢？</p>
+<p>这是因为我们在 <code>get_interface</code> 方法中声明的 <code>lifetime</code> 有问题，该方法的参数的生命周期是 <code>&#39;a</code>，而 <code>List</code> 的生命周期也是 <code>&#39;a</code>，说明该方法至少活得跟 <code>List</code> 一样久，再回到 <code>main</code> 函数中，<code>list</code> 可以活到 <code>main</code> 函数的结束，因此 <code>list.get_interface()</code> 借用的可变引用也会活到 <code>main</code> 函数的结束，在此期间，自然无法再进行借用了。</p>
+<p>要解决这个问题，我们需要为 <code>get_interface</code> 方法的参数给予一个不同于 <code>List&lt;&#39;a&gt;</code> 的生命周期 <code>&#39;b</code>，最终代码如下：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Interface</span>&lt;<span class="symbol">&#x27;b</span>, <span class="symbol">&#x27;a</span>: <span class="symbol">&#x27;b</span>&gt; &#123;</span><br><span class="line">    manager: &amp;<span class="symbol">&#x27;b</span> <span class="keyword">mut</span> Manager&lt;<span class="symbol">&#x27;a</span>&gt;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span>&lt;<span class="symbol">&#x27;b</span>, <span class="symbol">&#x27;a</span>: <span class="symbol">&#x27;b</span>&gt; Interface&lt;<span class="symbol">&#x27;b</span>, <span class="symbol">&#x27;a</span>&gt; &#123;</span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">noop</span>(<span class="keyword">self</span>) &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;interface consumed&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Manager</span>&lt;<span class="symbol">&#x27;a</span>&gt; &#123;</span><br><span class="line">    text: &amp;<span class="symbol">&#x27;a</span> <span class="type">str</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">List</span>&lt;<span class="symbol">&#x27;a</span>&gt; &#123;</span><br><span class="line">    manager: Manager&lt;<span class="symbol">&#x27;a</span>&gt;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span>&lt;<span class="symbol">&#x27;a</span>&gt; List&lt;<span class="symbol">&#x27;a</span>&gt; &#123;</span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">get_interface</span>&lt;<span class="symbol">&#x27;b</span>&gt;(&amp;<span class="symbol">&#x27;b</span> <span class="keyword">mut</span> <span class="keyword">self</span>) <span class="punctuation">-&gt;</span> Interface&lt;<span class="symbol">&#x27;b</span>, <span class="symbol">&#x27;a</span>&gt;</span><br><span class="line">    <span class="keyword">where</span> <span class="symbol">&#x27;a</span>: <span class="symbol">&#x27;b</span> &#123;</span><br><span class="line">        Interface &#123;</span><br><span class="line">            manager: &amp;<span class="keyword">mut</span> <span class="keyword">self</span>.manager</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">list</span> = List &#123;</span><br><span class="line">        manager: Manager &#123;</span><br><span class="line">            text: <span class="string">&quot;hello&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    list.<span class="title function_ invoke__">get_interface</span>().<span class="title function_ invoke__">noop</span>();</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;Interface should be dropped here and the borrow released&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 下面的调用可以通过，因为Interface的生命周期不需要跟list一样长</span></span><br><span class="line">    <span class="title function_ invoke__">use_list</span>(&amp;list);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">use_list</span>(list: &amp;List) &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, list.manager.text);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>至此，生命周期终于完结，两章超级长的内容，可以满足几乎所有对生命周期的学习目标。学完生命周期，意味着你正式入门了 Rust，只要再掌握几个常用概念，就可以上手写项目了。</p>
+<h1 id="’static-和-T-‘static"><a href="#’static-和-T-‘static" class="headerlink" title="&amp;’static 和 T: ‘static"></a>&amp;’static 和 T: ‘static</h1><p><code>&#39;static</code> 在 Rust 中是相当常见的，例如字符串字面值就具有 <code>&#39;static</code> 生命周期:</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">  <span class="keyword">let</span> <span class="variable">mark_twain</span>: &amp;<span class="type">str</span> = <span class="string">&quot;Samuel Clemens&quot;</span>;</span><br><span class="line">  <span class="title function_ invoke__">print_author</span>(mark_twain);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">print_author</span>(author: &amp;<span class="symbol">&#x27;static</span> <span class="type">str</span>) &#123;</span><br><span class="line">  <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, author);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>除此之外，特征对象的生命周期也是 <code>&#39;static</code>。</p>
+<p>除了 <code>&amp;&#39;static</code> 的用法外，我们在另外一种场景中也可以见到 <code>&#39;static</code> 的使用:</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::fmt::Display;</span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">mark_twain</span> = <span class="string">&quot;Samuel Clemens&quot;</span>;</span><br><span class="line">    <span class="title function_ invoke__">print</span>(&amp;mark_twain);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">print</span>&lt;T: Display + <span class="symbol">&#x27;static</span>&gt;(message: &amp;T) &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, message);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这里，很明显 <code>&#39;static</code> 是作为生命周期约束来使用了。 <strong>那么问题来了， <code>&amp;&#39;static</code> 和 <code>T: &#39;static</code> 的用法到底有何区别?</strong></p>
+<h2 id="’static"><a href="#’static" class="headerlink" title="&amp;’static"></a>&amp;’static</h2><p><code>&amp;&#39;static</code> 对于生命周期有着非常强的要求：**一个引用必须要活得跟剩下的程序一样久，才能被标注为 <code>&amp;&#39;static</code>**。</p>
+<p>对于字符串字面量来说，他直接被打包到二进制文件中，永远不会被<code>drop</code>,因此它能跟程序活的一样久，自然他的生命周期就是<code>&#39;static</code></p>
+<p>但是，**<code>&amp;&#39;static</code>生命周期针对的仅仅是引用，而不是持有该引用的变量**，对于变量来说，还是要遵守相应的作用域规则：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::&#123;slice::from_raw_parts, <span class="type">str</span>::from_utf8_unchecked&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">get_memory_location</span>() <span class="punctuation">-&gt;</span> (<span class="type">usize</span>, <span class="type">usize</span>) &#123;</span><br><span class="line">  <span class="comment">// “Hello World” 是字符串字面量，因此它的生命周期是 `&#x27;static`.</span></span><br><span class="line">  <span class="comment">// 但持有它的变量 `string` 的生命周期就不一样了，它完全取决于变量作用域，对于该例子来说，也就是当前的函数范围</span></span><br><span class="line">  <span class="keyword">let</span> <span class="variable">string</span> = <span class="string">&quot;Hello World!&quot;</span>;</span><br><span class="line">  <span class="keyword">let</span> <span class="variable">pointer</span> = string.<span class="title function_ invoke__">as_ptr</span>() <span class="keyword">as</span> <span class="type">usize</span>;</span><br><span class="line">  <span class="keyword">let</span> <span class="variable">length</span> = string.<span class="title function_ invoke__">len</span>();</span><br><span class="line">  (pointer, length)</span><br><span class="line">  <span class="comment">// `string` 在这里被 drop 释放</span></span><br><span class="line">  <span class="comment">// 虽然变量被释放，无法再被访问，但是数据依然还会继续存活</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">get_str_at_location</span>(pointer: <span class="type">usize</span>, length: <span class="type">usize</span>) <span class="punctuation">-&gt;</span> &amp;<span class="symbol">&#x27;static</span> <span class="type">str</span> &#123;</span><br><span class="line">  <span class="comment">// 使用裸指针需要 `unsafe&#123;&#125;` 语句块</span></span><br><span class="line">  <span class="keyword">unsafe</span> &#123; <span class="title function_ invoke__">from_utf8_unchecked</span>(<span class="title function_ invoke__">from_raw_parts</span>(pointer <span class="keyword">as</span> *<span class="keyword">const</span> <span class="type">u8</span>, length)) &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">  <span class="keyword">let</span> (pointer, length) = <span class="title function_ invoke__">get_memory_location</span>();</span><br><span class="line">  <span class="keyword">let</span> <span class="variable">message</span> = <span class="title function_ invoke__">get_str_at_location</span>(pointer, length);</span><br><span class="line">  <span class="built_in">println!</span>(</span><br><span class="line">    <span class="string">&quot;The &#123;&#125; bytes at 0x&#123;:X&#125; stored: &#123;&#125;&quot;</span>,</span><br><span class="line">    length, pointer, message</span><br><span class="line">  );</span><br><span class="line">  <span class="comment">// 如果大家想知道为何处理裸指针需要 `unsafe`，可以试着反注释以下代码</span></span><br><span class="line">  <span class="comment">// let message = get_str_at_location(1000, 10);</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面代码有两点值得注意：</p>
+<ul>
+<li><code>&amp;&#39;static</code> 的引用确实可以和程序活得一样久，因为我们通过 <code>get_str_at_location</code> 函数直接取到了对应的字符串</li>
+<li>持有 <code>&amp;&#39;static</code> 引用的变量，它的生命周期受到作用域的限制，大家务必不要搞混了</li>
+</ul>
+<h2 id="T-‘static"><a href="#T-‘static" class="headerlink" title="T: ‘static"></a>T: ‘static</h2><p>相比起来，这种形式的约束就有些复杂了。</p>
+<p>首先，在以下两种情况下，<code>T: &#39;static</code> 与 <code>&amp;&#39;static</code> 有相同的约束：<code>T</code> 必须活得和程序一样久。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::fmt::<span class="built_in">Debug</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">print_it</span>&lt;T: <span class="built_in">Debug</span> + <span class="symbol">&#x27;static</span>&gt;( input: T) &#123;</span><br><span class="line">    <span class="built_in">println!</span>( <span class="string">&quot;&#x27;static value passed in is: &#123;:?&#125;&quot;</span>, input );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">print_it1</span>( input: <span class="keyword">impl</span> <span class="title class_">Debug</span> + <span class="symbol">&#x27;static</span> ) &#123;</span><br><span class="line">    <span class="built_in">println!</span>( <span class="string">&quot;&#x27;static value passed in is: &#123;:?&#125;&quot;</span>, input );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">i</span> = <span class="number">5</span>;</span><br><span class="line"></span><br><span class="line">    <span class="title function_ invoke__">print_it</span>(&amp;i); <span class="comment">// 引用当离开这一行的时候它的生命周期就结束了，那么给他指定为 &#x27;static 自然就报错了</span></span><br><span class="line">    <span class="title function_ invoke__">print_it1</span>(&amp;i); <span class="comment">// 同上</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上代码会报错，原因很简单: <code>&amp;i</code> 的生命周期无法满足 <code>&#39;static</code> 的约束，如果大家将 <code>i</code> 修改为常量，那自然一切 OK。</p>
+<p>见证奇迹的时候，请不要眨眼，现在我们来稍微修改下 <code>print_it</code> 函数:</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::fmt::<span class="built_in">Debug</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">print_it</span>&lt;T: <span class="built_in">Debug</span> + <span class="symbol">&#x27;static</span>&gt;( input: &amp;T) &#123;  <span class="comment">// 这里没用使用到 T 所以对于T并没有进行生命周期的检查</span></span><br><span class="line">    <span class="built_in">println!</span>( <span class="string">&quot;&#x27;static value passed in is: &#123;:?&#125;&quot;</span>, input );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">i</span> = <span class="number">5</span>;</span><br><span class="line"></span><br><span class="line">    <span class="title function_ invoke__">print_it</span>(&amp;i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这段代码竟然不报错了！原因在于我们约束的是 <code>T</code>，但是使用的却是它的引用 <code>&amp;T</code>，换而言之，我们根本没有直接使用 <code>T</code>，因此编译器就没有去检查 <code>T</code> 的生命周期约束！它只要确保 <code>&amp;T</code> 的生命周期符合规则即可，在上面代码中，它自然是符合的。</p>
+<p>再来看一个例子:</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::fmt::Display;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">  <span class="keyword">let</span> <span class="variable">r1</span>;</span><br><span class="line">  <span class="keyword">let</span> <span class="variable">r2</span>;</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">static</span> STATIC_EXAMPLE: <span class="type">i32</span> = <span class="number">42</span>;</span><br><span class="line">    r1 = &amp;STATIC_EXAMPLE;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">x</span> = <span class="string">&quot;&amp;&#x27;static str&quot;</span>;</span><br><span class="line">    r2 = x;</span><br><span class="line">    <span class="comment">// r1 和 r2 持有的数据都是 &#x27;static 的，因此在花括号结束后，并不会被释放</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">println!</span>(<span class="string">&quot;&amp;&#x27;static i32: &#123;&#125;&quot;</span>, r1); <span class="comment">// -&gt; 42</span></span><br><span class="line">  <span class="built_in">println!</span>(<span class="string">&quot;&amp;&#x27;static str: &#123;&#125;&quot;</span>, r2); <span class="comment">// -&gt; &amp;&#x27;static str</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> <span class="variable">r3</span>: &amp;<span class="type">str</span>;</span><br><span class="line"></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s1</span> = <span class="string">&quot;String&quot;</span>.<span class="title function_ invoke__">to_string</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// s1 虽然没有 &#x27;static 生命周期，但是它依然可以满足 T: &#x27;static 的约束</span></span><br><span class="line">    <span class="comment">// 充分说明这个约束是多么的弱。。</span></span><br><span class="line">    <span class="title function_ invoke__">static_bound</span>(&amp;s1);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// s1 是 String 类型，没有 &#x27;static 的生命周期，因此下面代码会报错</span></span><br><span class="line">    r3 = &amp;s1;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// s1 在这里被 drop</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, r3);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">static_bound</span>&lt;T: Display + <span class="symbol">&#x27;static</span>&gt;(t: &amp;T) &#123;</span><br><span class="line">  <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, t);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="static-到底针对谁？"><a href="#static-到底针对谁？" class="headerlink" title="static 到底针对谁？"></a>static 到底针对谁？</h2><p>大家有没有想过，到底是 <code>&amp;&#39;static</code> 作用域这个引用还是该引用指向的数据呢？</p>
+<p><strong>答案是引用指向的数据</strong>，而引用本身是要遵循其作用域范围的，我们来简单验证下</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">static_string</span> = <span class="string">&quot;I&#x27;m in read-only memory&quot;</span>;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;static_string: &#123;&#125;&quot;</span>, static_string);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 当 `static_string` 超出作用域时，该引用不能再被使用，但是数据依然会存在于 binary 所占用的内存中</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;static_string reference remains alive: &#123;&#125;&quot;</span>, static_string);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上代码不出所料会报错，原因在于虽然字符串字面量 “I’m in read-only memory” 的生命周期是 <code>&#39;static</code>，但是持有它的引用并不是，它的作用域在内部花括号 <code>&#125;</code> 处就结束了。</p>
+
+    
+  </article>
+
+  
+      
+    <div class="nexmoe-post-copyright">
+        <strong>本文作者：</strong>kay<br>
+        <strong>本文链接：</strong><a href="https://www.tooupper.com/content/Rust/learning-Rust/rust-senior/%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.html" title="https:&#x2F;&#x2F;www.tooupper.com&#x2F;content&#x2F;Rust&#x2F;learning-Rust&#x2F;rust-senior&#x2F;%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.html" target="_blank" rel="noopener">https:&#x2F;&#x2F;www.tooupper.com&#x2F;content&#x2F;Rust&#x2F;learning-Rust&#x2F;rust-senior&#x2F;%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.html</a><br>
+        
+            <strong>版权声明：</strong>本文采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/deed.zh" target="_blank">CC BY-NC-SA 3.0 CN</a> 协议进行许可
+
+        
+    </div>
+
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+   
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/Rust%E8%BF%9B%E9%98%B6/" rel="tag">Rust进阶</a>
+    
+</div>
+  
+  
+    <script async src="/js/copy-codeblock.js?v=1698918460945"></script>
+  
+
+  
+      <div class="nexmoe-post-footer">
+          
+      </div>
+  
+</div></div><div class="nexmoe-post-right">    <div class="nexmoe-fixed">
+        <div class="nexmoe-tool">
+
+            
+
+            
+            
+            <button class="mdui-fab catalog" style="overflow:unset;">
+                <i class="nexmoefont icon-i-catalog"></i>
+                <div class="nexmoe-toc">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B7%B1%E5%85%A5%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="toc-number">1.</span> <span class="toc-text">深入生命周期</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8D%E5%A4%AA%E8%81%AA%E6%98%8E%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E6%A3%80%E6%9F%A5"><span class="toc-number">1.1.</span> <span class="toc-text">不太聪明的生命周期检查</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BE%8B1"><span class="toc-number">1.1.1.</span> <span class="toc-text">例1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BE%8B2"><span class="toc-number">1.1.2.</span> <span class="toc-text">例2</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%A0%E7%95%8C%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="toc-number">1.2.</span> <span class="toc-text">无界生命周期</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E7%BA%A6%E6%9D%9F-HRTB"><span class="toc-number">1.3.</span> <span class="toc-text">生命周期约束 HRTB</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%80%98a-%E2%80%98b"><span class="toc-number">1.3.1.</span> <span class="toc-text">‘a: ‘b</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#T-%E2%80%98a"><span class="toc-number">1.3.2.</span> <span class="toc-text">T: ‘a</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AD%E5%8C%85%E5%87%BD%E6%95%B0%E7%9A%84%E6%B6%88%E9%99%A4%E8%A7%84%E5%88%99"><span class="toc-number">1.4.</span> <span class="toc-text">闭包函数的消除规则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NLL-Non-Lexical-Lifetime"><span class="toc-number">1.5.</span> <span class="toc-text">NLL(Non-Lexical Lifetime)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Reborrow-%E5%86%8D%E5%80%9F%E7%94%A8"><span class="toc-number">1.5.1.</span> <span class="toc-text">Reborrow 再借用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E6%B6%88%E9%99%A4%E8%A7%84%E5%88%99%E8%A1%A5%E5%85%85"><span class="toc-number">1.6.</span> <span class="toc-text">生命周期消除规则补充</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#impl-%E5%9D%97%E6%B6%88%E9%99%A4"><span class="toc-number">1.6.1.</span> <span class="toc-text">impl 块消除</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E7%BA%A6%E6%9D%9F%E6%B6%88%E9%99%A4"><span class="toc-number">1.6.2.</span> <span class="toc-text">生命周期约束消除</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BE%8B%E5%AD%90"><span class="toc-number">1.7.</span> <span class="toc-text">例子</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E2%80%99static-%E5%92%8C-T-%E2%80%98static"><span class="toc-number">2.</span> <span class="toc-text">&amp;’static 和 T: ‘static</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E2%80%99static"><span class="toc-number">2.1.</span> <span class="toc-text">&amp;’static</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#T-%E2%80%98static"><span class="toc-number">2.2.</span> <span class="toc-text">T: ‘static</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#static-%E5%88%B0%E5%BA%95%E9%92%88%E5%AF%B9%E8%B0%81%EF%BC%9F"><span class="toc-number">2.3.</span> <span class="toc-text">static 到底针对谁？</span></a></li></ol></li></ol>
+                </div>
+            </button>
+            
+
+            
+
+            <a href="#nexmoe-content" class="backtop toc-link" aria-label="Back To Top" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+        </div>
+    </div>
+</div></div><div id="nexmoe-footer"><!--!--></div><div><div id="nexmoe-search-space">
+	<div class="search-container">
+		<div class="search-header">
+			<div class="search-input-container">
+				<input
+					class="search-input"
+					type="text"
+					placeholder="搜索"
+					oninput="sinput();"
+				/>
+			</div>
+			<a class="search-close" onclick="sclose();">×</a>
+		</div>
+		<div class="search-body"></div>
+	</div>
+</div>
+</div><div><script async src="https://www.TooUpper.com" crossorigin="anonymous"></script>
+</div></body></html>

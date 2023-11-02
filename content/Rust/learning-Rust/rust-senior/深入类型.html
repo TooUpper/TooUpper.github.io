@@ -1,0 +1,624 @@
+<!doctype html>
+<html lang="zh"><head>
+<title>深入类型 - 成祠的个人博客</title>
+<meta charset="UTF-8">
+<meta name="keywords" content="blog">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+
+<link rel="shortcut icon" href="/image/favicon.png" type="image/png" />
+<meta name="description" content="深入类型Rust 是强类型语言，同时也是强安全语言，这些特性导致了 Rust 的类型注定比一般语言要更深入也更困难。 类型转换Rust 是类型安全的语言，因此在 Rust 中做类型转换不是一件简单的事。 as 转换先来看一段代码： 12345678fn main() &amp;#123;  let a: i32 &#x3D; 10;  let b: u16 &#x3D; 100;  if a &lt; b &amp;#123;  &#x2F;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入类型">
+<meta property="og:url" content="https://www.tooupper.com/content/Rust/learning-Rust/rust-senior/%E6%B7%B1%E5%85%A5%E7%B1%BB%E5%9E%8B.html">
+<meta property="og:site_name" content="成祠的个人博客">
+<meta property="og:description" content="深入类型Rust 是强类型语言，同时也是强安全语言，这些特性导致了 Rust 的类型注定比一般语言要更深入也更困难。 类型转换Rust 是类型安全的语言，因此在 Rust 中做类型转换不是一件简单的事。 as 转换先来看一段代码： 12345678fn main() &amp;#123;  let a: i32 &#x3D; 10;  let b: u16 &#x3D; 100;  if a &lt; b &amp;#123;  &#x2F;">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-10-01T11:10:14.000Z">
+<meta property="article:modified_time" content="2023-10-20T07:11:04.975Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="Rust进阶">
+<meta name="twitter:card" content="summary">
+
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+<link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
+
+
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1698918461711">
+
+<link rel="stylesheet" href="/css/style.css?v=1698918461711">
+
+
+
+
+    
+        <link rel="stylesheet" href="/custom.css?v=1698918461711">
+    
+
+
+
+<script src="/lib/mdui_043tiny/mdui.js" async></script>
+<script src="/lib/fancybox/fancybox.umd.js" async></script>
+<script src="/lib/lax.min.js" async></script>
+
+
+<script async src="/js/app.js?v=1698918461711"></script>
+
+ 
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4D4ZJ9G024"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+
+  gtag("config", "G-4D4ZJ9G024");
+</script>
+
+<meta name="generator" content="Hexo 6.3.0"></head><body class="nexmoe mdui-drawer-body-left"><div id="nexmoe-background"><div class="nexmoe-bg" style="background-image: url(/image/banner.png)"></div><div class="mdui-appbar mdui-shadow-0"><div class="mdui-toolbar"><a class="mdui-btn mdui-btn-icon mdui-ripple" mdui-drawer="{target: &#039;#drawer&#039;, swipe: true}" title="menu"><i class="mdui-icon nexmoefont icon-menu"></i></a><div class="mdui-toolbar-spacer"></div><a class="mdui-btn mdui-btn-icon" href="/" title="kay"><img src="/image/Logo.png" alt="kay"></a></div></div></div><div id="nexmoe-header"><div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="kay">
+            <img src="/image/Logo.png" alt="kay" alt="kay">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>文章</span>29</div>
+        <div><span>标签</span>4</div>
+        <div><span>分类</span>2</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/aboutMe.html" title="关于博主">
+            <i class="mdui-list-item-icon nexmoefont icon-info-circle"></i>
+            <div class="mdui-list-item-content">
+                关于博主
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archives.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/downloads.html" title="下载中心">
+            <i class="mdui-list-item-icon nexmoefont icon-coffee"></i>
+            <div class="mdui-list-item-content">
+                下载中心
+            </div>
+        </a>
+        
+    </div>
+    
+    
+        
+        <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+        
+            <form id="search_form">
+                <label><input class="st-default-search-input" id="search_value" name="q" type="search" placeholder="搜索" style="
+                    font-size: 15px !important;
+                    height: 56px !important;
+                    background-image: none;
+                "></label>
+            </form>
+         
+    </div>
+</div>
+
+
+	<script async src="/js/search.js?v=1698918461711"></script>
+
+
+
+    
+        
+        <div class="nexmoe-widget-wrap">
+	<div class="nexmoe-widget nexmoe-social">
+		<a
+			class="mdui-ripple"
+			href="/image/QQOrWeChat.png"
+			target="_blank"
+			mdui-tooltip="{content: 'QQ'}"
+			style="
+				color: rgb(249, 174, 8);
+				background-color: rgba(249, 174, 8, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-QQ"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="/image/QQOrWeChat.png"
+			target="_blank"
+			mdui-tooltip="{content: 'WeChat'}"
+			style="
+				color: rgb(59, 151, 239);
+				background-color: rgba(59, 151, 239, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-wechat-fill"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://github.com/TooUpper/"
+			target="_blank"
+			mdui-tooltip="{content: 'GitHub'}"
+			style="
+				color: rgb(25, 23, 23);
+				background-color: rgba(25, 23, 23, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-github"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="/www.TooUpper.com"
+			target="_blank"
+			mdui-tooltip="{content: 'Blog'}"
+			style="
+				color: rgb(30, 136, 229);
+				background-color: rgba(30, 136, 229, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-home"
+			></i> </a
+		>
+	</div>
+</div>
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章分类</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/RISC-V/">RISC-V</a>
+          <span class="category-list-count">4</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Rust/">Rust</a>
+          <span class="category-list-count">25</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/Rust%E5%9F%BA%E7%A1%80/" style="font-size: 20px;">Rust基础</a> <a href="/tags/Rust%E8%BF%9B%E9%98%B6/" style="font-size: 15px;">Rust进阶</a> <a href="/tags/rcore/" style="font-size: 10px;">rcore</a> <a href="/tags/riscv/" style="font-size: 10px;">riscv</a>
+    </div>
+    
+  </div>
+
+    
+        
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章归档</h3>
+    <div class="nexmoe-widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/">2023</a><span class="archive-list-count">29</span></li></ul>
+    </div>
+  </div>
+
+
+
+    
+   
+    <div class="nexmoe-copyright">
+        &copy; 2023 kay
+        Powered by <a href="https://www.TooUpper.com" target="_blank">成祠</a>
+        & <a href="https://github.com/TooUpper" target="_blank">TooUpper</a>
+        <br><a target="_blank" href="https://www.TooUpper.com">鄂ICP备2020018486号</a>
+<br><a target="_blank" href="https://www.TooUpper.com">加油做一个不会被优化掉的程序员</a>
+
+    </div>
+</div><!-- .nexmoe-drawer --></div><div id="nexmoe-content"><div class="nexmoe-primary"><div class="nexmoe-post">
+  <article>
+    
+        <div class="nexmoe-post-cover absolute" style="padding-top: 62.5%;"> 
+            <img src="/image/Rust/RustCrab.png" alt="深入类型" loading="lazy">
+            <h1>深入类型</h1>
+        </div>
+    
+    
+    <div class="nexmoe-post-meta">
+    <div class="nexmoe-rainbow">
+        <a class="nexmoefont icon-calendar-fill">2023年10月01日</a>
+        
+            <a class="nexmoefont icon-appstore-fill -link" href="/categories/Rust/">Rust</a>
+        
+        
+    <a><i class="nexmoefont icon-areachart"></i>约9.8k字</a>
+    <a><i class="nexmoefont icon-time-circle-fill"></i>预计需要39分钟</a>
+
+    </div>
+    
+    
+    
+    
+    
+</div>
+
+    <h1 id="深入类型"><a href="#深入类型" class="headerlink" title="深入类型"></a>深入类型</h1><p>Rust 是强类型语言，同时也是强安全语言，这些特性导致了 Rust 的类型注定比一般语言要更深入也更困难。</p>
+<h2 id="类型转换"><a href="#类型转换" class="headerlink" title="类型转换"></a>类型转换</h2><p>Rust 是类型安全的语言，因此在 Rust 中做类型转换不是一件简单的事。</p>
+<h3 id="as-转换"><a href="#as-转换" class="headerlink" title="as 转换"></a>as 转换</h3><p>先来看一段代码：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">  <span class="keyword">let</span> <span class="variable">a</span>: <span class="type">i32</span> = <span class="number">10</span>;</span><br><span class="line">  <span class="keyword">let</span> <span class="variable">b</span>: <span class="type">u16</span> = <span class="number">100</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> a &lt; b &#123;  <span class="comment">//error: 不同类型无法比较</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;Ten is less than one hundred.&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>解决办法很简单，只要把 <code>b</code> 转换成 <code>i32</code> 类型即可，Rust 中内置了一些基本类型之间的转换，这里使用 <code>as</code> 操作符来完成： <code>if a &lt; (b as i32) &#123;...&#125;</code>。那么为什么不把 <code>a</code> 转换成 <code>u16</code> 类型呢？</p>
+<p>因为每个类型能表达的数据范围不同，如果把范围较大的类型转换成较小的类型，会造成错误，因此我们需要把范围较小的类型转换成较大的类型，来避免这些问题的发生。</p>
+<blockquote>
+<p>使用类型转换需要小心，因为如果执行以下操作 <code>300_i32 as i8</code>，你将获得 <code>44</code> 这个值，而不是 <code>300</code>，因为 <code>i8</code> 类型能表达的的最大值为 <code>2^7 - 1</code>，使用以下代码可以查看 <code>i8</code> 的最大值：</p>
+</blockquote>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">a</span> = <span class="type">i8</span>::MAX;</span><br><span class="line"><span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>,a);</span><br></pre></td></tr></table></figure>
+
+<p>下面列出了常用的转换形式：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">   <span class="keyword">let</span> <span class="variable">a</span> = <span class="number">3.1</span> <span class="keyword">as</span> <span class="type">i8</span>; <span class="comment">// 3</span></span><br><span class="line">   <span class="keyword">let</span> <span class="variable">b</span> = <span class="number">100_i8</span> <span class="keyword">as</span> <span class="type">i32</span>; <span class="comment">// 100</span></span><br><span class="line">   <span class="keyword">let</span> <span class="variable">c</span> = <span class="string">&#x27;a&#x27;</span> <span class="keyword">as</span> <span class="type">u8</span>; <span class="comment">// 将字符&#x27;a&#x27;转换为整数，97</span></span><br><span class="line"></span><br><span class="line">   <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;,&#123;&#125;,&#123;&#125;&quot;</span>,a,b,c)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="内存地址转换为指针"><a href="#内存地址转换为指针" class="headerlink" title="内存地址转换为指针"></a>内存地址转换为指针</h4><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">values</span>: [<span class="type">i32</span>; <span class="number">2</span>] = [<span class="number">1</span>, <span class="number">2</span>];</span><br><span class="line"><span class="keyword">let</span> <span class="variable">p1</span>: *<span class="keyword">mut</span> <span class="type">i32</span> = values.<span class="title function_ invoke__">as_mut_ptr</span>(); <span class="comment">// 转换为 ptr 地址</span></span><br><span class="line"><span class="keyword">let</span> <span class="variable">first_address</span> = p1 <span class="keyword">as</span> <span class="type">usize</span>; <span class="comment">// 将p1内存地址转换为一个整数</span></span><br><span class="line"><span class="keyword">let</span> <span class="variable">second_address</span> = first_address + <span class="number">4</span>; <span class="comment">// 4 == std::mem::size_of::&lt;i32&gt;()，i32类型占用4个字节，因此将内存地址 + 4</span></span><br><span class="line"><span class="keyword">let</span> <span class="variable">p2</span> = second_address <span class="keyword">as</span> *<span class="keyword">mut</span> <span class="type">i32</span>; <span class="comment">// 访问该地址指向的下一个整数p2</span></span><br><span class="line"><span class="keyword">unsafe</span> &#123;</span><br><span class="line">    *p2 += <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">assert_eq!</span>(values[<span class="number">1</span>], <span class="number">3</span>);</span><br></pre></td></tr></table></figure>
+
+<h4 id="强制类型转换的边角知识"><a href="#强制类型转换的边角知识" class="headerlink" title="强制类型转换的边角知识"></a>强制类型转换的边角知识</h4><p>转换不具有传递性 就算 <code>e as U1 as U2</code> 是合法的，也不能说明 <code>e as U2</code> 是合法的（<code>e</code> 不能直接转换成 <code>U2</code>）。</p>
+<h3 id="TryInto-转换"><a href="#TryInto-转换" class="headerlink" title="TryInto 转换"></a>TryInto 转换</h3><p>在一些场景中，使用 <code>as</code> 关键字会有比较大的限制。如果你想要在类型转换上拥有完全的控制而不依赖内置的转换，例如处理转换错误，那么可以使用 <code>TryInto</code> ：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::convert::TryInto;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">   <span class="keyword">let</span> <span class="variable">a</span>: <span class="type">u8</span> = <span class="number">10</span>;</span><br><span class="line">   <span class="keyword">let</span> <span class="variable">b</span>: <span class="type">u16</span> = <span class="number">1500</span>;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">let</span> <span class="variable">b_</span>: <span class="type">u8</span> = b.<span class="title function_ invoke__">try_into</span>().<span class="title function_ invoke__">unwrap</span>();</span><br><span class="line"></span><br><span class="line">   <span class="keyword">if</span> a &lt; b_ &#123;</span><br><span class="line">     <span class="built_in">println!</span>(<span class="string">&quot;Ten is less than one hundred.&quot;</span>);</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面代码中引入了 <code>std::convert::TryInto</code> 特征，但是却没有使用它，可能有些同学会为此困惑，主要原因在于<strong>如果你要使用一个特征的方法，那么你需要引入该特征到当前的作用域中</strong>，我们在上面用到了 <code>try_into</code> 方法，因此需要引入对应的特征。但是 Rust 又提供了一个非常便利的办法，把最常用的标准库中的特征通过<a target="_blank" rel="noopener" href="https://course.rs/appendix/prelude.html"><code>std::prelude</code></a>模块提前引入到当前作用域中，其中包括了 <code>std::convert::TryInto</code>，你可以尝试删除第一行的代码 <code>use ...</code>，看看是否会报错。</p>
+<p><code>try_into</code> 会尝试进行一次转换，并返回一个 <code>Result</code>，此时就可以对其进行相应的错误处理。由于我们的例子只是为了快速测试，因此使用了 <code>unwrap</code> 方法，该方法在发现错误时，会直接调用 <code>panic</code> 导致程序的崩溃退出，在实际项目中，请不要这么使用，具体见<strong>panic</strong>部分。</p>
+<p>最主要的是 <code>try_into</code> 转换会捕获大类型向小类型转换时导致的溢出错误：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">b</span>: <span class="type">i16</span> = <span class="number">1500</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">b_</span>: <span class="type">u8</span> = <span class="keyword">match</span> b.<span class="title function_ invoke__">try_into</span>() &#123;</span><br><span class="line">        <span class="title function_ invoke__">Ok</span>(b1) =&gt; b1,</span><br><span class="line">        <span class="title function_ invoke__">Err</span>(e) =&gt; &#123;</span><br><span class="line">            <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, e.<span class="title function_ invoke__">to_string</span>());</span><br><span class="line">            <span class="number">0</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行后输出如下 <code>&quot;out of range integral type conversion attempted&quot;</code>，在这里我们程序捕获了错误，编译器告诉我们类型范围超出的转换是不被允许的，因为我们试图把 <code>1500_i16</code> 转换为 <code>u8</code> 类型，后者明显不足以承载这么大的值。</p>
+<h3 id="通用类型转换"><a href="#通用类型转换" class="headerlink" title="通用类型转换"></a>通用类型转换</h3><p>虽然 <code>as</code> 和 <code>TryInto</code> 很强大，但是只能应用在数值类型上，可是 Rust 有如此多的类型，想要为这些类型实现转换，我们需要另谋出路，先来看看在一个笨办法，将一个结构体转换为另外一个结构体：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Foo</span> &#123;</span><br><span class="line">    x: <span class="type">u32</span>,</span><br><span class="line">    y: <span class="type">u16</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Bar</span> &#123;</span><br><span class="line">    a: <span class="type">u32</span>,</span><br><span class="line">    b: <span class="type">u16</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">reinterpret</span>(foo: Foo) <span class="punctuation">-&gt;</span> Bar &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">Foo</span> &#123; x, y &#125; = foo;</span><br><span class="line">    Bar &#123; a: x, b: y &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>简单粗暴，但是从另外一个角度来看，也挺啰嗦的，好在 Rust 为我们提供了更通用的方式来完成这个目的。</p>
+<h4 id="强制类型转换符"><a href="#强制类型转换符" class="headerlink" title="强制类型转换符"></a>强制类型转换符</h4><p>在某些情况下，类型是可以进行隐式强制转换的，虽然这些转换弱化了 Rust 的类型系统，但是它们的存在是为了让 Rust 在大多数场景可以工作(说白了，帮助用户省事)，而不是报各种类型上的编译错误。</p>
+<p>首先，在匹配特征时，不会做任何强制转换(除了方法)。一个类型 <code>T</code> 可以强制转换为 <code>U</code>，不代表 <code>impl T</code> 可以强制转换为 <code>impl U</code>，例如下面的代码就无法通过编译检查：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">trait</span> <span class="title class_">Trait</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">foo</span>&lt;X: Trait&gt;(t: X) &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span>&lt;<span class="symbol">&#x27;a</span>&gt; Trait <span class="keyword">for</span> &amp;<span class="symbol">&#x27;a</span> <span class="type">i32</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">t</span>: &amp;<span class="keyword">mut</span> <span class="type">i32</span> = &amp;<span class="keyword">mut</span> <span class="number">0</span>;</span><br><span class="line">    <span class="title function_ invoke__">foo</span>(t);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>报错如下：</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">error[E0277]: the trait bound `&amp;mut i32: Trait` is not satisfied</span><br><span class="line"><span class="meta prompt_">--&gt; </span><span class="language-bash">src/main.rs:9:9</span></span><br><span class="line">|</span><br><span class="line">9 |     foo(t);</span><br><span class="line">|         ^ the trait `Trait` is not implemented for `&amp;mut i32`</span><br><span class="line">|</span><br><span class="line">= help: the following implementations were found:</span><br><span class="line">        &lt;&amp;&#x27;a i32 as Trait&gt;</span><br><span class="line">= note: `Trait` is implemented for `&amp;i32`, but not for `&amp;mut i32`</span><br></pre></td></tr></table></figure>
+
+<p><strong><code>&amp;i32</code> 实现了特征 <code>Trait</code>， <code>&amp;mut i32</code> 可以转换为 <code>&amp;i32</code>，但是 <code>&amp;mut i32</code> 依然无法作为 <code>Trait</code> 来使用。</strong></p>
+<h4 id="操作符"><a href="#操作符" class="headerlink" title=". 操作符"></a>. 操作符</h4><p>方法调用的点操作符看起来简单，实际上非常不简单，它在调用时，会发生很多魔法般的类型转换，例如：自动引用、自动解引用，强制类型转换直到类型能匹配等。</p>
+<p>假设有一个方法 <code>foo</code>，它有一个接收器(接收器就是 <code>self</code>、<code>&amp;self</code>、<code>&amp;mut self</code> 参数)。如果调用 <code>value.foo()</code>，编译器在调用 <code>foo</code> 之前，需要决定到底使用哪个 <code>Self</code> 类型来调用。现在假设 <code>value</code> 拥有类型 <code>T</code>。</p>
+<p>再进一步，我们使用完全限定语法来进行准确的函数调用:</p>
+<ol>
+<li>首先，编译器检查它是否可以直接调用 <code>T::foo(value)</code>，称之为<strong>值方法调用</strong></li>
+<li>如果上一步调用无法完成(例如方法类型错误或者特征没有针对 <code>Self</code> 进行实现，上文提到过特征不能进行强制转换)，那么编译器会尝试增加自动引用，例如会尝试以下调用： <code>&lt;&amp;T&gt;::foo(value)</code> 和 <code>&lt;&amp;mut T&gt;::foo(value)</code>，称之为<strong>引用方法调用</strong></li>
+<li>若上面两个方法依然不工作，编译器会试着解引用 <code>T</code> ，然后再进行尝试。这里使用了 <code>Deref</code> 特征 —— 若 <code>T: Deref&lt;Target = U&gt;</code> (<code>T</code> 可以被解引用为 <code>U</code>)，那么编译器会使用 <code>U</code> 类型进行尝试，称之为<strong>解引用方法调用</strong></li>
+<li>若 <code>T</code> 不能被解引用，且 <code>T</code> 是一个定长类型(在编译期类型长度是已知的)，那么编译器也会尝试将 <code>T</code> 从定长类型转为不定长类型，例如将 <code>[i32; 2]</code> 转为 <code>[i32]</code></li>
+<li>若还是不行，那…没有那了，最后编译器大喊一声：汝欺我甚，不干了！</li>
+</ol>
+<p>下面我们来用一个例子来解释上面的方法查找算法:</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">array</span>: Rc&lt;<span class="type">Box</span>&lt;[T; <span class="number">3</span>]&gt;&gt; = ...;</span><br><span class="line"><span class="keyword">let</span> <span class="variable">first_entry</span> = array[<span class="number">0</span>];</span><br></pre></td></tr></table></figure>
+
+<p><code>array</code> 数组的底层数据隐藏在了重重封锁之后，那么编译器如何使用 <code>array[0]</code> 这种数组原生访问语法通过重重封锁，准确的访问到数组中的第一个元素？</p>
+<ol>
+<li>首先， <code>array[0]</code> 只是<a target="_blank" rel="noopener" href="https://doc.rust-lang.org/std/ops/trait.Index.html"><code>Index</code></a>特征的语法糖：编译器会将 <code>array[0]</code> 转换为 <code>array.index(0)</code> 调用，当然在调用之前，编译器会先检查 <code>array</code> 是否实现了 <code>Index</code> 特征。</li>
+<li>接着，编译器检查 <code>Rc&lt;Box&lt;[T; 3]&gt;&gt;</code> 是否有实现 <code>Index</code> 特征，结果是否，不仅如此，<code>&amp;Rc&lt;Box&lt;[T; 3]&gt;&gt;</code> 与 <code>&amp;mut Rc&lt;Box&lt;[T; 3]&gt;&gt;</code> 也没有实现。</li>
+<li>上面的都不能工作，编译器开始对 <code>Rc&lt;Box&lt;[T; 3]&gt;&gt;</code> 进行解引用，把它转变成 <code>Box&lt;[T; 3]&gt;</code></li>
+<li>此时继续对 <code>Box&lt;[T; 3]&gt;</code> 进行上面的操作 ：<code>Box&lt;[T; 3]&gt;</code>， <code>&amp;Box&lt;[T; 3]&gt;</code>，和 <code>&amp;mut Box&lt;[T; 3]&gt;</code> 都没有实现 <code>Index</code> 特征，所以编译器开始对 <code>Box&lt;[T; 3]&gt;</code> 进行解引用，然后我们得到了 <code>[T; 3]</code></li>
+<li><code>[T; 3]</code> 以及它的各种引用都没有实现 <code>Index</code> 索引(是不是很反直觉:D，<strong>在直觉中，数组都可以通过索引访问，实际上只有数组切片才可以</strong>!)，它也不能再进行解引用，因此编译器只能祭出最后的大杀器：将定长转为不定长，因此 <code>[T; 3]</code> 被转换成 <code>[T]</code>，也就是数组切片，它实现了 <code>Index</code> 特征，因此最终我们可以通过 <code>index</code> 方法访问到对应的元素。</li>
+</ol>
+<p>过程看起来很复杂，但是也还好，挺好理解，如果你现在不能彻底理解，也不要紧，等以后对 Rust 理解更深了，同时需要深入理解类型转换时，再来细细品读本章。</p>
+<p>再来看看以下更复杂的例子：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">do_stuff</span>&lt;T: <span class="built_in">Clone</span>&gt;(value: &amp;T) &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">cloned</span> = value.<span class="title function_ invoke__">clone</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面例子中 <code>cloned</code> 的类型是什么？首先编译器检查能不能进行<strong>值方法调用</strong>， <code>value</code> 的类型是 <code>&amp;T</code>，同时 <code>clone</code> 方法的签名也是 <code>&amp;T</code> ： <code>fn clone(&amp;T) -&gt; T</code>，因此可以进行值方法调用，再加上编译器知道了 <code>T</code> 实现了 <code>Clone</code>，因此 <code>cloned</code> 的类型是 <code>T</code>。</p>
+<p>如果 <code>T: Clone</code> 的特征约束被移除呢？</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">do_stuff</span>&lt;T&gt;(value: &amp;T) &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">cloned</span> = value.<span class="title function_ invoke__">clone</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>首先，从直觉上来说，该方法会报错，因为 <code>T</code> 没有实现 <code>Clone</code> 特征，但是真实情况是什么呢？</p>
+<p>我们先来推导一番。 首先通过值方法调用就不再可行，因为 <code>T</code> 没有实现 <code>Clone</code> 特征，也就无法调用 <code>T</code> 的 <code>clone</code> 方法。接着编译器尝试<strong>引用方法调用</strong>，此时 <code>T</code> 变成 <code>&amp;T</code>，在这种情况下， <code>clone</code> 方法的签名如下： <code>fn clone(&amp;&amp;T) -&gt; &amp;T</code>，接着我们现在对 <code>value</code> 进行了引用。 编译器发现 <code>&amp;T</code> 实现了 <code>Clone</code> 类型(所有的引用类型都可以被复制，因为其实就是复制一份地址)，因此可以推出 <code>cloned</code> 也是 <code>&amp;T</code> 类型。</p>
+<p>最终，我们复制出一份引用指针，这很合理，因为值类型 <code>T</code> 没有实现 <code>Clone</code>，只能去复制一个指针了。</p>
+<p>下面的例子也是自动引用生效的地方：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#[derive(Clone)]</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Container</span>&lt;T&gt;(Arc&lt;T&gt;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">clone_containers</span>&lt;T&gt;(foo: &amp;Container&lt;<span class="type">i32</span>&gt;, bar: &amp;Container&lt;T&gt;) &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">foo_cloned</span> = foo.<span class="title function_ invoke__">clone</span>();</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">bar_cloned</span> = bar.<span class="title function_ invoke__">clone</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>推断下上面的 <code>foo_cloned</code> 和 <code>bar_cloned</code> 是什么类型？提示: 关键在 <code>Container</code> 的泛型参数，一个是 <code>i32</code> 的具体类型，一个是泛型类型，其中 <code>i32</code> 实现了 <code>Clone</code>，但是 <code>T</code> 并没有。</p>
+<p>首先要复习一下复杂类型派生 <code>Clone</code> 的规则：一个复杂类型能否派生 <code>Clone</code>，需要它内部的所有子类型都能进行 <code>Clone</code>。因此 <code>Container&lt;T&gt;(Arc&lt;T&gt;)</code> 是否实现 <code>Clone</code> 的关键在于 <code>T</code> 类型是否实现了 <code>Clone</code> 特征。</p>
+<p>上面代码中，<code>Container&lt;i32&gt;</code> 实现了 <code>Clone</code> 特征，因此编译器可以直接进行值方法调用，此时相当于直接调用 <code>foo.clone</code>，其中 <code>clone</code> 的函数签名是 <code>fn clone(&amp;T) -&gt; T</code>，由此可以看出 <code>foo_cloned</code> 的类型是 <code>Container&lt;i32&gt;</code>。</p>
+<p>然而，<code>bar_cloned</code> 的类型却是 <code>&amp;Container&lt;T&gt;</code>，这个不合理啊，明明我们为 <code>Container&lt;T&gt;</code> 派生了 <code>Clone</code> 特征，因此它也应该是 <code>Container&lt;T&gt;</code> 类型才对。万事皆有因，我们先来看下 <code>derive</code> 宏最终生成的代码大概是啥样的：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">impl</span>&lt;T&gt; <span class="built_in">Clone</span> <span class="keyword">for</span> <span class="title class_">Container</span>&lt;T&gt; <span class="keyword">where</span> T: <span class="built_in">Clone</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">clone</span>(&amp;<span class="keyword">self</span>) <span class="punctuation">-&gt;</span> <span class="keyword">Self</span> &#123;</span><br><span class="line">        <span class="title function_ invoke__">Self</span>(Arc::<span class="title function_ invoke__">clone</span>(&amp;<span class="keyword">self</span>.<span class="number">0</span>))</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从上面代码可以看出，派生 <code>Clone</code> 能实现的根本是 <code>T</code> 实现了<a target="_blank" rel="noopener" href="https://doc.rust-lang.org/std/clone/trait.Clone.html#derivable"><code>Clone</code>特征</a>：<code>where T: Clone</code>， 因此 <code>Container&lt;T&gt;</code> 就没有实现 <code>Clone</code> 特征。</p>
+<p>编译器接着会去尝试引用方法调用，此时 <code>&amp;Container&lt;T&gt;</code> 引用实现了 <code>Clone</code>，最终可以得出 <code>bar_cloned</code> 的类型是 <code>&amp;Container&lt;T&gt;</code>。</p>
+<p>当然，也可以为 <code>Container&lt;T&gt;</code> 手动实现 <code>Clone</code> 特征：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">impl</span>&lt;T&gt; <span class="built_in">Clone</span> <span class="keyword">for</span> <span class="title class_">Container</span>&lt;T&gt; &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">clone</span>(&amp;<span class="keyword">self</span>) <span class="punctuation">-&gt;</span> <span class="keyword">Self</span> &#123;</span><br><span class="line">        <span class="title function_ invoke__">Self</span>(Arc::<span class="title function_ invoke__">clone</span>(&amp;<span class="keyword">self</span>.<span class="number">0</span>))</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>此时，编译器首次尝试值方法调用即可通过，因此 <code>bar_cloned</code> 的类型变成 <code>Container&lt;T&gt;</code>。</p>
+<h4 id="变形记-Transmutes"><a href="#变形记-Transmutes" class="headerlink" title="变形记(Transmutes)"></a>变形记(Transmutes)</h4><p>前方危险，敬请绕行！</p>
+<p>类型系统，你让开！我要自己转换这些类型，不成功便成仁！虽然本书大多是关于安全的内容，我还是希望你能仔细考虑避免使用本章讲到的内容。这是你在 Rust 中所能做到的真真正正、彻彻底底、最最可怕的非安全行为，在这里，所有的保护机制都形同虚设。</p>
+<p>先让你看看深渊长什么样，开开眼，然后你再决定是否深入： <code>mem::transmute&lt;T, U&gt;</code> 将类型 <code>T</code> 直接转成类型 <code>U</code>，唯一的要求就是，这两个类型占用同样大小的字节数！我的天，这也算限制？这简直就是无底线的转换好吧？看看会导致什么问题：</p>
+<ol>
+<li><p>首先也是最重要的，转换后创建一个任意类型的实例会造成无法想象的混乱，而且根本无法预测。不要把 <code>3</code> 转换成 <code>bool</code> 类型，就算你根本不会去使用该 <code>bool</code> 类型，也不要去这样转换</p>
+</li>
+<li><p>变形后会有一个重载的返回类型，即使你没有指定返回类型，为了满足类型推导的需求，依然会产生千奇百怪的类型</p>
+</li>
+<li><p>将</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&amp;</span><br></pre></td></tr></table></figure>
+
+<p>变形为</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&amp;mut</span><br></pre></td></tr></table></figure>
+
+<p>是未定义的行为</p>
+<ul>
+<li>这种转换永远都是未定义的</li>
+<li>不，你不能这么做</li>
+<li>不要多想，你没有那种幸运</li>
+</ul>
+</li>
+<li><p>变形为一个未指定生命周期的引用会导致无界生命周期、</p>
+</li>
+<li><p>在复合类型之间互相变换时，你需要保证它们的排列布局是一模一样的！一旦不一样，那么字段就会得到不可预期的值，这也是未定义的行为，至于你会不会因此愤怒， <strong>WHO CARES</strong> ，你都用了变形了，老兄！</p>
+</li>
+</ol>
+<p>对于第 5 条，你该如何知道内存的排列布局是一样的呢？对于 <code>repr(C)</code> 类型和 <code>repr(transparent)</code> 类型来说，它们的布局是有着精确定义的。但是对于你自己的”普通却自信”的 Rust 类型 <code>repr(Rust)</code> 来说，它可不是有着精确定义的。甚至同一个泛型类型的不同实例都可以有不同的内存布局。 <code>Vec&lt;i32&gt;</code> 和 <code>Vec&lt;u32&gt;</code> 它们的字段可能有着相同的顺序，也可能没有。对于数据排列布局来说，<strong>什么能保证，什么不能保证</strong>目前还在 Rust 开发组的<a target="_blank" rel="noopener" href="https://rust-lang.github.io/unsafe-code-guidelines/layout.html">工作任务</a>中呢。</p>
+<p>你以为你之前凝视的是深渊吗？不，你凝视的只是深渊的大门。 <code>mem::transmute_copy&lt;T, U&gt;</code> 才是真正的深渊，它比之前的还要更加危险和不安全。它从 <code>T</code> 类型中拷贝出 <code>U</code> 类型所需的字节数，然后转换成 <code>U</code>。 <code>mem::transmute</code> 尚有大小检查，能保证两个数据的内存大小一致，现在这哥们干脆连这个也丢了，只不过 <code>U</code> 的尺寸若是比 <code>T</code> 大，会是一个未定义行为。</p>
+<p>当然，你也可以通过裸指针转换和 <code>unions</code> (todo!)获得所有的这些功能，但是你将无法获得任何编译提示或者检查。裸指针转换和 <code>unions</code> 也不是魔法，无法逃避上面说的规则。</p>
+<p><code>transmute</code> 虽然危险，但作为一本工具书，知识当然要全面，下面列举两个有用的 <code>transmute</code> 应用场景 :)。</p>
+<ul>
+<li>将裸指针变成函数指针：</li>
+</ul>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">foo</span>() <span class="punctuation">-&gt;</span> <span class="type">i32</span> &#123;</span><br><span class="line">    <span class="number">0</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="variable">pointer</span> = foo <span class="keyword">as</span> *<span class="title function_ invoke__">const</span> ();</span><br><span class="line"><span class="keyword">let</span> <span class="variable">function</span> = <span class="keyword">unsafe</span> &#123; </span><br><span class="line">    <span class="comment">// 将裸指针转换为函数指针</span></span><br><span class="line">    std::mem::transmute::&lt;*<span class="title function_ invoke__">const</span> (), <span class="title function_ invoke__">fn</span>() <span class="punctuation">-&gt;</span> <span class="type">i32</span>&gt;(pointer) </span><br><span class="line">&#125;;</span><br><span class="line"><span class="built_in">assert_eq!</span>(<span class="title function_ invoke__">function</span>(), <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>延长生命周期，或者缩短一个静态生命周期寿命：</li>
+</ul>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">R</span>&lt;<span class="symbol">&#x27;a</span>&gt;(&amp;<span class="symbol">&#x27;a</span> <span class="type">i32</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 将 &#x27;b 生命周期延长至 &#x27;static 生命周期</span></span><br><span class="line"><span class="keyword">unsafe</span> <span class="keyword">fn</span> <span class="title function_">extend_lifetime</span>&lt;<span class="symbol">&#x27;b</span>&gt;(r: R&lt;<span class="symbol">&#x27;b</span>&gt;) <span class="punctuation">-&gt;</span> R&lt;<span class="symbol">&#x27;static</span>&gt; &#123;</span><br><span class="line">    std::mem::transmute::&lt;R&lt;<span class="symbol">&#x27;b</span>&gt;, R&lt;<span class="symbol">&#x27;static</span>&gt;&gt;(r)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 将 &#x27;static 生命周期缩短至 &#x27;c 生命周期</span></span><br><span class="line"><span class="keyword">unsafe</span> <span class="keyword">fn</span> <span class="title function_">shorten_invariant_lifetime</span>&lt;<span class="symbol">&#x27;b</span>, <span class="symbol">&#x27;c</span>&gt;(r: &amp;<span class="symbol">&#x27;b</span> <span class="keyword">mut</span> R&lt;<span class="symbol">&#x27;static</span>&gt;) <span class="punctuation">-&gt;</span> &amp;<span class="symbol">&#x27;b</span> <span class="keyword">mut</span> R&lt;<span class="symbol">&#x27;c</span>&gt; &#123;</span><br><span class="line">    std::mem::transmute::&lt;&amp;<span class="symbol">&#x27;b</span> <span class="keyword">mut</span> R&lt;<span class="symbol">&#x27;static</span>&gt;, &amp;<span class="symbol">&#x27;b</span> <span class="keyword">mut</span> R&lt;<span class="symbol">&#x27;c</span>&gt;&gt;(r)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上例子非常先进！但是是非常不安全的 Rust 行为！</p>
+<h2 id="newtype-和-类型别名"><a href="#newtype-和-类型别名" class="headerlink" title="newtype 和 类型别名"></a>newtype 和 类型别名</h2><p>弱弱地、不负责任地说，Rust 的学习难度之恶名，可能有一半来源于 Rust 的类型系统，而其中一半的一半则来自于本章节的内容。在本章，我们将重点学习如何创建自定义类型，以及了解何为动态大小的类型。</p>
+<h3 id="newtype"><a href="#newtype" class="headerlink" title="newtype"></a>newtype</h3><p>何为 <code>newtype</code>？简单来说，就是使用元组结构体的方式将已有的类型包裹起来：<code>struct Meters(u32);</code>，那么此处 <code>Meters</code> 就是一个 <code>newtype</code>。</p>
+<p>为何需要 <code>newtype</code>？Rust 这多如繁星的 Old 类型满足不了我们吗？这是因为：</p>
+<ul>
+<li>自定义类型可以让我们给出更有意义和可读性的类型名，例如与其使用 <code>u32</code> 作为距离的单位类型，我们可以使用 <code>Meters</code>，它的可读性要好得多</li>
+<li>对于某些场景，只有 <code>newtype</code> 可以很好地解决</li>
+<li>隐藏内部类型的细节</li>
+</ul>
+<p>一箩筐的理由～～ 让我们先从第二点讲起。</p>
+<h4 id="为外部类型实现外部特征"><a href="#为外部类型实现外部特征" class="headerlink" title="为外部类型实现外部特征"></a>为外部类型实现外部特征</h4><p>在之前的章节中，我们有讲过，在外部类型上实现外部特征必须使用 <code>newtype</code> 的方式，否则你就得遵循孤儿规则：要为类型 <code>A</code> 实现特征 <code>T</code>，那么 <code>A</code> 或者 <code>T</code> 必须至少有一个在当前的作用范围内。</p>
+<p>例如，如果想使用 <code>println!(&quot;&#123;&#125;&quot;, v)</code> 的方式去格式化输出一个动态数组 <code>Vec</code>，以期给用户提供更加清晰可读的内容，那么就需要为 <code>Vec</code> 实现 <code>Display</code> 特征，但是这里有一个问题： <code>Vec</code> 类型定义在标准库中，<code>Display</code> 亦然，这时就可以祭出大杀器 <code>newtype</code> 来解决：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::fmt;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Wrapper</span>(<span class="type">Vec</span>&lt;<span class="type">String</span>&gt;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">fmt</span>::Display <span class="keyword">for</span> <span class="title class_">Wrapper</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">fmt</span>(&amp;<span class="keyword">self</span>, f: &amp;<span class="keyword">mut</span> fmt::Formatter) <span class="punctuation">-&gt;</span> fmt::<span class="type">Result</span> &#123;</span><br><span class="line">        <span class="built_in">write!</span>(f, <span class="string">&quot;[&#123;&#125;]&quot;</span>, <span class="keyword">self</span>.<span class="number">0</span>.<span class="title function_ invoke__">join</span>(<span class="string">&quot;, &quot;</span>))</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">w</span> = <span class="title function_ invoke__">Wrapper</span>(<span class="built_in">vec!</span>[<span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;hello&quot;</span>), <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;world&quot;</span>)]);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;w = &#123;&#125;&quot;</span>, w);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如上所示，使用元组结构体语法 <code>struct Wrapper(Vec&lt;String&gt;)</code> 创建了一个 <code>newtype</code> Wrapper，然后为它实现 <code>Display</code> 特征，最终实现了对 <code>Vec</code> 动态数组的格式化输出。</p>
+<h4 id="更好的可读性及类型异化"><a href="#更好的可读性及类型异化" class="headerlink" title="更好的可读性及类型异化"></a>更好的可读性及类型异化</h4><p>首先，更好的可读性不等于更少的代码（如果你学过 Scala，相信会深有体会），其次下面的例子只是一个示例，未必能体现出更好的可读性：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::ops::Add;</span><br><span class="line"><span class="keyword">use</span> std::fmt;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Meters</span>(<span class="type">u32</span>);</span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">fmt</span>::Display <span class="keyword">for</span> <span class="title class_">Meters</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">fmt</span>(&amp;<span class="keyword">self</span>, f: &amp;<span class="keyword">mut</span> fmt::Formatter) <span class="punctuation">-&gt;</span> fmt::<span class="type">Result</span> &#123;</span><br><span class="line">        <span class="built_in">write!</span>(f, <span class="string">&quot;目标地点距离你&#123;&#125;米&quot;</span>, <span class="keyword">self</span>.<span class="number">0</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">Add</span> <span class="keyword">for</span> <span class="title class_">Meters</span> &#123;</span><br><span class="line">    <span class="keyword">type</span> <span class="title class_">Output</span> = <span class="keyword">Self</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">add</span>(<span class="keyword">self</span>, other: Meters) <span class="punctuation">-&gt;</span> <span class="keyword">Self</span> &#123;</span><br><span class="line">        <span class="title function_ invoke__">Self</span>(<span class="keyword">self</span>.<span class="number">0</span> + other.<span class="number">0</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">d</span> = <span class="title function_ invoke__">calculate_distance</span>(<span class="title function_ invoke__">Meters</span>(<span class="number">10</span>), <span class="title function_ invoke__">Meters</span>(<span class="number">20</span>));</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, d);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">calculate_distance</span>(d1: Meters, d2: Meters) <span class="punctuation">-&gt;</span> Meters &#123;</span><br><span class="line">    d1 + d2</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面代码创建了一个 <code>newtype</code> Meters，为其实现 <code>Display</code> 和 <code>Add</code> 特征，接着对两个距离进行求和计算，最终打印出该距离：</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">目标地点距离你30米</span><br></pre></td></tr></table></figure>
+
+<p>事实上，除了可读性外，还有一个极大的优点：如果给 <code>calculate_distance</code> 传一个其它的类型，例如<code>struct MilliMeters(u32);</code>，该代码将无法编译。尽管 <code>Meters</code> 和 <code>MilliMeters</code> 都是对 <code>u32</code> 类型的简单包装，但是<strong>它们是不同的类型！</strong></p>
+<h4 id="隐藏内部类型的细节"><a href="#隐藏内部类型的细节" class="headerlink" title="隐藏内部类型的细节"></a>隐藏内部类型的细节</h4><p>众所周知，Rust 的类型有很多自定义的方法，假如我们把某个类型传给了用户，但是又不想用户调用这些方法，就可以使用 <code>newtype</code>：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Meters</span>(<span class="type">u32</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">i</span>: <span class="type">u32</span> = <span class="number">2</span>;</span><br><span class="line">    <span class="built_in">assert_eq!</span>(i.<span class="title function_ invoke__">pow</span>(<span class="number">2</span>), <span class="number">4</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">n</span> = <span class="title function_ invoke__">Meters</span>(i);</span><br><span class="line">    <span class="comment">// 下面的代码将报错，因为`Meters`类型上没有`pow`方法</span></span><br><span class="line">    <span class="comment">// assert_eq!(n.pow(2), 4);</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>不过需要偷偷告诉你的是，这种方式实际上是掩耳盗铃，因为用户依然可以通过 <code>n.0.pow(2)</code> 的方式来调用内部类型的方法 :)</p>
+<h3 id="类型别名-Type-Alias"><a href="#类型别名-Type-Alias" class="headerlink" title="类型别名(Type Alias)"></a>类型别名(Type Alias)</h3><p>除了使用 <code>newtype</code>，我们还可以使用一个更传统的方式来创建新类型：类型别名</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">Meters</span> = <span class="type">u32</span></span><br></pre></td></tr></table></figure>
+
+<p>嗯，不得不说，类型别名的方式看起来比 <code>newtype</code> 顺眼的多，而且跟其它语言的使用方式几乎一致，但是： <strong>类型别名并不是一个独立的全新的类型，而是某一个类型的别名</strong>，因此编译器依然会把 <code>Meters</code> 当 <code>u32</code> 来使用：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">Meters</span> = <span class="type">u32</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="variable">x</span>: <span class="type">u32</span> = <span class="number">5</span>;</span><br><span class="line"><span class="keyword">let</span> <span class="variable">y</span>: Meters = <span class="number">5</span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">println!</span>(<span class="string">&quot;x + y = &#123;&#125;&quot;</span>, x + y);</span><br></pre></td></tr></table></figure>
+
+<p>上面的代码将顺利编译通过，但是如果你使用 <code>newtype</code> 模式，该代码将无情报错，简单做个总结：</p>
+<ul>
+<li>类型别名仅仅是别名，只是为了让可读性更好，并不是全新的类型，<code>newtype</code> 才是！</li>
+<li>类型别名无法实现<em>为外部类型实现外部特征</em>等功能，而 <code>newtype</code> 可以</li>
+</ul>
+<p>类型别名除了让类型可读性更好，还能<strong>减少模版代码的使用</strong>：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">f</span>: <span class="type">Box</span>&lt;<span class="keyword">dyn</span> <span class="title function_ invoke__">Fn</span>() + <span class="built_in">Send</span> + <span class="symbol">&#x27;static</span>&gt; = <span class="type">Box</span>::<span class="title function_ invoke__">new</span>(|| <span class="built_in">println!</span>(<span class="string">&quot;hi&quot;</span>));</span><br><span class="line"><span class="comment">// Fn() 是一个没有捕捉外部函数的闭包</span></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">takes_long_type</span>(f: <span class="type">Box</span>&lt;<span class="keyword">dyn</span> <span class="title function_ invoke__">Fn</span>() + <span class="built_in">Send</span> + <span class="symbol">&#x27;static</span>&gt;) &#123;</span><br><span class="line">    <span class="comment">// --snip--</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">returns_long_type</span>() <span class="punctuation">-&gt;</span> <span class="type">Box</span>&lt;<span class="keyword">dyn</span> <span class="title function_ invoke__">Fn</span>() + <span class="built_in">Send</span> + <span class="symbol">&#x27;static</span>&gt; &#123;</span><br><span class="line">    <span class="comment">// --snip--</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>f</code> 是一个令人眼花缭乱的类型 <code>Box&lt;dyn Fn() + Send + &#39;static&gt;</code>，如果仔细看，会发现其实只有一个 <code>Send</code> 特征不认识，<code>Send</code> 是什么在这里不重要，你只需理解，<code>f</code> 就是一个 <code>Box&lt;dyn T&gt;</code> 类型的特征对象，实现了 <code>Fn()</code> 和<code> Send</code> 特征，同时生命周期为 <code>&#39;static</code>。</p>
+<p>因为 <code>f</code> 的类型贼长，导致了后面我们在使用它时，到处都充斥这些不太优美的类型标注，好在类型别名可解君忧：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">Thunk</span> = <span class="type">Box</span>&lt;<span class="keyword">dyn</span> <span class="title function_ invoke__">Fn</span>() + <span class="built_in">Send</span> + <span class="symbol">&#x27;static</span>&gt;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="variable">f</span>: Thunk = <span class="type">Box</span>::<span class="title function_ invoke__">new</span>(|| <span class="built_in">println!</span>(<span class="string">&quot;hi&quot;</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">takes_long_type</span>(f: Thunk) &#123;</span><br><span class="line">    <span class="comment">// --snip--</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">returns_long_type</span>() <span class="punctuation">-&gt;</span> Thunk &#123;</span><br><span class="line">    <span class="comment">// --snip--</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Bang！是不是？！立刻大幅简化了我们的使用。喝着奶茶、哼着歌、我写起代码撩起妹，何其快哉！</p>
+<p>在标准库中，类型别名应用最广的就是简化 <code>Result&lt;T, E&gt;</code> 枚举。</p>
+<h3 id="永不反悔类型"><a href="#永不反悔类型" class="headerlink" title="!永不反悔类型"></a>!永不反悔类型</h3><p>在函数那章，曾经介绍过 <code>!</code> 类型：<code>!</code> 用来说明一个函数永不返回任何值，当时可能体会不深，没事，在学习了更多手法后，保证你有全新的体验：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">i</span> = <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">v</span> = <span class="keyword">match</span> i &#123;</span><br><span class="line">       <span class="number">0</span>..=<span class="number">3</span> =&gt; i,</span><br><span class="line">       _ =&gt; <span class="built_in">println!</span>(<span class="string">&quot;不合规定的值:&#123;&#125;&quot;</span>, i)</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面函数，会报出一个编译错误:</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">error[E0308]: `match` arms have incompatible types // match的分支类型不同</span><br><span class="line"><span class="meta prompt_"> --&gt; </span><span class="language-bash">src/main.rs:5:13</span></span><br><span class="line">  |</span><br><span class="line">3 |       let v = match i &#123;</span><br><span class="line">  |  _____________-</span><br><span class="line">4 | |        0..3 =&gt; i,</span><br><span class="line">  | |                - this is found to be of type `&#123;integer&#125;` // 该分支返回整数类型</span><br><span class="line">5 | |        _ =&gt; println!(&quot;不合规定的值:&#123;&#125;&quot;, i)</span><br><span class="line">  | |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected integer, found `()` // 该分支返回()单元类型</span><br><span class="line">6 | |     &#125;;</span><br><span class="line">  | |_____- `match` arms have incompatible types</span><br></pre></td></tr></table></figure>
+
+<p>原因很简单: 要赋值给 <code>v</code>，就必须保证 <code>match</code> 的各个分支返回的值是同一个类型，但是上面一个分支返回数值、另一个分支返回元类型 <code>()</code>，自然会出错。</p>
+<p>既然 <code>println</code> 不行，那再试试 <code>panic</code></p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">i</span> = <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">v</span> = <span class="keyword">match</span> i &#123;</span><br><span class="line">       <span class="number">0</span>..=<span class="number">3</span> =&gt; i,</span><br><span class="line">       _ =&gt; <span class="built_in">panic!</span>(<span class="string">&quot;不合规定的值:&#123;&#125;&quot;</span>, i)</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>神奇的事发生了，此处 <code>panic</code> 竟然通过了编译。难道这两个宏拥有不同的返回类型？</p>
+<p>你猜的没错：<code>panic</code> 的返回值是 <code>!</code>，代表它决不会返回任何值，既然没有任何返回值，那自然不会存在分支类型不匹配的情况。</p>
+<h2 id="Sized-和不定长类型-DST"><a href="#Sized-和不定长类型-DST" class="headerlink" title="Sized 和不定长类型 DST"></a>Sized 和不定长类型 DST</h2><p>在 Rust 中类型有多种抽象的分类方式，例如之前笔记的：基本类型、集合类型、复合类型等。再比如说，如果从编译器何时能获知类型大小的角度出发，可以分成两类:</p>
+<ul>
+<li>定长类型( sized )，这些类型的大小在编译时是已知的</li>
+<li>不定长类型( unsized )，与定长类型相反，它的大小只有到了程序运行时才能动态获知，这种类型又被称之为 DST</li>
+</ul>
+<p>首先，我们来深入看看何为 DST。</p>
+<h3 id="动态大小类型-DST"><a href="#动态大小类型-DST" class="headerlink" title="动态大小类型 DST"></a>动态大小类型 DST</h3><p>之前学过的几乎所有类型，都是固定大小的类型，包括集合 <code>Vec</code>、<code>String</code> 和 <code>HashMap</code> 等，而动态大小类型刚好与之相反：<strong>编译器无法在编译期得知该类型值的大小，只有到了程序运行时，才能动态获知</strong>。对于动态类型，我们使用 <code>DST</code>(dynamically sized types)或者 <code>unsized</code> 类型来称呼它。</p>
+<p>上述的这些集合虽然底层数据可动态变化，感觉像是动态大小的类型。但是实际上，<strong>这些底层数据只是保存在堆上，在栈中还存有一个引用类型</strong>，该引用包含了集合的内存地址、元素数目、分配空间信息，通过这些信息，编译器对于该集合的实际大小了若指掌，最最重要的是：<strong>栈上的引用类型是固定大小的</strong>，因此它们依然是固定大小的类型。</p>
+<p><strong>正因为编译器无法在编译期获知类型大小，若你试图在代码中直接使用 DST 类型，将无法通过编译。</strong></p>
+<p>现在给你一个挑战：想出几个 DST 类型。俺厚黑地说一句，估计大部分人都想不出这样的一个类型，就连我，如果不是查询着资料在写，估计一时半会儿也想不到一个。</p>
+<p>先来看一个最直白的：</p>
+<h4 id="试图创建动态大小的数组"><a href="#试图创建动态大小的数组" class="headerlink" title="试图创建动态大小的数组"></a>试图创建动态大小的数组</h4><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">my_function</span>(n: <span class="type">usize</span>) &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">array</span> = [<span class="number">123</span>; n];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上代码就会报错(错误输出的内容并不是因为 DST，但根本原因是类似的)，因为 <code>n</code> 在编译期无法得知，而数组类型的一个组成部分就是长度，长度变为动态的，自然类型就变成了 unsized 。</p>
+<h4 id="切片"><a href="#切片" class="headerlink" title="切片"></a>切片</h4><p>切片也是一个典型的 DST 类型，后面会说。</p>
+<h4 id="str"><a href="#str" class="headerlink" title="str"></a>str</h4><p>考虑一下这个类型：<code>str</code>，感觉有点眼生？是的，它既不是 <code>String</code> 动态字符串，也不是 <code>&amp;str</code> 字符串切片，而是一个 <strong><code>str</code>。它是一个动态类型，同时还是 <code>String</code> 和 <code>&amp;str</code> 的底层数据类型</strong>。 由于 <code>str</code> 是动态类型，因此它的大小直到运行期才知道，下面的代码会因此报错：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// error</span></span><br><span class="line"><span class="keyword">let</span> <span class="variable">s1</span>: <span class="type">str</span> = <span class="string">&quot;Hello there!&quot;</span>;</span><br><span class="line"><span class="keyword">let</span> <span class="variable">s2</span>: <span class="type">str</span> = <span class="string">&quot;How&#x27;s it going?&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ok</span></span><br><span class="line"><span class="keyword">let</span> <span class="variable">s3</span>: &amp;<span class="type">str</span> = <span class="string">&quot;on?&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>Rust 需要明确地知道一个特定类型的值占据了多少内存空间，同时该类型的所有值都必须使用相同大小的内存。如果 Rust 允许我们使用这种动态类型，那么这两个 <code>str</code> 值就需要占用同样大小的内存，这显然是不现实的: <code>s1</code> 占用了 12 字节，<code>s2</code> 占用了 15 字节，总不至于为了满足同样的内存大小，用空白字符去填补字符串吧？</p>
+<p>所以，我们只有一条路走，那就是给它们一个固定大小的类型：<code>&amp;str</code>。那么为何字符串切片 <code>&amp;str</code> 就是固定大小呢？因为它的引用存储在栈上，具有固定大小(类似指针)，同时它指向的数据存储在堆中，也是已知的大小，再加上 <code>&amp;str</code> 引用中包含有堆上数据内存地址、长度等信息，因此最终可以得出字符串切片是固定大小类型的结论。</p>
+<p>与 <code>&amp;str</code> 类似，<code>String</code> 字符串也是固定大小的类型。</p>
+<p>正是因为 <code>&amp;str</code> 的引用有了底层堆数据的明确信息，它才是固定大小类型。假设如果它没有这些信息呢？那它也将变成一个动态类型。因此，将动态数据固定化的秘诀就是<strong>使用引用指向这些动态数据，然后在引用中存储相关的内存位置、长度等信息</strong>。</p>
+<h4 id="特征对象"><a href="#特征对象" class="headerlink" title="特征对象"></a>特征对象</h4><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">foobar_1</span>(thing: &amp;<span class="keyword">dyn</span> MyThing) &#123;&#125;     <span class="comment">// OK</span></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">foobar_2</span>(thing: <span class="type">Box</span>&lt;<span class="keyword">dyn</span> MyThing&gt;) &#123;&#125; <span class="comment">// OK</span></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">foobar_3</span>(thing: MyThing) &#123;&#125;          <span class="comment">// ERROR!</span></span><br></pre></td></tr></table></figure>
+
+<p>如上所示，只能通过引用或 <code>Box</code> 的方式来使用特征对象，直接使用将报错！</p>
+<blockquote>
+<p>特征对象的大小是不确定的，因为编译期无法知道你具体使用的是哪个实现</p>
+</blockquote>
+<h4 id="总结：只能间接使用的-DST"><a href="#总结：只能间接使用的-DST" class="headerlink" title="总结：只能间接使用的 DST"></a>总结：只能间接使用的 DST</h4><p>Rust 中常见的 <code>DST</code> 类型有: <code>str</code>、<code>[T]</code>、<code>dyn Trait</code>，<strong>它们都无法单独被使用，必须要通过引用或者 <code>Box</code> 来间接使用</strong> 。</p>
+<p>我们之前已经见过，使用 <code>Box</code> 将一个没有固定大小的特征变成一个有固定大小的特征对象，那能否故技重施，将 <code>str</code> 封装成一个固定大小类型？留个悬念先，我们来看看 <code>Sized</code> 特征。</p>
+<h3 id="Sized-特征"><a href="#Sized-特征" class="headerlink" title="Sized 特征"></a>Sized 特征</h3><p>既然动态类型的问题这么大，那么在使用泛型时，Rust 如何保证我们的泛型参数是固定大小的类型呢？例如以下泛型函数：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">generic</span>&lt;T&gt;(t: T) &#123;</span><br><span class="line">    <span class="comment">// --snip--</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>该函数很简单，就一个泛型参数 T，那么如何保证 <code>T</code> 是固定大小的类型？仔细回想下，貌似在之前的课程章节中，我们也没有做过任何事情去做相关的限制，那 <code>T</code> 怎么就成了固定大小的类型了？奥秘在于编译器自动帮我们加上了 <code>Sized</code> 特征约束：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">generic</span>&lt;T: <span class="built_in">Sized</span>&gt;(t: T) &#123;</span><br><span class="line">    <span class="comment">// --snip--</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在上面，Rust 自动添加的特征约束 <code>T: Sized</code>，表示泛型函数只能用于一切实现了 <code>Sized</code> 特征的类型上，而<strong>所有在编译时就能知道其大小的类型，都会自动实现 <code>Sized</code> 特征</strong>，例如。。。。也没啥好例如的，你能想到的几乎所有类型都实现了 <code>Sized</code> 特征，<strong>除了上面那个坑坑的 <code>str</code>，哦，还有特征</strong>。</p>
+<p><strong>每一个特征都是一个可以通过名称来引用的 动态大小类型</strong>。因此如果想把特征作为具体的类型来传递给函数，你必须将其转换成一个特征对象：诸如 <code>&amp;dyn Trait</code> 或者 <code>Box&lt;dyn Trait&gt;</code> (还有 <code>Rc&lt;dyn Trait&gt;</code>)这些引用类型。</p>
+<p>现在还有一个问题：假如想在泛型函数中使用动态数据类型怎么办？可以使用 <code>?Sized</code> 特征(不得不说这个命名方式很 Rusty，竟然有点幽默)：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">generic</span>&lt;T: ?<span class="built_in">Sized</span>&gt;(t: &amp;T) &#123;</span><br><span class="line">    <span class="comment">// --snip--</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>?Sized</code> 特征用于表明类型 <code>T</code> 既有可能是固定大小的类型，也可能是动态大小的类型。还有一点要注意的是，函数参数类型从 <code>T</code> 变成了 <code>&amp;T</code>，因为 <code>T</code> 可能是动态大小的，因此需要用一个固定大小的指针(引用)来包裹它。</p>
+<h3 id="Box-str"><a href="#Box-str" class="headerlink" title="Box&lt; str&gt;"></a>Box&lt; str&gt;</h3><p>在结束前，再来看看之前遗留的问题：使用 <code>Box</code> 可以将一个动态大小的特征变成一个具有固定大小的特征对象，能否故技重施，将 <code>str</code> 封装成一个固定大小类型？</p>
+<p>先回想下，章节前面的内容介绍过该如何把一个动态大小类型转换成固定大小的类型： <strong>使用引用指向这些动态数据，然后在引用中存储相关的内存位置、长度等信息</strong>。</p>
+<p>好的，根据这个，我们来一起推测。首先，<code>Box&lt;str&gt;</code> 使用了一个引用来指向 <code>str</code>，嗯，满足了第一个条件。但是第二个条件呢？<code>Box</code> 中有该 <code>str</code> 的长度信息吗？显然是 <code>No</code>。那为什么特征就可以变成特征对象？其实这个还蛮复杂的，简单来说，对于特征对象，编译器无需知道它具体是什么类型，只要知道它能调用哪几个方法即可，因此编译器帮我们实现了剩下的一切。</p>
+<p>来验证下我们的推测：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">s1</span>: <span class="type">Box</span>&lt;<span class="type">str</span>&gt; = <span class="type">Box</span>::<span class="title function_ invoke__">new</span>(<span class="string">&quot;Hello there!&quot;</span> <span class="keyword">as</span> <span class="type">str</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>报错如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">error[E0277]: the size for values of type `str` cannot be known at compilation time</span><br><span class="line"> --&gt; src/main.rs:2:24</span><br><span class="line">  |</span><br><span class="line">2 |     let s1: Box&lt;str&gt; = Box::new(&quot;Hello there!&quot; as str);</span><br><span class="line">  |                        ^^^^^^^^ doesn&#x27;t have a size known at compile-time</span><br><span class="line">  |</span><br><span class="line">  = help: the trait `Sized` is not implemented for `str`</span><br><span class="line">  = note: all function arguments must have a statically known size</span><br></pre></td></tr></table></figure>
+
+<p>提示得很清晰，不知道 <code>str</code> 的大小，因此无法使用这种语法进行 <code>Box</code> 进装，但是你可以这么做:</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">s1</span>: <span class="type">Box</span>&lt;<span class="type">str</span>&gt; = <span class="string">&quot;Hello there!&quot;</span>.<span class="title function_ invoke__">into</span>(); <span class="comment">// 将 &quot;Hello there!&quot; 转为指定的 Box&lt;str&gt; 类型。</span></span><br></pre></td></tr></table></figure>
+
+<p>主动转换成 <code>str</code> 的方式不可行，但是可以让编译器来帮我们完成，只要告诉它我们需要的类型即可。</p>
+<h2 id="枚举和整数"><a href="#枚举和整数" class="headerlink" title="枚举和整数"></a>枚举和整数</h2><p>在 Rust 中，从枚举到整数的转换很容易，但是反过来，就没那么容易，甚至部分实现还挺邪恶, 例如使用<code>transmute</code>。</p>
+<h3 id="场景模拟"><a href="#场景模拟" class="headerlink" title="场景模拟"></a>场景模拟</h3><p>在实际场景中，从整数到枚举的转换有时还是非常需要的，例如你有一个枚举类型，然后需要从外面传入一个整数，用于控制后续的流程走向，此时就需要用整数去匹配相应的枚举(你也可以用整数匹配整数-, -，看看会不会被喷)。</p>
+<p>既然有了需求，剩下的就是看看该如何实现。</p>
+<h3 id="C-语言的实现"><a href="#C-语言的实现" class="headerlink" title="C 语言的实现"></a>C 语言的实现</h3><p>对于 C 语言来说，万物皆邪恶，因此我们不讨论安全，只看实现，不得不说很简洁：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">atomic_number</span> &#123;</span></span><br><span class="line">    HYDROGEN = <span class="number">1</span>,</span><br><span class="line">    HELIUM = <span class="number">2</span>,</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    IRON = <span class="number">26</span>,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="class"><span class="keyword">enum</span> <span class="title">atomic_number</span> <span class="title">element</span> =</span> <span class="number">26</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (element == IRON) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;Beware of Rust!\n&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是在 Rust 中，以下代码：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> <span class="title class_">MyEnum</span> &#123;</span><br><span class="line">    A = <span class="number">1</span>,</span><br><span class="line">    B,</span><br><span class="line">    C,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="comment">// 将枚举转换成整数，顺利通过</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">x</span> = MyEnum::C <span class="keyword">as</span> <span class="type">i32</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将整数转换为枚举，失败</span></span><br><span class="line">    <span class="keyword">match</span> x &#123;</span><br><span class="line">        MyEnum::A =&gt; &#123;&#125;</span><br><span class="line">        MyEnum::B =&gt; &#123;&#125;</span><br><span class="line">        MyEnum::C =&gt; &#123;&#125;</span><br><span class="line">        _ =&gt; &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>就会报错: <code>MyEnum::A =&gt; &#123;&#125; mismatched types, expected i32, found enum MyEnum</code>。</p>
+<h3 id="使用三方库"><a href="#使用三方库" class="headerlink" title="使用三方库"></a>使用三方库</h3><p>首先可以想到的肯定是三方库，毕竟 Rust 的生态目前已经发展的很不错，类似的需求总是有的，这里我们先使用<code>num-traits</code>和<code>num-derive</code>来试试。</p>
+<p>在<code>Cargo.toml</code>中引入：</p>
+<figure class="highlight toml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[dependencies]</span></span><br><span class="line"><span class="attr">num-traits</span> = <span class="string">&quot;0.2.14&quot;</span></span><br><span class="line"><span class="attr">num-derive</span> = <span class="string">&quot;0.3.3&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>代码如下:</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> num_derive::FromPrimitive;</span><br><span class="line"><span class="keyword">use</span> num_traits::FromPrimitive;</span><br><span class="line"></span><br><span class="line"><span class="meta">#[derive(FromPrimitive)]</span></span><br><span class="line"><span class="keyword">enum</span> <span class="title class_">MyEnum</span> &#123;</span><br><span class="line">    A = <span class="number">1</span>,</span><br><span class="line">    B,</span><br><span class="line">    C,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">x</span> = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">match</span> FromPrimitive::<span class="title function_ invoke__">from_i32</span>(x) &#123;</span><br><span class="line">        <span class="title function_ invoke__">Some</span>(MyEnum::A) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;Got A&quot;</span>),</span><br><span class="line">        <span class="title function_ invoke__">Some</span>(MyEnum::B) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;Got B&quot;</span>),</span><br><span class="line">        <span class="title function_ invoke__">Some</span>(MyEnum::C) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;Got C&quot;</span>),</span><br><span class="line">        <span class="literal">None</span>            =&gt; <span class="built_in">println!</span>(<span class="string">&quot;Couldn&#x27;t convert &#123;&#125;&quot;</span>, x),</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>除了上面的库，还可以使用一个较新的库: <a target="_blank" rel="noopener" href="https://github.com/illicitonion/num_enum"><code>num_enums</code></a>。</p>
+<h3 id="TryFrom-宏"><a href="#TryFrom-宏" class="headerlink" title="TryFrom + 宏"></a>TryFrom + 宏</h3><p>在 Rust 1.34 后，可以实现<code>TryFrom</code>特征来做转换:</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::convert::TryFrom;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">TryFrom</span>&lt;<span class="type">i32</span>&gt; <span class="keyword">for</span> <span class="title class_">MyEnum</span> &#123;</span><br><span class="line">    <span class="keyword">type</span> <span class="title class_">Error</span> = ();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">try_from</span>(v: <span class="type">i32</span>) <span class="punctuation">-&gt;</span> <span class="type">Result</span>&lt;<span class="keyword">Self</span>, <span class="keyword">Self</span>::Error&gt; &#123;</span><br><span class="line">        <span class="keyword">match</span> v &#123;</span><br><span class="line">            x <span class="keyword">if</span> x == MyEnum::A <span class="keyword">as</span> <span class="type">i32</span> =&gt; <span class="title function_ invoke__">Ok</span>(MyEnum::A),</span><br><span class="line">            x <span class="keyword">if</span> x == MyEnum::B <span class="keyword">as</span> <span class="type">i32</span> =&gt; <span class="title function_ invoke__">Ok</span>(MyEnum::B),</span><br><span class="line">            x <span class="keyword">if</span> x == MyEnum::C <span class="keyword">as</span> <span class="type">i32</span> =&gt; <span class="title function_ invoke__">Ok</span>(MyEnum::C),</span><br><span class="line">            _ =&gt; <span class="title function_ invoke__">Err</span>(()),</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上代码定义了从<code>i32</code>到<code>MyEnum</code>的转换，接着就可以使用<code>TryInto</code>来实现转换：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::convert::TryInto;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">x</span> = MyEnum::C <span class="keyword">as</span> <span class="type">i32</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">match</span> x.<span class="title function_ invoke__">try_into</span>() &#123;</span><br><span class="line">        <span class="title function_ invoke__">Ok</span>(MyEnum::A) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;a&quot;</span>),</span><br><span class="line">        <span class="title function_ invoke__">Ok</span>(MyEnum::B) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;b&quot;</span>),</span><br><span class="line">        <span class="title function_ invoke__">Ok</span>(MyEnum::C) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;c&quot;</span>),</span><br><span class="line">        <span class="title function_ invoke__">Err</span>(_) =&gt; eprintln!(<span class="string">&quot;unknown number&quot;</span>),</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是上面的代码有个问题，你需要为每个枚举成员都实现一个转换分支，非常麻烦。好在可以使用宏来简化，自动根据枚举的定义来实现<code>TryFrom</code>特征:</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#[macro_export]</span></span><br><span class="line"><span class="built_in">macro_rules!</span> back_to_enum &#123;</span><br><span class="line">    ($(<span class="meta">#[$meta:meta]</span>)* $vis:vis <span class="keyword">enum</span> $name:ident &#123;</span><br><span class="line">        $($(<span class="meta">#[$vmeta:meta]</span>)* $vname:ident $(= $val:expr)?,)*</span><br><span class="line">    &#125;) =&gt; &#123;</span><br><span class="line">        $(<span class="meta">#[$meta]</span>)*</span><br><span class="line">        $vis <span class="keyword">enum</span> $name &#123;</span><br><span class="line">            $($(<span class="meta">#[$vmeta]</span>)* $vname $(= $val)?,)*</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">impl</span> <span class="title class_">std</span>::convert::TryFrom&lt;<span class="type">i32</span>&gt; <span class="keyword">for</span> $name &#123;</span><br><span class="line">            <span class="keyword">type</span> <span class="title class_">Error</span> = ();</span><br><span class="line"></span><br><span class="line">            <span class="keyword">fn</span> <span class="title function_">try_from</span>(v: <span class="type">i32</span>) <span class="punctuation">-&gt;</span> <span class="type">Result</span>&lt;<span class="keyword">Self</span>, <span class="keyword">Self</span>::Error&gt; &#123;</span><br><span class="line">                <span class="keyword">match</span> v &#123;</span><br><span class="line">                    $(x <span class="keyword">if</span> x == $name::$vname <span class="keyword">as</span> <span class="type">i32</span> =&gt; <span class="title function_ invoke__">Ok</span>($name::$vname),)*</span><br><span class="line">                    _ =&gt; <span class="title function_ invoke__">Err</span>(()),</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">back_to_enum! &#123;</span><br><span class="line">    <span class="keyword">enum</span> <span class="title class_">MyEnum</span> &#123;</span><br><span class="line">        A = <span class="number">1</span>,</span><br><span class="line">        B,</span><br><span class="line">        C,</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="邪恶之王-std-mem-transmute"><a href="#邪恶之王-std-mem-transmute" class="headerlink" title="邪恶之王: std::mem::transmute"></a>邪恶之王: std::mem::transmute</h3><p><strong>这个方法原则上并不推荐，但是有其存在的意义，如果要使用，你需要清晰的知道自己为什么使用</strong>。</p>
+<p>在之前的类型转换章节，我们提到过非常邪恶的<code>transmute</code>转换，其实，当你知道数值一定不会超过枚举的范围时(例如枚举成员对应 1，2，3，传入的整数也在这个范围内)，就可以使用这个方法完成变形。</p>
+<blockquote>
+<p>最好使用#[repr(..)]来控制底层类型的大小，免得本来需要 i32，结果传入 i64，最终内存无法对齐，产生奇怪的结果</p>
+</blockquote>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#[repr(i32)]</span></span><br><span class="line"><span class="keyword">enum</span> <span class="title class_">MyEnum</span> &#123;</span><br><span class="line">    A = <span class="number">1</span>, B, C</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">x</span> = MyEnum::C;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">y</span> = x <span class="keyword">as</span> <span class="type">i32</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">z</span>: MyEnum = <span class="keyword">unsafe</span> &#123; std::mem::<span class="title function_ invoke__">transmute</span>(y) &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// match the enum that came from an int</span></span><br><span class="line">    <span class="keyword">match</span> z &#123;</span><br><span class="line">        MyEnum::A =&gt; &#123; <span class="built_in">println!</span>(<span class="string">&quot;Found A&quot;</span>); &#125;</span><br><span class="line">        MyEnum::B =&gt; &#123; <span class="built_in">println!</span>(<span class="string">&quot;Found B&quot;</span>); &#125;</span><br><span class="line">        MyEnum::C =&gt; &#123; <span class="built_in">println!</span>(<span class="string">&quot;Found C&quot;</span>); &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>既然是邪恶之王，当然得有真本事，无需标准库、也无需 unstable 的 Rust 版本，我们就完成了转换！awesome!??</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本文列举了常用(其实差不多也是全部了，还有一个 unstable 特性没提到)的从整数转换为枚举的方式，推荐度按照出现的先后顺序递减。</p>
+<p>但是推荐度最低，不代表它就没有出场的机会，只要使用边界清晰，一样可以大放光彩，例如最后的<code>transmute</code>函数。</p>
+
+    
+  </article>
+
+  
+      
+    <div class="nexmoe-post-copyright">
+        <strong>本文作者：</strong>kay<br>
+        <strong>本文链接：</strong><a href="https://www.tooupper.com/content/Rust/learning-Rust/rust-senior/%E6%B7%B1%E5%85%A5%E7%B1%BB%E5%9E%8B.html" title="https:&#x2F;&#x2F;www.tooupper.com&#x2F;content&#x2F;Rust&#x2F;learning-Rust&#x2F;rust-senior&#x2F;%E6%B7%B1%E5%85%A5%E7%B1%BB%E5%9E%8B.html" target="_blank" rel="noopener">https:&#x2F;&#x2F;www.tooupper.com&#x2F;content&#x2F;Rust&#x2F;learning-Rust&#x2F;rust-senior&#x2F;%E6%B7%B1%E5%85%A5%E7%B1%BB%E5%9E%8B.html</a><br>
+        
+            <strong>版权声明：</strong>本文采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/deed.zh" target="_blank">CC BY-NC-SA 3.0 CN</a> 协议进行许可
+
+        
+    </div>
+
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+   
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/Rust%E8%BF%9B%E9%98%B6/" rel="tag">Rust进阶</a>
+    
+</div>
+  
+  
+    <script async src="/js/copy-codeblock.js?v=1698918460935"></script>
+  
+
+  
+      <div class="nexmoe-post-footer">
+          
+      </div>
+  
+</div></div><div class="nexmoe-post-right">    <div class="nexmoe-fixed">
+        <div class="nexmoe-tool">
+
+            
+
+            
+            
+            <button class="mdui-fab catalog" style="overflow:unset;">
+                <i class="nexmoefont icon-i-catalog"></i>
+                <div class="nexmoe-toc">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B7%B1%E5%85%A5%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.</span> <span class="toc-text">深入类型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2"><span class="toc-number">1.1.</span> <span class="toc-text">类型转换</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#as-%E8%BD%AC%E6%8D%A2"><span class="toc-number">1.1.1.</span> <span class="toc-text">as 转换</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E5%9C%B0%E5%9D%80%E8%BD%AC%E6%8D%A2%E4%B8%BA%E6%8C%87%E9%92%88"><span class="toc-number">1.1.1.1.</span> <span class="toc-text">内存地址转换为指针</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BC%BA%E5%88%B6%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E7%9A%84%E8%BE%B9%E8%A7%92%E7%9F%A5%E8%AF%86"><span class="toc-number">1.1.1.2.</span> <span class="toc-text">强制类型转换的边角知识</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TryInto-%E8%BD%AC%E6%8D%A2"><span class="toc-number">1.1.2.</span> <span class="toc-text">TryInto 转换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E7%94%A8%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2"><span class="toc-number">1.1.3.</span> <span class="toc-text">通用类型转换</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BC%BA%E5%88%B6%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E7%AC%A6"><span class="toc-number">1.1.3.1.</span> <span class="toc-text">强制类型转换符</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E7%AC%A6"><span class="toc-number">1.1.3.2.</span> <span class="toc-text">. 操作符</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%98%E5%BD%A2%E8%AE%B0-Transmutes"><span class="toc-number">1.1.3.3.</span> <span class="toc-text">变形记(Transmutes)</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#newtype-%E5%92%8C-%E7%B1%BB%E5%9E%8B%E5%88%AB%E5%90%8D"><span class="toc-number">1.2.</span> <span class="toc-text">newtype 和 类型别名</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#newtype"><span class="toc-number">1.2.1.</span> <span class="toc-text">newtype</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BA%E5%A4%96%E9%83%A8%E7%B1%BB%E5%9E%8B%E5%AE%9E%E7%8E%B0%E5%A4%96%E9%83%A8%E7%89%B9%E5%BE%81"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">为外部类型实现外部特征</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9B%B4%E5%A5%BD%E7%9A%84%E5%8F%AF%E8%AF%BB%E6%80%A7%E5%8F%8A%E7%B1%BB%E5%9E%8B%E5%BC%82%E5%8C%96"><span class="toc-number">1.2.1.2.</span> <span class="toc-text">更好的可读性及类型异化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9A%90%E8%97%8F%E5%86%85%E9%83%A8%E7%B1%BB%E5%9E%8B%E7%9A%84%E7%BB%86%E8%8A%82"><span class="toc-number">1.2.1.3.</span> <span class="toc-text">隐藏内部类型的细节</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B1%BB%E5%9E%8B%E5%88%AB%E5%90%8D-Type-Alias"><span class="toc-number">1.2.2.</span> <span class="toc-text">类型别名(Type Alias)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B0%B8%E4%B8%8D%E5%8F%8D%E6%82%94%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.2.3.</span> <span class="toc-text">!永不反悔类型</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Sized-%E5%92%8C%E4%B8%8D%E5%AE%9A%E9%95%BF%E7%B1%BB%E5%9E%8B-DST"><span class="toc-number">1.3.</span> <span class="toc-text">Sized 和不定长类型 DST</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A8%E6%80%81%E5%A4%A7%E5%B0%8F%E7%B1%BB%E5%9E%8B-DST"><span class="toc-number">1.3.1.</span> <span class="toc-text">动态大小类型 DST</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AF%95%E5%9B%BE%E5%88%9B%E5%BB%BA%E5%8A%A8%E6%80%81%E5%A4%A7%E5%B0%8F%E7%9A%84%E6%95%B0%E7%BB%84"><span class="toc-number">1.3.1.1.</span> <span class="toc-text">试图创建动态大小的数组</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%87%E7%89%87"><span class="toc-number">1.3.1.2.</span> <span class="toc-text">切片</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#str"><span class="toc-number">1.3.1.3.</span> <span class="toc-text">str</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%89%B9%E5%BE%81%E5%AF%B9%E8%B1%A1"><span class="toc-number">1.3.1.4.</span> <span class="toc-text">特征对象</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%EF%BC%9A%E5%8F%AA%E8%83%BD%E9%97%B4%E6%8E%A5%E4%BD%BF%E7%94%A8%E7%9A%84-DST"><span class="toc-number">1.3.1.5.</span> <span class="toc-text">总结：只能间接使用的 DST</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Sized-%E7%89%B9%E5%BE%81"><span class="toc-number">1.3.2.</span> <span class="toc-text">Sized 特征</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Box-str"><span class="toc-number">1.3.3.</span> <span class="toc-text">Box&lt; str&gt;</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%9A%E4%B8%BE%E5%92%8C%E6%95%B4%E6%95%B0"><span class="toc-number">1.4.</span> <span class="toc-text">枚举和整数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%BA%E6%99%AF%E6%A8%A1%E6%8B%9F"><span class="toc-number">1.4.1.</span> <span class="toc-text">场景模拟</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#C-%E8%AF%AD%E8%A8%80%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.4.2.</span> <span class="toc-text">C 语言的实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E4%B8%89%E6%96%B9%E5%BA%93"><span class="toc-number">1.4.3.</span> <span class="toc-text">使用三方库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TryFrom-%E5%AE%8F"><span class="toc-number">1.4.4.</span> <span class="toc-text">TryFrom + 宏</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%82%AA%E6%81%B6%E4%B9%8B%E7%8E%8B-std-mem-transmute"><span class="toc-number">1.4.5.</span> <span class="toc-text">邪恶之王: std::mem::transmute</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">1.4.6.</span> <span class="toc-text">总结</span></a></li></ol></li></ol></li></ol>
+                </div>
+            </button>
+            
+
+            
+
+            <a href="#nexmoe-content" class="backtop toc-link" aria-label="Back To Top" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+        </div>
+    </div>
+</div></div><div id="nexmoe-footer"><!--!--></div><div><div id="nexmoe-search-space">
+	<div class="search-container">
+		<div class="search-header">
+			<div class="search-input-container">
+				<input
+					class="search-input"
+					type="text"
+					placeholder="搜索"
+					oninput="sinput();"
+				/>
+			</div>
+			<a class="search-close" onclick="sclose();">×</a>
+		</div>
+		<div class="search-body"></div>
+	</div>
+</div>
+</div><div><script async src="https://www.TooUpper.com" crossorigin="anonymous"></script>
+</div></body></html>

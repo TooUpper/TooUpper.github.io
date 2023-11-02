@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="zh"><head>
+<title>变量绑定与解构 - 成祠的个人博客</title>
+<meta charset="UTF-8">
+<meta name="keywords" content="blog">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+
+<link rel="shortcut icon" href="/image/favicon.png" type="image/png" />
+<meta name="description" content="变量绑定与解构变量绑定语法：let 变量名 &#x3D; &quot;值&quot;  示例：let a &#x3D; &quot;Hello Word&quot;; 变量只有在初始化后才能被使用 变量可变性Rust 变量默认情况下不可变。可通过 mnt 关键字让变量可变。 1234567fn main() &amp;#123;    let x &#x3D; 5;    &#x2F;&#x2F; !是宏的写法，&amp;#123;&amp;#125;表示占位符，x是变">
+<meta property="og:type" content="article">
+<meta property="og:title" content="变量绑定与解构">
+<meta property="og:url" content="https://www.tooupper.com/content/Rust/learning-Rust/rust-Basic/%E5%8F%98%E9%87%8F%E7%BB%91%E5%AE%9A%E4%B8%8E%E8%A7%A3%E6%9E%84.html">
+<meta property="og:site_name" content="成祠的个人博客">
+<meta property="og:description" content="变量绑定与解构变量绑定语法：let 变量名 &#x3D; &quot;值&quot;  示例：let a &#x3D; &quot;Hello Word&quot;; 变量只有在初始化后才能被使用 变量可变性Rust 变量默认情况下不可变。可通过 mnt 关键字让变量可变。 1234567fn main() &amp;#123;    let x &#x3D; 5;    &#x2F;&#x2F; !是宏的写法，&amp;#123;&amp;#125;表示占位符，x是变">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-09-25T12:01:14.000Z">
+<meta property="article:modified_time" content="2023-10-06T07:31:31.202Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="Rust基础">
+<meta name="twitter:card" content="summary">
+
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+<link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
+
+
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1698918461746">
+
+<link rel="stylesheet" href="/css/style.css?v=1698918461746">
+
+
+
+
+    
+        <link rel="stylesheet" href="/custom.css?v=1698918461746">
+    
+
+
+
+<script src="/lib/mdui_043tiny/mdui.js" async></script>
+<script src="/lib/fancybox/fancybox.umd.js" async></script>
+<script src="/lib/lax.min.js" async></script>
+
+
+<script async src="/js/app.js?v=1698918461746"></script>
+
+ 
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4D4ZJ9G024"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+
+  gtag("config", "G-4D4ZJ9G024");
+</script>
+
+<meta name="generator" content="Hexo 6.3.0"></head><body class="nexmoe mdui-drawer-body-left"><div id="nexmoe-background"><div class="nexmoe-bg" style="background-image: url(/image/banner.png)"></div><div class="mdui-appbar mdui-shadow-0"><div class="mdui-toolbar"><a class="mdui-btn mdui-btn-icon mdui-ripple" mdui-drawer="{target: &#039;#drawer&#039;, swipe: true}" title="menu"><i class="mdui-icon nexmoefont icon-menu"></i></a><div class="mdui-toolbar-spacer"></div><a class="mdui-btn mdui-btn-icon" href="/" title="kay"><img src="/image/Logo.png" alt="kay"></a></div></div></div><div id="nexmoe-header"><div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="kay">
+            <img src="/image/Logo.png" alt="kay" alt="kay">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>文章</span>29</div>
+        <div><span>标签</span>4</div>
+        <div><span>分类</span>2</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/aboutMe.html" title="关于博主">
+            <i class="mdui-list-item-icon nexmoefont icon-info-circle"></i>
+            <div class="mdui-list-item-content">
+                关于博主
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archives.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/downloads.html" title="下载中心">
+            <i class="mdui-list-item-icon nexmoefont icon-coffee"></i>
+            <div class="mdui-list-item-content">
+                下载中心
+            </div>
+        </a>
+        
+    </div>
+    
+    
+        
+        <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+        
+            <form id="search_form">
+                <label><input class="st-default-search-input" id="search_value" name="q" type="search" placeholder="搜索" style="
+                    font-size: 15px !important;
+                    height: 56px !important;
+                    background-image: none;
+                "></label>
+            </form>
+         
+    </div>
+</div>
+
+
+	<script async src="/js/search.js?v=1698918461746"></script>
+
+
+
+    
+        
+        <div class="nexmoe-widget-wrap">
+	<div class="nexmoe-widget nexmoe-social">
+		<a
+			class="mdui-ripple"
+			href="/image/QQOrWeChat.png"
+			target="_blank"
+			mdui-tooltip="{content: 'QQ'}"
+			style="
+				color: rgb(249, 174, 8);
+				background-color: rgba(249, 174, 8, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-QQ"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="/image/QQOrWeChat.png"
+			target="_blank"
+			mdui-tooltip="{content: 'WeChat'}"
+			style="
+				color: rgb(59, 151, 239);
+				background-color: rgba(59, 151, 239, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-wechat-fill"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://github.com/TooUpper/"
+			target="_blank"
+			mdui-tooltip="{content: 'GitHub'}"
+			style="
+				color: rgb(25, 23, 23);
+				background-color: rgba(25, 23, 23, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-github"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="/www.TooUpper.com"
+			target="_blank"
+			mdui-tooltip="{content: 'Blog'}"
+			style="
+				color: rgb(30, 136, 229);
+				background-color: rgba(30, 136, 229, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-home"
+			></i> </a
+		>
+	</div>
+</div>
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章分类</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/RISC-V/">RISC-V</a>
+          <span class="category-list-count">4</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Rust/">Rust</a>
+          <span class="category-list-count">25</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/Rust%E5%9F%BA%E7%A1%80/" style="font-size: 20px;">Rust基础</a> <a href="/tags/Rust%E8%BF%9B%E9%98%B6/" style="font-size: 15px;">Rust进阶</a> <a href="/tags/rcore/" style="font-size: 10px;">rcore</a> <a href="/tags/riscv/" style="font-size: 10px;">riscv</a>
+    </div>
+    
+  </div>
+
+    
+        
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章归档</h3>
+    <div class="nexmoe-widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/">2023</a><span class="archive-list-count">29</span></li></ul>
+    </div>
+  </div>
+
+
+
+    
+   
+    <div class="nexmoe-copyright">
+        &copy; 2023 kay
+        Powered by <a href="https://www.TooUpper.com" target="_blank">成祠</a>
+        & <a href="https://github.com/TooUpper" target="_blank">TooUpper</a>
+        <br><a target="_blank" href="https://www.TooUpper.com">鄂ICP备2020018486号</a>
+<br><a target="_blank" href="https://www.TooUpper.com">加油做一个不会被优化掉的程序员</a>
+
+    </div>
+</div><!-- .nexmoe-drawer --></div><div id="nexmoe-content"><div class="nexmoe-primary"><div class="nexmoe-post">
+  <article>
+    
+        <div class="nexmoe-post-cover absolute" style="padding-top: 62.5%;"> 
+            <img src="/image/Rust/RustCrab.png" alt="变量绑定与解构" loading="lazy">
+            <h1>变量绑定与解构</h1>
+        </div>
+    
+    
+    <div class="nexmoe-post-meta">
+    <div class="nexmoe-rainbow">
+        <a class="nexmoefont icon-calendar-fill">2023年09月25日</a>
+        
+            <a class="nexmoefont icon-appstore-fill -link" href="/categories/Rust/">Rust</a>
+        
+        
+    <a><i class="nexmoefont icon-areachart"></i>约1.1k字</a>
+    <a><i class="nexmoefont icon-time-circle-fill"></i>预计需要5分钟</a>
+
+    </div>
+    
+    
+    
+    
+    
+</div>
+
+    <h1 id="变量绑定与解构"><a href="#变量绑定与解构" class="headerlink" title="变量绑定与解构"></a>变量绑定与解构</h1><h2 id="变量绑定"><a href="#变量绑定" class="headerlink" title="变量绑定"></a>变量绑定</h2><p>语法：<code>let 变量名 = &quot;值&quot; </code></p>
+<p>示例：<code>let a = &quot;Hello Word&quot;;</code></p>
+<p><code>变量只有在初始化后才能被使用</code></p>
+<h2 id="变量可变性"><a href="#变量可变性" class="headerlink" title="变量可变性"></a>变量可变性</h2><p>Rust 变量默认情况下<strong>不可变</strong>。可通过 <code>mnt</code> 关键字让变量<strong>可变</strong>。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">x</span> = <span class="number">5</span>;</span><br><span class="line">    <span class="comment">// !是宏的写法，&#123;&#125;表示占位符，x是变量名</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;The Value of x is:&#123;&#125;&quot;</span>, x);     </span><br><span class="line">    x = <span class="number">6</span>; <span class="comment">// error[E0384]: cannot assign twice to immutable variable `x`</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;The Value of x is:&#123;&#125;&quot;</span>, x); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用 <code>cargo run</code> 运行会提示：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">$ cargo run</span><br><span class="line">   Compiling variables v0.<span class="number">1.0</span> (file:<span class="comment">///projects/variables)</span></span><br><span class="line">error[E0384]: cannot assign twice to immutable variable `x`</span><br><span class="line"> -<span class="punctuation">-&gt;</span> src/main.rs:<span class="number">4</span>:<span class="number">5</span></span><br><span class="line">  |</span><br><span class="line"><span class="number">2</span> |     <span class="keyword">let</span> <span class="variable">x</span> = <span class="number">5</span>;</span><br><span class="line">  |         -</span><br><span class="line">  |         |</span><br><span class="line">  |         first assignment to `x`</span><br><span class="line">  |         help: consider making this binding mutable: `<span class="keyword">mut</span> x`</span><br><span class="line"><span class="number">3</span> |     <span class="built_in">println!</span>(<span class="string">&quot;The value of x is: &#123;&#125;&quot;</span>, x);</span><br><span class="line"><span class="number">4</span> |     x = <span class="number">6</span>;</span><br><span class="line">  |     ^^^^^ cannot assign twice to immutable variable</span><br><span class="line"></span><br><span class="line">error: aborting due to previous error</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>具体的错误原因是 <code>cannot assign twice to immutable variable x</code>（<strong>无法对不可变的变量进行重复赋值</strong>）。</p>
+<p>改为以下内容</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">x</span> = <span class="number">5</span>;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;The value of x is: &#123;&#125;&quot;</span>, x);</span><br><span class="line">    x = <span class="number">6</span>;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;The value of x is: &#123;&#125;&quot;</span>, x);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行<code>cargo run</code></p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ cargo run</span><br><span class="line">   Compiling variables v0.<span class="number">1.0</span> (file:<span class="comment">///projects/variables)</span></span><br><span class="line">    Finished dev [unoptimized + debuginfo] <span class="title function_ invoke__">target</span>(s) <span class="keyword">in</span> <span class="number">0.30</span>s</span><br><span class="line">     Running `target/debug/variables`</span><br><span class="line">The value of x is: <span class="number">5</span></span><br><span class="line">The value of x is: <span class="number">6</span></span><br></pre></td></tr></table></figure>
+
+<p>输出正常。</p>
+<h2 id="使用下划线开头忽略未使用的变量"><a href="#使用下划线开头忽略未使用的变量" class="headerlink" title="使用下划线开头忽略未使用的变量"></a>使用下划线开头忽略未使用的变量</h2><p>如果你创建了<strong>一个暂不使用或者一直都不会被使用的变量</strong>那么就需要手动告诉Rust，不然编译器会以为他是个BUG。为此<strong>可以使用下划线(_)作为变量的开头</strong>。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">_x</span> = <span class="number">5</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">y</span> = <span class="number">10</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>cargo run</code>运行</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">warning: unused variable: `y`</span><br><span class="line"> -<span class="punctuation">-&gt;</span> src/main.rs:<span class="number">3</span>:<span class="number">9</span></span><br><span class="line">  |</span><br><span class="line"><span class="number">3</span> |     <span class="keyword">let</span> <span class="variable">y</span> = <span class="number">10</span>;</span><br><span class="line">  |         ^ help: 如果 y 故意不被使用，请添加一个下划线前缀: `_y`</span><br><span class="line">  |</span><br><span class="line">  = note: `<span class="meta">#[warn(unused_variables)]</span>` on by default</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>可以看到 Rust编译器给 <code>y</code>提示了未被使用的错误。为此如果还想继续保留<code>y</code>那么可以将<code>y</code>改写为<code>_y</code>即可。</p>
+<h2 id="变量解构"><a href="#变量解构" class="headerlink" title="变量解构"></a>变量解构</h2><p><code>let</code> 还可以用于复杂变量的解构，<strong>从一个相对复杂的变量中，匹配出改变了的部分内容</strong>。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> (a, <span class="keyword">mut</span> b): (<span class="type">bool</span>,<span class="type">bool</span>) = (<span class="literal">true</span>, <span class="literal">false</span>);</span><br><span class="line">    <span class="comment">// a = true,不可变; b = false，可变</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;a = &#123;:?&#125;, b = &#123;:?&#125;&quot;</span>, a, b);</span><br><span class="line"></span><br><span class="line">    b = <span class="literal">true</span>;</span><br><span class="line">    <span class="built_in">assert_eq!</span>(a, b);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>chago run</code>运行</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">正在执行任务: D:\tools\SDK\Rust\.cargo\bin\cargo.exe run --package test1 --bin test1 </span><br><span class="line">    Finished dev [unoptimized + debuginfo] <span class="title function_ invoke__">target</span>(s) <span class="keyword">in</span> <span class="number">0.00</span>s</span><br><span class="line">    Running `target\debug\test1.exe`</span><br><span class="line">a = <span class="literal">true</span>, b = <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="解构式赋值"><a href="#解构式赋值" class="headerlink" title="解构式赋值"></a>解构式赋值</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Struct</span> &#123;</span><br><span class="line">    e: <span class="type">i32</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> (a, b, c, d, e);</span><br><span class="line"></span><br><span class="line">    (a, b) = (<span class="number">1</span>, <span class="number">2</span>);</span><br><span class="line">    <span class="comment">// _ 代表匹配一个值，但是我们不关心具体的值是什么，因此没有使用一个变量名而是使用了 _</span></span><br><span class="line">    <span class="comment">// .. 是一个解构语法，表示忽略其他字段</span></span><br><span class="line">    <span class="comment">//(c, .., d, _) = (1, 2, 3, &quot;4&quot;, 5); //这是元组的标准解构并绑定值的方式</span></span><br><span class="line">    [c, .., d, _] = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]; <span class="comment">// 这是使用数组给元组进行解构并绑定值。前提要元组与数组长度、类型一致。</span></span><br><span class="line">    <span class="comment">// 表示将`Struct &#123; e: 5 &#125;`的值绑定到另一个具有相同字段的结构体的变量上，并提取其中的字段值。</span></span><br><span class="line">    <span class="comment">// 在这个例子中，表达式的左边是一个模式 Struct &#123; e, .. &#125; ，它将 Struct &#123; e: 5 &#125; 中的 e 字段值解构并绑定到 e 变量上。</span></span><br><span class="line">    Struct &#123; e, .. &#125; = Struct &#123; e: <span class="number">5</span> &#125;;</span><br><span class="line">	<span class="comment">// 打印输出</span></span><br><span class="line">    <span class="built_in">print!</span>(<span class="string">&quot;&#123;&#125;, &#123;&#125;, &#123;&#125;, &#123;&#125;, &#123;&#125;&quot;</span>, a, b, c, d, e); <span class="comment">// 1, 2, 1, 4, 5</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="变量隐蔽"><a href="#变量隐蔽" class="headerlink" title="变量隐蔽"></a>变量隐蔽</h2><p>Rust可以重复声明变量，后者会屏蔽掉前者</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">x</span> = <span class="number">5</span>;</span><br><span class="line">    <span class="comment">// 在main函数的作用域内对之前的x进行遮蔽</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">x</span> = x + <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 在当前的花括号作用域内，对之前的x进行遮蔽</span></span><br><span class="line">        <span class="keyword">let</span> <span class="variable">x</span> = x * <span class="number">2</span>;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;The value of x in the inner scope is: &#123;&#125;&quot;</span>, x); <span class="comment">// x = 12</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;The value of x is: &#123;&#125;&quot;</span>, x);  <span class="comment">// x = 6</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="变量与常量之间的差异"><a href="#变量与常量之间的差异" class="headerlink" title="变量与常量之间的差异"></a>变量与常量之间的差异</h2><p>1.常量不允许使用<code>mut</code>。<strong>常量默认从创建开始就不可变，当编译完成后常量的值就已经被确定了</strong>(这里我记得常量在编译时会被编译为二进制代码而写入对应文件中。)</p>
+<p>2.常量使用<code>const</code>关键字而不是<code>let</code>，并且值的类型必须<strong>显示标注</strong>。</p>
+<p>示例：<code>const MAX_POINTS: u32 = 100_000;</code>&#x2F;&#x2F;对数字字面量可插入下划线以提高可读性。</p>
+
+    
+  </article>
+
+  
+      
+    <div class="nexmoe-post-copyright">
+        <strong>本文作者：</strong>kay<br>
+        <strong>本文链接：</strong><a href="https://www.tooupper.com/content/Rust/learning-Rust/rust-Basic/%E5%8F%98%E9%87%8F%E7%BB%91%E5%AE%9A%E4%B8%8E%E8%A7%A3%E6%9E%84.html" title="https:&#x2F;&#x2F;www.tooupper.com&#x2F;content&#x2F;Rust&#x2F;learning-Rust&#x2F;rust-Basic&#x2F;%E5%8F%98%E9%87%8F%E7%BB%91%E5%AE%9A%E4%B8%8E%E8%A7%A3%E6%9E%84.html" target="_blank" rel="noopener">https:&#x2F;&#x2F;www.tooupper.com&#x2F;content&#x2F;Rust&#x2F;learning-Rust&#x2F;rust-Basic&#x2F;%E5%8F%98%E9%87%8F%E7%BB%91%E5%AE%9A%E4%B8%8E%E8%A7%A3%E6%9E%84.html</a><br>
+        
+            <strong>版权声明：</strong>本文采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/deed.zh" target="_blank">CC BY-NC-SA 3.0 CN</a> 协议进行许可
+
+        
+    </div>
+
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+   
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/Rust%E5%9F%BA%E7%A1%80/" rel="tag">Rust基础</a>
+    
+</div>
+  
+  
+    <script async src="/js/copy-codeblock.js?v=1698918460958"></script>
+  
+
+  
+      <div class="nexmoe-post-footer">
+          
+      </div>
+  
+</div></div><div class="nexmoe-post-right">    <div class="nexmoe-fixed">
+        <div class="nexmoe-tool">
+
+            
+
+            
+            
+            <button class="mdui-fab catalog" style="overflow:unset;">
+                <i class="nexmoefont icon-i-catalog"></i>
+                <div class="nexmoe-toc">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%98%E9%87%8F%E7%BB%91%E5%AE%9A%E4%B8%8E%E8%A7%A3%E6%9E%84"><span class="toc-number">1.</span> <span class="toc-text">变量绑定与解构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%98%E9%87%8F%E7%BB%91%E5%AE%9A"><span class="toc-number">1.1.</span> <span class="toc-text">变量绑定</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%98%E9%87%8F%E5%8F%AF%E5%8F%98%E6%80%A7"><span class="toc-number">1.2.</span> <span class="toc-text">变量可变性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E4%B8%8B%E5%88%92%E7%BA%BF%E5%BC%80%E5%A4%B4%E5%BF%BD%E7%95%A5%E6%9C%AA%E4%BD%BF%E7%94%A8%E7%9A%84%E5%8F%98%E9%87%8F"><span class="toc-number">1.3.</span> <span class="toc-text">使用下划线开头忽略未使用的变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%98%E9%87%8F%E8%A7%A3%E6%9E%84"><span class="toc-number">1.4.</span> <span class="toc-text">变量解构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E6%9E%84%E5%BC%8F%E8%B5%8B%E5%80%BC"><span class="toc-number">1.4.1.</span> <span class="toc-text">解构式赋值</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%98%E9%87%8F%E9%9A%90%E8%94%BD"><span class="toc-number">1.5.</span> <span class="toc-text">变量隐蔽</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%98%E9%87%8F%E4%B8%8E%E5%B8%B8%E9%87%8F%E4%B9%8B%E9%97%B4%E7%9A%84%E5%B7%AE%E5%BC%82"><span class="toc-number">1.6.</span> <span class="toc-text">变量与常量之间的差异</span></a></li></ol></li></ol>
+                </div>
+            </button>
+            
+
+            
+
+            <a href="#nexmoe-content" class="backtop toc-link" aria-label="Back To Top" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+        </div>
+    </div>
+</div></div><div id="nexmoe-footer"><!--!--></div><div><div id="nexmoe-search-space">
+	<div class="search-container">
+		<div class="search-header">
+			<div class="search-input-container">
+				<input
+					class="search-input"
+					type="text"
+					placeholder="搜索"
+					oninput="sinput();"
+				/>
+			</div>
+			<a class="search-close" onclick="sclose();">×</a>
+		</div>
+		<div class="search-body"></div>
+	</div>
+</div>
+</div><div><script async src="https://www.TooUpper.com" crossorigin="anonymous"></script>
+</div></body></html>

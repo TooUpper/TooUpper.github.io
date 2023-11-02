@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="zh"><head>
+<title>全局变量 - 成祠的个人博客</title>
+<meta charset="UTF-8">
+<meta name="keywords" content="blog">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+
+<link rel="shortcut icon" href="/image/favicon.png" type="image/png" />
+<meta name="description" content="全局变量在一些场景，我们可能需要全局变量来简化状态共享的代码，包括全局 ID，全局数据存储等等，下面一起来看看有哪些创建全局变量的方法。 首先，有一点可以肯定，全局变量的生命周期肯定是&#39;static，但是不代表它需要用static来声明，例如常量、字符串字面值等无需使用static进行声明，原因是它们已经被打包到二进制可执行文件中。 下面我们从编译期初始化及运行期初始化两个类别来介绍下全局">
+<meta property="og:type" content="article">
+<meta property="og:title" content="全局变量">
+<meta property="og:url" content="https://www.tooupper.com/content/Rust/learning-Rust/rust-senior/%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F.html">
+<meta property="og:site_name" content="成祠的个人博客">
+<meta property="og:description" content="全局变量在一些场景，我们可能需要全局变量来简化状态共享的代码，包括全局 ID，全局数据存储等等，下面一起来看看有哪些创建全局变量的方法。 首先，有一点可以肯定，全局变量的生命周期肯定是&#39;static，但是不代表它需要用static来声明，例如常量、字符串字面值等无需使用static进行声明，原因是它们已经被打包到二进制可执行文件中。 下面我们从编译期初始化及运行期初始化两个类别来介绍下全局">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-10-29T15:30:23.000Z">
+<meta property="article:modified_time" content="2023-10-29T14:36:34.986Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="Rust进阶">
+<meta name="twitter:card" content="summary">
+
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+<link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
+
+
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1698918461639">
+
+<link rel="stylesheet" href="/css/style.css?v=1698918461639">
+
+
+
+
+    
+        <link rel="stylesheet" href="/custom.css?v=1698918461639">
+    
+
+
+
+<script src="/lib/mdui_043tiny/mdui.js" async></script>
+<script src="/lib/fancybox/fancybox.umd.js" async></script>
+<script src="/lib/lax.min.js" async></script>
+
+
+<script async src="/js/app.js?v=1698918461639"></script>
+
+ 
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4D4ZJ9G024"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+
+  gtag("config", "G-4D4ZJ9G024");
+</script>
+
+<meta name="generator" content="Hexo 6.3.0"></head><body class="nexmoe mdui-drawer-body-left"><div id="nexmoe-background"><div class="nexmoe-bg" style="background-image: url(/image/banner.png)"></div><div class="mdui-appbar mdui-shadow-0"><div class="mdui-toolbar"><a class="mdui-btn mdui-btn-icon mdui-ripple" mdui-drawer="{target: &#039;#drawer&#039;, swipe: true}" title="menu"><i class="mdui-icon nexmoefont icon-menu"></i></a><div class="mdui-toolbar-spacer"></div><a class="mdui-btn mdui-btn-icon" href="/" title="kay"><img src="/image/Logo.png" alt="kay"></a></div></div></div><div id="nexmoe-header"><div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="kay">
+            <img src="/image/Logo.png" alt="kay" alt="kay">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>文章</span>29</div>
+        <div><span>标签</span>4</div>
+        <div><span>分类</span>2</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/aboutMe.html" title="关于博主">
+            <i class="mdui-list-item-icon nexmoefont icon-info-circle"></i>
+            <div class="mdui-list-item-content">
+                关于博主
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archives.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/downloads.html" title="下载中心">
+            <i class="mdui-list-item-icon nexmoefont icon-coffee"></i>
+            <div class="mdui-list-item-content">
+                下载中心
+            </div>
+        </a>
+        
+    </div>
+    
+    
+        
+        <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+        
+            <form id="search_form">
+                <label><input class="st-default-search-input" id="search_value" name="q" type="search" placeholder="搜索" style="
+                    font-size: 15px !important;
+                    height: 56px !important;
+                    background-image: none;
+                "></label>
+            </form>
+         
+    </div>
+</div>
+
+
+	<script async src="/js/search.js?v=1698918461639"></script>
+
+
+
+    
+        
+        <div class="nexmoe-widget-wrap">
+	<div class="nexmoe-widget nexmoe-social">
+		<a
+			class="mdui-ripple"
+			href="/image/QQOrWeChat.png"
+			target="_blank"
+			mdui-tooltip="{content: 'QQ'}"
+			style="
+				color: rgb(249, 174, 8);
+				background-color: rgba(249, 174, 8, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-QQ"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="/image/QQOrWeChat.png"
+			target="_blank"
+			mdui-tooltip="{content: 'WeChat'}"
+			style="
+				color: rgb(59, 151, 239);
+				background-color: rgba(59, 151, 239, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-wechat-fill"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="https://github.com/TooUpper/"
+			target="_blank"
+			mdui-tooltip="{content: 'GitHub'}"
+			style="
+				color: rgb(25, 23, 23);
+				background-color: rgba(25, 23, 23, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-github"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="/www.TooUpper.com"
+			target="_blank"
+			mdui-tooltip="{content: 'Blog'}"
+			style="
+				color: rgb(30, 136, 229);
+				background-color: rgba(30, 136, 229, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-home"
+			></i> </a
+		>
+	</div>
+</div>
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章分类</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/RISC-V/">RISC-V</a>
+          <span class="category-list-count">4</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Rust/">Rust</a>
+          <span class="category-list-count">25</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/Rust%E5%9F%BA%E7%A1%80/" style="font-size: 20px;">Rust基础</a> <a href="/tags/Rust%E8%BF%9B%E9%98%B6/" style="font-size: 15px;">Rust进阶</a> <a href="/tags/rcore/" style="font-size: 10px;">rcore</a> <a href="/tags/riscv/" style="font-size: 10px;">riscv</a>
+    </div>
+    
+  </div>
+
+    
+        
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章归档</h3>
+    <div class="nexmoe-widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/">2023</a><span class="archive-list-count">29</span></li></ul>
+    </div>
+  </div>
+
+
+
+    
+   
+    <div class="nexmoe-copyright">
+        &copy; 2023 kay
+        Powered by <a href="https://www.TooUpper.com" target="_blank">成祠</a>
+        & <a href="https://github.com/TooUpper" target="_blank">TooUpper</a>
+        <br><a target="_blank" href="https://www.TooUpper.com">鄂ICP备2020018486号</a>
+<br><a target="_blank" href="https://www.TooUpper.com">加油做一个不会被优化掉的程序员</a>
+
+    </div>
+</div><!-- .nexmoe-drawer --></div><div id="nexmoe-content"><div class="nexmoe-primary"><div class="nexmoe-post">
+  <article>
+    
+        <div class="nexmoe-post-cover absolute" style="padding-top: 62.5%;"> 
+            <img src="/image/Rust/RustCrab.png" alt="全局变量" loading="lazy">
+            <h1>全局变量</h1>
+        </div>
+    
+    
+    <div class="nexmoe-post-meta">
+    <div class="nexmoe-rainbow">
+        <a class="nexmoefont icon-calendar-fill">2023年10月29日</a>
+        
+            <a class="nexmoefont icon-appstore-fill -link" href="/categories/Rust/">Rust</a>
+        
+        
+    <a><i class="nexmoefont icon-areachart"></i>约3.5k字</a>
+    <a><i class="nexmoefont icon-time-circle-fill"></i>预计需要15分钟</a>
+
+    </div>
+    
+    
+    
+    
+    
+</div>
+
+    <h1 id="全局变量"><a href="#全局变量" class="headerlink" title="全局变量"></a>全局变量</h1><p>在一些场景，我们可能需要全局变量来简化状态共享的代码，包括全局 ID，全局数据存储等等，下面一起来看看有哪些创建全局变量的方法。</p>
+<p>首先，有一点可以肯定，全局变量的生命周期肯定是<code>&#39;static</code>，但是不代表它需要用<code>static</code>来声明，例如常量、字符串字面值等无需使用<code>static</code>进行声明，原因是它们已经被打包到二进制可执行文件中。</p>
+<p>下面我们从编译期初始化及运行期初始化两个类别来介绍下全局变量有哪些类型及该如何使用。</p>
+<h2 id="编译期初始化"><a href="#编译期初始化" class="headerlink" title="编译期初始化"></a>编译期初始化</h2><p>我们大多数使用的全局变量都只需要在编译期初始化即可，例如静态配置、计数器、状态值等等。</p>
+<h3 id="静态常量"><a href="#静态常量" class="headerlink" title="静态常量"></a>静态常量</h3><p>全局常量可以在程序任何一部分使用，当然，如果它是定义在某个模块中，你需要引入对应的模块才能使用。常量，顾名思义它是不可变的，很适合用作静态配置：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> MAX_ID: <span class="type">usize</span> =  <span class="type">usize</span>::MAX / <span class="number">2</span>;</span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">   <span class="built_in">println!</span>(<span class="string">&quot;用户ID允许的最大值是&#123;&#125;&quot;</span>,MAX_ID);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>常量与普通变量的区别</strong></p>
+<ul>
+<li>关键字是<code>const</code>而不是<code>let</code></li>
+<li>定义常量必须指明类型（如 i32）不能省略</li>
+<li>定义常量时变量的命名规则一般是全部大写</li>
+<li>常量可以在任意作用域进行定义，其生命周期贯穿整个程序的生命周期。编译时编译器会尽可能将其内联到代码中，所以在不同地方对同一常量的引用并不能保证引用到相同的内存地址</li>
+<li>常量的赋值只能是常量表达式&#x2F;数学表达式，也就是说必须是在编译期就能计算出的值，如果需要在运行时才能得出结果的值比如函数，则不能赋值给常量表达式</li>
+<li>对于变量出现重复的定义(绑定)会发生变量遮盖，后面定义的变量会遮住前面定义的变量，常量则不允许出现重复的定义</li>
+</ul>
+<h3 id="静态变量"><a href="#静态变量" class="headerlink" title="静态变量"></a>静态变量</h3><p>静态变量允许声明一个全局的变量，常用于全局数据统计，例如我们希望用一个变量来统计程序当前的总请求数：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">mut</span> REQUEST_RECV: <span class="type">usize</span> = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">   <span class="keyword">unsafe</span> &#123;</span><br><span class="line">        REQUEST_RECV += <span class="number">1</span>;</span><br><span class="line">        <span class="built_in">assert_eq!</span>(REQUEST_RECV, <span class="number">1</span>);</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Rust 要求必须使用<code>unsafe</code>语句块才能访问和修改<code>static</code>变量，因为这种使用方式往往并不安全，其实编译器是对的，当在多线程中同时去修改时，会不可避免的遇到脏数据。</p>
+<p>只有在<strong>同一线程</strong>内或者<strong>不在乎数据的准确性</strong>时，才应该使用全局静态变量。</p>
+<p>和常量相同，定义静态变量的时候必须赋值为在编译期就可以计算出的值(常量表达式&#x2F;数学表达式)，不能是运行时才能计算出的值(如函数)</p>
+<p><strong>静态变量和常量的区别</strong></p>
+<ul>
+<li>静态变量不会被内联，在整个程序中，静态变量只有一个实例，所有的引用都会指向同一个地址</li>
+<li>存储在静态变量中的值必须要实现 Sync trait</li>
+</ul>
+<h3 id="原子类型"><a href="#原子类型" class="headerlink" title="原子类型"></a>原子类型</h3><p>想要全局计数器、状态控制等功能，又想要线程安全的实现，原子类型是非常好的办法。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::sync::atomic::&#123;AtomicUsize, Ordering&#125;;</span><br><span class="line"><span class="keyword">static</span> REQUEST_RECV: AtomicUsize  = AtomicUsize::<span class="title function_ invoke__">new</span>(<span class="number">0</span>);</span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">for</span> <span class="variable">_</span> <span class="keyword">in</span> <span class="number">0</span>..<span class="number">100</span> &#123;</span><br><span class="line">        REQUEST_RECV.<span class="title function_ invoke__">fetch_add</span>(<span class="number">1</span>, Ordering::Relaxed);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;当前用户请求数&#123;:?&#125;&quot;</span>,REQUEST_RECV);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="示例：全局-ID-生成器"><a href="#示例：全局-ID-生成器" class="headerlink" title="示例：全局 ID 生成器"></a>示例：全局 ID 生成器</h3><p>来看看如何使用上面的内容实现一个全局 ID 生成器:</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::sync::atomic::&#123;Ordering, AtomicUsize&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Factory</span>&#123;</span><br><span class="line">    factory_id: <span class="type">usize</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> GLOBAL_ID_COUNTER: AtomicUsize = AtomicUsize::<span class="title function_ invoke__">new</span>(<span class="number">0</span>);</span><br><span class="line"><span class="keyword">const</span> MAX_ID: <span class="type">usize</span> = <span class="type">usize</span>::MAX / <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">generate_id</span>()<span class="punctuation">-&gt;</span><span class="type">usize</span>&#123;</span><br><span class="line">    <span class="comment">// 检查两次溢出，否则直接加一可能导致溢出</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">current_val</span> = GLOBAL_ID_COUNTER.<span class="title function_ invoke__">load</span>(Ordering::Relaxed); <span class="comment">// 取出 GLOBAL_ID_COUNTER 中的值</span></span><br><span class="line">    <span class="keyword">if</span> current_val &gt; MAX_ID&#123;</span><br><span class="line">        <span class="built_in">panic!</span>(<span class="string">&quot;Factory ids overflowed&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    GLOBAL_ID_COUNTER.<span class="title function_ invoke__">fetch_add</span>(<span class="number">1</span>, Ordering::Relaxed) <span class="comment">// 加 1</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">next_id</span> = GLOBAL_ID_COUNTER.<span class="title function_ invoke__">load</span>(Ordering::Relaxed);</span><br><span class="line">    <span class="keyword">if</span> next_id &gt; MAX_ID&#123;</span><br><span class="line">        <span class="built_in">panic!</span>(<span class="string">&quot;Factory ids overflowed&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    next_id</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">Factory</span>&#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">new</span>()<span class="punctuation">-&gt;</span><span class="keyword">Self</span>&#123;</span><br><span class="line">        <span class="keyword">Self</span>&#123;</span><br><span class="line">            factory_id: <span class="title function_ invoke__">generate_id</span>()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="运行期初始化"><a href="#运行期初始化" class="headerlink" title="运行期初始化"></a>运行期初始化</h2><p>以上的静态初始化有一个致命的问题：无法用函数进行静态初始化，例如你如果想声明一个全局的<code>Mutex</code>锁：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::sync::Mutex;</span><br><span class="line"><span class="keyword">static</span> NAMES: Mutex&lt;<span class="type">String</span>&gt; = Mutex::<span class="title function_ invoke__">new</span>(<span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;Sunface, Jack, Allen&quot;</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">v</span> = NAMES.<span class="title function_ invoke__">lock</span>().<span class="title function_ invoke__">unwrap</span>();</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>,v);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行后报错如下：</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">error[E0015]: calls in statics are limited to constant functions, tuple structs and tuple variants</span><br><span class="line"><span class="meta prompt_"> --&gt; </span><span class="language-bash">src/main.rs:3:42</span></span><br><span class="line">  |</span><br><span class="line">3 | static NAMES: Mutex&lt;String&gt; = Mutex::new(String::from(&quot;sunface&quot;));</span><br></pre></td></tr></table></figure>
+
+<p>但你又必须在声明时就对<code>NAMES</code>进行初始化，此时就陷入了两难的境地。好在天无绝人之路，我们可以使用<code>lazy_static</code>包来解决这个问题。</p>
+<h3 id="lazy-static"><a href="#lazy-static" class="headerlink" title="lazy_static"></a>lazy_static</h3><p><a target="_blank" rel="noopener" href="https://github.com/rust-lang-nursery/lazy-static.rs"><code>lazy_static</code></a>是社区提供的非常强大的宏，用于懒初始化静态变量，之前的静态变量都是在编译期初始化的，因此无法使用函数调用进行赋值，而<code>lazy_static</code>允许我们在运行期初始化静态变量！</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::sync::Mutex;</span><br><span class="line"><span class="keyword">use</span> lazy_static::lazy_static;</span><br><span class="line">lazy_static! &#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">ref</span> NAMES: Mutex&lt;<span class="type">String</span>&gt; = Mutex::<span class="title function_ invoke__">new</span>(<span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;Sunface, Jack, Allen&quot;</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">v</span> = NAMES.<span class="title function_ invoke__">lock</span>().<span class="title function_ invoke__">unwrap</span>();</span><br><span class="line">    v.<span class="title function_ invoke__">push_str</span>(<span class="string">&quot;, Myth&quot;</span>);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>,v);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当然，使用<code>lazy_static</code>在每次访问静态变量时，会有轻微的性能损失，因为其内部实现用了一个底层的并发原语<code>std::sync::Once</code>，在每次访问该变量时，程序都会执行一次原子指令用于确认静态变量的初始化是否完成。</p>
+<p><code>lazy_static</code>宏，匹配的是<code>static ref</code>，所以定义的静态变量都是不可变引用</p>
+<p>可能有读者会问，为何需要在运行期初始化一个静态变量，除了上面的全局锁，你会遇到最常见的场景就是：<strong>一个全局的动态配置，它在程序开始后，才加载数据进行初始化，最终可以让各个线程直接访问使用</strong></p>
+<p>再来看一个使用<code>lazy_static</code>实现全局缓存的例子:</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> lazy_static::lazy_static;</span><br><span class="line"><span class="keyword">use</span> std::collections::HashMap;</span><br><span class="line"></span><br><span class="line">lazy_static! &#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">ref</span> HASHMAP: HashMap&lt;<span class="type">u32</span>, &amp;<span class="symbol">&#x27;static</span> <span class="type">str</span>&gt; = &#123;</span><br><span class="line">        <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">m</span> = HashMap::<span class="title function_ invoke__">new</span>();</span><br><span class="line">        m.<span class="title function_ invoke__">insert</span>(<span class="number">0</span>, <span class="string">&quot;foo&quot;</span>);</span><br><span class="line">        m.<span class="title function_ invoke__">insert</span>(<span class="number">1</span>, <span class="string">&quot;bar&quot;</span>);</span><br><span class="line">        m.<span class="title function_ invoke__">insert</span>(<span class="number">2</span>, <span class="string">&quot;baz&quot;</span>);</span><br><span class="line">        m</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="comment">// 首次访问`HASHMAP`的同时对其进行初始化</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;The entry for `0` is \&quot;&#123;&#125;\&quot;.&quot;</span>, HASHMAP.<span class="title function_ invoke__">get</span>(&amp;<span class="number">0</span>).<span class="title function_ invoke__">unwrap</span>());</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 后续的访问仅仅获取值，再不会进行任何初始化操作</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;The entry for `1` is \&quot;&#123;&#125;\&quot;.&quot;</span>, HASHMAP.<span class="title function_ invoke__">get</span>(&amp;<span class="number">1</span>).<span class="title function_ invoke__">unwrap</span>());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>需要注意的是，<code>lazy_static</code>直到运行到<code>main</code>中的第一行代码时，才进行初始化，非常<code>lazy static</code>。</p>
+<h3 id="ref-关键字"><a href="#ref-关键字" class="headerlink" title="ref 关键字"></a>ref 关键字</h3><p>某些情况下，使用ref与&amp;是等效的，但ref关键字一般用于要绑定的标识符前，通常这些地方都无法使用&amp;。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">x</span> = <span class="built_in">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>];</span><br><span class="line"><span class="keyword">let</span> <span class="variable">ref</span> y = x; <span class="comment">// ref表示以引用的方式绑定y和x，所以y的类型是&amp;Vec&lt;i32&gt;。</span></span><br><span class="line"><span class="keyword">let</span> <span class="variable">y</span> = &amp;x; <span class="comment">// 与上一句等价。</span></span><br></pre></td></tr></table></figure>
+
+<p>ref用于match的分支匹配中</p>
+<p>match在匹配时，会拿走被匹配变量，所以match之后，原变量无法再使用。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">a</span> = <span class="title function_ invoke__">Some</span>(<span class="built_in">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]);</span><br><span class="line"><span class="keyword">match</span> a &#123;</span><br><span class="line">        <span class="literal">None</span> =&gt; (),</span><br><span class="line">        <span class="title function_ invoke__">Some</span>(value) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, value), <span class="comment">// value绑定是移动语义，所以a被match占据。</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, a); <span class="comment">// 不能再使用a</span></span><br></pre></td></tr></table></figure>
+
+<p>要避免这种情况，可以使用ref</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">a</span> = <span class="title function_ invoke__">Some</span>(<span class="built_in">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]);</span><br><span class="line"><span class="keyword">match</span> a &#123;</span><br><span class="line">        <span class="literal">None</span> =&gt; (),</span><br><span class="line">        <span class="title function_ invoke__">Some</span>(<span class="keyword">ref</span> value) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, value), <span class="comment">// value以引用方式绑定。</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, a); <span class="comment">// a仍然在</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">// 也可以写成</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">let</span> <span class="variable">a</span> = <span class="title function_ invoke__">Some</span>(<span class="built_in">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]);</span><br><span class="line"><span class="keyword">match</span> &amp;a &#123; <span class="comment">// 创建a的引用，match只使用了a引用，且match结束时，引用离开作用域也会销毁</span></span><br><span class="line">        <span class="literal">None</span> =&gt; (),</span><br><span class="line">        <span class="title function_ invoke__">Some</span>(value) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, value), <span class="comment">// 编译器会识别出，value也是引用。</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, a); <span class="comment">// 可以继续使用a，如果a可变，也可以修改a</span></span><br></pre></td></tr></table></figure>
+
+<p>ref用于<strong>解构</strong>时引用结构体某些字段</p>
+<p>不考虑复制特性，结构体进行匹配时，默认将使用移动语义，结构体字段所有权从结构体移动到被绑定的变量上，原变量失去所有权。例如</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#[derive(Debug)]</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">    name: <span class="type">String</span>,</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">p</span> = Person &#123;</span><br><span class="line">        name: <span class="string">&quot;薛海舟&quot;</span>.<span class="title function_ invoke__">to_string</span>(),</span><br><span class="line">    &#125;;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">let</span> <span class="variable">Person</span> &#123; name: a &#125; = p; <span class="comment">// a是被绑定的标识符，这里将p中name的所有权转移给a变量。</span></span><br><span class="line">    <span class="comment">// p.name.push_str(&quot;舒珊靖&quot;); // 失败，因为p已经被移动。</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, a); <span class="comment">// a中内容是&quot;薛海舟&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用ref就表示，要以引用的形式来绑定。例如</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#[derive(Debug)]</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">    name: <span class="type">String</span>,</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// ref只能用于要被绑定的标识符前</span></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">p</span> = Person &#123;</span><br><span class="line">        name: <span class="string">&quot;薛海舟&quot;</span>.<span class="title function_ invoke__">to_string</span>(),</span><br><span class="line">    &#125;;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">let</span> <span class="variable">Person</span> &#123; name: <span class="keyword">ref</span> <span class="keyword">mut</span> a &#125; = p; <span class="comment">// a是是对p中name字段的可变借用</span></span><br><span class="line">    *a = <span class="string">&quot;舒珊靖&quot;</span>.<span class="title function_ invoke__">to_string</span>(); <span class="comment">// 对a赋值，就相当于对p中name操作</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, p); <span class="comment">// p中name变为舒珊靖</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Box-leak"><a href="#Box-leak" class="headerlink" title="Box::leak"></a>Box::leak</h3><p>在<code>Box</code>智能指针章节中，我们提到了<code>Box::leak</code>可以用于全局变量，例如用作运行期初始化的全局动态配置，先来看看如果不使用<code>lazy_static</code>也不使用<code>Box::leak</code>，会发生什么：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#[derive(Debug)]</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Config</span> &#123;</span><br><span class="line">    a: <span class="type">String</span>,</span><br><span class="line">    b: <span class="type">String</span>,</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">mut</span> CONFIG: <span class="type">Option</span>&lt;&amp;<span class="keyword">mut</span> Config&gt; = <span class="literal">None</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">unsafe</span> &#123;</span><br><span class="line">        CONFIG = <span class="title function_ invoke__">Some</span>(&amp;<span class="keyword">mut</span> Config &#123;</span><br><span class="line">            a: <span class="string">&quot;A&quot;</span>.<span class="title function_ invoke__">to_string</span>(),</span><br><span class="line">            b: <span class="string">&quot;B&quot;</span>.<span class="title function_ invoke__">to_string</span>(),</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, CONFIG)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上代码我们声明了一个全局动态配置<code>CONFIG</code>，并且其值初始化为<code>None</code>，然后在程序开始运行后，给它赋予相应的值，运行后报错:</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">error[E0716]: temporary value dropped while borrowed</span><br><span class="line"><span class="meta prompt_">  --&gt; </span><span class="language-bash">src/main.rs:10:28</span></span><br><span class="line">   |</span><br><span class="line">10 |            CONFIG = Some(&amp;mut Config &#123;</span><br><span class="line">   |   _________-__________________^</span><br><span class="line">   |  |_________|</span><br><span class="line">   | ||</span><br><span class="line">11 | ||             a: &quot;A&quot;.to_string(),</span><br><span class="line">12 | ||             b: &quot;B&quot;.to_string(),</span><br><span class="line">13 | ||         &#125;);</span><br><span class="line">   | ||         ^-- temporary value is freed at the end of this statement</span><br><span class="line">   | ||_________||</span><br><span class="line">   |  |_________|assignment requires that borrow lasts for `&#x27;static`</span><br><span class="line">   |            creates a temporary which is freed while still in use</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，Rust 的借用和生命周期规则限制了我们做到这一点，因为试图将一个局部生命周期的变量赋值给全局生命周期的<code>CONFIG</code>，这明显是不安全的。</p>
+<p>好在<code>Rust</code>为我们提供了<code>Box::leak</code>方法，它可以将一个变量从内存中泄漏(听上去怪怪的，竟然做主动内存泄漏)，然后将其变为<code>&#39;static</code>生命周期，最终该变量将和程序活得一样久，因此可以赋值给全局静态变量<code>CONFIG</code>。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#[derive(Debug)]</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Config</span> &#123;</span><br><span class="line">    a: <span class="type">String</span>,</span><br><span class="line">    b: <span class="type">String</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">mut</span> CONFIG: <span class="type">Option</span>&lt;&amp;<span class="keyword">mut</span> Config&gt; = <span class="literal">None</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">c</span> = <span class="type">Box</span>::<span class="title function_ invoke__">new</span>(Config &#123;</span><br><span class="line">        a: <span class="string">&quot;A&quot;</span>.<span class="title function_ invoke__">to_string</span>(),</span><br><span class="line">        b: <span class="string">&quot;B&quot;</span>.<span class="title function_ invoke__">to_string</span>(),</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">unsafe</span> &#123;</span><br><span class="line">        <span class="comment">// 将`c`从内存中泄漏，变成`&#x27;static`生命周期</span></span><br><span class="line">        CONFIG = <span class="title function_ invoke__">Some</span>(<span class="type">Box</span>::<span class="title function_ invoke__">leak</span>(c));</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, CONFIG);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="从函数返回全局变量"><a href="#从函数返回全局变量" class="headerlink" title="从函数返回全局变量"></a>从函数返回全局变量</h3><p>问题又来了，如果我们需要在运行期，从一个函数返回一个全局变量该如何做？例如：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#[derive(Debug)]</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Config</span> &#123;</span><br><span class="line">    a: <span class="type">String</span>,</span><br><span class="line">    b: <span class="type">String</span>,</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">mut</span> CONFIG: <span class="type">Option</span>&lt;&amp;<span class="keyword">mut</span> Config&gt; = <span class="literal">None</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">init</span>() <span class="punctuation">-&gt;</span> <span class="type">Option</span>&lt;&amp;<span class="symbol">&#x27;static</span> <span class="keyword">mut</span> Config&gt; &#123;</span><br><span class="line">    <span class="title function_ invoke__">Some</span>(&amp;<span class="keyword">mut</span> Config &#123;</span><br><span class="line">        a: <span class="string">&quot;A&quot;</span>.<span class="title function_ invoke__">to_string</span>(),</span><br><span class="line">        b: <span class="string">&quot;B&quot;</span>.<span class="title function_ invoke__">to_string</span>(),</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">unsafe</span> &#123;</span><br><span class="line">        CONFIG = <span class="title function_ invoke__">init</span>();</span><br><span class="line"></span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, CONFIG)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>报错这里就不展示了，跟之前大同小异，还是生命周期引起的，那么该如何解决呢？依然可以用<code>Box::leak</code>:</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#[derive(Debug)]</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Config</span> &#123;</span><br><span class="line">    a: <span class="type">String</span>,</span><br><span class="line">    b: <span class="type">String</span>,</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">mut</span> CONFIG: <span class="type">Option</span>&lt;&amp;<span class="keyword">mut</span> Config&gt; = <span class="literal">None</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">init</span>() <span class="punctuation">-&gt;</span> <span class="type">Option</span>&lt;&amp;<span class="symbol">&#x27;static</span> <span class="keyword">mut</span> Config&gt; &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">c</span> = <span class="type">Box</span>::<span class="title function_ invoke__">new</span>(Config &#123;</span><br><span class="line">        a: <span class="string">&quot;A&quot;</span>.<span class="title function_ invoke__">to_string</span>(),</span><br><span class="line">        b: <span class="string">&quot;B&quot;</span>.<span class="title function_ invoke__">to_string</span>(),</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="title function_ invoke__">Some</span>(<span class="type">Box</span>::<span class="title function_ invoke__">leak</span>(c))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">unsafe</span> &#123;</span><br><span class="line">        CONFIG = <span class="title function_ invoke__">init</span>();</span><br><span class="line"></span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;&#123;:?&#125;&quot;</span>, CONFIG)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="标准库中的-OnceCell"><a href="#标准库中的-OnceCell" class="headerlink" title="标准库中的 OnceCell"></a>标准库中的 OnceCell</h2><p>在 <code>Rust</code> 标准库中提供了实验性的 <code>lazy::OnceCell</code> 和 <code>lazy::SyncOnceCell</code> (在 <code>Rust</code> 1.70.0版本及以上的标准库中，替换为稳定的 <code>cell::OnceCell</code> 和 <code>sync::OnceLock</code> )两种 <code>Cell</code> ，前者用于单线程，后者用于多线程，它们用来存储堆上的信息，并且具有最多只能赋值一次的特性。 如实现一个多线程的日志组件 <code>Logger</code>：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 低于Rust 1.70版本中， OnceCell 和 SyncOnceCell 的API为实验性的 ，</span></span><br><span class="line"><span class="comment">// 需启用特性 `#![feature(once_cell)]`。</span></span><br><span class="line"><span class="meta">#![feature(once_cell)]</span></span><br><span class="line"><span class="keyword">use</span> std::&#123;lazy::SyncOnceCell, thread&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Rust 1.70版本以上,</span></span><br><span class="line"><span class="comment">// use std::&#123;sync::OnceLock, thread&#125;;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="comment">// 子线程中调用</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">handle</span> = thread::<span class="title function_ invoke__">spawn</span>(|| &#123;</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">logger</span> = Logger::<span class="title function_ invoke__">global</span>();</span><br><span class="line">        logger.<span class="title function_ invoke__">log</span>(<span class="string">&quot;thread message&quot;</span>.<span class="title function_ invoke__">to_string</span>());</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 主线程调用</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">logger</span> = Logger::<span class="title function_ invoke__">global</span>();</span><br><span class="line">    logger.<span class="title function_ invoke__">log</span>(<span class="string">&quot;some message&quot;</span>.<span class="title function_ invoke__">to_string</span>());</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">logger2</span> = Logger::<span class="title function_ invoke__">global</span>();</span><br><span class="line">    logger2.<span class="title function_ invoke__">log</span>(<span class="string">&quot;other message&quot;</span>.<span class="title function_ invoke__">to_string</span>());</span><br><span class="line"></span><br><span class="line">    handle.<span class="title function_ invoke__">join</span>().<span class="title function_ invoke__">unwrap</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#[derive(Debug)]</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Logger</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 低于Rust 1.70版本</span></span><br><span class="line"><span class="keyword">static</span> LOGGER: SyncOnceCell&lt;Logger&gt; = SyncOnceCell::<span class="title function_ invoke__">new</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">// Rust 1.70版本以上</span></span><br><span class="line"><span class="comment">// static LOGGER: OnceLock&lt;Logger&gt; = OnceLock::new();</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">Logger</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">global</span>() <span class="punctuation">-&gt;</span> &amp;<span class="symbol">&#x27;static</span> Logger &#123;</span><br><span class="line">        <span class="comment">// 获取或初始化 Logger</span></span><br><span class="line">        LOGGER.<span class="title function_ invoke__">get_or_init</span>(|| &#123;</span><br><span class="line">            <span class="built_in">println!</span>(<span class="string">&quot;Logger is being created...&quot;</span>); <span class="comment">// 初始化打印</span></span><br><span class="line">            Logger</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">log</span>(&amp;<span class="keyword">self</span>, message: <span class="type">String</span>) &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, message)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上代码我们声明了一个 <code>global()</code> 关联函数，并在其内部调用 <code>get_or_init</code> 进行初始化 <code>Logger</code>，之后在不同线程上多次调用 <code>Logger::global()</code> 获取其实例：</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Logger is being created...</span><br><span class="line">some message</span><br><span class="line">other message</span><br><span class="line">thread message</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，<code>Logger is being created...</code> 在多个线程中使用也只被打印了一次。</p>
+<p>特别注意，目前 <code>OnceCell</code> 和 <code>SyncOnceCell</code> API 暂未稳定，需启用特性 <code>#![feature(once_cell)]</code>。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在 Rust 中有很多方式可以创建一个全局变量，本章也只是介绍了其中一部分，更多的还等待大家自己去挖掘学习(当然，未来可能本章节会不断完善，最后变成一个巨无霸- , -)。</p>
+<p>简单来说，全局变量可以分为两种：</p>
+<ul>
+<li>编译期初始化的全局变量，<code>const</code>创建常量，<code>static</code>创建静态变量，<code>Atomic</code>创建原子类型</li>
+<li>运行期初始化的全局变量，<code>lazy_static</code>用于懒初始化，<code>Box::leak</code>利用内存泄漏将一个变量的生命周期变为<code>&#39;static</code></li>
+</ul>
+
+    
+  </article>
+
+  
+      
+    <div class="nexmoe-post-copyright">
+        <strong>本文作者：</strong>kay<br>
+        <strong>本文链接：</strong><a href="https://www.tooupper.com/content/Rust/learning-Rust/rust-senior/%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F.html" title="https:&#x2F;&#x2F;www.tooupper.com&#x2F;content&#x2F;Rust&#x2F;learning-Rust&#x2F;rust-senior&#x2F;%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F.html" target="_blank" rel="noopener">https:&#x2F;&#x2F;www.tooupper.com&#x2F;content&#x2F;Rust&#x2F;learning-Rust&#x2F;rust-senior&#x2F;%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F.html</a><br>
+        
+            <strong>版权声明：</strong>本文采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/cn/deed.zh" target="_blank">CC BY-NC-SA 3.0 CN</a> 协议进行许可
+
+        
+    </div>
+
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+   
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/Rust%E8%BF%9B%E9%98%B6/" rel="tag">Rust进阶</a>
+    
+</div>
+  
+  
+    <script async src="/js/copy-codeblock.js?v=1698918460903"></script>
+  
+
+  
+      <div class="nexmoe-post-footer">
+          
+      </div>
+  
+</div></div><div class="nexmoe-post-right">    <div class="nexmoe-fixed">
+        <div class="nexmoe-tool">
+
+            
+
+            
+            
+            <button class="mdui-fab catalog" style="overflow:unset;">
+                <i class="nexmoefont icon-i-catalog"></i>
+                <div class="nexmoe-toc">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F"><span class="toc-number">1.</span> <span class="toc-text">全局变量</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E6%9C%9F%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">1.1.</span> <span class="toc-text">编译期初始化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E5%B8%B8%E9%87%8F"><span class="toc-number">1.1.1.</span> <span class="toc-text">静态常量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E5%8F%98%E9%87%8F"><span class="toc-number">1.1.2.</span> <span class="toc-text">静态变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%9F%E5%AD%90%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.1.3.</span> <span class="toc-text">原子类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%EF%BC%9A%E5%85%A8%E5%B1%80-ID-%E7%94%9F%E6%88%90%E5%99%A8"><span class="toc-number">1.1.4.</span> <span class="toc-text">示例：全局 ID 生成器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C%E6%9C%9F%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">1.2.</span> <span class="toc-text">运行期初始化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#lazy-static"><span class="toc-number">1.2.1.</span> <span class="toc-text">lazy_static</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ref-%E5%85%B3%E9%94%AE%E5%AD%97"><span class="toc-number">1.2.2.</span> <span class="toc-text">ref 关键字</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Box-leak"><span class="toc-number">1.2.3.</span> <span class="toc-text">Box::leak</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8E%E5%87%BD%E6%95%B0%E8%BF%94%E5%9B%9E%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F"><span class="toc-number">1.2.4.</span> <span class="toc-text">从函数返回全局变量</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%87%E5%87%86%E5%BA%93%E4%B8%AD%E7%9A%84-OnceCell"><span class="toc-number">1.3.</span> <span class="toc-text">标准库中的 OnceCell</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">1.4.</span> <span class="toc-text">总结</span></a></li></ol></li></ol>
+                </div>
+            </button>
+            
+
+            
+
+            <a href="#nexmoe-content" class="backtop toc-link" aria-label="Back To Top" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+        </div>
+    </div>
+</div></div><div id="nexmoe-footer"><!--!--></div><div><div id="nexmoe-search-space">
+	<div class="search-container">
+		<div class="search-header">
+			<div class="search-input-container">
+				<input
+					class="search-input"
+					type="text"
+					placeholder="搜索"
+					oninput="sinput();"
+				/>
+			</div>
+			<a class="search-close" onclick="sclose();">×</a>
+		</div>
+		<div class="search-body"></div>
+	</div>
+</div>
+</div><div><script async src="https://www.TooUpper.com" crossorigin="anonymous"></script>
+</div></body></html>
