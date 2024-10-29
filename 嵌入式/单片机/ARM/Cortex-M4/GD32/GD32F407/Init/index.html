@@ -6,12 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta name="description" content="准备阶段下载相关文件，GD32F407 的用户手册、数组手册、选型手册等。 创建项目与配置创建项目 1234567891011&#x2F;&#x2F; 目录结构Demo01└── Docs&#x2F;		    &#x2F;&#x2F; 说明文档 README.md└── Project&#x2F;		&#x2F;&#x2F; 存放 Keil 文件和生成的一些配置文件、hex 文件     ├── CMSIS&#x2F;          &#x2F;&#x2F; CMSIS 中 ARM 相关文件├──">
+    <meta name="description" content="准备阶段下载相关文件，GD32F407 的用户手册、数组手册、选型手册、固件使用指南（一般下载固件库时会附带）等。 创建项目与配置创建项目 在工程目录中创捷下列文件夹 1234567891011&#x2F;&#x2F; 目录结构Demo01└── Docs&#x2F;		    &#x2F;&#x2F; 说明文档 README.md└── Project&#x2F;		&#x2F;&#x2F; 存放 Keil 文件和生成的一些配置文件、hex 文件     ├── CMSIS">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Init">
 <meta property="og:url" content="https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Init/index.html">
 <meta property="og:site_name" content="流年不知心底事">
-<meta property="og:description" content="准备阶段下载相关文件，GD32F407 的用户手册、数组手册、选型手册等。 创建项目与配置创建项目 1234567891011&#x2F;&#x2F; 目录结构Demo01└── Docs&#x2F;		    &#x2F;&#x2F; 说明文档 README.md└── Project&#x2F;		&#x2F;&#x2F; 存放 Keil 文件和生成的一些配置文件、hex 文件     ├── CMSIS&#x2F;          &#x2F;&#x2F; CMSIS 中 ARM 相关文件├──">
+<meta property="og:description" content="准备阶段下载相关文件，GD32F407 的用户手册、数组手册、选型手册、固件使用指南（一般下载固件库时会附带）等。 创建项目与配置创建项目 在工程目录中创捷下列文件夹 1234567891011&#x2F;&#x2F; 目录结构Demo01└── Docs&#x2F;		    &#x2F;&#x2F; 说明文档 README.md└── Project&#x2F;		&#x2F;&#x2F; 存放 Keil 文件和生成的一些配置文件、hex 文件     ├── CMSIS">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407Keilyinruwenjian.png">
 <meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407Keilinclude.png">
@@ -23,8 +23,10 @@
 <meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407DAPpeizhi04.png">
 <meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407xinpianxuanxingbiao.png">
 <meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407jinzhenbufen.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407xitshizhong.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407xitongshizhong02.png">
 <meta property="article:published_time" content="2024-10-24T11:48:00.000Z">
-<meta property="article:modified_time" content="2024-10-26T12:27:54.362Z">
+<meta property="article:modified_time" content="2024-10-27T14:02:19.098Z">
 <meta property="article:author" content="kay">
 <meta property="article:tag" content="GD32F407">
 <meta name="twitter:card" content="summary">
@@ -107,10 +109,10 @@
     <span id="actions">
       <ul>
         
-        <li><a class="icon" aria-label="上一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M3/STM32/STM32F103/%E6%96%B0%E5%BB%BA%E5%B7%A5%E7%A8%8B%E6%AD%A5%E9%AA%A4/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="上一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/GPIO/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
         
         
-        <li><a class="icon" aria-label="下一篇" href="/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/%E5%AD%97%E7%AC%A6%E4%B8%B2/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="下一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M3/STM32/STM32F103/Init/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
         
         <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
         <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
@@ -140,7 +142,7 @@
     
     
       <div id="toc">
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%86%E5%A4%87%E9%98%B6%E6%AE%B5"><span class="toc-number">1.</span> <span class="toc-text">准备阶段</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE%E4%B8%8E%E9%85%8D%E7%BD%AE"><span class="toc-number">2.</span> <span class="toc-text">创建项目与配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E5%8F%91%E4%B8%8E%E8%B0%83%E8%AF%95"><span class="toc-number">3.</span> <span class="toc-text">开发与调试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%83%A7%E5%86%99%E4%B8%8E%E9%AA%8C%E8%AF%81"><span class="toc-number">4.</span> <span class="toc-text">烧写与验证</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B0%83%E6%95%B4%E6%97%B6%E9%92%9F%E9%A2%91%E7%8E%87"><span class="toc-number">5.</span> <span class="toc-text">调整时钟频率</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">6.</span> <span class="toc-text">问题</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%86%E5%A4%87%E9%98%B6%E6%AE%B5"><span class="toc-number">1.</span> <span class="toc-text">准备阶段</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE%E4%B8%8E%E9%85%8D%E7%BD%AE"><span class="toc-number">2.</span> <span class="toc-text">创建项目与配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E5%8F%91%E4%B8%8E%E8%B0%83%E8%AF%95"><span class="toc-number">3.</span> <span class="toc-text">开发与调试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%83%A7%E5%86%99%E4%B8%8E%E9%AA%8C%E8%AF%81"><span class="toc-number">4.</span> <span class="toc-text">烧写与验证</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#DAP-Link-%E4%B8%8B%E8%BD%BD"><span class="toc-number">4.1.</span> <span class="toc-text">DAP-Link 下载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-DFU-%E7%83%A7%E5%BD%95"><span class="toc-number">4.2.</span> <span class="toc-text">使用 DFU 烧录</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B0%83%E6%95%B4%E6%97%B6%E9%92%9F%E9%A2%91%E7%8E%87"><span class="toc-number">5.</span> <span class="toc-text">调整时钟频率</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B0%83%E6%95%B4%E6%99%B6%E6%8C%AF%E7%9A%84%E9%A2%91%E7%8E%87"><span class="toc-number">6.</span> <span class="toc-text">调整晶振的频率</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">7.</span> <span class="toc-text">问题</span></a></li></ol>
       </div>
     
   </span>
@@ -190,12 +192,13 @@
   
 
   <div class="content e-content" itemprop="articleBody">
-    <h2 id="准备阶段"><a href="#准备阶段" class="headerlink" title="准备阶段"></a>准备阶段</h2><p>下载相关文件，GD32F407 的用户手册、数组手册、选型手册等。</p>
+    <h2 id="准备阶段"><a href="#准备阶段" class="headerlink" title="准备阶段"></a>准备阶段</h2><p>下载相关文件，GD32F407 的用户手册、数组手册、选型手册、固件使用指南（一般下载固件库时会附带）等。</p>
 <h2 id="创建项目与配置"><a href="#创建项目与配置" class="headerlink" title="创建项目与配置"></a>创建项目与配置</h2><p><strong>创建项目</strong></p>
+<p>在工程目录中创捷下列文件夹</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 目录结构</span></span><br><span class="line"></span><br><span class="line">Demo01</span><br><span class="line">└── Docs/		    <span class="comment">// 说明文档 README.md</span></span><br><span class="line">└── Project/		<span class="comment">// 存放 Keil 文件和生成的一些配置文件、hex 文件     </span></span><br><span class="line">├── CMSIS/          <span class="comment">// CMSIS 中 ARM 相关文件</span></span><br><span class="line">├── Firmware/       <span class="comment">// 官方标准固件库中的驱动程序</span></span><br><span class="line">├── Drivers/        <span class="comment">// 外设硬件驱动程序</span></span><br><span class="line">├── Middleware/     <span class="comment">// 中间件组件</span></span><br><span class="line">├── App/            <span class="comment">// 应用层代码</span></span><br><span class="line">└── User/      		<span class="comment">// 入口层     </span></span><br></pre></td></tr></table></figure>
 
 <p><strong>文件移植</strong></p>
-<p>将官方标准固件库中我们需要的的文件拷贝到我们对应的文件目录中去</p>
+<p>将官方标准固件库中我们需要的的文件拷贝到对应的工程目录中去：</p>
 <p><strong>CMSIS</strong> –&gt; 官方标准固件库中的 CMSIS 中的代码；</p>
 <p><strong>Firmware</strong> –&gt; 官方标准固件库中的外设驱动；</p>
 <p><strong>Drivers</strong> –&gt; 我们自己封装的驱动，如按键、显示屏等；</p>
@@ -204,14 +207,20 @@
 <p><strong>User</strong> –&gt; 程序的入口和一些工具文件</p>
 <p><strong>Project</strong> –&gt; Keil 文件的目录</p>
 <p>那么具体都是要拷贝哪些软件呢，</p>
-<ol>
-<li>将对应目录下文件都拷贝过去，然后将所有 .c 文件添加进项目中然后在解决错误问题（不建议）</li>
-<li>查看官方的示例代码，看看人家官方示例是需要拷贝那些，<ol>
-<li>打开 Keil 查看他的工程目录，然后从官方库中复制对应的文件到我们自己的项目中；(注意，一般工程中只会显示 .c 文件但我们要记得将对应的 .h 文件一起拷贝)</li>
-</ol>
+<ul>
+<li><p>将对应目录下文件都拷贝过去，然后将所有 .c 文件添加进项目中然后在解决错误问题（不建议）</p>
 </li>
-</ol>
+<li><p>查看官方的示例代码，看看人家官方示例是需要拷贝那些，</p>
+<ul>
+<li>打开 Keil 查看他的工程目录，然后从官方库中复制对应的文件到我们自己的项目中；(注意，一般工程中只会显示 .c 文件但我们要记得将对应的 .h 文件一起拷贝)</li>
+</ul>
+</li>
+</ul>
 <p><strong>在 Keil 工程中创建工程目录并添加对应的文件</strong></p>
+<ul>
+<li>创建 Keil 工程并新建对应的工程目录</li>
+<li>将工程文件夹下的 .C 文件添加到 Keil 工程中去</li>
+</ul>
 <p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407Keilyinruwenjian.png" alt="F407Keilyinruwenjian"></p>
 <p><strong>添加 Include PATH 路径</strong></p>
 <p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407Keilinclude.png" alt="F407Keilinclude"></p>
@@ -251,7 +260,7 @@
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;gd32f4xx.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;systick.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;main.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;gd32f450i_eval.h&quot;</span> <span class="comment">// 删掉</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 整个函数删掉</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">led_spark</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    <span class="type">static</span> __IO <span class="type">uint32_t</span> timingdelaylocal = <span class="number">0U</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(timingdelaylocal) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(timingdelaylocal &lt; <span class="number">500U</span>) &#123;</span><br><span class="line">            gd_eval_led_on(LED1);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            gd_eval_led_off(LED1);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        timingdelaylocal--;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        timingdelaylocal = <span class="number">1000U</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line"></span><br><span class="line">    gd_eval_led_init(LED1); <span class="comment">// 这个调用语句也删掉</span></span><br><span class="line">    systick_config();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>) &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// gd32f4xx_it.c 中调用了 led_spark() 我们也要讲他删掉</span></span><br></pre></td></tr></table></figure>
 
 <ol start="2">
-<li><p><strong>运行他会报错，提示缺少一些文件，我们去看这些文件在我们的目录中是否存在，如果不存在就加进来</strong></p>
+<li><p><strong>编译运行这时他会报错，提示缺少一些文件，我们去看这些文件在我们的目录中是否存在，如果不存在就加进来</strong></p>
 <p>这里一般情况下是缺少 “core_cmFunc.h”，”core_cm4.h”，”core_cm4_simd.h”，”core_cmlnstr.h”，这四个</p>
 </li>
 <li><p><strong>此时还是报错，我们点击报错的语句，发现他会跳到某些个 include 处报错：D:&#x2F;Tools&#x2F;IDE&#x2F;keil&#x2F;keil&#x2F;ARM&#x2F;Packs&#x2F;GigaDevice&#x2F;GD32F4xx_DFP&#x2F;3.0.3&#x2F;Device&#x2F;F4XX&#x2F;Include\gd32f4xx_libopt.h(11): error: ‘RTE_Components.h’ file not found；</strong></p>
@@ -263,14 +272,14 @@
 <li><p>gd32f4xx_libopt.h 这个文件是在哪被声明使用的呢？，我们发现，他是在 gd32f4xx.h 中被声明使用的，那么 gd32f4xx.h 这个文件在本地是否存在呢，如果不存在就需要从标准固件库中添加进我们的项目中；</p>
 </li>
 </ul>
-<p>此时，运行它使用的就是我们本地的 gd32f4xx_libopt.h 文件了，程序可以正常使用了；</p>
+<p>此时，运行它使用的就是我们本地的 gd32f4xx_libopt.h 文件了，这时它有时候还会报错某些引用错误，但这是官方的标准文件是不会出错了，那么大概率就是某些头没有导入，他某些头文件的导入是通过宏来定义的；我们需要在 Keil 中定义某些宏；</p>
 <ol start="4">
 <li><strong>简化外设库的使用</strong></li>
 </ol>
 <p>我们看 gd32f4xx_libopt.h 文件发现其中定义了很多的头文件，但是它需要通过宏去判断是否导入这些头文件，所以此时我们需要添加这些宏关键字；</p>
 <p>“魔术棒” –&gt; “C&#x2F;C++” 下的 “Define” 中进行添加；”USE_STDPERIPH_DRIVER,GD32F407”，这两个宏定义，</p>
 <p>USE_STDPERIPH_DRIVER 用于在 gd32f4xx.h 中展开 gd32f4xx_libopt.h 头文件（这一句可以不加，它本身会做判断，不存在就自动定义）；</p>
-<p>GD32F407 用于在 gd32f4xx_libopt.h 展开标准固件库中的头文件</p>
+<p>GD32F407 用于在 gd32f4xx_libopt.h 展开标准固件库中的头文件；</p>
 <h2 id="烧写与验证"><a href="#烧写与验证" class="headerlink" title="烧写与验证"></a>烧写与验证</h2><p>在嵌入式开发中，<strong>拿到一块开发板后，烧录方式不能随意选择</strong>，而是需要<strong>根据开发板的硬件支持情况</strong>来选择适合的烧录方法。</p>
 <p><strong>如何查看开发板的烧录方式支持情况</strong></p>
 <ul>
@@ -281,8 +290,7 @@
 <li><p><strong>开发板文档</strong>：一些开发板还会提供专门的用户手册，其中会详细说明支持的烧录方法和推荐的工具。</p>
 </li>
 </ul>
-<p><strong>DAP-Link 下载</strong></p>
-<ol>
+<h3 id="DAP-Link-下载"><a href="#DAP-Link-下载" class="headerlink" title="DAP-Link 下载"></a>DAP-Link 下载</h3><ol>
 <li>DAP-Link 连线</li>
 </ol>
 <p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407DAPlianxian.png" alt="F407DAPlianxian"></p>
@@ -295,7 +303,7 @@
 </ol>
 <p>“主界面” –&gt; “保存” –&gt; “Rebuild” –&gt; “Download” 即可</p>
 <p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407shaolumulu.png" alt="F407shaolumulu"></p>
-<p><strong>下载安装 CH340 驱动</strong></p>
+<h3 id="使用-DFU-烧录"><a href="#使用-DFU-烧录" class="headerlink" title="使用 DFU 烧录"></a>使用 DFU 烧录</h3><p><strong>下载安装 CH340 驱动</strong></p>
 <p><a target="_blank" rel="noopener" href="https://www.wch.cn/download/CH341SER_EXE.html">CH341SER.EXE - 南京沁恒微电子股份有限公司</a></p>
 <p><strong>下载安装 DFU 驱动</strong></p>
 <p><a target="_blank" rel="noopener" href="https://www.gd32mcu.com/cn/download?kw=DFU&lan=cn">兆易创新GigaDevice-资料下载兆易创新GD32 MCU</a></p>
@@ -485,6 +493,10 @@
 <li><p><strong>如果没有外部晶振（即使用内部16MHz振荡器）</strong>，则选择 <code>__SYSTEM_CLOCK_168M_PLL_IRC16M</code>。</p>
 </li>
 </ul>
+<h2 id="调整晶振的频率"><a href="#调整晶振的频率" class="headerlink" title="调整晶振的频率"></a>调整晶振的频率</h2><p>我们这个板子使用的是外部高速的 8MHz 我们要将代码中使用的改为 8MHz</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407xitshizhong.png" alt="F407xitshizhong"></p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407xitongshizhong02.png" alt="F407xitongshizhong02"></p>
+<p>板子上使用的是外部的晶振，她本身不知道会用到多大的，所以创建项目时候要记得去修改系统时钟相关的配置；</p>
 <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>一、<strong>外部的 8MHz 是如何实现 168MHz 的？</strong></p>
 
   </div>
@@ -517,7 +529,7 @@
     
     
       <div id="toc-footer" style="display: none">
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%86%E5%A4%87%E9%98%B6%E6%AE%B5"><span class="toc-number">1.</span> <span class="toc-text">准备阶段</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE%E4%B8%8E%E9%85%8D%E7%BD%AE"><span class="toc-number">2.</span> <span class="toc-text">创建项目与配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E5%8F%91%E4%B8%8E%E8%B0%83%E8%AF%95"><span class="toc-number">3.</span> <span class="toc-text">开发与调试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%83%A7%E5%86%99%E4%B8%8E%E9%AA%8C%E8%AF%81"><span class="toc-number">4.</span> <span class="toc-text">烧写与验证</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B0%83%E6%95%B4%E6%97%B6%E9%92%9F%E9%A2%91%E7%8E%87"><span class="toc-number">5.</span> <span class="toc-text">调整时钟频率</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">6.</span> <span class="toc-text">问题</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%86%E5%A4%87%E9%98%B6%E6%AE%B5"><span class="toc-number">1.</span> <span class="toc-text">准备阶段</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE%E4%B8%8E%E9%85%8D%E7%BD%AE"><span class="toc-number">2.</span> <span class="toc-text">创建项目与配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E5%8F%91%E4%B8%8E%E8%B0%83%E8%AF%95"><span class="toc-number">3.</span> <span class="toc-text">开发与调试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%83%A7%E5%86%99%E4%B8%8E%E9%AA%8C%E8%AF%81"><span class="toc-number">4.</span> <span class="toc-text">烧写与验证</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#DAP-Link-%E4%B8%8B%E8%BD%BD"><span class="toc-number">4.1.</span> <span class="toc-text">DAP-Link 下载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-DFU-%E7%83%A7%E5%BD%95"><span class="toc-number">4.2.</span> <span class="toc-text">使用 DFU 烧录</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B0%83%E6%95%B4%E6%97%B6%E9%92%9F%E9%A2%91%E7%8E%87"><span class="toc-number">5.</span> <span class="toc-text">调整时钟频率</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B0%83%E6%95%B4%E6%99%B6%E6%8C%AF%E7%9A%84%E9%A2%91%E7%8E%87"><span class="toc-number">6.</span> <span class="toc-text">调整晶振的频率</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">7.</span> <span class="toc-text">问题</span></a></li></ol>
       </div>
     
 
