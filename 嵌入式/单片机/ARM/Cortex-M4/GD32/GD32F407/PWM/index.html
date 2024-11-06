@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="PWM（Pulse Width Modulation，脉冲宽度调制）是一种调制技术，通过改变脉冲信号的占空比来控制平均输出电压或功率。 PWM 的相关参数PWM主要有三个参数：频率、占空比、分辨率 频率：  定义：PWM信号的频率指的是单位时间内一个完整周期（高电平和低电平持续时间总和）的重复次数，通常以赫兹（Hz）为单位。 例子：如果PWM信号的频率为 1 kHz，这意味着每秒钟会重复 1000">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PWM">
+<meta property="og:url" content="https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/PWM/index.html">
+<meta property="og:site_name" content="流年不知心底事">
+<meta property="og:description" content="PWM（Pulse Width Modulation，脉冲宽度调制）是一种调制技术，通过改变脉冲信号的占空比来控制平均输出电压或功率。 PWM 的相关参数PWM主要有三个参数：频率、占空比、分辨率 频率：  定义：PWM信号的频率指的是单位时间内一个完整周期（高电平和低电平持续时间总和）的重复次数，通常以赫兹（Hz）为单位。 例子：如果PWM信号的频率为 1 kHz，这意味着每秒钟会重复 1000">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407PWMjibenjiegou.png">
+<meta property="og:image" content="c:\Users\kay\AppData\Roaming\Typora\typora-user-images\image-20241104082839368.png">
+<meta property="article:published_time" content="2024-11-03T14:49:00.000Z">
+<meta property="article:modified_time" content="2024-11-04T01:46:13.332Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="GD32F407">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407PWMjibenjiegou.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>PWM</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Timer/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/PWM/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/PWM/&text=PWM"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/PWM/&title=PWM"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/PWM/&is_video=false&description=PWM"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=PWM&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/PWM/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/PWM/&title=PWM"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/PWM/&title=PWM"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/PWM/&title=PWM"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/PWM/&title=PWM"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/PWM/&name=PWM&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/PWM/&t=PWM"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#PWM-%E7%9A%84%E7%9B%B8%E5%85%B3%E5%8F%82%E6%95%B0"><span class="toc-number">1.</span> <span class="toc-text">PWM 的相关参数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PWM-%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-number">2.</span> <span class="toc-text">PWM 工作原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">3.</span> <span class="toc-text">实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81"><span class="toc-number">3.1.</span> <span class="toc-text">代码</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        PWM
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">kay</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-11-03T14:49:00.000Z" class="dt-published" itemprop="datePublished">2024-11-03</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/ARM/">ARM</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/GD32F407/" rel="tag">GD32F407</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>PWM（Pulse Width Modulation，脉冲宽度调制）是一种调制技术，通过改变脉冲信号的<strong>占空比</strong>来控制平均输出电压或功率。</p>
+<h2 id="PWM-的相关参数"><a href="#PWM-的相关参数" class="headerlink" title="PWM 的相关参数"></a>PWM 的相关参数</h2><p>PWM主要有三个参数：频率、占空比、分辨率</p>
+<p><strong>频率</strong>：</p>
+<ul>
+<li><strong>定义</strong>：<code>PWM</code>信号的频率指的是单位时间内一个完整周期（高电平和低电平持续时间总和）的重复次数，通常以赫兹（Hz）为单位。</li>
+<li><strong>例子</strong>：如果<code>PWM</code>信号的频率为 1 kHz，这意味着每秒钟会重复 1000 次完整的高低电平循环。</li>
+</ul>
+<p><strong>占空比</strong>：</p>
+<ul>
+<li><strong>定义</strong>：占空比是高电平持续时间与整个周期时间的比例，通常以百分比表示。它决定了平均输出功率。</li>
+<li><strong>例子</strong>：如果一个<code>PWM</code>信号的周期为 10ms，其中高电平持续 6ms，低电平持续 4ms，则占空比为 60%（6 ms &#x2F; 10 ms × 100%）。在<code>LED</code>调光中，60% 的占空比会使<code>LED</code>发出比 30%占 空比更亮的光。</li>
+</ul>
+<p><strong>分辨率</strong>：</p>
+<ul>
+<li>就是占空比<strong>变化的快慢</strong>，<strong>占空比变化的细腻程度</strong>。占空比跳的快如按照 1% 跳变与按照 0.1% 跳变，那么 0.1% 的跳变就越细腻，越柔和。</li>
+</ul>
+<h2 id="PWM-工作原理"><a href="#PWM-工作原理" class="headerlink" title="PWM 工作原理"></a>PWM 工作原理</h2><p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407PWMjibenjiegou.png" alt="F407PWMjibenjiegou"></p>
+<p>图片 PWM 的工作过程为：定时器模块中的计数器（CNT）从 0 开始递增，当达到自动重装寄存器（ARR）设置的最大值时，计数器会自动清零并重新开始。捕获&#x2F;比较寄存器（CCR）存储一个比较值，当计数器的值小于CCR时，输出信号保持高电平；当计数器的值大于等于CCR时，输出信号变为低电平，从而生成占空比可调的 PWM 信号。通过<strong>调整 ARR 可以控制 PWM 的频率</strong>，而通过<strong>改变 CCR 的值可以调整 PWM 信号的占空比</strong>。</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>功能：通过 PWM 实现蜂鸣器播放两只老虎</p>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;gd32f4xx.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;systick.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;main.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;bsp_usart0.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// USART 配置...</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// LED1 GPIO Config</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">GPIO_LED_Config</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">	<span class="comment">// LED 总开关</span></span><br><span class="line">	rcu_periph_clock_enable(RCU_GPIOC);</span><br><span class="line">	gpio_mode_set(GPIOC, GPIO_MODE_OUTPUT, GPIO_PUPD_PULLUP, GPIO_PIN_6);</span><br><span class="line">	gpio_output_options_set(GPIOC, GPIO_OTYPE_PP, GPIO_OSPEED_2MHZ, GPIO_PIN_6);</span><br><span class="line">	<span class="comment">// LED1</span></span><br><span class="line">	rcu_periph_clock_enable(RCU_GPIOD);</span><br><span class="line">	gpio_mode_set(GPIOD, GPIO_MODE_AF, GPIO_PUPD_PULLUP, GPIO_PIN_15);</span><br><span class="line">	gpio_af_set(GPIOD, GPIO_AF_2, GPIO_PIN_15);</span><br><span class="line">	gpio_output_options_set(GPIOD, GPIO_OTYPE_PP, GPIO_OSPEED_2MHZ, GPIO_PIN_15);</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// 总开关常开</span></span><br><span class="line">	gpio_bit_reset(GPIOC, GPIO_PIN_6);	</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// LED1 TImer Config</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">TImer_LED_Config</span><span class="params">(<span class="type">void</span>)</span> &#123;	</span><br><span class="line">	timer_deinit(TIMER3);</span><br><span class="line">	rcu_periph_clock_enable(RCU_TIMER3);</span><br><span class="line">	rcu_timer_clock_prescaler_config(RCU_TIMER_PSC_MUL4);</span><br><span class="line">	</span><br><span class="line">	timer_parameter_struct initpara;</span><br><span class="line">		</span><br><span class="line">	timer_struct_para_init(&amp;initpara);</span><br><span class="line">	initpara.prescaler         = <span class="number">16800</span>; <span class="comment">// 168000000 / 16800 = 10000 -&gt; 1S</span></span><br><span class="line">    initpara.period            = <span class="number">30000</span>; <span class="comment">// 3S		</span></span><br><span class="line">	timer_init(TIMER3, &amp;initpara);	</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// PWM 配置</span></span><br><span class="line">	</span><br><span class="line">    </span><br><span class="line">	timer_enable(TIMER3);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    systick_config();</span><br><span class="line">	GPIO_LED_Config();</span><br><span class="line">	TImer_LED_Config();</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;Hello\n&quot;</span>);</span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>) &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>prescaler：计数器时钟等于 TIMER_CK 时钟除以(PSC+1)，每次当更新事件产生时，PSC 的值 被装入到对应的影子寄存器。</p>
+</blockquote>
+<p><img src="C:\Users\kay\AppData\Roaming\Typora\typora-user-images\image-20241104082839368.png" alt="image-20241104082839368"></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">博主</a></li>
+        
+          <li><a href="/tags/">标签</a></li>
+        
+          <li><a href="/categories/">分类</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#PWM-%E7%9A%84%E7%9B%B8%E5%85%B3%E5%8F%82%E6%95%B0"><span class="toc-number">1.</span> <span class="toc-text">PWM 的相关参数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PWM-%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-number">2.</span> <span class="toc-text">PWM 工作原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">3.</span> <span class="toc-text">实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81"><span class="toc-number">3.1.</span> <span class="toc-text">代码</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/PWM/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/PWM/&text=PWM"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/PWM/&title=PWM"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/PWM/&is_video=false&description=PWM"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=PWM&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/PWM/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/PWM/&title=PWM"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/PWM/&title=PWM"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/PWM/&title=PWM"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/PWM/&title=PWM"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/PWM/&name=PWM&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/PWM/&t=PWM"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024
+    kay
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

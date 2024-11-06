@@ -6,12 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta name="description" content="准备阶段下载相关文件，STM32F407 的用户手册、数组手册、选型手册、固件使用指南（一般下载固件库时会附带）等。 创建项目与配置创建项目 在工程目录中创捷下列文件夹 1234567891011&#x2F;&#x2F; 目录结构Demo01└── Docs&#x2F;		    &#x2F;&#x2F; 说明文档 README.md└── Project&#x2F;		&#x2F;&#x2F; 存放 Keil 文件和生成的一些配置文件、hex 文件     ├── CMSI">
+    <meta name="description" content="准备阶段下载相关文件，STM32F407 的用户手册、数组手册、选型手册、固件使用指南（一般下载固件库时会附带）等。 创建项目与配置创建项目 在工程目录中创捷下列文件夹 123456789101112&#x2F;&#x2F; 目录结构Demo01└── Docs&#x2F;		 &#x2F;&#x2F; 说明文档 README.md└── Project&#x2F;	 &#x2F;&#x2F; 存放 Keil 文件和生成的一些配置文件、hex 文件     ├── CMSIS">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Init">
 <meta property="og:url" content="https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/STM32/STM32F407/Init/index.html">
 <meta property="og:site_name" content="流年不知心底事">
-<meta property="og:description" content="准备阶段下载相关文件，STM32F407 的用户手册、数组手册、选型手册、固件使用指南（一般下载固件库时会附带）等。 创建项目与配置创建项目 在工程目录中创捷下列文件夹 1234567891011&#x2F;&#x2F; 目录结构Demo01└── Docs&#x2F;		    &#x2F;&#x2F; 说明文档 README.md└── Project&#x2F;		&#x2F;&#x2F; 存放 Keil 文件和生成的一些配置文件、hex 文件     ├── CMSI">
+<meta property="og:description" content="准备阶段下载相关文件，STM32F407 的用户手册、数组手册、选型手册、固件使用指南（一般下载固件库时会附带）等。 创建项目与配置创建项目 在工程目录中创捷下列文件夹 123456789101112&#x2F;&#x2F; 目录结构Demo01└── Docs&#x2F;		 &#x2F;&#x2F; 说明文档 README.md└── Project&#x2F;	 &#x2F;&#x2F; 存放 Keil 文件和生成的一些配置文件、hex 文件     ├── CMSIS">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407Keilyinruwenjian.png">
 <meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407Keilinclude.png">
@@ -26,7 +26,7 @@
 <meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407xitshizhong.png">
 <meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407xitongshizhong02.png">
 <meta property="article:published_time" content="2024-10-27T14:03:00.000Z">
-<meta property="article:modified_time" content="2024-10-27T14:04:27.607Z">
+<meta property="article:modified_time" content="2024-10-31T00:35:14.431Z">
 <meta property="article:author" content="kay">
 <meta property="article:tag" content="STM32F407">
 <meta name="twitter:card" content="summary">
@@ -195,7 +195,7 @@
     <h2 id="准备阶段"><a href="#准备阶段" class="headerlink" title="准备阶段"></a>准备阶段</h2><p>下载相关文件，STM32F407 的用户手册、数组手册、选型手册、固件使用指南（一般下载固件库时会附带）等。</p>
 <h2 id="创建项目与配置"><a href="#创建项目与配置" class="headerlink" title="创建项目与配置"></a>创建项目与配置</h2><p><strong>创建项目</strong></p>
 <p>在工程目录中创捷下列文件夹</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 目录结构</span></span><br><span class="line"></span><br><span class="line">Demo01</span><br><span class="line">└── Docs/		    <span class="comment">// 说明文档 README.md</span></span><br><span class="line">└── Project/		<span class="comment">// 存放 Keil 文件和生成的一些配置文件、hex 文件     </span></span><br><span class="line">├── CMSIS/          <span class="comment">// CMSIS 中 ARM 相关文件</span></span><br><span class="line">├── Firmware/       <span class="comment">// 官方标准固件库中的驱动程序</span></span><br><span class="line">├── Drivers/        <span class="comment">// 外设硬件驱动程序</span></span><br><span class="line">├── Middleware/     <span class="comment">// 中间件组件</span></span><br><span class="line">├── App/            <span class="comment">// 应用层代码</span></span><br><span class="line">└── User/      		<span class="comment">// 入口层     </span></span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 目录结构</span></span><br><span class="line"></span><br><span class="line">Demo01</span><br><span class="line">└── Docs/		 <span class="comment">// 说明文档 README.md</span></span><br><span class="line">└── Project/	 <span class="comment">// 存放 Keil 文件和生成的一些配置文件、hex 文件     </span></span><br><span class="line">├── CMSIS/       <span class="comment">// CMSIS 中 ARM 相关文件</span></span><br><span class="line">├── Hardware/    <span class="comment">// 协议层代码</span></span><br><span class="line">├── Firmware/    <span class="comment">// 官方标准固件库中的驱动程序</span></span><br><span class="line">├── Drivers/     <span class="comment">// 外设硬件驱动程序</span></span><br><span class="line">├── Middleware/  <span class="comment">// 上层中间件组件</span></span><br><span class="line">├── App/         <span class="comment">// 应用层代码</span></span><br><span class="line">└── User/      	 <span class="comment">// 入口层     </span></span><br></pre></td></tr></table></figure>
 
 <p><strong>文件移植</strong></p>
 <p>将官方标准固件库中我们需要的的文件拷贝到对应的工程目录中去：</p>
@@ -213,6 +213,7 @@
 <li><p>查看官方的示例代码，看看人家官方示例是需要拷贝那些，</p>
 <ul>
 <li>打开 Keil 查看他的工程目录，然后从官方库中复制对应的文件到我们自己的项目中；(注意，一般工程中只会显示 .c 文件但我们要记得将对应的 .h 文件一起拷贝)</li>
+<li>注意在每一款芯片的固件库中都包含一个用于导入所有固件库的头文件，这个头文件在示例工程中可能并没有导入，但我们不要忘记导入，他一般存在于示例代码的模板目录下，STM32 中叫做 stm32f4xx_conf.h；</li>
 </ul>
 </li>
 </ul>
@@ -497,7 +498,17 @@
 <p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407xitshizhong.png" alt="F407xitshizhong"></p>
 <p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407xitongshizhong02.png" alt="F407xitongshizhong02"></p>
 <p>板子上使用的是外部的晶振，她本身不知道会用到多大的，所以创建项目时候要记得去修改系统时钟相关的配置；</p>
-<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>一、<strong>外部的 8MHz 是如何实现 168MHz 的？</strong></p>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>一、**..&#x2F;CMSIS\stm32f4xx.h(115): error: “Please select first the target STM32F4xx device used in your application (in stm32f4xx.h file)”**</p>
+<p>这个报错是因为在  stm32f4xx.h 文件中，你还没有选择具体的 STM32F4 系列微控制器型号。</p>
+<p>我们需要添加宏已</p>
+<p>二、**..&#x2F;CMSIS\core_cmFunc.h(629): error: unknown register name ‘vfpcc’ in asm**</p>
+<p>这个错误通常表示编译器无法识别 <code>vfpcc</code> 寄存器，可能是因为当前的编译设置或目标架构不正确。</p>
+<p>我们需要修改 ARM 编译器的版本将他改为 5 或者 6；</p>
+<p>三、**..\Firmware\misc.c(114): warning:  #223-D: function “assert_param” declared implicitly**</p>
+<p>这个警告表示 <code>assert_param</code> 函数在使用时没有找到相应的声明。</p>
+<p>这是我们要点击报错信息，找到这条语句，右键跳转到他的定义文件中去，这时候大概会提示文件不存在，例如提示 stm32f4xx_fmc.c 文件不存在，他有一个头文件用于导入大部分的估</p>
+<p>四、**.\Objects\project.sct(7): error: L6236E: No section matches selector - no section to be FIRST&#x2F;LAST.**</p>
+<p>表示没有添加启动文件</p>
 
   </div>
 </article>
