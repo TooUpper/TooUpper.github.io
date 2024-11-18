@@ -23,10 +23,8 @@
 <meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407DAPpeizhi04.png">
 <meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407xinpianxuanxingbiao.png">
 <meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407jinzhenbufen.png">
-<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407xitshizhong.png">
-<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407xitongshizhong02.png">
 <meta property="article:published_time" content="2024-10-24T11:48:00.000Z">
-<meta property="article:modified_time" content="2024-10-27T14:02:19.098Z">
+<meta property="article:modified_time" content="2024-11-18T14:13:21.165Z">
 <meta property="article:author" content="kay">
 <meta property="article:tag" content="GD32F407">
 <meta name="twitter:card" content="summary">
@@ -109,10 +107,10 @@
     <span id="actions">
       <ul>
         
-        <li><a class="icon" aria-label="上一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M3/STM32/STM32F103/Init/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="上一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/GPIO/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
         
         
-        <li><a class="icon" aria-label="下一篇" href="/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/%E5%AD%97%E7%AC%A6%E4%B8%B2/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="下一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M3/STM32/STM32F103/Init/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
         
         <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
         <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
@@ -142,7 +140,7 @@
     
     
       <div id="toc">
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%86%E5%A4%87%E9%98%B6%E6%AE%B5"><span class="toc-number">1.</span> <span class="toc-text">准备阶段</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE%E4%B8%8E%E9%85%8D%E7%BD%AE"><span class="toc-number">2.</span> <span class="toc-text">创建项目与配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E5%8F%91%E4%B8%8E%E8%B0%83%E8%AF%95"><span class="toc-number">3.</span> <span class="toc-text">开发与调试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%83%A7%E5%86%99%E4%B8%8E%E9%AA%8C%E8%AF%81"><span class="toc-number">4.</span> <span class="toc-text">烧写与验证</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#DAP-Link-%E4%B8%8B%E8%BD%BD"><span class="toc-number">4.1.</span> <span class="toc-text">DAP-Link 下载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-DFU-%E7%83%A7%E5%BD%95"><span class="toc-number">4.2.</span> <span class="toc-text">使用 DFU 烧录</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B0%83%E6%95%B4%E6%97%B6%E9%92%9F%E9%A2%91%E7%8E%87"><span class="toc-number">5.</span> <span class="toc-text">调整时钟频率</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B0%83%E6%95%B4%E6%99%B6%E6%8C%AF%E7%9A%84%E9%A2%91%E7%8E%87"><span class="toc-number">6.</span> <span class="toc-text">调整晶振的频率</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">7.</span> <span class="toc-text">问题</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%86%E5%A4%87%E9%98%B6%E6%AE%B5"><span class="toc-number">1.</span> <span class="toc-text">准备阶段</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE%E4%B8%8E%E9%85%8D%E7%BD%AE"><span class="toc-number">2.</span> <span class="toc-text">创建项目与配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E5%8F%91%E4%B8%8E%E8%B0%83%E8%AF%95"><span class="toc-number">3.</span> <span class="toc-text">开发与调试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%83%A7%E5%86%99%E4%B8%8E%E9%AA%8C%E8%AF%81"><span class="toc-number">4.</span> <span class="toc-text">烧写与验证</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#DAP-Link-%E4%B8%8B%E8%BD%BD"><span class="toc-number">4.1.</span> <span class="toc-text">DAP-Link 下载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-DFU-%E7%83%A7%E5%BD%95"><span class="toc-number">4.2.</span> <span class="toc-text">使用 DFU 烧录</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B0%83%E6%95%B4%E7%B3%BB%E7%BB%9F%E4%B8%BB%E9%A2%91"><span class="toc-number">5.</span> <span class="toc-text">调整系统主频</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE-SysTick"><span class="toc-number">6.</span> <span class="toc-text">配置 SysTick</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">7.</span> <span class="toc-text">问题</span></a></li></ol>
       </div>
     
   </span>
@@ -345,8 +343,7 @@
 <blockquote>
 <p>但我测试时候发现，将 WP0 下面的两个沟去掉也可以接触写保护;</p>
 </blockquote>
-<h2 id="调整时钟频率"><a href="#调整时钟频率" class="headerlink" title="调整时钟频率"></a>调整时钟频率</h2><p>我们在测试中发现设置为 1S 的时间间隔与实际运行时的时间相差太大，这是我们就要去修改系统的始终频率，让其与我们这个芯片所支持的时钟频率保持一致；</p>
-<p>芯片选型手册</p>
+<h2 id="调整系统主频"><a href="#调整系统主频" class="headerlink" title="调整系统主频"></a>调整系统主频</h2><p>芯片选型手册</p>
 <p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407xinpianxuanxingbiao.png" alt="F407xinpianxuanxingbiao"></p>
 <p>这张图表展示了 GD32F407VET6 芯片的主要参数和特性，以下是对各项的详细说明：</p>
 <p><strong>基本参数</strong></p>
@@ -357,12 +354,10 @@
 </ul>
 </li>
 <li><p><strong>Memory (Bytes)</strong> - <strong>内存</strong>:</p>
-<ul>
+</li>
 <li><p><strong>Flash</strong>: 512 KB 的内部 Flash 存储，用于存储程序代码。</p>
 </li>
 <li><p><strong>SRAM</strong>: 192 KB 的 SRAM，供程序运行时使用，存储临时数据和变量。</p>
-</li>
-</ul>
 </li>
 </ul>
 <p><strong>输入&#x2F;输出 (I&#x2F;O)</strong></p>
@@ -480,23 +475,30 @@
 </ul>
 </li>
 </ul>
-<p>根据手册我们要设置系统主频为 168 MHz，那么要如何实现这个 168MHz 的频率，这时候就要去看板子商家的原理图和用户手册了，看他们是如何实现的，然后选择为对应的方式，如果他们设置了外部就选择外部否则可以选择内部的；</p>
+<p>根据手册我们要设置系统主频为 168 MHz，那么要如何实现这个 168MHz 的频率，这时候就要去看板子商家的原理图和用户手册了，看他们是如何实现的，然后选择为对应的方式，如果他们设置了外部就选择外部否则可以选择内部的（通常情况下一般都是默认选择外部高速晶振）；</p>
 <p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407jinzhenbufen.png" alt="F407jinzhenbufen"></p>
-<p>通过板子的原理图可以看出它使用的是外部 8MHz 所以我们在 system_gd32f4xx.c 中要放开对下面代码的注释</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> __SYSTEM_CLOCK_168M_PLL_8M_HXTAL        (uint32_t)(168000000)</span></span><br></pre></td></tr></table></figure>
+<p>这里我们先简单走一遍 ARM32 系列设置系统主频的流程：</p>
+<p>上电复位后他会去执行 Reset_Handler 这个启动代码，它负责在系统复位（Reset）后初始化处理器状态和程序运行环境；同时在这个代码中他会去调用 SystemInit这个初始化函数；</p>
+<p>在 SystemInit 这个初始化函数中，他会进行一系列的初始化配置，这里我们只关心它对于系统时钟的配置也就是调用的 SetSysClock 这个函数；</p>
+<p>在 SetSysClock 这个函数中他打开了了外部时钟，并设置了锁相环等一些列操作；这里我们关心的是如何将 8MHz 外部高速晶振设置为 168MHz 的系统主频，也就是如何通过锁相环将 8MHz 设置为 168MHz；</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 锁相环配置如下</span></span><br><span class="line">RCC-&gt;PLLCFGR = PLL_M | (PLL_N &lt;&lt; <span class="number">6</span>) | (((PLL_P &gt;&gt; <span class="number">1</span>) <span class="number">-1</span>) &lt;&lt; <span class="number">16</span>) |</span><br><span class="line">                   (RCC_PLLCFGR_PLLSRC_HSE) | (PLL_Q &lt;&lt; <span class="number">24</span>);</span><br></pre></td></tr></table></figure>
 
-<ul>
-<li><p><strong>如果板子有 25MHz 的外部晶振</strong>，则选择 <code>__SYSTEM_CLOCK_168M_PLL_25M_HXTAL</code>。</p>
-</li>
-<li><p><strong>如果板子有 8MHz 的外部晶振</strong>，则选择 <code>__SYSTEM_CLOCK_168M_PLL_8M_HXTAL</code>。</p>
-</li>
-<li><p><strong>如果没有外部晶振（即使用内部16MHz振荡器）</strong>，则选择 <code>__SYSTEM_CLOCK_168M_PLL_IRC16M</code>。</p>
-</li>
-</ul>
-<h2 id="调整晶振的频率"><a href="#调整晶振的频率" class="headerlink" title="调整晶振的频率"></a>调整晶振的频率</h2><p>我们这个板子使用的是外部高速的 8MHz 我们要将代码中使用的改为 8MHz</p>
-<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407xitshizhong.png" alt="F407xitshizhong"></p>
-<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407xitongshizhong02.png" alt="F407xitongshizhong02"></p>
-<p>板子上使用的是外部的晶振，她本身不知道会用到多大的，所以创建项目时候要记得去修改系统时钟相关的配置；</p>
+<p>在上面的锁相环配置中，我们可以看到，它是通过先除以 PLL_M 乘以 PLL_N 在除以 PLL_P 最终得到一个系统主频的，所以我们只需要修改这三个常量的值就可以了 ；</p>
+<p>也就是将 PLL_M 设置为 8，PLL_N 设置为 336，PLL_P 设置为 2 即可；当然你也可以有其他的组合只要得到的是 168MHz 就可以；</p>
+<blockquote>
+<p>不理解记住就可以，因为只要是 Cortex-M 系列的他的锁相环基本上都是这样配置的</p>
+</blockquote>
+<p>此时系统主频就被配置为了 168MHz</p>
+<h2 id="配置-SysTick"><a href="#配置-SysTick" class="headerlink" title="配置 SysTick"></a>配置 SysTick</h2><p>设置完系统主频后，我们还需要设置下滴答时钟以得到一个精准的延时；SysTick 的具体原理可以参考 <a href="">SysTick</a> 这一篇文章，这里只教大家如何去配置；</p>
+<p>我们找到 main() 函数中系统滴答时钟的配置语句，然后跳转后找到 SysTick_Config 这个函数，这里面就是对于系统滴答时钟的配置，我们通常使用默认配置不去动他，只需要给他一个具体的周期值即可；</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// STM32</span></span><br><span class="line">RCC_GetClocksFreq(&amp;RCC_Clocks);</span><br><span class="line">SysTick_Config(RCC_Clocks.HCLK_Frequency / <span class="number">100</span>);</span><br><span class="line"><span class="comment">// GD32</span></span><br><span class="line">SysTick_Config(SystemCoreClock / <span class="number">1000000U</span>);</span><br></pre></td></tr></table></figure>
+
+<p>通过上面语句可以发现在 Cortex-M 架构中，我们只需要设置 SysTick_Config 这个函数的参数即可，在 GD32 中 SystemCoreClock 是调用的一个宏我们只需要修改他为 168000000（系统主频）即可；在 SMT32 中稍微麻烦一点我们要去看他的默认配置也就是 RCC_GetClocksFreq(&amp;RCC_Clocks) 这个函数;</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// GD32 中的修改</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> __SYSTEM_CLOCK_168M_PLL_8M_HXTAL        (uint32_t)(168000000)</span></span><br><span class="line"><span class="comment">// STM32 中会通过寄存器去配置所以通常情况下我们不需要去修改它，只需要修改如下即可：</span></span><br><span class="line"><span class="comment">// (我感觉 STM32 可以不需要配置，它会自动去选择时钟源，通过时钟源作为系统滴答时钟进行计算)</span></span><br><span class="line"><span class="comment">// 这一条代码我感觉通常情况下不会用到，除非我们像 GD32 那样去使用；</span></span><br><span class="line"><span class="type">uint32_t</span> SystemCoreClock = <span class="number">168000000</span>;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>一般情况下我们将 GD32 中 SysTick 的代码复制到 STM32 中去使用，因为更简单些</p>
+</blockquote>
 <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>一、<strong>外部的 8MHz 是如何实现 168MHz 的？</strong></p>
 
   </div>
@@ -529,7 +531,7 @@
     
     
       <div id="toc-footer" style="display: none">
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%86%E5%A4%87%E9%98%B6%E6%AE%B5"><span class="toc-number">1.</span> <span class="toc-text">准备阶段</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE%E4%B8%8E%E9%85%8D%E7%BD%AE"><span class="toc-number">2.</span> <span class="toc-text">创建项目与配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E5%8F%91%E4%B8%8E%E8%B0%83%E8%AF%95"><span class="toc-number">3.</span> <span class="toc-text">开发与调试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%83%A7%E5%86%99%E4%B8%8E%E9%AA%8C%E8%AF%81"><span class="toc-number">4.</span> <span class="toc-text">烧写与验证</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#DAP-Link-%E4%B8%8B%E8%BD%BD"><span class="toc-number">4.1.</span> <span class="toc-text">DAP-Link 下载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-DFU-%E7%83%A7%E5%BD%95"><span class="toc-number">4.2.</span> <span class="toc-text">使用 DFU 烧录</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B0%83%E6%95%B4%E6%97%B6%E9%92%9F%E9%A2%91%E7%8E%87"><span class="toc-number">5.</span> <span class="toc-text">调整时钟频率</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B0%83%E6%95%B4%E6%99%B6%E6%8C%AF%E7%9A%84%E9%A2%91%E7%8E%87"><span class="toc-number">6.</span> <span class="toc-text">调整晶振的频率</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">7.</span> <span class="toc-text">问题</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%86%E5%A4%87%E9%98%B6%E6%AE%B5"><span class="toc-number">1.</span> <span class="toc-text">准备阶段</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE%E4%B8%8E%E9%85%8D%E7%BD%AE"><span class="toc-number">2.</span> <span class="toc-text">创建项目与配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E5%8F%91%E4%B8%8E%E8%B0%83%E8%AF%95"><span class="toc-number">3.</span> <span class="toc-text">开发与调试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%83%A7%E5%86%99%E4%B8%8E%E9%AA%8C%E8%AF%81"><span class="toc-number">4.</span> <span class="toc-text">烧写与验证</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#DAP-Link-%E4%B8%8B%E8%BD%BD"><span class="toc-number">4.1.</span> <span class="toc-text">DAP-Link 下载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-DFU-%E7%83%A7%E5%BD%95"><span class="toc-number">4.2.</span> <span class="toc-text">使用 DFU 烧录</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B0%83%E6%95%B4%E7%B3%BB%E7%BB%9F%E4%B8%BB%E9%A2%91"><span class="toc-number">5.</span> <span class="toc-text">调整系统主频</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE-SysTick"><span class="toc-number">6.</span> <span class="toc-text">配置 SysTick</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">7.</span> <span class="toc-text">问题</span></a></li></ol>
       </div>
     
 
