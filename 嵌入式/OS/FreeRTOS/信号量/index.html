@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="FreeRTOS 中的信号量是一种重要的同步机制，用于实现任务之间或任务与中断之间的通信和资源共享管理。信号量最初是为解决并发编程中互斥访问共享资源的问题而设计的，但在 FreeRTOS 中还可以用于任务间的同步。 FreeRTOS 提供了三种主要类型的信号量：  二值信号量（Binary Semaphore） 只有两个状态：空（0） 和 满（1）。 常用于任务间同步和中断与任务的同步。 在创建时">
+<meta property="og:type" content="article">
+<meta property="og:title" content="信号量">
+<meta property="og:url" content="https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BF%A1%E5%8F%B7%E9%87%8F/index.html">
+<meta property="og:site_name" content="流年不知心底事">
+<meta property="og:description" content="FreeRTOS 中的信号量是一种重要的同步机制，用于实现任务之间或任务与中断之间的通信和资源共享管理。信号量最初是为解决并发编程中互斥访问共享资源的问题而设计的，但在 FreeRTOS 中还可以用于任务间的同步。 FreeRTOS 提供了三种主要类型的信号量：  二值信号量（Binary Semaphore） 只有两个状态：空（0） 和 满（1）。 常用于任务间同步和中断与任务的同步。 在创建时">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/freertosbinSemaphore.gif">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/mutexes.gif">
+<meta property="article:published_time" content="2024-11-26T09:35:00.000Z">
+<meta property="article:modified_time" content="2025-01-07T10:58:33.648Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="FreeRTOS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/freertosbinSemaphore.gif">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>信号量</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BF%A1%E5%8F%B7%E9%87%8F/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BF%A1%E5%8F%B7%E9%87%8F/&text=信号量"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BF%A1%E5%8F%B7%E9%87%8F/&title=信号量"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BF%A1%E5%8F%B7%E9%87%8F/&is_video=false&description=信号量"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=信号量&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BF%A1%E5%8F%B7%E9%87%8F/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BF%A1%E5%8F%B7%E9%87%8F/&title=信号量"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BF%A1%E5%8F%B7%E9%87%8F/&title=信号量"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BF%A1%E5%8F%B7%E9%87%8F/&title=信号量"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BF%A1%E5%8F%B7%E9%87%8F/&title=信号量"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BF%A1%E5%8F%B7%E9%87%8F/&name=信号量&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BF%A1%E5%8F%B7%E9%87%8F/&t=信号量"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E8%BF%9B%E5%88%B6%E4%BF%A1%E5%8F%B7%E9%87%8F"><span class="toc-number">1.</span> <span class="toc-text">二进制信号量</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#API"><span class="toc-number">1.1.</span> <span class="toc-text">API</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#xSemaphoreCreateBinary"><span class="toc-number">1.1.1.</span> <span class="toc-text">xSemaphoreCreateBinary</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xSemaphoreTake"><span class="toc-number">1.1.2.</span> <span class="toc-text">xSemaphoreTake</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xSemaphoreGive"><span class="toc-number">1.1.3.</span> <span class="toc-text">xSemaphoreGive</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xSemaphoreTakeFromISR"><span class="toc-number">1.1.4.</span> <span class="toc-text">xSemaphoreTakeFromISR</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xSemaphoreGiveFromISR"><span class="toc-number">1.1.5.</span> <span class="toc-text">xSemaphoreGiveFromISR</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.2.</span> <span class="toc-text">实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A1%E6%95%B0%E4%BF%A1%E5%8F%B7%E9%87%8F"><span class="toc-number">2.</span> <span class="toc-text">计数信号量</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#API-1"><span class="toc-number">2.1.</span> <span class="toc-text">API</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#xSemaphoreCreateCounting"><span class="toc-number">2.1.1.</span> <span class="toc-text">xSemaphoreCreateCounting</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#uxSemaphoreGetCount"><span class="toc-number">2.1.2.</span> <span class="toc-text">uxSemaphoreGetCount</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xSemaphoreTake-1"><span class="toc-number">2.1.3.</span> <span class="toc-text">xSemaphoreTake</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xSemaphoreGive-1"><span class="toc-number">2.1.4.</span> <span class="toc-text">xSemaphoreGive</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xSemaphoreTakeFromISR-1"><span class="toc-number">2.1.5.</span> <span class="toc-text">xSemaphoreTakeFromISR</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xSemaphoreGiveFromISR-1"><span class="toc-number">2.1.6.</span> <span class="toc-text">xSemaphoreGiveFromISR</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0-1"><span class="toc-number">2.2.</span> <span class="toc-text">实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%92%E6%96%A5%E9%94%81"><span class="toc-number">3.</span> <span class="toc-text">互斥锁</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#API-2"><span class="toc-number">3.1.</span> <span class="toc-text">API</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#xSemaphoreCreateMutex"><span class="toc-number">3.1.1.</span> <span class="toc-text">xSemaphoreCreateMutex</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xSemaphoreTake-2"><span class="toc-number">3.1.2.</span> <span class="toc-text">xSemaphoreTake</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xSemaphoreGive-2"><span class="toc-number">3.1.3.</span> <span class="toc-text">xSemaphoreGive</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0-2"><span class="toc-number">3.2.</span> <span class="toc-text">实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%92%E5%BD%92%E4%BA%92%E6%96%A5%E9%94%81"><span class="toc-number">4.</span> <span class="toc-text">递归互斥锁</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#API-3"><span class="toc-number">4.1.</span> <span class="toc-text">API</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#xSemaphoreCreateRecursiveMutex"><span class="toc-number">4.1.1.</span> <span class="toc-text">xSemaphoreCreateRecursiveMutex</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xSemaphoreTakeRecursive"><span class="toc-number">4.1.2.</span> <span class="toc-text">xSemaphoreTakeRecursive</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xSemaphoreGiveRecursive"><span class="toc-number">4.1.3.</span> <span class="toc-text">xSemaphoreGiveRecursive</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0-3"><span class="toc-number">4.2.</span> <span class="toc-text">实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%98%E5%85%88%E7%BA%A7%E7%BB%A7%E6%89%BF"><span class="toc-number">5.</span> <span class="toc-text">优先级继承</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        信号量
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">kay</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-11-26T09:35:00.000Z" class="dt-published" itemprop="datePublished">2024-11-26</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/FreeRTOS/">FreeRTOS</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/FreeRTOS/" rel="tag">FreeRTOS</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>FreeRTOS 中的信号量是一种重要的同步机制，用于实现任务之间或任务与中断之间的<strong>通信</strong>和<strong>资源共享管理</strong>。信号量最初是为解决并发编程中<strong>互斥访问共享资源</strong>的问题而设计的，但在 FreeRTOS 中还可以用于任务间的同步。</p>
+<p>FreeRTOS 提供了三种主要类型的信号量：</p>
+<ol>
+<li><strong>二值信号量（Binary Semaphore）</strong><ul>
+<li>只有两个状态：空（0） 和 满（1）。</li>
+<li>常用于<strong>任务间同步</strong>和<strong>中断与任务的同步</strong>。</li>
+<li>在创建时，二值信号量可以通过 xSemaphoreCreateBinary() 或 xSemaphoreCreateBinaryStatic() 创建。</li>
+</ul>
+</li>
+<li><strong>计数信号量（Counting Semaphore）</strong><ul>
+<li>允许多个任务或中断访问资源，类似于一个计数器。</li>
+<li>计数信号量的计数值可以大于 1，表示同一时间允许多个任务获取信号量。</li>
+<li>常用于<strong>管理多个等价资源</strong>或<strong>实现事件计数</strong>。</li>
+<li>在创建时，可以通过 xSemaphoreCreateCounting() 或 xSemaphoreCreateCountingStatic() 创建。</li>
+</ul>
+</li>
+<li><strong>互斥量（Mutex）</strong><ul>
+<li>专门用于保护共享资源，实现任务间的互斥访问。</li>
+<li>互斥量具有<strong>优先级继承机制</strong>，用于防止<strong>优先级反转</strong>问题。</li>
+<li>互斥量始终处于<strong>二值信号量的状态</strong>，但为互斥访问场景进行了特殊优化。</li>
+<li>在创建时，可以通过 xSemaphoreCreateMutex() 或 xSemaphoreCreateMutexStatic() 创建。</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p>提示：在许多使用场景中，使用直达任务通知要比使用信号量的速度更快，内存效率更高。</p>
+</blockquote>
+<h2 id="二进制信号量"><a href="#二进制信号量" class="headerlink" title="二进制信号量"></a>二进制信号量</h2><p>二进制信号量用于互斥和同步目的。</p>
+<p>二进制信号量和互斥锁极为相似，但存在一些细微差别：互斥锁包括优先继承机制， 而二进制信号量则不然。因此，<strong>二进制信号量是实现同步的更好选择</strong>（任务之间或任务与中断之间）， 而<strong>互斥锁是实现简单互斥的更好选择</strong>。</p>
+<p>信号量相关函数允许指定阻塞时间。阻塞时间表示在尝试“获取”信号量时， 如果信号量不是立即可用， 任务应进入阻塞状态的最大“滴答”数。如果多个任务在同一信号量上阻塞， 则具有最高优先级的任务将成为下次信号量可用时解除阻塞的任务。</p>
+<p>可将二进制信号量视为仅能容纳一个项目的队列。因此，队列只能为空或满 （因此称为二进制）。</p>
+<p><strong>使用信号量同步任务与中断。中断仅“提供” 信号量，而任务仅“获取”信号量。</strong></p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/freertosbinSemaphore.gif" alt="freertosbinSemaphore"></p>
+<p> xSemaphoreGiveFromISR 用于释放信号量</p>
+<p>xSemaphoreTake 用于获取信号量的<em>宏</em>。</p>
+<p><strong>信号量的“给出”和“获取”机制</strong>：</p>
+<ul>
+<li>二进制信号量的计数值最多只能为 1（表示信号量可用）。</li>
+<li>当一个任务成功调用 xSemaphoreTake 时，信号量的计数值立即变为 <code>0</code>，表示信号量被“占用”。</li>
+<li>在信号量变为 0 后，其他试图获取信号量的任务都会进入阻塞状态，直到信号量被重新“给出”并变为 1。</li>
+</ul>
+<h3 id="API"><a href="#API" class="headerlink" title="API"></a>API</h3><h4 id="xSemaphoreCreateBinary"><a href="#xSemaphoreCreateBinary" class="headerlink" title="xSemaphoreCreateBinary"></a>xSemaphoreCreateBinary</h4><p>创建一个二进制信号量，并返回一个可以引用该信号量的句柄。</p>
+<p>每个二进制信号量需要少量 RAM，用于保存信号量状态。如果 使用 xSemaphoreCreateBinary() 创建了二进制信号量，那么所需的 RAM 将自动从 FreeRTOS 堆中分配。如果二进制信号量 是使用 xSemaphoreCreateBinaryStatic() 创建的，则 RAM 由应用程序写入器提供，这需要一个附加参数，但允许 RAM 在编译时进行静态分配 。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SemaphoreHandle_t <span class="title function_">xSemaphoreCreateBinary</span><span class="params">( <span class="type">void</span> )</span>;</span><br></pre></td></tr></table></figure>
+
+<p>信号量是在“空”状态下创建的，这意味着必须先用 xSemaphoreGive() API 函数给出信号量， 然后才能使用 xSemaphoreTake() 函数来获取（获得）该信号量。</p>
+<p>二值信号量并不需要在得到后立即释放， 因此，任务同步可以通过一个任务&#x2F;中断持续释放信号量 而另外一个持续获得信号量来实现。</p>
+<p>与互斥锁不同， 二进制信号量可用于中断服务程序。</p>
+<p><strong>返回值：</strong></p>
+<ul>
+<li><p><em>NULL</em></p>
+<p>因为可用 FreeRTOS 堆不足，所以无法创建信号量。</p>
+</li>
+<li><p><em>其他任何值</em></p>
+<p>信号量已成功创建。返回值是一个句柄， 通过该句柄可以引用信号量。</p>
+</li>
+</ul>
+<p><strong>示例</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">xSemaphore = xSemaphoreCreateBinary();</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( xSemaphore == <span class="literal">NULL</span> )&#123;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="xSemaphoreTake"><a href="#xSemaphoreTake" class="headerlink" title="xSemaphoreTake"></a>xSemaphoreTake</h4><p>用于获取信号量的。</p>
+<p>不得从 ISR 调用此宏。如果需要，xQueueReceiveFromISR() 可用来从中断中获取一个信号量， 尽管这不是正常操作。信号量使用队列作为 其底层机制，因此函数在某种程度上可互操作。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xSemaphoreTake(SemaphoreHandle_t xSemaphore, TickType_t xTicksToWait);</span><br></pre></td></tr></table></figure>
+
+<p><strong>参数：</strong></p>
+<ul>
+<li><p>xSemaphore</p>
+<p>正在获取的信号量的句柄——在创建信号量时获得。</p>
+</li>
+<li><p>xTicksToWait</p>
+<p>等待信号量变为可用的时间（以滴答为单位）。</p>
+<p>如果 INCLUDE_vTaskSuspend 设置为 1，则将阻塞时间指定为 portMAX_DELAY 会导致任务无限期地阻塞（没有超时限制）。</p>
+</li>
+</ul>
+<p><strong>返回：</strong></p>
+<ul>
+<li>如果获得信号量，则返回 <em>pdTRUE</em>。</li>
+<li>如果 xTicksToWait 过期，信号量不可用，则返回 <em>pdFALSE</em>。</li>
+</ul>
+<p><strong>示例</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>( xSemaphoreTake(xSemaphore, ( TickType_t )<span class="number">10</span>) == pdTRUE ) &#123;</span><br><span class="line">    <span class="comment">// 访问共享资源</span></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="xSemaphoreGive"><a href="#xSemaphoreGive" class="headerlink" title="xSemaphoreGive"></a>xSemaphoreGive</h4><p>用于释放信号量的。释放前信号量必须已经创建</p>
+<p><strong>参数：</strong></p>
+<ul>
+<li><p>xSemaphore</p>
+<p>要释放的信号量的句柄。这是创建信号量时返回的句柄。 |</p>
+</li>
+</ul>
+<p><strong>返回：</strong></p>
+<ul>
+<li>如果信号量被释放，则返回 <em>pdTRUE</em>。</li>
+<li>如果发生错误，则返回 <em>pdFALSE</em>。信号量是使用队列实现的。发布消息时，如果队列上没有空间， 那么可能会发生错误，这表明最初未能正确获取信号量。</li>
+</ul>
+<p><strong>示例</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>( xSemaphoreGive( xSemaphore ) != pdTRUE ) &#123;</span><br><span class="line">    <span class="comment">// 释放失败的处理</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( xSemaphoreTake( xSemaphore, ( TickType_t ) <span class="number">0</span> ) )</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 获取信号量后就可以访问共享资源</span></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="comment">// 操作玩抽释放信号量</span></span><br><span class="line">    <span class="keyword">if</span>( xSemaphoreGive( xSemaphore ) != pdTRUE ) &#123;</span><br><span class="line">        <span class="comment">// 释放失败的处理</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="xSemaphoreTakeFromISR"><a href="#xSemaphoreTakeFromISR" class="headerlink" title="xSemaphoreTakeFromISR"></a>xSemaphoreTakeFromISR</h4><p>可从 ISR 调用的 xSemaphoreTake() 版本。与 xSemaphoreTake() 不同，xSemaphoreTakeFromISR() 不允许指定阻塞时间。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xSemaphoreTakeFromISR(SemaphoreHandle_t xSemaphore, <span class="type">signed</span> BaseType_t *pxHigherPriorityTaskWoken)</span><br></pre></td></tr></table></figure>
+
+<p><strong>参数：</strong></p>
+<ul>
+<li><p>xSemaphore</p>
+<p>信号量被“获取”。信号量由 SemaphoreHandle_t 类型的变量引用， 必须在使用之前显式创建。</p>
+</li>
+<li><p>pxHigherPriorityTaskWoken</p>
+<p>信号量由于其类型可能阻塞一个或多个任务，等待给出信号量。调用 xSemaphoreTakeFromISR() 会尝试获取信号量，如果成功获取信号量，则会唤醒一个正在等待该信号量的任务，使其离开阻塞状态。</p>
+<p>如果调用函数导致任务离开阻塞状态， 且未阻塞任务的优先级等于或高于当前正在执行的任务（被中断的任务），那么 API 函数将从内部把 *pxHigherPriorityTaskWoken 设置为 pdTRUE。 </p>
+<p>如果 xSemaphoreTakeFromISR() 将 pxHigherPriorityTaskWoken 设置为 pdTRUE，则应在退出中断之前执行上下文切换。这将确保中断直接返回到最高优先级的就绪状态任务（返回优先级最高的任务，而不是被中断的任务） 。该机制与 xQueueReceiveFromISR() 函数中使用的机制相同， pxHigherPriorityTaskWoken 是一个可选参数，可设置为 NULL。</p>
+</li>
+</ul>
+<p><strong>返回：</strong></p>
+<p>如果成功获取信号量，则返回 pdTRUE。如果因为信号量不可用而未成功获取信号量， 则返回 pdFALSE。</p>
+<h4 id="xSemaphoreGiveFromISR"><a href="#xSemaphoreGiveFromISR" class="headerlink" title="xSemaphoreGiveFromISR"></a>xSemaphoreGiveFromISR</h4><p>用于释放信号量的<em>宏</em>。释放前信号量必须已经 通过调用 xSemaphoreCreateBinary() 或 xSemaphoreCreateCounting() 创建。</p>
+<p>互斥锁型信号量（那些调用 xSemaphoreCreateMutex() 创建的信号量） 不得与此宏一起使用。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xSemaphoreGiveFromISR(SemaphoreHandle_t xSemaphore, <span class="type">signed</span> BaseType_t *pxHigherPriorityTaskWoken)</span><br></pre></td></tr></table></figure>
+
+<p><strong>参数：</strong></p>
+<ul>
+<li><p>xSemaphore</p>
+<p>要释放的信号量的句柄。这是创建信号量时返回的句柄。</p>
+</li>
+<li><p>pxHigherPriorityTaskWoken</p>
+<p>如果给出信号量会导致任务解除阻塞，并且解除阻塞的任务的优先级高于当前正在运行的任务， 则 xSemaphoreGiveFromISR() 会将 *pxHigherPriorityTaskWoken 设置为 pdTRUE。 </p>
+<p>如果 xSemaphoreGiveFromISR() 将此值设置为 pdTRUE，则应在退出中断之前请求上下文切换。</p>
+<p> 从 FreeRTOS V7.3.0 开始，pxHigherPriorityTaskWoken 为可选参数， 可设置为 NULL。</p>
+</li>
+</ul>
+<p><strong>返回：</strong></p>
+<p>如果成功给出信号量，则返回 pdTRUE，否则 errQUEUE_FULL。</p>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>开启两个任务，分别去等待信号。</p>
+<p>开启按键扫描任务，当点击按键时，发送信号</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;gd32f4xx.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;systick.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;main.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;FreeRTOS.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;task.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;semphr.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Usart0.h&quot;</span></span></span><br><span class="line"></span><br><span class="line">TaskHandle_t            task_handler;</span><br><span class="line">TaskHandle_t            task_key_handler;</span><br><span class="line">TaskHandle_t            task1_handler;</span><br><span class="line">TaskHandle_t            task2_handler;</span><br><span class="line">SemaphoreHandle_t 			sema_handler;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">task1</span><span class="params">(<span class="type">void</span> *pvParameters)</span> &#123;</span><br><span class="line">    BaseType_t result;</span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>) &#123;</span><br><span class="line">        result = xSemaphoreTake(sema_handler, portMAX_DELAY);</span><br><span class="line">        <span class="keyword">if</span>(result == pdTRUE) &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;task1\n&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;task1 Error\n&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">task2</span><span class="params">(<span class="type">void</span> *pvParameters)</span> &#123;</span><br><span class="line">    BaseType_t result;</span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>) &#123;</span><br><span class="line">        result = xSemaphoreTake(sema_handler, portMAX_DELAY);</span><br><span class="line">        <span class="keyword">if</span>(result == pdTRUE) &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;task2\n&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;task2 Error\n&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">task_key</span><span class="params">(<span class="type">void</span> *pvParameters)</span> &#123;</span><br><span class="line">    FlagStatus pre_state = RESET;</span><br><span class="line">    BaseType_t result;</span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>) &#123;</span><br><span class="line">        FlagStatus state = gpio_input_bit_get(GPIOA, GPIO_PIN_0);</span><br><span class="line">        <span class="keyword">if</span>(SET == state &amp;&amp; pre_state == RESET) &#123;</span><br><span class="line">            <span class="comment">// 当前高电平, 上一次为低电平,按下</span></span><br><span class="line">            pre_state = state;</span><br><span class="line"></span><br><span class="line">            result = xSemaphoreGive(sema_handler);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span>(RESET == state &amp;&amp; pre_state == SET) &#123;</span><br><span class="line">            <span class="comment">// 当前高电平, 上一次为低电平,抬起</span></span><br><span class="line">            pre_state = state;</span><br><span class="line">        &#125;</span><br><span class="line">        vTaskDelay(<span class="number">20</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">Usart0_recv</span><span class="params">(<span class="type">uint8_t</span> *data, <span class="type">uint32_t</span> len)</span> &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;recv: %s\n&quot;</span>, data);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">GPIO_config</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="comment">// 时钟初始化</span></span><br><span class="line">    rcu_periph_clock_enable(RCU_GPIOA);</span><br><span class="line">    <span class="comment">// 配置GPIO模式</span></span><br><span class="line">    gpio_mode_set(GPIOA, GPIO_MODE_INPUT, GPIO_PUPD_PULLDOWN, GPIO_PIN_0);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">start_task</span><span class="params">(<span class="type">void</span> *pvParameters)</span> &#123;</span><br><span class="line">    GPIO_config();</span><br><span class="line">    Usart0_init();</span><br><span class="line"></span><br><span class="line">    taskENTER_CRITICAL();</span><br><span class="line"></span><br><span class="line">    xTaskCreate(task_key, <span class="string">&quot;task_key&quot;</span>, <span class="number">64</span>, <span class="literal">NULL</span>, <span class="number">2</span>, &amp;task_key_handler);</span><br><span class="line">    xTaskCreate(task1, <span class="string">&quot;task1&quot;</span>, <span class="number">64</span>, <span class="literal">NULL</span>, <span class="number">3</span>, &amp;task1_handler);</span><br><span class="line">    xTaskCreate(task2, <span class="string">&quot;task2&quot;</span>, <span class="number">64</span>, <span class="literal">NULL</span>, <span class="number">2</span>, &amp;task2_handler);</span><br><span class="line">    vTaskDelete(task_handler);</span><br><span class="line"></span><br><span class="line">    taskEXIT_CRITICAL();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    NVIC_SetPriorityGrouping(NVIC_PRIGROUP_PRE4_SUB0);</span><br><span class="line">    sema_handler = xSemaphoreCreateBinary();</span><br><span class="line">    xTaskCreate(start_task, <span class="string">&quot;start_task&quot;</span>, <span class="number">128</span>, <span class="literal">NULL</span>, <span class="number">1</span>, &amp;task_handler);</span><br><span class="line">    vTaskStartScheduler();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>) &#123;&#125;</span><br><span class="line">&#125;    </span><br></pre></td></tr></table></figure>
+
+<h2 id="计数信号量"><a href="#计数信号量" class="headerlink" title="计数信号量"></a>计数信号量</h2><p>正如二进制信号量可以被认为是长度为 1 的队列那样， 计数信号量也可以被认为是长度大于 1 的队列。同样，信号量的使用者对存储在队列中的数据并不感兴趣， 他们只关心队列是否为空。</p>
+<p>计数信号量通常用于两种情况：</p>
+<ol>
+<li><p>盘点事件。</p>
+<p>在此使用场景中，事件处理程序将在每次事件发生时“提供”信号量（递增信号量计数值）， 而处理程序任务将在每次处理事件时“获取”信号量 （递减信号量计数值）。因此，计数值是已发生的事件数与已处理的事件数之间的差值。在这种情况下， 创建信号量时希望计数值为零。</p>
+</li>
+<li><p>资源管理。</p>
+<p>在此使用情景中，计数值表示可用资源的数量。为了获得对资源的控制，任务必须首先获得信号量——递减信号量计数值。当计数值达到零时， 表示没有空闲资源可用。当任务结束使用资源时， 它会“返还”一个信号量——同时递增信号量计数值。在这种情况下， 创建信号量时希望计数值等于最大计数值。</p>
+</li>
+</ol>
+<p><strong>计数信号量的“给出”和“获取”机制</strong></p>
+<p><strong>给出机制：</strong></p>
+<p>“给出”信号量表示资源或事件的增加，可以理解为将信号量的计数值递增。</p>
+<ul>
+<li><p>当调用 xSemaphoreGive() 或 xSemaphoreGiveFromISR() 时：</p>
+<p>如果当前信号量的计数值小于最大允许值，则计数值增加 1。</p>
+<p>如果计数值已达到最大值（通常在创建信号量时定义），进一步的“给出”操作不会改变计数值，函数返回 <code>pdFAIL</code>。</p>
+<p>如果有任务正在等待此信号量且任务的优先级足够高，则调度器会将该任务从阻塞状态移到就绪状态。</p>
+</li>
+</ul>
+<p><strong>获取机制：</strong></p>
+<p>“获取”信号量表示使用资源或响应事件，可以理解为将信号量的计数值递减。</p>
+<ul>
+<li><p>当调用 xSemaphoreTake() 或 xSemaphoreTakeFromISR() 时：</p>
+<p>如果当前信号量的计数值大于零，则计数值减少 1，函数返回 pdPASS。</p>
+<p>如果计数值等于零：</p>
+<ul>
+<li>如果指定了阻塞时间（xTicksToWait），任务进入阻塞状态，等待计数值变为大于零。</li>
+<li>如果阻塞时间为 0，函数立即返回 pdFAIL，表示获取失败。</li>
+</ul>
+</li>
+</ul>
+<h3 id="API-1"><a href="#API-1" class="headerlink" title="API"></a>API</h3><h4 id="xSemaphoreCreateCounting"><a href="#xSemaphoreCreateCounting" class="headerlink" title="xSemaphoreCreateCounting"></a>xSemaphoreCreateCounting</h4><p>创建一个计数信号量， 并返回一个可以引用该新建信号量的句柄。</p>
+<p>configSUPPORT_DYNAMIC_ALLOCATION 必须在 FreeRTOSConfig.h 中设置为 1，或处于未定义状态（在这种情况下，默认为 1），该 RTOS API 函数 才可用。</p>
+<p>每个计数信号量需要少量 RAM ，用于保存信号量的状态。如果使用 xSemaphoreCreateCounting() 创建计数信号量则所需的 RAM 将从 FreeRTOS 堆自动分配。 如果使用 xSemaphoreCreateCountingStatic() 创建计数信号量， 则 RAM会由应用程序编写器提供，这需要其他的 但允许在编译时静态分配 RAM 。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SemaphoreHandle_t <span class="title function_">xSemaphoreCreateCounting</span><span class="params">(UBaseType_t uxMaxCount, UBaseType_t uxInitialCount)</span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>参数：</strong></p>
+<ul>
+<li><p>uxMaxCount</p>
+<p>可以达到的最大计数值。当信号量达到此值时，它不能再被“给定”。</p>
+</li>
+<li><p>uxInitialCount</p>
+<p>创建信号量时分配给信号量的计数值。</p>
+</li>
+</ul>
+<p><strong>返回：</strong></p>
+<ul>
+<li>如果已成功创建信号量，则将返回该信号量的句柄 。</li>
+<li>如果因为保留信号量所需的 RAM 无法分配而无法创建信号量， 则会返回 NULL。</li>
+</ul>
+<p><strong>示例</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">xSemaphore = xSemaphoreCreateCounting( <span class="number">10</span>, <span class="number">0</span> );</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( xSemaphore != <span class="literal">NULL</span> ) &#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="uxSemaphoreGetCount"><a href="#uxSemaphoreGetCount" class="headerlink" title="uxSemaphoreGetCount"></a>uxSemaphoreGetCount</h4><p>获取信号量的计数值。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UBaseType_t <span class="title function_">uxSemaphoreGetCount</span><span class="params">( SemaphoreHandle_t xSemaphore )</span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>参数：</strong></p>
+<ul>
+<li><p>xSemaphore</p>
+<p>正在查询的信号量的句柄。</p>
+</li>
+</ul>
+<p><strong>返回：</strong></p>
+<p>如果信号量是计数信号量，则返回信号量的当前计数值 。如果信号量是二进制信号量， 则当信号量可用时，返回 1，当信号量不可用时， 返回 0。</p>
+<h4 id="xSemaphoreTake-1"><a href="#xSemaphoreTake-1" class="headerlink" title="xSemaphoreTake"></a>xSemaphoreTake</h4><p>同上</p>
+<h4 id="xSemaphoreGive-1"><a href="#xSemaphoreGive-1" class="headerlink" title="xSemaphoreGive"></a>xSemaphoreGive</h4><p>同上</p>
+<h4 id="xSemaphoreTakeFromISR-1"><a href="#xSemaphoreTakeFromISR-1" class="headerlink" title="xSemaphoreTakeFromISR"></a>xSemaphoreTakeFromISR</h4><p>同上</p>
+<h4 id="xSemaphoreGiveFromISR-1"><a href="#xSemaphoreGiveFromISR-1" class="headerlink" title="xSemaphoreGiveFromISR"></a>xSemaphoreGiveFromISR</h4><p>同上</p>
+<h3 id="实现-1"><a href="#实现-1" class="headerlink" title="实现"></a>实现</h3><ol>
+<li>开启两个任务，等待信号，接收到信号后，处理耗时操作</li>
+<li>开启按键扫描，点击按键时发送信号</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;gd32f4xx.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;systick.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;main.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;FreeRTOS.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;task.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;semphr.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Usart0.h&quot;</span></span></span><br><span class="line"></span><br><span class="line">TaskHandle_t            task_handler;</span><br><span class="line">TaskHandle_t            task_key_handler;</span><br><span class="line">TaskHandle_t            task1_handler;</span><br><span class="line">TaskHandle_t            task2_handler;</span><br><span class="line">SemaphoreHandle_t 		sema_handler;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">task1</span><span class="params">(<span class="type">void</span> *pvParameters)</span> &#123;</span><br><span class="line">    BaseType_t result;</span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>) &#123;</span><br><span class="line">        result = xSemaphoreTake(sema_handler, portMAX_DELAY);</span><br><span class="line">        <span class="keyword">if</span>(result == pdTRUE) &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;task1 %ld\n&quot;</span>, uxSemaphoreGetCount(sema_handler));</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;task1 Error\n&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        vTaskDelay(<span class="number">2500</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">task2</span><span class="params">(<span class="type">void</span> *pvParameters)</span> &#123;</span><br><span class="line">    BaseType_t result;</span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>) &#123;</span><br><span class="line">        result = xSemaphoreTake(sema_handler, portMAX_DELAY);</span><br><span class="line">        <span class="keyword">if</span>(result == pdTRUE) &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;task2 %ld\n&quot;</span>, uxSemaphoreGetCount(sema_handler));</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;task2 Error\n&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        vTaskDelay(<span class="number">2500</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">task_key</span><span class="params">(<span class="type">void</span> *pvParameters)</span> &#123;</span><br><span class="line">    FlagStatus pre_state = RESET;</span><br><span class="line">    BaseType_t result;</span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>) &#123;</span><br><span class="line">        FlagStatus state = gpio_input_bit_get(GPIOA, GPIO_PIN_0);</span><br><span class="line">        <span class="keyword">if</span>(SET == state &amp;&amp; pre_state == RESET) &#123;</span><br><span class="line">            <span class="comment">// 当前高电平, 上一次为低电平,按下</span></span><br><span class="line">            pre_state = state;</span><br><span class="line">            result = xSemaphoreGive(sema_handler);</span><br><span class="line"><span class="comment">//			if(result == pdTRUE) &#123;</span></span><br><span class="line"><span class="comment">//				printf(&quot;semaphore give success\n&quot;);</span></span><br><span class="line"><span class="comment">//			&#125; else &#123;</span></span><br><span class="line"><span class="comment">//				printf(&quot;semaphore give error\n&quot;);</span></span><br><span class="line"><span class="comment">//			&#125;</span></span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span>(RESET == state &amp;&amp; pre_state == SET) &#123;</span><br><span class="line">            <span class="comment">// 当前高电平, 上一次为低电平,抬起</span></span><br><span class="line">            pre_state = state;</span><br><span class="line">        &#125;</span><br><span class="line">        vTaskDelay(<span class="number">20</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">Usart0_recv</span><span class="params">(<span class="type">uint8_t</span> *data, <span class="type">uint32_t</span> len)</span> &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;recv: %s\n&quot;</span>, data);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">GPIO_config</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="comment">// 时钟初始化</span></span><br><span class="line">    rcu_periph_clock_enable(RCU_GPIOA);</span><br><span class="line">    <span class="comment">// 配置GPIO模式</span></span><br><span class="line">    gpio_mode_set(GPIOA, GPIO_MODE_INPUT, GPIO_PUPD_PULLDOWN, GPIO_PIN_0);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">start_task</span><span class="params">(<span class="type">void</span> *pvParameters)</span> &#123;</span><br><span class="line">    GPIO_config();</span><br><span class="line">    Usart0_init();</span><br><span class="line">    taskENTER_CRITICAL();</span><br><span class="line"></span><br><span class="line">    xTaskCreate(task_key, <span class="string">&quot;task_key&quot;</span>, <span class="number">64</span>, <span class="literal">NULL</span>, <span class="number">2</span>, &amp;task_key_handler);</span><br><span class="line">    xTaskCreate(task1, <span class="string">&quot;task1&quot;</span>, <span class="number">64</span>, <span class="literal">NULL</span>, <span class="number">3</span>, &amp;task1_handler);</span><br><span class="line">    xTaskCreate(task2, <span class="string">&quot;task2&quot;</span>, <span class="number">64</span>, <span class="literal">NULL</span>, <span class="number">2</span>, &amp;task2_handler);</span><br><span class="line">    vTaskDelete(task_handler);</span><br><span class="line"></span><br><span class="line">    taskEXIT_CRITICAL();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span>&#123;</span><br><span class="line">    NVIC_SetPriorityGrouping(NVIC_PRIGROUP_PRE4_SUB0);</span><br><span class="line"></span><br><span class="line">    sema_handler = xSemaphoreCreateCounting(<span class="number">100</span>, <span class="number">0</span>);</span><br><span class="line">    xTaskCreate(start_task, <span class="string">&quot;start_task&quot;</span>, <span class="number">128</span>, <span class="literal">NULL</span>, <span class="number">1</span>, &amp;task_handler);</span><br><span class="line">    vTaskStartScheduler();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>) &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="互斥锁"><a href="#互斥锁" class="headerlink" title="互斥锁"></a>互斥锁</h2><p>互斥锁是包含优先级继承机制的二进制信号量。鉴于二进制信号量是实现同步（任务之间或任务与中断之间） 的更好方式，因此互斥锁更适合实现简单的 相互排斥（即互斥）。</p>
+<p>用于互斥时，互斥锁就像用于保护资源的令牌。当一个 任务希望访问资源时，必须首先获得（“获取”）该令牌。使用完资源后， 任务必须“返还”令牌，以便其他任务有机会访问 相同的资源。</p>
+<p><strong>优先级继承机制</strong></p>
+<p>互斥锁使用相同的信号量访问 API 函数，因此也能指定阻塞时间。该 阻塞时间表示一个任务试图“获取”互斥锁，而互斥锁无法立即使用时， 任务应进入阻塞状态的最大“滴答”数。然而，与二进制信号量不同， 互斥锁采用优先级继承机制。这意味着<strong>如果高优先级任务进入阻塞状态，同时尝试获取当前由低优先级任务持有的互斥锁（令牌）， 则持有令牌的任务的优先级会暂时提高到阻塞任务的优先级。</strong>这项机制 旨在确保较高优先级的任务保持阻塞状态的时间尽可能短， 从而最大限度减少已经发生的“优先级反转”现象。</p>
+<blockquote>
+<p>优先级继承无法解决优先级反转！只是在某些情况下将影响降至最低。应用程序的设计应从一开始就避免发生优先级反转。</p>
+</blockquote>
+<p><strong>不能从中断中使用互斥锁</strong></p>
+<ul>
+<li>互斥锁使用的优先级继承机制要求从任务中（而不是从中断中）拿走和放入互斥锁。</li>
+<li>中断无法保持阻塞来等待一个被互斥锁保护的资源变为可用。</li>
+</ul>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/mutexes.gif" alt="mutexes"></p>
+<p><strong>互斥锁的“给出”和“获取”机制</strong></p>
+<p>任务请求使用共享资源时，需要通过“获取”互斥锁来确保独占访问权。</p>
+<ul>
+<li><p>调用 xSemaphoreTake() 或 xSemaphoreTakeRecursive() 时：</p>
+<p><strong>锁可用</strong>：如果互斥锁当前未被其他任务占用，则获取成功，并将锁的“拥有者”设置为当前任务，函数返回 pdPASS。</p>
+<p><strong>锁不可用：</strong>如果互斥锁已被其他任务占用，则任务进入阻塞状态，直到：</p>
+<ul>
+<li>锁被释放。</li>
+<li>超过了指定的阻塞时间（xTicksToWait）。</li>
+</ul>
+<p><strong>递归支持（Recursive Mutex）</strong>：如果当前任务已获取了互斥锁，递归获取是允许的，计数会递增（只适用于递归互斥锁）。</p>
+</li>
+</ul>
+<p>当任务完成资源的使用后，必须通过“给出”互斥锁将其释放，允许其他任务继续使用。</p>
+<ul>
+<li><p>调用 <strong>xSemaphoreGive()</strong> 或 <strong>xSemaphoreGiveRecursive()</strong> 时：</p>
+<p><strong>当前任务为锁的拥有者</strong>：互斥锁被释放，允许其他等待的任务获取锁。</p>
+<p><strong>当前任务不是锁的拥有者</strong>：释放操作无效（仅在调试模式下可能触发断言错误）。</p>
+<p><strong>递归支持（Recursive Mutex）</strong>：如果任务递归获取了多次互斥锁，则每次“给出”都会使计数递减，直到完全释放为止。</p>
+</li>
+</ul>
+<h3 id="API-2"><a href="#API-2" class="headerlink" title="API"></a>API</h3><h4 id="xSemaphoreCreateMutex"><a href="#xSemaphoreCreateMutex" class="headerlink" title="xSemaphoreCreateMutex"></a>xSemaphoreCreateMutex</h4><p>创建互斥锁，并返回 一个该互斥锁可以引用的句柄。中断服务例程中， 不能使用互斥锁。</p>
+<p>configSUPPORT_DYNAMIC_ALLOCATION 和 configUSE_MUTEXES 必须同时在 FreeRTOSConfig.h 中设置为 1，xSemaphoreCreateMutex() 才可用。（configSUPPORT_DYNAMIC_ALLOCATION 也可以不定义， 在这种情况下，它将默认为 1。）</p>
+<p>每个互斥锁需要少量 RAM ， 以此来保持互斥锁的状态。如果互斥锁是使用 xSemaphoreCreateMutex() 创建的， 则所需的 RAM 将从 FreeRTOS 堆自动分配。 如果互斥锁是使用 xSemaphoreCreateMutexStatic() 创建的， 那么应由应用程序写入器提供 RAM， 但允许在编译时静态分配 RAM 。</p>
+<p>使用 xSemaphoreTake() 获取互斥锁， 并使用 xSemaphoreGive() 给出互斥锁。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SemaphoreHandle_t <span class="title function_">xSemaphoreCreateMutex</span><span class="params">( <span class="type">void</span> )</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>返回：</strong></p>
+<ul>
+<li>如果已成功创建互斥锁型信号量，则返回创建的互斥锁的句柄。</li>
+<li>如果由于<a target="_blank" rel="noopener" href="https://www.freertos.org/Documentation/02-Kernel/02-Kernel-features/09-Memory-management/01-Memory-management">无法分配</a>保存互斥锁所需的内存而未创建互斥锁，则返回 NULL。</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">xSemaphore = xSemaphoreCreateMutex();</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( xSemaphore != <span class="literal">NULL</span> ) &#123;</span><br><span class="line">   <span class="comment">// TODO</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="xSemaphoreTake-2"><a href="#xSemaphoreTake-2" class="headerlink" title="xSemaphoreTake"></a>xSemaphoreTake</h4><p>同上</p>
+<h4 id="xSemaphoreGive-2"><a href="#xSemaphoreGive-2" class="headerlink" title="xSemaphoreGive"></a>xSemaphoreGive</h4><p>同上</p>
+<h3 id="实现-2"><a href="#实现-2" class="headerlink" title="实现"></a>实现</h3><p>开启两个任务，同时等待和发送信号，观察任务调用</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;gd32f4xx.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;systick.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;main.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;USART0.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;FreeRTOS.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;task.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;semphr.h&quot;</span></span></span><br><span class="line"><span class="comment">/******</span></span><br><span class="line"><span class="comment">需求：创建3个任务</span></span><br><span class="line"><span class="comment">1. task1：等待Take信号</span></span><br><span class="line"><span class="comment">2. task2：每隔1秒执行一次任务</span></span><br><span class="line"><span class="comment">3. task3：等待Take信号</span></span><br><span class="line"><span class="comment">优先级逐个增加</span></span><br><span class="line"><span class="comment">------------------------------- 信号量</span></span><br><span class="line"><span class="comment">a. 创建互斥信号量</span></span><br><span class="line"><span class="comment">b. 默认发送了一个信号</span></span><br><span class="line"><span class="comment">******/</span></span><br><span class="line">TaskHandle_t            xStartTask_Handler;</span><br><span class="line"><span class="comment">//TaskHandle_t            xTaskKey_Handler;</span></span><br><span class="line">TaskHandle_t            xTask1_Handler;</span><br><span class="line">TaskHandle_t            xTask2_Handler;</span><br><span class="line">TaskHandle_t            xTask3_Handler;</span><br><span class="line"></span><br><span class="line">SemaphoreHandle_t xSemaphore = <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">USART0_on_recv</span><span class="params">(<span class="type">uint8_t</span>* data, <span class="type">uint32_t</span> len)</span> &#123;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;recv[%d]: %s\n&quot;</span>, len, data);	</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 同学：优先级低</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">task1</span><span class="params">(<span class="type">void</span> *pvParameters)</span> &#123;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;task_Low run!\n&quot;</span>);</span><br><span class="line">	<span class="type">uint32_t</span> cnt = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">while</span>(<span class="number">1</span>)&#123;</span><br><span class="line">		<span class="comment">// 无限阻塞在此函数，直到获取到信号</span></span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;task_Low try take\n&quot;</span>);</span><br><span class="line">		xSemaphoreTake(xSemaphore, portMAX_DELAY);</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;task_Low running!\n&quot;</span>);		</span><br><span class="line">		delay_1ms(<span class="number">3000</span>); <span class="comment">// 模拟耗时操作	</span></span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;task_Low give!\n&quot;</span>);</span><br><span class="line">		xSemaphoreGive(xSemaphore);</span><br><span class="line">		vTaskDelay(pdMS_TO_TICKS(<span class="number">1000</span>));</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 坏同学：优先级中</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">task2</span><span class="params">(<span class="type">void</span> *pvParameters)</span> &#123;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;task_Middle run!\n&quot;</span>);</span><br><span class="line">	<span class="type">uint32_t</span> cnt = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">while</span>(<span class="number">1</span>)&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;task_Middle! %d\n&quot;</span>, cnt++);</span><br><span class="line">		vTaskDelay(pdMS_TO_TICKS(<span class="number">1000</span>));</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 老师：优先级高</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">task3</span><span class="params">(<span class="type">void</span> *pvParameters)</span> &#123;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;task_High run!\n&quot;</span>);</span><br><span class="line">	<span class="type">uint32_t</span> cnt = <span class="number">0</span>;</span><br><span class="line">	BaseType_t xReturn; <span class="comment">// pdTRUE, pdFALSE</span></span><br><span class="line">	<span class="keyword">while</span>(<span class="number">1</span>)&#123;</span><br><span class="line">		<span class="comment">// 无限阻塞在此函数，直到获取到信号</span></span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;task_High try take\n&quot;</span>);</span><br><span class="line">		xSemaphoreTake(xSemaphore, portMAX_DELAY);</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;task_High running!\n&quot;</span>);</span><br><span class="line">		</span><br><span class="line">		delay_1ms(<span class="number">1000</span>); <span class="comment">// 模拟耗时操作</span></span><br><span class="line">	</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;task_High give!\n&quot;</span>);</span><br><span class="line">		xSemaphoreGive(xSemaphore);</span><br><span class="line">		vTaskDelay(pdMS_TO_TICKS(<span class="number">1000</span>));</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">GPIO_config</span><span class="params">()</span> &#123;</span><br><span class="line">	<span class="comment">// GPIO input PA0</span></span><br><span class="line">	rcu_periph_clock_enable(RCU_GPIOA);</span><br><span class="line">	<span class="comment">// input</span></span><br><span class="line">	gpio_mode_set(GPIOA, GPIO_MODE_INPUT, GPIO_PUPD_PULLDOWN, GPIO_PIN_0);	</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">void</span> <span class="title function_">sys_init</span><span class="params">()</span> &#123;</span><br><span class="line">	GPIO_config();</span><br><span class="line">	USART0_init();	</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">void</span> <span class="title function_">start_task</span><span class="params">(<span class="type">void</span> *pvParameters)</span> &#123;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// 1. 在start任务中初始化所有外设</span></span><br><span class="line">	sys_init();</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;Start!\n&quot;</span>);</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// FreeRTOS 创建互斥信号量, 默认会放一个信号</span></span><br><span class="line">	xSemaphore = xSemaphoreCreateMutex();</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">if</span>(xSemaphore != <span class="literal">NULL</span>)&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;xSemaphore create successful!\n&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// 2. 其他任务，进入临界区，等所有任务都创建完，再退出，一起运行</span></span><br><span class="line">  taskENTER_CRITICAL();</span><br><span class="line">	</span><br><span class="line">  xTaskCreate((TaskFunction_t)task1,              	<span class="comment">// 指向任务函数的指针</span></span><br><span class="line">              (<span class="type">const</span> <span class="type">char</span>*   )<span class="string">&quot;task1&quot;</span>,            	<span class="comment">// 任务名称</span></span><br><span class="line">              <span class="number">64</span>,                                 	<span class="comment">// 任务栈大小</span></span><br><span class="line">              <span class="literal">NULL</span>,                               	<span class="comment">// 任务函数的参数</span></span><br><span class="line">              <span class="number">3</span>,                                  	<span class="comment">// 任务优先级, 数值越大，优先级越高</span></span><br><span class="line">              (TaskHandle_t*  )&amp;xTask1_Handler);  	<span class="comment">// 任务句柄</span></span><br><span class="line">							</span><br><span class="line">  xTaskCreate((TaskFunction_t)task2,              	<span class="comment">// 指向任务函数的指针</span></span><br><span class="line">              (<span class="type">const</span> <span class="type">char</span>*   )<span class="string">&quot;task2&quot;</span>,            	<span class="comment">// 任务名称</span></span><br><span class="line">              <span class="number">64</span>,                                 	<span class="comment">// 任务栈大小</span></span><br><span class="line">              <span class="literal">NULL</span>,                               	<span class="comment">// 任务函数的参数</span></span><br><span class="line">              <span class="number">4</span>,                                  	<span class="comment">// 任务优先级, 数值越大，优先级越高</span></span><br><span class="line">              (TaskHandle_t*  )&amp;xTask2_Handler);  	<span class="comment">// 任务句柄</span></span><br><span class="line">								</span><br><span class="line">  xTaskCreate((TaskFunction_t)task3,              	<span class="comment">// 指向任务函数的指针</span></span><br><span class="line">              (<span class="type">const</span> <span class="type">char</span>*   )<span class="string">&quot;task3&quot;</span>,            	<span class="comment">// 任务名称</span></span><br><span class="line">              <span class="number">64</span>,                                 	<span class="comment">// 任务栈大小</span></span><br><span class="line">              <span class="literal">NULL</span>,                               	<span class="comment">// 任务函数的参数</span></span><br><span class="line">              <span class="number">5</span>,                                  	<span class="comment">// 任务优先级, 数值越大，优先级越高</span></span><br><span class="line">              (TaskHandle_t*  )&amp;xTask3_Handler);  	<span class="comment">// 任务句柄						</span></span><br><span class="line">	<span class="comment">// Exti退出临界区</span></span><br><span class="line">  taskEXIT_CRITICAL();							</span><br><span class="line">	<span class="comment">// 3. 删除自己</span></span><br><span class="line">  vTaskDelete(xStartTask_Handler);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">  nvic_priority_group_set(NVIC_PRIGROUP_PRE4_SUB0);</span><br><span class="line">  systick_config();</span><br><span class="line">	<span class="comment">// 开始第一个任务</span></span><br><span class="line">  xTaskCreate((TaskFunction_t)start_task,            <span class="comment">// 任务的函数指针，函数名</span></span><br><span class="line">              (<span class="type">const</span> <span class="type">char</span>*   )<span class="string">&quot;start_task&quot;</span>,          <span class="comment">// 任务名称，最大长度configMAX_TASK_NAME_LEN</span></span><br><span class="line">              (<span class="type">uint16_t</span>			 )<span class="number">128</span>,                   <span class="comment">// 任务栈大小，单位: 字Word / Half Word 128 x 4</span></span><br><span class="line">              (<span class="type">void</span>*		     )<span class="literal">NULL</span>,                  <span class="comment">// 任务函数的参数，通常用NULL</span></span><br><span class="line">              (UBaseType_t   )<span class="number">1</span>,                     <span class="comment">// 任务优先级，数值越大，优先级越高</span></span><br><span class="line">              (TaskHandle_t* )&amp;xStartTask_Handler);  <span class="comment">// 任务句柄				</span></span><br><span class="line">  <span class="comment">// 开启任务调度</span></span><br><span class="line">  vTaskStartScheduler();</span><br><span class="line">  <span class="keyword">while</span>(<span class="number">1</span>) &#123;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="递归互斥锁"><a href="#递归互斥锁" class="headerlink" title="递归互斥锁"></a>递归互斥锁</h2><p>用户可对一把递归互斥锁重复加锁。只有用户为每成功的 xSemaphoreTakeRecursive() 请求调用 xSemaphoreGiveRecursive() 后，互斥锁才会重新变为可用。</p>
+<p>例如，如果一个任务成功“加锁”相同的互斥锁 5 次， 那么任何其他任务都无法使用此互斥锁，直到任务也把这个互斥锁“解锁”5 次。</p>
+<p>这种类型的信号量使用优先级继承机制，因此“加锁”一个信号量的任务必须在不需要此信号量时， 立即将信号量“解锁”。</p>
+<p>不能从中断服务程序中使用类型是互斥锁的信号量。</p>
+<p>不能从中断中使用互斥锁的原因是：</p>
+<ul>
+<li>互斥锁使用的优先级继承机制要求 从任务中（而不是从中断中）拿走和放入互斥锁。</li>
+<li>中断无法保持阻塞来等待一个被互斥锁保护的资源 变得可用。</li>
+</ul>
+<p><strong>递归互斥锁的“给出”和“获取”机制</strong></p>
+<p>递归互斥锁的基本思想是，每当一个任务成功获取锁时，锁的计数值会增加；当任务释放锁时，锁的计数值会减少。当计数值为零时，锁才会被真正释放，并允许其他任务获取该锁。</p>
+<p>获取锁（Take）机制</p>
+<ul>
+<li>当一个任务首次请求获取递归互斥锁时，如果锁当前没有被占用，任务会立即获得锁，并将锁的计数器设为 1。</li>
+<li>如果该任务再次请求获取该锁，它会成功获取锁（锁的计数器加 1），并继续执行嵌套的代码段。</li>
+<li>锁的计数器会随着任务的每次获取递增，这样任务就可以在嵌套的调用中多次获取该锁，而不会发生死锁。</li>
+</ul>
+<p>释放锁（Give）机制</p>
+<ul>
+<li>当任务释放锁时，锁的计数器会减少。如果计数器的值大于 1，表示任务还有其他嵌套的调用持有锁，释放锁只是减少计数器的值，锁仍然被当前任务持有。</li>
+<li>当任务释放锁时，如果计数器的值减至 0，表示当前任务已经没有</li>
+</ul>
+<h3 id="API-3"><a href="#API-3" class="headerlink" title="API"></a>API</h3><h4 id="xSemaphoreCreateRecursiveMutex"><a href="#xSemaphoreCreateRecursiveMutex" class="headerlink" title="xSemaphoreCreateRecursiveMutex"></a>xSemaphoreCreateRecursiveMutex</h4><p>创建一个递归互斥锁，并返回一个可以引用该互斥锁的句柄 。不能在中断服务程序中使用递归互斥锁。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SemaphoreHandle_t <span class="title function_">xSemaphoreCreateRecursiveMutex</span><span class="params">( <span class="type">void</span> )</span></span><br></pre></td></tr></table></figure>
+
+<p>configSUPPORT_DYNAMIC_ALLOCATION 和 configUSE_RECURSIVE_MUTEXES 必须在 FreeRTOSConfig.h 中设置为 1，xSemaphoreCreateRecursiveMutex() 才可用（configSUPPORT_DYNAMIC_ALLOCATION 也可以不定义，这种情况下 默认为 1）。</p>
+<p>每个递归互斥锁都需要少量 RAM，用于保存递归互斥锁的状态。 如果互斥锁是使用 xSemaphoreCreateRecursiveMutex() 创建的， 则所需的 RAM 将从 FreeRTOS 堆自动分配。 如果一个递归互斥锁是使用 xSemaphoreCreateRecursiveMutexStatic() 创建的， 那么RAM 由应用程序写入器提供，这需要用到一个附加参数， 但允许在编译时静态分配 RAM 。</p>
+<p>递归互斥锁分别使用 xSemaphoreTakeRecursive() 和 xSemaphoreGiveRecursive() API 函数“获取”和“释放”。 不得使用 xSemaphoreTake() 和 xSemaphoreGive()。</p>
+<p>xSemaphoreCreateMutex()和 xSemaphoreCreateMutexStatic()用于创建非递归互斥锁。非递归互斥锁只能被一个任务获取一次（在释放前），如果同一个任务想再次获取则会失败， 因为当任务第一次释放互斥锁时，互斥锁就一直处于释放状态。</p>
+<p>与非递归互斥锁相反，递归互斥锁可以被同一个任务获取很多次， 获取多少次就需要释放多少次， 此时才会返回递归互斥锁。</p>
+<p><strong>返回：</strong></p>
+<p>如果已成功创建递归互斥锁，则返回创建的互斥锁的句柄。</p>
+<p>如果由于无法分配保递归互斥锁所需的内存而未创建递归互斥锁，则返回 NULL。</p>
+<p><strong>示例</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">xMutex = xSemaphoreCreateRecursiveMutex();</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( xMutex != <span class="literal">NULL</span> )&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="xSemaphoreTakeRecursive"><a href="#xSemaphoreTakeRecursive" class="headerlink" title="xSemaphoreTakeRecursive"></a>xSemaphoreTakeRecursive</h4><p>递归的“获取”一个互斥锁型信号量。 此互斥锁必须已经事先通过调用 xSemaphoreCreateRecursiveMutex() 完成创建；</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xSemaphoreTakeRecursive(SemaphoreHandle_t xMutex, TickType_t xTicksToWait );</span><br></pre></td></tr></table></figure>
+
+<p>必须在 FreeRTOSConfig.h 中将 configUSE_RECURSIVE_MUTEXES 设置为 1， 此宏才可用。</p>
+<p>不得在使用 xSemaphoreCreateMutex() 创建的互斥锁上使用此宏。</p>
+<p>所有者可以反复“获取”递归使用的互斥锁。在所有者 为每个成功的“获取”请求调用 xSemaphoreGiveRecursive() 之前，该互斥锁不会再次变得可用。例如， 如果一个任务成功地“获取”了同一个互斥锁 5 次， 那么任何其他任务都无法使用此互斥锁， 直到任务也把这个互斥锁“解锁”5 次。</p>
+<p><strong>参数：</strong></p>
+<ul>
+<li><p>xMutex</p>
+<p>正在获得的互斥锁的句柄。这是由 xSemaphoreCreateRecursiveMutex() 返回的句柄。</p>
+</li>
+<li><p>xTicksToWait</p>
+<p>等待信号量变为可用的时间（以滴答为单位）。可以使用 portTICK_PERIOD_MS 宏 将其转换为实际时间。可以用一个为零的阻塞时间来轮询信号量。如果 任务已有信号量，则无论 xTicksToWait 的值是多少， xSemaphoreTakeRecursive() 都将立即返回。</p>
+</li>
+</ul>
+<p><strong>返回：</strong></p>
+<p>如果获得信号量，则返回 pdTRUE；如果 xTicksToWait 过期，信号量不可用，则返回 pdFALSE。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>( xSemaphoreTakeRecursive( xMutex, ( TickType_t ) <span class="number">10</span> ) == pdTRUE ) &#123;</span><br><span class="line"></span><br><span class="line">    xSemaphoreTakeRecursive( xMutex, ( TickType_t ) <span class="number">10</span> );</span><br><span class="line">    xSemaphoreTakeRecursive( xMutex, ( TickType_t ) <span class="number">10</span> );</span><br><span class="line"></span><br><span class="line">    xSemaphoreGiveRecursive( xMutex );</span><br><span class="line">    xSemaphoreGiveRecursive( xMutex );</span><br><span class="line">    xSemaphoreGiveRecursive( xMutex );</span><br><span class="line">    <span class="comment">// 这时候其他任务可以获取这个锁</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span> &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="xSemaphoreGiveRecursive"><a href="#xSemaphoreGiveRecursive" class="headerlink" title="xSemaphoreGiveRecursive"></a>xSemaphoreGiveRecursive</h4><p>递归地释放或“给出”一个互斥锁型信号量的<em>宏</em>。 此互斥锁必须已经事先通过调用 xSemaphoreCreateRecursiveMutex() 完成创建；</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xSemaphoreGiveRecursive( SemaphoreHandle_t xMutex )</span><br></pre></td></tr></table></figure>
+
+<p>必须在 FreeRTOSConfig.h 中将 configUSE_RECURSIVE_MUTEXES 设置为 1， 此宏才可用。</p>
+<p>不得在使用 xSemaphoreCreateMutex() 创建的互斥锁上使用此宏。</p>
+<p>所有者可以反复“获取”递归互斥锁。在所有者为每个成功的“获取”请求调用 xSemaphoreGiveRecursive() 之前，该互斥锁不会再次变得可用。</p>
+<p>例如， 如果一个任务成功地“获取”了同一个互斥锁 5 次， 那么任何其他任务都无法使用此互斥锁， 直到任务也把这个互斥锁“解锁”5 次。</p>
+<p><strong>参数：</strong></p>
+<ul>
+<li><p>xMutex</p>
+<p>正在释放或“给出”的互斥锁的句柄。这是由 xSemaphoreCreateRecursiveMutex() 返回的句柄。</p>
+</li>
+</ul>
+<p><strong>返回：</strong></p>
+<p>如果成功给出信号量，则返回 pdTRUE。</p>
+<h3 id="实现-3"><a href="#实现-3" class="headerlink" title="实现"></a>实现</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;gd32f4xx.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;systick.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;main.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;FreeRTOS.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;task.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;semphr.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;USART0.h&quot;</span></span></span><br><span class="line"></span><br><span class="line">TaskHandle_t            task_Handler;</span><br><span class="line">TaskHandle_t            task1_Handler;</span><br><span class="line">TaskHandle_t            task2_Handler;</span><br><span class="line">SemaphoreHandle_t 		sema_handler;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">task1</span><span class="params">(<span class="type">void</span> *pvParameters)</span> &#123;</span><br><span class="line">  BaseType_t result;</span><br><span class="line">  <span class="keyword">while</span>(<span class="number">1</span>) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;task1	take 0\n&quot;</span>);</span><br><span class="line">    xSemaphoreTakeRecursive(sema_handler, portMAX_DELAY);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;task1	take 1\n&quot;</span>);</span><br><span class="line">    xSemaphoreTakeRecursive(sema_handler, portMAX_DELAY);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;task1	give\n&quot;</span>);</span><br><span class="line">    xSemaphoreGiveRecursive(sema_handler);</span><br><span class="line">		</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;task1	give\n&quot;</span>);</span><br><span class="line">    xSemaphoreGiveRecursive(sema_handler);</span><br><span class="line">    vTaskDelay(<span class="number">1000</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">task2</span><span class="params">(<span class="type">void</span> *pvParameters)</span> &#123;</span><br><span class="line">  BaseType_t result;</span><br><span class="line">  <span class="keyword">while</span>(<span class="number">1</span>) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;task2	take 0\n&quot;</span>);</span><br><span class="line">    xSemaphoreTakeRecursive(sema_handler, portMAX_DELAY);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;task2	take 1\n&quot;</span>);</span><br><span class="line">    xSemaphoreTakeRecursive(sema_handler, portMAX_DELAY);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;task2	give\n&quot;</span>);</span><br><span class="line">    xSemaphoreGiveRecursive(sema_handler);</span><br><span class="line">		</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;task2	give\n&quot;</span>);</span><br><span class="line">    xSemaphoreGiveRecursive(sema_handler);</span><br><span class="line"></span><br><span class="line">    vTaskDelay(<span class="number">1000</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">GPIO_config</span><span class="params">()</span> &#123;</span><br><span class="line">  <span class="comment">// 时钟初始化</span></span><br><span class="line">  rcu_periph_clock_enable(RCU_GPIOA);</span><br><span class="line">  <span class="comment">// 配置GPIO模式</span></span><br><span class="line">  gpio_mode_set(GPIOA, GPIO_MODE_INPUT, GPIO_PUPD_PULLDOWN, GPIO_PIN_0);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">start_task</span><span class="params">(<span class="type">void</span> *pvParameters)</span> &#123;</span><br><span class="line">  GPIO_config();</span><br><span class="line">  USART0_init();</span><br><span class="line">	</span><br><span class="line">  sema_handler = xSemaphoreCreateRecursiveMutex();</span><br><span class="line">  <span class="keyword">if</span>(sema_handler == <span class="literal">NULL</span>) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;create error\r\n&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  taskENTER_CRITICAL();</span><br><span class="line"></span><br><span class="line">  xTaskCreate(task1, <span class="string">&quot;task1&quot;</span>, <span class="number">128</span>, <span class="literal">NULL</span>, <span class="number">3</span>, &amp;task1_Handler);</span><br><span class="line">  xTaskCreate(task2, <span class="string">&quot;task2&quot;</span>, <span class="number">128</span>, <span class="literal">NULL</span>, <span class="number">2</span>, &amp;task2_Handler);</span><br><span class="line">  vTaskDelete(task_Handler);</span><br><span class="line"></span><br><span class="line">  taskEXIT_CRITICAL();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">USART0_on_recv</span><span class="params">(<span class="type">uint8_t</span> *data, <span class="type">uint32_t</span> len)</span> &#123;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;recv: %s\n&quot;</span>, data);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    NVIC_SetPriorityGrouping(NVIC_PRIGROUP_PRE4_SUB0);</span><br><span class="line">  xTaskCreate(start_task, <span class="string">&quot;start_task&quot;</span>, <span class="number">128</span>, <span class="literal">NULL</span>, <span class="number">1</span>, &amp;task_Handler);</span><br><span class="line">  vTaskStartScheduler();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">while</span>(<span class="number">1</span>) &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="优先级继承"><a href="#优先级继承" class="headerlink" title="优先级继承"></a>优先级继承</h2><p>FreeRTOS 实现了基本的优先级继承机制，旨在优化 空间和执行周期。完全的优先级继承机制需要多得多的数据和处理器 周期来确定任何时刻的继承优先级，特别是在任务同时占用超过一个互斥锁时 。</p>
+<p>请牢记优先级继承机制的这些特定行为：</p>
+<ul>
+<li>如果一个任务在占用一个互斥锁时没有先释放它已占用的互斥锁， 则可以进一步提升其继承优先级。</li>
+<li>任务在释放其占有的所有互斥锁之前，一直保持最高继承优先级。 这与释放互斥锁的顺序无关。</li>
+<li>如果多个互斥锁被占用，无论在任何一个被占用的互斥锁上等待的任务是否完成等待（超时）， 则任务将保持最高继承优先级 。</li>
+</ul>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">博主</a></li>
+        
+          <li><a href="/tags/">标签</a></li>
+        
+          <li><a href="/categories/">分类</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E8%BF%9B%E5%88%B6%E4%BF%A1%E5%8F%B7%E9%87%8F"><span class="toc-number">1.</span> <span class="toc-text">二进制信号量</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#API"><span class="toc-number">1.1.</span> <span class="toc-text">API</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#xSemaphoreCreateBinary"><span class="toc-number">1.1.1.</span> <span class="toc-text">xSemaphoreCreateBinary</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xSemaphoreTake"><span class="toc-number">1.1.2.</span> <span class="toc-text">xSemaphoreTake</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xSemaphoreGive"><span class="toc-number">1.1.3.</span> <span class="toc-text">xSemaphoreGive</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xSemaphoreTakeFromISR"><span class="toc-number">1.1.4.</span> <span class="toc-text">xSemaphoreTakeFromISR</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xSemaphoreGiveFromISR"><span class="toc-number">1.1.5.</span> <span class="toc-text">xSemaphoreGiveFromISR</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.2.</span> <span class="toc-text">实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A1%E6%95%B0%E4%BF%A1%E5%8F%B7%E9%87%8F"><span class="toc-number">2.</span> <span class="toc-text">计数信号量</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#API-1"><span class="toc-number">2.1.</span> <span class="toc-text">API</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#xSemaphoreCreateCounting"><span class="toc-number">2.1.1.</span> <span class="toc-text">xSemaphoreCreateCounting</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#uxSemaphoreGetCount"><span class="toc-number">2.1.2.</span> <span class="toc-text">uxSemaphoreGetCount</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xSemaphoreTake-1"><span class="toc-number">2.1.3.</span> <span class="toc-text">xSemaphoreTake</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xSemaphoreGive-1"><span class="toc-number">2.1.4.</span> <span class="toc-text">xSemaphoreGive</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xSemaphoreTakeFromISR-1"><span class="toc-number">2.1.5.</span> <span class="toc-text">xSemaphoreTakeFromISR</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xSemaphoreGiveFromISR-1"><span class="toc-number">2.1.6.</span> <span class="toc-text">xSemaphoreGiveFromISR</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0-1"><span class="toc-number">2.2.</span> <span class="toc-text">实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%92%E6%96%A5%E9%94%81"><span class="toc-number">3.</span> <span class="toc-text">互斥锁</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#API-2"><span class="toc-number">3.1.</span> <span class="toc-text">API</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#xSemaphoreCreateMutex"><span class="toc-number">3.1.1.</span> <span class="toc-text">xSemaphoreCreateMutex</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xSemaphoreTake-2"><span class="toc-number">3.1.2.</span> <span class="toc-text">xSemaphoreTake</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xSemaphoreGive-2"><span class="toc-number">3.1.3.</span> <span class="toc-text">xSemaphoreGive</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0-2"><span class="toc-number">3.2.</span> <span class="toc-text">实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%92%E5%BD%92%E4%BA%92%E6%96%A5%E9%94%81"><span class="toc-number">4.</span> <span class="toc-text">递归互斥锁</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#API-3"><span class="toc-number">4.1.</span> <span class="toc-text">API</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#xSemaphoreCreateRecursiveMutex"><span class="toc-number">4.1.1.</span> <span class="toc-text">xSemaphoreCreateRecursiveMutex</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xSemaphoreTakeRecursive"><span class="toc-number">4.1.2.</span> <span class="toc-text">xSemaphoreTakeRecursive</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#xSemaphoreGiveRecursive"><span class="toc-number">4.1.3.</span> <span class="toc-text">xSemaphoreGiveRecursive</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0-3"><span class="toc-number">4.2.</span> <span class="toc-text">实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%98%E5%85%88%E7%BA%A7%E7%BB%A7%E6%89%BF"><span class="toc-number">5.</span> <span class="toc-text">优先级继承</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BF%A1%E5%8F%B7%E9%87%8F/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BF%A1%E5%8F%B7%E9%87%8F/&text=信号量"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BF%A1%E5%8F%B7%E9%87%8F/&title=信号量"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BF%A1%E5%8F%B7%E9%87%8F/&is_video=false&description=信号量"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=信号量&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BF%A1%E5%8F%B7%E9%87%8F/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BF%A1%E5%8F%B7%E9%87%8F/&title=信号量"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BF%A1%E5%8F%B7%E9%87%8F/&title=信号量"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BF%A1%E5%8F%B7%E9%87%8F/&title=信号量"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BF%A1%E5%8F%B7%E9%87%8F/&title=信号量"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BF%A1%E5%8F%B7%E9%87%8F/&name=信号量&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BF%A1%E5%8F%B7%E9%87%8F/&t=信号量"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    kay
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="AS608 是一款常用的指纹识别模块，广泛应用于各种身份验证和安全系统中。AS608 使用光学传感器捕捉指纹图像，具有较高的灵敏度和分辨率，能够清晰识别指纹的细节。每个指纹可以转换为模板，存储在模块内。模板通常包含特征点的信息，以提高识别的准确性。  模板指的是经过处理后提取出的指纹特征信息。具体来说，模板是一个数字化的表示，包含指纹的独特特征点及其相互关系，而不是原始的指纹图像。  AS608">
+<meta property="og:type" content="article">
+<meta property="og:title" content="指纹识别_AS608">
+<meta property="og:url" content="https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/STC8H/%E6%8C%87%E7%BA%B9%E8%AF%86%E5%88%AB_AS608/index.html">
+<meta property="og:site_name" content="流年不知心底事">
+<meta property="og:description" content="AS608 是一款常用的指纹识别模块，广泛应用于各种身份验证和安全系统中。AS608 使用光学传感器捕捉指纹图像，具有较高的灵敏度和分辨率，能够清晰识别指纹的细节。每个指纹可以转换为模板，存储在模块内。模板通常包含特征点的信息，以提高识别的准确性。  模板指的是经过处理后提取出的指纹特征信息。具体来说，模板是一个数字化的表示，包含指纹的独特特征点及其相互关系，而不是原始的指纹图像。  AS608">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/STC8H/ATKAS608img.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/STC8H/ATKAS608yinjiao.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/STC8H/ATKAS608tongxinxieyi.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/STC8H/ATKAS608yindaxieyi.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/STC8H/ATKAS608yuanlitu.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/STC8H/ATKAS608tuiwan.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/STC8H/ATKAS608kailou.png">
+<meta property="article:published_time" content="2024-10-22T06:30:00.000Z">
+<meta property="article:modified_time" content="2025-01-07T10:58:33.664Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="STC8H">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/STC8H/ATKAS608img.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>指纹识别_AS608</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/%E5%AD%97%E7%AC%A6%E4%B8%B2/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/C%E8%AF%AD%E8%A8%80%E5%86%85%E5%AD%98%E5%B8%83%E5%B1%80/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/STC8H/%E6%8C%87%E7%BA%B9%E8%AF%86%E5%88%AB_AS608/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/STC8H/%E6%8C%87%E7%BA%B9%E8%AF%86%E5%88%AB_AS608/&text=指纹识别_AS608"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/STC8H/%E6%8C%87%E7%BA%B9%E8%AF%86%E5%88%AB_AS608/&title=指纹识别_AS608"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/STC8H/%E6%8C%87%E7%BA%B9%E8%AF%86%E5%88%AB_AS608/&is_video=false&description=指纹识别_AS608"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=指纹识别_AS608&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/STC8H/%E6%8C%87%E7%BA%B9%E8%AF%86%E5%88%AB_AS608/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/STC8H/%E6%8C%87%E7%BA%B9%E8%AF%86%E5%88%AB_AS608/&title=指纹识别_AS608"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/STC8H/%E6%8C%87%E7%BA%B9%E8%AF%86%E5%88%AB_AS608/&title=指纹识别_AS608"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/STC8H/%E6%8C%87%E7%BA%B9%E8%AF%86%E5%88%AB_AS608/&title=指纹识别_AS608"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/STC8H/%E6%8C%87%E7%BA%B9%E8%AF%86%E5%88%AB_AS608/&title=指纹识别_AS608"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/STC8H/%E6%8C%87%E7%BA%B9%E8%AF%86%E5%88%AB_AS608/&name=指纹识别_AS608&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/STC8H/%E6%8C%87%E7%BA%B9%E8%AF%86%E5%88%AB_AS608/&t=指纹识别_AS608"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ATK-AS608"><span class="toc-number">1.</span> <span class="toc-text">ATK-AS608</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%95%E8%84%9A%E6%8F%8F%E8%BF%B0"><span class="toc-number">1.1.</span> <span class="toc-text">引脚描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE"><span class="toc-number">1.2.</span> <span class="toc-text">通信协议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%A3%E4%BB%A4%E5%92%8C%E5%9C%B0%E5%9D%80"><span class="toc-number">1.3.</span> <span class="toc-text">口令和地址</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%93%E5%86%B2%E5%8C%BA%E4%B8%8E%E6%8C%87%E7%BA%B9%E5%BA%93"><span class="toc-number">1.4.</span> <span class="toc-text">缓冲区与指纹库</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A1%AC%E4%BB%B6%E8%BF%9E%E6%8E%A5"><span class="toc-number">2.</span> <span class="toc-text">硬件连接</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BD%AF%E4%BB%B6%E5%AE%9E%E7%8E%B0"><span class="toc-number">3.</span> <span class="toc-text">软件实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A8%E6%8C%BD%E8%BE%93%E5%87%BA"><span class="toc-number">4.</span> <span class="toc-text">推挽输出</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E6%BC%8F%E8%BE%93%E5%87%BA"><span class="toc-number">5.</span> <span class="toc-text">开漏输出</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        指纹识别_AS608
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">kay</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-10-22T06:30:00.000Z" class="dt-published" itemprop="datePublished">2024-10-22</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/">嵌入式</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/STC8H/" rel="tag">STC8H</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>AS608 是一款常用的指纹识别模块，广泛应用于各种身份验证和安全系统中。AS608 使用<strong>光学传感器</strong>捕捉指纹图像，具有较高的灵敏度和分辨率，能够清晰识别指纹的细节。每个指纹可以转换为<strong>模板</strong>，存储在模块内。模板通常包含特征点的信息，以提高识别的准确性。</p>
+<blockquote>
+<p>模板指的是经过处理后提取出的指纹特征信息。具体来说，模板是一个数字化的表示，包含指纹的独特特征点及其相互关系，而不是原始的指纹图像。</p>
+</blockquote>
+<p>AS608 指纹识别模块主要是指采用了杭州晟元芯片技术有限公司（Synochip）的 <strong>AS608 指纹识别芯片</strong>而做成的指纹模块，模块厂商只是基于该芯片设计外围电路，集成一个可供 2 次开发的指纹模块；<strong>所以，只要是基于 AS608 芯片的指纹模块，其控制电路及控制协议几乎是一样的，只是厂家和性能不同而已。</strong></p>
+<h2 id="ATK-AS608"><a href="#ATK-AS608" class="headerlink" title="ATK-AS608"></a>ATK-AS608</h2><p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/STC8H/ATKAS608img.png" alt="ATKAS608img"></p>
+<h3 id="引脚描述"><a href="#引脚描述" class="headerlink" title="引脚描述"></a>引脚描述</h3><p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/STC8H/ATKAS608yinjiao.png" alt="ATKAS608yinjiao"></p>
+<blockquote>
+<p>WAK：当手指放在传感器上时，WAK 会被拉高到高电平。初始化时，WAK 引脚的默认状态通常是低电平，MCU 通过轮询 WAK 状态来判断手指是否按下。在正常工作时，WAK 会在有手指时变为高电平，而没有手指时保持低电平。你无需将其初始化为高电平。</p>
+</blockquote>
+<h3 id="通信协议"><a href="#通信协议" class="headerlink" title="通信协议"></a>通信协议</h3><p><strong>模块指令格式</strong></p>
+<p>模块指令格式分为三种：命令包格式、数据包格式、结束包格式。</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/STC8H/ATKAS608tongxinxieyi.png" alt="ATKAS608tongxinxieyi"></p>
+<ul>
+<li><p>包标识 &#x3D; 01 命令包</p>
+</li>
+<li><p>包标识 &#x3D;02 数据包，且有后续包 </p>
+</li>
+<li><p>包标识 &#x3D;08 最后一个数据包，即结束包 </p>
+</li>
+<li><p>所有的数据包都要加包头：0xEF01 </p>
+</li>
+<li><p><strong>发送</strong>给模块和<strong>接收</strong>模块的数据包格式相同。</p>
+</li>
+<li><p>数据包不能单独进入执行流程，必须跟在指令包或应答包后面。 </p>
+</li>
+<li><p>包长度 &#x3D; 包长度至校验和（指令、参数或数据）的总字节数，包含校验和，但不包含包长度本身的字节数。 </p>
+</li>
+<li><p>校验和是从包标识至校验和之间所有字节之和，超出 2 字节的进位忽略。 </p>
+</li>
+<li><p>芯片地址在没有生成之前为缺省的 0xFFFFFFFF，一旦上位机通过指令生成了芯片 地址，则所有的数据包都必须按照生成的地址收发。芯片将拒绝地址错误的数据 包。 </p>
+</li>
+<li><p>对于多字节的高字节在前低字节在后 （如 2bytes 的 00 06 表示 0006，而不是 0600）。</p>
+</li>
+<li><p>具体的指令码需要查看数据手册；</p>
+</li>
+</ul>
+<p><strong>模块应答格式</strong></p>
+<p>应答是将有关命令执行情况与结果上报给上位机，应答包含有参数，并可跟后续数据包。 上位机只有在收到模块的应答包后才能确认模块收包情况与指令执行情况。模块应答包中包 含一个参数：确认码。确认码表示执行指令完毕的情况。</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/STC8H/ATKAS608yindaxieyi.png" alt="ATKAS608yindaxieyi"></p>
+<ul>
+<li>返回的确认码含义需要去查看数据手册</li>
+</ul>
+<p><strong>指令只能由上位机下给模块，模块向上位机应答。</strong> </p>
+<p><strong>不同的指令所返回的应答模块的确认码是不同的，我们只需要判断他所返回的几个状态就可以了；</strong></p>
+<blockquote>
+<p>系统上电复位后将首先检查默认的设备握手口令是否被修改，若未被修改，则系统 认为上位机没有验证口令的需求，SOC 直接进入正常工作状态；若已被修改，则必须首先验证设备握手口令，口令通过后 SOC 才进入正常工作状态。</p>
+</blockquote>
+<h3 id="口令和地址"><a href="#口令和地址" class="headerlink" title="口令和地址"></a>口令和地址</h3><p>系统默认口令为 0，可通过指令修改。若默认口令未被修改，则系统不要求验证口令， 上位机和 MCU 与芯片通讯；若口令被修改，则上位机与芯片通讯的第一个指令必须是验证 口令，只有口令验证通过后，芯片才接收其它指令。注：不建议修改口令！</p>
+<p> 芯片的默认地址为 0Xffffffff,可通过指令修改，数据包的地址域必须与该地址相配，命令包&#x2F;数据包才被系统接收。 </p>
+<h3 id="缓冲区与指纹库"><a href="#缓冲区与指纹库" class="headerlink" title="缓冲区与指纹库"></a>缓冲区与指纹库</h3><p>系统内设有一个 72K 字节的图像缓冲区与二个 512bytes 大小的特征文件缓冲区，名字 分别称为：ImageBuffer,CharBuffer1 和 CharBuffer2。用户可以通过指令读写任意一个缓冲区。 CharBuffer1 或 CharBuffer2 既可以用于存放普通特征文件也可以用于存放模板特征文件。通过 UART 口上传或下载图像时为了加快速度，只用到像素字节的高 4 位，即将两个像素合 成一个字节传送。通过 USB 口则是整 8 位像素。 </p>
+<p>指纹库容量根据挂接的 FLASH 容量不同而改变，系统会自动判别。指纹模板按照<strong>序号</strong>存放，序号定义为：0—（N-1）（N 为指纹库容量）。用户只能根据序号访问指纹库内容。</p>
+<h2 id="硬件连接"><a href="#硬件连接" class="headerlink" title="硬件连接"></a>硬件连接</h2><p><strong>原理图</strong></p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/STC8H/ATKAS608yuanlitu.png" alt="ATKAS608yuanlitu"></p>
+<h2 id="软件实现"><a href="#软件实现" class="headerlink" title="软件实现"></a>软件实现</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// UAER 初始化</span></span><br><span class="line"></span><br><span class="line">sbit WAK = P3^<span class="number">7</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 我如何去触发（使用）这个指纹识别的功能</span></span><br><span class="line"><span class="keyword">while</span>(<span class="number">1</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span>(WAK == <span class="number">1</span>) &#123;</span><br><span class="line">        shuazhiwen();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">shuazhiwen</span><span class="params">()</span> &#123; </span><br><span class="line">    uchar IDs1,IDs2,IDs3;	 </span><br><span class="line">	SFG_identify();		 <span class="comment">//发送检测指纹命令</span></span><br><span class="line">	<span class="keyword">while</span>(querenma == <span class="number">1</span>)	<span class="comment">// 指纹错误</span></span><br><span class="line">		SFG_identify();  <span class="comment">//发送检测指纹命令</span></span><br><span class="line">	<span class="keyword">if</span>(querenma == <span class="number">0</span>) &#123;   </span><br><span class="line">		LcmClearTXT();</span><br><span class="line">		PutStr(<span class="number">1</span>,<span class="number">2</span>,<span class="string">&quot;门已打开&quot;</span>); </span><br><span class="line">		IDs1=PageID/<span class="number">100</span>;</span><br><span class="line">		IDs2=PageID/<span class="number">10</span>%<span class="number">10</span>;</span><br><span class="line">		IDs3=PageID%<span class="number">10</span>;</span><br><span class="line">		PutStr(<span class="number">2</span>,<span class="number">1</span>,<span class="string">&quot;编号为:&quot;</span>);</span><br><span class="line">		WriteCommand(<span class="number">0x8D</span>);		<span class="comment">//指定第三行显示位置</span></span><br><span class="line">		WriteData(<span class="number">0x30</span> + IDs1);</span><br><span class="line">		WriteData(<span class="number">0x30</span> + IDs2);</span><br><span class="line">		WriteData(<span class="number">0x30</span> + IDs3);</span><br><span class="line">		jidianqi = <span class="number">0</span>;</span><br><span class="line">		delay(<span class="number">2500</span>); </span><br><span class="line">		jidianqi = <span class="number">1</span>;	</span><br><span class="line">		delay(<span class="number">1000</span>);</span><br><span class="line">		PutStr(<span class="number">0</span>,<span class="number">0</span>,<span class="string">&quot;    欢迎使用    &quot;</span>);</span><br><span class="line">		PutStr(<span class="number">1</span>,<span class="number">0</span>,<span class="string">&quot;  多功能门禁锁  &quot;</span>);</span><br><span class="line">		PutStr(<span class="number">2</span>,<span class="number">0</span>,<span class="string">&quot;  请输入密码：  &quot;</span>);</span><br><span class="line">		sc = <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">   	<span class="keyword">else</span> <span class="keyword">if</span>(querenma == <span class="number">9</span>) &#123; <span class="comment">// 没有指纹</span></span><br><span class="line">		LcmClearTXT();</span><br><span class="line">		PutStr(<span class="number">1</span>,<span class="number">1</span>,<span class="string">&quot;没搜索到指纹&quot;</span>);</span><br><span class="line">		PutStr(<span class="number">2</span>,<span class="number">1</span>,<span class="string">&quot;请重新按手指&quot;</span>);</span><br><span class="line">		beep = <span class="number">0</span>;</span><br><span class="line">		delay(<span class="number">300</span>);</span><br><span class="line">		beep = <span class="number">1</span>;</span><br><span class="line">		delay(<span class="number">1000</span>);</span><br><span class="line">		PutStr(<span class="number">0</span>,<span class="number">0</span>,<span class="string">&quot;    欢迎使用    &quot;</span>);</span><br><span class="line">		PutStr(<span class="number">1</span>,<span class="number">0</span>,<span class="string">&quot;  多功能门禁锁  &quot;</span>);</span><br><span class="line">		PutStr(<span class="number">2</span>,<span class="number">0</span>,<span class="string">&quot;  请输入密码：  &quot;</span>);</span><br><span class="line">		sc++;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">SFG_identify</span><span class="params">()</span> &#123; <span class="comment">//自动验证指纹     录图像+生成特征+搜索   </span></span><br><span class="line">    uchar i,ID1,ID2; </span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">		0xEF01 0xFFFFFFFF 0x01 0x0003(03) 0x11 0x15（校验位）验证指纹</span></span><br><span class="line"><span class="comment">	*/</span></span><br><span class="line"></span><br><span class="line">    SBUF = <span class="number">0xef</span>;    <span class="comment">// 触发中断写数据  </span></span><br><span class="line">    <span class="keyword">while</span>(TI == <span class="number">0</span>); <span class="comment">// SCON寄存器 串口发送结束时一件自动置1 等着发送完</span></span><br><span class="line">    TI = <span class="number">0</span>;		 <span class="comment">// 需手动置0</span></span><br><span class="line">    SBUF = <span class="number">0X01</span>;    <span class="comment">// </span></span><br><span class="line">    <span class="keyword">while</span>(TI == <span class="number">0</span>);</span><br><span class="line">    TI = <span class="number">0</span>;</span><br><span class="line">        </span><br><span class="line">    SBUF = <span class="number">0XFF</span>;</span><br><span class="line">    <span class="keyword">while</span>(TI == <span class="number">0</span>);</span><br><span class="line">    TI = <span class="number">0</span>;</span><br><span class="line">    SBUF = <span class="number">0XFF</span>;</span><br><span class="line">    <span class="keyword">while</span>(TI == <span class="number">0</span>);</span><br><span class="line">    TI = <span class="number">0</span>;</span><br><span class="line">    SBUF = <span class="number">0XFF</span>;</span><br><span class="line">    <span class="keyword">while</span>(TI == <span class="number">0</span>);</span><br><span class="line">    TI = <span class="number">0</span>;</span><br><span class="line">    SBUF = <span class="number">0XFF</span>;</span><br><span class="line">    <span class="keyword">while</span>(TI == <span class="number">0</span>);</span><br><span class="line">    TI = <span class="number">0</span>;</span><br><span class="line">        </span><br><span class="line">    SBUF=<span class="number">0X01</span>;</span><br><span class="line">    <span class="keyword">while</span>(TI==<span class="number">0</span>);</span><br><span class="line">    TI=<span class="number">0</span>;</span><br><span class="line">        </span><br><span class="line">    SBUF = <span class="number">0X00</span>;</span><br><span class="line">    <span class="keyword">while</span>(TI==<span class="number">0</span>);</span><br><span class="line">    TI = <span class="number">0</span>;</span><br><span class="line">    SBUF = <span class="number">0X03</span>;</span><br><span class="line">    <span class="keyword">while</span>(TI == <span class="number">0</span>);</span><br><span class="line">    TI = <span class="number">0</span>;</span><br><span class="line">        </span><br><span class="line">    SBUF = <span class="number">0X11</span>;   <span class="comment">// 表示验证指针</span></span><br><span class="line">    <span class="keyword">while</span>(TI == <span class="number">0</span>);</span><br><span class="line">    TI = <span class="number">0</span>;</span><br><span class="line">           </span><br><span class="line">    SBUF = <span class="number">0X00</span>;</span><br><span class="line">    <span class="keyword">while</span>(TI == <span class="number">0</span>);</span><br><span class="line">    TI = <span class="number">0</span>;</span><br><span class="line">    summaf = <span class="number">0x15</span>;</span><br><span class="line">    SBUF = summaf;	   <span class="comment">//校验和</span></span><br><span class="line">    <span class="keyword">while</span>(TI == <span class="number">0</span>);</span><br><span class="line">    TI = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(i = <span class="number">0</span>;i &lt; <span class="number">9</span>;i++) &#123;       </span><br><span class="line">    	<span class="keyword">while</span>(RI == <span class="number">0</span>);</span><br><span class="line">    	RI = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span>(RI == <span class="number">0</span>);</span><br><span class="line">    RI = <span class="number">0</span>;</span><br><span class="line">    querenma = SBUF;</span><br><span class="line">    <span class="keyword">while</span>(RI == <span class="number">0</span>);</span><br><span class="line">    RI = <span class="number">0</span>;</span><br><span class="line">    ID1 = SBUF;</span><br><span class="line">    <span class="keyword">while</span>(RI == <span class="number">0</span>);</span><br><span class="line">    RI = <span class="number">0</span>;</span><br><span class="line">    ID2 = SBUF;</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">while</span>(RI == <span class="number">0</span>);</span><br><span class="line">    RI = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(RI == <span class="number">0</span>);</span><br><span class="line">    RI = <span class="number">0</span>;			  <span class="comment">//得分</span></span><br><span class="line">        </span><br><span class="line">    <span class="keyword">while</span>(RI == <span class="number">0</span>);</span><br><span class="line">    RI  =<span class="number">0</span>;</span><br><span class="line">    sum[<span class="number">1</span>] = SBUF;</span><br><span class="line">    <span class="keyword">while</span>(RI == <span class="number">0</span>);</span><br><span class="line">    RI=<span class="number">0</span>;</span><br><span class="line">    sum[<span class="number">0</span>] = SBUF;</span><br><span class="line">    summas = (sum[<span class="number">1</span>] &lt;&lt; <span class="number">8</span>) + sum[<span class="number">0</span>];									 </span><br><span class="line">    <span class="comment">//PageID=ID1;</span></span><br><span class="line">    PageID=(ID1 &lt;&lt; <span class="number">8</span>) + ID2;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//按键扫描程序 P1.0--P1.3为行线 P1.4--P1.7为列线</span></span><br><span class="line"><span class="type">unsigned</span> <span class="type">char</span> <span class="title function_">Keycan</span><span class="params">(<span class="type">void</span>)</span> &#123;   </span><br><span class="line">  	<span class="type">unsigned</span> <span class="type">char</span> rcode, ccode;</span><br><span class="line">  	P1 = <span class="number">0xF0</span>;     		</span><br><span class="line">  	<span class="keyword">if</span>((P1&amp;<span class="number">0xF0</span>) != <span class="number">0xF0</span>) &#123;</span><br><span class="line">    	delay(<span class="number">1</span>);</span><br><span class="line">    	<span class="keyword">if</span>((P1&amp;<span class="number">0xF0</span>) != <span class="number">0xF0</span>) &#123;  </span><br><span class="line">        	rcode = <span class="number">0xFE</span>;	<span class="comment">// 1111 1110</span></span><br><span class="line">    		<span class="keyword">while</span>((rcode&amp;<span class="number">0x10</span>) != <span class="number">0</span>) &#123;</span><br><span class="line">       			P1 = rcode;      <span class="comment">// 1011 1110</span></span><br><span class="line">      			<span class="keyword">if</span>((P1&amp;<span class="number">0xF0</span>) != <span class="number">0xF0</span>) &#123;</span><br><span class="line">       				ccode = (P1&amp;<span class="number">0xF0</span>)|<span class="number">0x0F</span>; <span class="comment">// 1011 0000 ==&gt; 1011 1111</span></span><br><span class="line">       				<span class="comment">//do&#123;;&#125;</span></span><br><span class="line">	   				<span class="keyword">while</span>((P1&amp;<span class="number">0xF0</span>) != <span class="number">0xF0</span>);</span><br><span class="line">       				<span class="keyword">return</span> ((~rcode) + (~ccode)); <span class="number">0000</span> <span class="number">0001</span> + <span class="number">0100</span> <span class="number">0000</span> =&gt; <span class="number">0100</span> <span class="number">0001</span></span><br><span class="line">      			&#125;<span class="keyword">else</span></span><br><span class="line">    				rcode = (rcode&lt;&lt;<span class="number">1</span>)|<span class="number">0x01</span>;</span><br><span class="line">    		&#125;</span><br><span class="line">    	&#125;</span><br><span class="line">  	&#125;  </span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="推挽输出"><a href="#推挽输出" class="headerlink" title="推挽输出"></a>推挽输出</h2><p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/STC8H/ATKAS608tuiwan.png" alt="ATKAS608tuiwan"></p>
+<blockquote>
+<p>推挽模式不支持线与，因为可能会导致 mos 管烧掉</p>
+</blockquote>
+<h2 id="开漏输出"><a href="#开漏输出" class="headerlink" title="开漏输出"></a>开漏输出</h2><p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/STC8H/ATKAS608kailou.png" alt="ATKAS608kailou"></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">博主</a></li>
+        
+          <li><a href="/tags/">标签</a></li>
+        
+          <li><a href="/categories/">分类</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ATK-AS608"><span class="toc-number">1.</span> <span class="toc-text">ATK-AS608</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%95%E8%84%9A%E6%8F%8F%E8%BF%B0"><span class="toc-number">1.1.</span> <span class="toc-text">引脚描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE"><span class="toc-number">1.2.</span> <span class="toc-text">通信协议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%A3%E4%BB%A4%E5%92%8C%E5%9C%B0%E5%9D%80"><span class="toc-number">1.3.</span> <span class="toc-text">口令和地址</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%93%E5%86%B2%E5%8C%BA%E4%B8%8E%E6%8C%87%E7%BA%B9%E5%BA%93"><span class="toc-number">1.4.</span> <span class="toc-text">缓冲区与指纹库</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A1%AC%E4%BB%B6%E8%BF%9E%E6%8E%A5"><span class="toc-number">2.</span> <span class="toc-text">硬件连接</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BD%AF%E4%BB%B6%E5%AE%9E%E7%8E%B0"><span class="toc-number">3.</span> <span class="toc-text">软件实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A8%E6%8C%BD%E8%BE%93%E5%87%BA"><span class="toc-number">4.</span> <span class="toc-text">推挽输出</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E6%BC%8F%E8%BE%93%E5%87%BA"><span class="toc-number">5.</span> <span class="toc-text">开漏输出</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/STC8H/%E6%8C%87%E7%BA%B9%E8%AF%86%E5%88%AB_AS608/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/STC8H/%E6%8C%87%E7%BA%B9%E8%AF%86%E5%88%AB_AS608/&text=指纹识别_AS608"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/STC8H/%E6%8C%87%E7%BA%B9%E8%AF%86%E5%88%AB_AS608/&title=指纹识别_AS608"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/STC8H/%E6%8C%87%E7%BA%B9%E8%AF%86%E5%88%AB_AS608/&is_video=false&description=指纹识别_AS608"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=指纹识别_AS608&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/STC8H/%E6%8C%87%E7%BA%B9%E8%AF%86%E5%88%AB_AS608/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/STC8H/%E6%8C%87%E7%BA%B9%E8%AF%86%E5%88%AB_AS608/&title=指纹识别_AS608"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/STC8H/%E6%8C%87%E7%BA%B9%E8%AF%86%E5%88%AB_AS608/&title=指纹识别_AS608"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/STC8H/%E6%8C%87%E7%BA%B9%E8%AF%86%E5%88%AB_AS608/&title=指纹识别_AS608"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/STC8H/%E6%8C%87%E7%BA%B9%E8%AF%86%E5%88%AB_AS608/&title=指纹识别_AS608"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/STC8H/%E6%8C%87%E7%BA%B9%E8%AF%86%E5%88%AB_AS608/&name=指纹识别_AS608&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/STC8H/%E6%8C%87%E7%BA%B9%E8%AF%86%E5%88%AB_AS608/&t=指纹识别_AS608"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    kay
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

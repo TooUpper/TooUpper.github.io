@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="LVGL（轻量级多功能图形库）是一个免费的开源图形库，提供创建嵌入式 GUI 所需的一切，具有易于使用的图形元素、漂亮的视觉效果和低内存占用。 要求基本上，每个能够驱动显示器的现代控制器都适合运行 LVGL。最低要求是：  16、32 或 64 位微控制器或处理器  &gt; 建议时钟速度为 16 MHz  Flash&#x2F;ROM：&gt; 64 kB（用于非常重要的组件）（建议&gt; 1">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LVGL介绍">
+<meta property="og:url" content="https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/LVGL%E4%BB%8B%E7%BB%8D/index.html">
+<meta property="og:site_name" content="流年不知心底事">
+<meta property="og:description" content="LVGL（轻量级多功能图形库）是一个免费的开源图形库，提供创建嵌入式 GUI 所需的一切，具有易于使用的图形元素、漂亮的视觉效果和低内存占用。 要求基本上，每个能够驱动显示器的现代控制器都适合运行 LVGL。最低要求是：  16、32 或 64 位微控制器或处理器  &gt; 建议时钟速度为 16 MHz  Flash&#x2F;ROM：&gt; 64 kB（用于非常重要的组件）（建议&gt; 1">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="c:\Users\kay\Desktop\intro_data_flow.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/F407yihuofeimen.png">
+<meta property="article:published_time" content="2024-11-25T04:17:00.000Z">
+<meta property="article:modified_time" content="2025-01-07T10:58:33.648Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="LVGL">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="c:\Users\kay\Desktop\intro_data_flow.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>LVGL介绍</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/%E7%A7%BB%E6%A4%8D%E6%B5%81%E7%A8%8B/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/%E5%9F%BA%E7%A1%80%E6%8E%A7%E4%BB%B6/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/LVGL%E4%BB%8B%E7%BB%8D/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/LVGL%E4%BB%8B%E7%BB%8D/&text=LVGL介绍"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/LVGL%E4%BB%8B%E7%BB%8D/&title=LVGL介绍"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/LVGL%E4%BB%8B%E7%BB%8D/&is_video=false&description=LVGL介绍"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=LVGL介绍&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/LVGL%E4%BB%8B%E7%BB%8D/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/LVGL%E4%BB%8B%E7%BB%8D/&title=LVGL介绍"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/LVGL%E4%BB%8B%E7%BB%8D/&title=LVGL介绍"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/LVGL%E4%BB%8B%E7%BB%8D/&title=LVGL介绍"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/LVGL%E4%BB%8B%E7%BB%8D/&title=LVGL介绍"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/LVGL%E4%BB%8B%E7%BB%8D/&name=LVGL介绍&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/LVGL%E4%BB%8B%E7%BB%8D/&t=LVGL介绍"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A6%81%E6%B1%82"><span class="toc-number">1.</span> <span class="toc-text">要求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="toc-number">2.</span> <span class="toc-text">基础知识</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#display"><span class="toc-number">2.1.</span> <span class="toc-text">display</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Screen"><span class="toc-number">2.2.</span> <span class="toc-text">Screen</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Widget"><span class="toc-number">2.3.</span> <span class="toc-text">Widget</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LGL-%E6%95%B0%E6%8D%AE%E6%B5%81"><span class="toc-number">3.</span> <span class="toc-text">LGL 数据流</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B8%B2%E6%9F%93%E5%8E%9F%E7%90%86"><span class="toc-number">4.</span> <span class="toc-text">渲染原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%BE%E5%B1%82"><span class="toc-number">4.1.</span> <span class="toc-text">图层</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E4%BB%B6"><span class="toc-number">4.2.</span> <span class="toc-text">组件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B8%B2%E6%9F%93%E9%A1%BA%E5%BA%8F"><span class="toc-number">4.3.</span> <span class="toc-text">渲染顺序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0%E4%B8%8E%E7%BB%98%E5%88%B6"><span class="toc-number">4.4.</span> <span class="toc-text">更新与绘制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E7%BB%88%E6%98%BE%E7%A4%BA"><span class="toc-number">4.5.</span> <span class="toc-text">最终显示</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        LVGL介绍
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">kay</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-11-25T04:17:00.000Z" class="dt-published" itemprop="datePublished">2024-11-25</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/">嵌入式</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/LVGL/" rel="tag">LVGL</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>LVGL（轻量级多功能图形库）是一个免费的开源图形库，提供创建嵌入式 GUI 所需的一切，具有易于使用的图形元素、漂亮的视觉效果和低内存占用。</p>
+<h2 id="要求"><a href="#要求" class="headerlink" title="要求"></a>要求</h2><p>基本上，每个能够驱动显示器的现代控制器都适合运行 LVGL。最低要求是：</p>
+<ul>
+<li><p>16、32 或 64 位微控制器或处理器</p>
+</li>
+<li><p>&gt; 建议时钟速度为 16 MHz</p>
+</li>
+<li><p>Flash&#x2F;ROM：&gt; 64 kB（用于非常重要的组件）（建议&gt; 180 kB）</p>
+</li>
+<li><p>内存：</p>
+<ul>
+<li><p>静态 RAM 使用量：~2 kB，取决于使用的功能和 Widget 类型</p>
+</li>
+<li><p>堆栈：&gt; 2kB（建议&gt; 8 kB）</p>
+</li>
+<li><p>动态数据（堆）：&gt; 2 KB（如果使用许多 GUI 小部件，建议&gt; 48 kB）。</p>
+<p>LV_MEM_SIZE 在  lv_conf.h 中设置。</p>
+</li>
+<li><p>显示缓冲区：&gt; <em>“水平分辨率”</em>像素（建议&gt;10 X <em>“水平分辨率” ）</em></p>
+</li>
+<li><p>MCU 或外部显示控制器中的一个帧缓冲器</p>
+</li>
+</ul>
+</li>
+<li><p>C99 或更新的编译器</p>
+</li>
+</ul>
+<h2 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h2><h3 id="display"><a href="#display" class="headerlink" title="display"></a>display</h3><p><strong>Display（显示器）</strong>：指的是物理硬件设备，也就是用于实际显示图像和像素的物理设备（例如 LCD 屏幕、OLED 屏幕等）。</p>
+<p><strong>lv_display_t（显示对象）</strong>：是 LVGL 中表示显示器的一个内存对象，它表示一个显示设备，但它并不是物理设备，而是一个存在于内存中的数据结构，用来管理与物理显示设备的交互。LVGL 会通过这个对象来控制显示设备上的内容，例如更新屏幕上的图形或文本。</p>
+<p><strong>Screen（屏幕）</strong>：是一个小部件，是整个界面布局的根，包含所有其他的 UI 元素，并附加到一个具体的 lv_display 上来进行显示。</p>
+<blockquote>
+<p>当第一个显示 (lv_display) 对象被创建时，它将成为默认显示。</p>
+</blockquote>
+<h3 id="Screen"><a href="#Screen" class="headerlink" title="Screen"></a>Screen</h3><p>屏幕只是任何没有父级的 Widget（即 parent 在创建期间传递 NULL 作为参数）。因此，它们构成了 <strong>Widget 树</strong>的“根”。</p>
+<p>所有屏幕：</p>
+<ul>
+<li>在创建屏幕时自动附加到当前的默认显示；</li>
+<li>自动占据相关显示器的全部区域；</li>
+<li>无法移动，即 lv_obj_set_pos() 和 lv_obj_set_size() 等功能无法在屏幕上使用。</li>
+</ul>
+<blockquote>
+<p>所有的组件的位置都是相对于父组件的，Screen 没有父控件，所以也就无法移动他的位置；</p>
+</blockquote>
+<p>当一个 lv_display_t 对象被创建时，LVGL 会自动为其创建四个“屏幕”（或层），并将这些屏幕附加到 lv_display_t 对象上。这些屏幕是显示界面上不同部分的图层管理。</p>
+<ol>
+<li>底层（活动屏幕下方，透明，不可滚动，但可点击）</li>
+<li>活动屏幕（这是当前正在显示的屏幕）</li>
+<li>顶层（活动屏幕上方，透明且不可滚动或点击）</li>
+<li>系统层（位于顶层之上，透明，不可滚动，不可点击）</li>
+</ol>
+<blockquote>
+<p>为了使底层可见，活动屏幕的背景必须至少部分透明（如果不是完全透明的话）。</p>
+</blockquote>
+<h3 id="Widget"><a href="#Widget" class="headerlink" title="Widget"></a>Widget</h3><p>初始化 LVGL 后，为了创建交互式用户界面，应用程序接下来创建一个 Widget 树，LVGL 可将其渲染到相关显示器，并可与用户进行交互。</p>
+<p>Widget 是“智能” LVGL 图形元素，例如<a target="_blank" rel="noopener" href="https://docs.lvgl.io/master/details/base-widget/index.html#base-widget-overview">基本小部件</a>（简单的矩形和<a target="_blank" rel="noopener" href="https://docs.lvgl.io/master/details/base-widget/obj.html#screens">屏幕</a>）、按钮、标签、复选框、开关、滑块、图表等。</p>
+<blockquote>
+<p>初始化：</p>
+<ol>
+<li>在系统执行早期通过调用 lv_init()初始化 LVGL。这需要在进行任何其他 LVGL 调用之前完成。</li>
+<li>初始化您的驱动程序。</li>
+</ol>
+<ul>
+<li><p>连接<a target="_blank" rel="noopener" href="https://docs.lvgl.io/master/intro/add-lvgl-to-your-project/connecting_lvgl.html#tick-interface">Tick 接口</a>。</p>
+</li>
+<li><p>连接<a target="_blank" rel="noopener" href="https://docs.lvgl.io/master/intro/add-lvgl-to-your-project/connecting_lvgl.html#display-interface">显示接口</a>。</p>
+</li>
+<li><p>连接<a target="_blank" rel="noopener" href="https://docs.lvgl.io/master/intro/add-lvgl-to-your-project/connecting_lvgl.html#indev-interface">输入设备接口</a>。</p>
+</li>
+</ul>
+<ol start="3">
+<li><p>lv_timer_handler()通过每隔几毫秒调用一次来管理 LVGL 计时器，从而驱动 LVGL 时间相关任务。</p>
+</li>
+<li><p>可选择使用 来设置主题 lv_display_set_theme()。</p>
+</li>
+<li><p>此后，在需要使用 LVGL 函数的源文件中 #include “lvgl&#x2F;lvgl.h”。</p>
+</li>
+</ol>
+</blockquote>
+<h2 id="LGL-数据流"><a href="#LGL-数据流" class="headerlink" title="LGL 数据流"></a>LGL 数据流</h2><p><img src="C:\Users\kay\Desktop\intro_data_flow.png" alt="intro_data_flow"></p>
+<h2 id="渲染原理"><a href="#渲染原理" class="headerlink" title="渲染原理"></a>渲染原理</h2><p>把每个显示的页面看作一个“<strong>图层</strong>”，然后在这个图层上我们添加不同的 <strong>组件</strong>（按钮、文本框、进度条等）。</p>
+<h3 id="图层"><a href="#图层" class="headerlink" title="图层"></a>图层</h3><p>在图层上我们可以自由地添加各种 <strong>UI 组件</strong>，比如按钮、文本框、图片等。</p>
+<p>图层就是<strong>显示的背景</strong>，它决定了界面显示的整体内容和顺序。</p>
+<h3 id="组件"><a href="#组件" class="headerlink" title="组件"></a>组件</h3><p>在图层上创建的每个 <strong>UI 组件</strong> 都是一个“对象”。</p>
+<p>比如，一个按钮就是一个对象，一个标签也是一个对象。</p>
+<p>每个对象都有自己的 <strong>位置、大小、样式</strong>（如颜色、边框、字体等），以及 <strong>功能</strong>（如点击按钮后的反应）。</p>
+<h3 id="渲染顺序"><a href="#渲染顺序" class="headerlink" title="渲染顺序"></a>渲染顺序</h3><p><strong>每个对象的显示顺序是由它的“层级”决定的</strong>。</p>
+<ul>
+<li><strong>层级</strong> 就是指对象显示的前后顺序。可以理解为 <strong>z-index</strong>，值越大，越靠前显示，覆盖在其他对象之上。</li>
+<li>比如，背景图层会被放在最底层，按钮、文字等会放在更上层。</li>
+</ul>
+<p>通过设置不同的<strong>层级</strong>，你可以控制哪些组件显示在最前面，哪些在后面。</p>
+<h3 id="更新与绘制"><a href="#更新与绘制" class="headerlink" title="更新与绘制"></a>更新与绘制</h3><p><strong>每当有事件发生时</strong>（比如按钮被点击，文本框内容变化），界面上相应的组件需要 <strong>重新绘制</strong>。</p>
+<ul>
+<li><strong>绘制</strong> 是指将组件的内容更新到屏幕上。例如，当按钮被按下时，按钮的颜色和样式可能会改变，系统会重新绘制这个按钮。</li>
+<li><strong>局部刷新</strong>：只更新有变化的部分，而不是重新绘制整个屏幕，这样可以提高效率。</li>
+</ul>
+<h3 id="最终显示"><a href="#最终显示" class="headerlink" title="最终显示"></a>最终显示</h3><p>所有的组件渲染（绘制）操作会先在 <strong>内存中的缓冲区</strong> 完成，这个缓冲区就像是一个“虚拟屏幕”。</p>
+<p>当所有组件都准备好之后，系统会把缓冲区的内容 <strong>一次性显示</strong> 到屏幕上。</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/F407yihuofeimen.png" alt="F407yihuofeimen"></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">博主</a></li>
+        
+          <li><a href="/tags/">标签</a></li>
+        
+          <li><a href="/categories/">分类</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A6%81%E6%B1%82"><span class="toc-number">1.</span> <span class="toc-text">要求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="toc-number">2.</span> <span class="toc-text">基础知识</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#display"><span class="toc-number">2.1.</span> <span class="toc-text">display</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Screen"><span class="toc-number">2.2.</span> <span class="toc-text">Screen</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Widget"><span class="toc-number">2.3.</span> <span class="toc-text">Widget</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LGL-%E6%95%B0%E6%8D%AE%E6%B5%81"><span class="toc-number">3.</span> <span class="toc-text">LGL 数据流</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B8%B2%E6%9F%93%E5%8E%9F%E7%90%86"><span class="toc-number">4.</span> <span class="toc-text">渲染原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%BE%E5%B1%82"><span class="toc-number">4.1.</span> <span class="toc-text">图层</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E4%BB%B6"><span class="toc-number">4.2.</span> <span class="toc-text">组件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B8%B2%E6%9F%93%E9%A1%BA%E5%BA%8F"><span class="toc-number">4.3.</span> <span class="toc-text">渲染顺序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0%E4%B8%8E%E7%BB%98%E5%88%B6"><span class="toc-number">4.4.</span> <span class="toc-text">更新与绘制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E7%BB%88%E6%98%BE%E7%A4%BA"><span class="toc-number">4.5.</span> <span class="toc-text">最终显示</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/LVGL%E4%BB%8B%E7%BB%8D/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/LVGL%E4%BB%8B%E7%BB%8D/&text=LVGL介绍"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/LVGL%E4%BB%8B%E7%BB%8D/&title=LVGL介绍"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/LVGL%E4%BB%8B%E7%BB%8D/&is_video=false&description=LVGL介绍"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=LVGL介绍&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/LVGL%E4%BB%8B%E7%BB%8D/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/LVGL%E4%BB%8B%E7%BB%8D/&title=LVGL介绍"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/LVGL%E4%BB%8B%E7%BB%8D/&title=LVGL介绍"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/LVGL%E4%BB%8B%E7%BB%8D/&title=LVGL介绍"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/LVGL%E4%BB%8B%E7%BB%8D/&title=LVGL介绍"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/LVGL%E4%BB%8B%E7%BB%8D/&name=LVGL介绍&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/LVGL%E4%BB%8B%E7%BB%8D/&t=LVGL介绍"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    kay
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

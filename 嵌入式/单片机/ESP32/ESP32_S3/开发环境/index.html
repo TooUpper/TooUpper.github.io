@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="ESP32 是一款功能强大的微控制器，支持多种开发环境，主要包括 Arduino IDE、ESP-IDF 和 MicroPython。这些开发环境各有优势，开发者可以根据项目需求和个人技能选择合适的工具进行开发。 ArduinoArduino IDE 是最简单和最受欢迎的开发环境之一，它使得开发者能够使用 Arduino 编程语言（基于 C&#x2F;C++）来编写和上传代码到 ESP32。通过安">
+<meta property="og:type" content="article">
+<meta property="og:title" content="开发环境">
+<meta property="og:url" content="https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/index.html">
+<meta property="og:site_name" content="流年不知心底事">
+<meta property="og:description" content="ESP32 是一款功能强大的微控制器，支持多种开发环境，主要包括 Arduino IDE、ESP-IDF 和 MicroPython。这些开发环境各有优势，开发者可以根据项目需求和个人技能选择合适的工具进行开发。 ArduinoArduino IDE 是最简单和最受欢迎的开发环境之一，它使得开发者能够使用 Arduino 编程语言（基于 C&#x2F;C++）来编写和上传代码到 ESP32。通过安">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/azcg.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/mlhhjpz1.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/mlhhjpz2.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/csky.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/idfpeizhi1.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/idfhjpz2.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/idfhjpz3.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/hjpz4.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/idfpeizhi1.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/idfqhbb2.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/idfhjpz3.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/hjpz4.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/idfhjblpz.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/idfxjxm1.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/xzgcml.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/xzgcmb.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/wcym.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/gjsl.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/gsrm.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/esptools1.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/esptools2.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/esptools3.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/error2.png">
+<meta property="article:published_time" content="2024-12-10T11:13:00.000Z">
+<meta property="article:modified_time" content="2025-01-07T10:58:33.664Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="ESP32-S3">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/azcg.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>开发环境</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/BLE%E8%93%9D%E7%89%99/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E7%83%A7%E5%BD%95%E6%96%B9%E5%BC%8F/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/&text=开发环境"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/&title=开发环境"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/&is_video=false&description=开发环境"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=开发环境&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/&title=开发环境"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/&title=开发环境"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/&title=开发环境"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/&title=开发环境"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/&name=开发环境&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/&t=开发环境"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Arduino"><span class="toc-number">1.</span> <span class="toc-text">Arduino</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ESP-IDF"><span class="toc-number">2.</span> <span class="toc-text">ESP-IDF</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-number">2.1.</span> <span class="toc-text">环境搭建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4"><span class="toc-number">2.2.</span> <span class="toc-text">相关命令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#VSCode"><span class="toc-number">3.</span> <span class="toc-text">VSCode</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE"><span class="toc-number">3.1.</span> <span class="toc-text">配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%87%E6%8D%A2%E7%89%88%E6%9C%AC"><span class="toc-number">3.2.</span> <span class="toc-text">切换版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="toc-number">3.3.</span> <span class="toc-text">配置环境变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B0%E5%BB%BA%E9%A1%B9%E7%9B%AE"><span class="toc-number">3.4.</span> <span class="toc-text">新建项目</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MicroPython"><span class="toc-number">4.</span> <span class="toc-text">MicroPython</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#esptool"><span class="toc-number">5.</span> <span class="toc-text">esptool</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">6.</span> <span class="toc-text">问题</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        开发环境
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">kay</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-12-10T11:13:00.000Z" class="dt-published" itemprop="datePublished">2024-12-10</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/ESP32/">ESP32</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/ESP32-S3/" rel="tag">ESP32-S3</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>ESP32 是一款功能强大的微控制器，支持多种开发环境，主要包括 <strong>Arduino IDE</strong>、<strong>ESP-IDF</strong> 和 <strong>MicroPython</strong>。这些开发环境各有优势，开发者可以根据项目需求和个人技能选择合适的工具进行开发。</p>
+<h2 id="Arduino"><a href="#Arduino" class="headerlink" title="Arduino"></a>Arduino</h2><p><strong>Arduino IDE</strong> 是最简单和最受欢迎的开发环境之一，它使得开发者能够使用 Arduino 编程语言（基于 C&#x2F;C++）来编写和上传代码到 ESP32。通过安装相应的 <strong>ESP32 开发板支持包</strong>，用户可以在 Arduino IDE 中轻松开发 ESP32 项目。</p>
+<p>&#x2F;&#x2F; TODO</p>
+<h2 id="ESP-IDF"><a href="#ESP-IDF" class="headerlink" title="ESP-IDF"></a>ESP-IDF</h2><p><strong>ESP-IDF</strong> 是 <strong>Espressif</strong> 官方为 ESP32 系列提供的原生开发框架，适用于开发更复杂、定制化的应用。ESP-IDF 是一个功能完整的 SDK，支持 Wi-Fi、蓝牙、低功耗操作等高级功能，并允许直接控制硬件。</p>
+<blockquote>
+<p>ESP-IDF独立于项目以外，通过环境变量引导编译与链接，ESP-IDF 与项目工程分离</p>
+<p>项目工程编译与链接必须依赖ESP-IDF，<strong>项目工程依赖于ESP-IDF</strong></p>
+</blockquote>
+<h3 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h3><p><strong>下载</strong></p>
+<p>下载 <a target="_blank" rel="noopener" href="https://dl.espressif.com/dl/esp-idf/?idf=4.4">ESP-IDF</a> 的安装包，该安装包会安装一系列需要的组件：</p>
+<ul>
+<li>内置的 Python</li>
+<li>交叉编译器</li>
+<li>OpenOCD</li>
+<li><a target="_blank" rel="noopener" href="https://cmake.org/download/">CMake</a> 和 <a target="_blank" rel="noopener" href="https://ninja-build.org/">Ninja</a> 编译工具</li>
+<li>ESP-IDF</li>
+</ul>
+<p><strong>安装</strong></p>
+<p>傻瓜式安装即可，注意安装步骤中的“安装前检查”和“完全安装”。</p>
+<p>弹出如下两个终端表示安装成功：</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/azcg.png" alt="azcg"></p>
+<p><strong>配置环境变量</strong></p>
+<p>安装成功后检查如下环境变量是否添加成功，如果没有就手动添加</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/mlhhjpz1.png" alt="mlhhjpz1"></p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/mlhhjpz2.png" alt="mlhhjpz2"></p>
+<p><strong>测试是否可用</strong></p>
+<p>1.拷贝 Espressif\Espressif\frameworks\esp-idf-v5.3.2\examples\get-started 下的 sample_project 文件到桌面</p>
+<p>以管理员身份运行 ESP-IDF 5.3 CMD ，cd 到 sample_project 目录下执行 idf.py build</p>
+<p>生成如下命令后说明编译成功</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/csky.png" alt="csky"></p>
+<blockquote>
+<p>生成后最关键的是如下三个文件：</p>
+<p>sample_project\build 下的 main.bin</p>
+<p>sample_project\build\bootloader 下的 bootloader.bin</p>
+<p>sample_project\build\partition_table 下的 partition_table.bin 三个文件</p>
+</blockquote>
+<h3 id="相关命令"><a href="#相关命令" class="headerlink" title="相关命令"></a>相关命令</h3><p>&#x2F;&#x2F; TODO</p>
+<h2 id="VSCode"><a href="#VSCode" class="headerlink" title="VSCode"></a>VSCode</h2><p><strong>在上面的环境搭建中，相当于我们配置死了某个具体版本的 ESP-IDF 库，如果我们确实要使用这个版本就没有问题，但是如果我们需要使用其他版本的 ESP-IDF 库就不行了，所以我们在使用 VSCode 进行开发时候，可以忽略上面的环境搭建，直接在 VSCode 中进行环境搭建</strong></p>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p><strong>在 VSCode 中安装 ESP-IDF 扩展插件</strong></p>
+<p>&#x2F;&#x2F; TODO</p>
+<p><strong>配置 ESP-IDF 插件</strong></p>
+<p>ctrl + shift + P &gt; Configure ESP-IDF Extension</p>
+<p>这里可以选择我们之前下载好的 ESP-IDF 官方库，如果没有下载可以直接看<strong>切换版本</strong>章节</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/idfpeizhi1.png" alt="idfpeizhi1.png"></p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/idfhjpz2.png" alt="idfhjpz2"></p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/idfhjpz3.png" alt="idfhjpz3"></p>
+<p>等待其完成即可</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/hjpz4.png" alt="hjpz4"></p>
+<h3 id="切换版本"><a href="#切换版本" class="headerlink" title="切换版本"></a>切换版本</h3><p><strong>下载其他的 ESP-IDF 版本</strong></p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/idfpeizhi1.png" alt="idfpeizhi1.png"></p>
+<p>这里需要指定全新的安装目录，记住这两个目录后面要设置环境变量用。</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/idfqhbb2.png" alt="idfqhbb2"></p>
+<p>上一步完成后要进行第二步工具下载</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/idfhjpz3.png" alt="idfhjpz3"></p>
+<p>如下则表示配置成功</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/hjpz4.png" alt="hjpz4"></p>
+<h3 id="配置环境变量"><a href="#配置环境变量" class="headerlink" title="配置环境变量"></a>配置环境变量</h3><p>等加载完成后，我们需要配置下该版本的环境变量，这里注意<strong>我们使用哪个版本就配置哪个版本的环境变量</strong></p>
+<p>这里设置的路径就是上面我们设置的安装路径</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/idfhjblpz.png" alt="idfhjblpz"></p>
+<h3 id="新建项目"><a href="#新建项目" class="headerlink" title="新建项目"></a>新建项目</h3><p>VSCode 先进入一个空的文件夹</p>
+<p>ctrl + shift + p 选择 Create Project from Extension Template</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/idfxjxm1.png" alt="idfxjxm1"></p>
+<p>选择工程目录</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/xzgcml.png" alt="xzgcml"></p>
+<p>选择工程模板</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/xzgcmb.png" alt="xzgcmb"></p>
+<p>如果上述步骤都没有问题就可以看到如下界面</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/wcym.png" alt="wcym"></p>
+<p>对于下面这一列 Cmake 命令列表如果发现不显示，则需要检查下环境变量配置是否正确；</p>
+<p>然后点击工具条中的构建项目即可编译完成。</p>
+<blockquote>
+<p>如果 VSCode 中还安装了 Cmake-Tools 插件，那么在下面的 Cmake 工具条中会提示三个错误一个警告，这是由于 ESP-IDF 与 Cmake-Tools 插件冲突所致，Cmake-Tools 会报错找不到 ESP32 编译所需要的一些工具，因为 ESP-IDF 使用的是自己的环境变量（Cmake-TOOls 不识别），所以这里报错并不影响程序的编译运行；</p>
+</blockquote>
+<h2 id="MicroPython"><a href="#MicroPython" class="headerlink" title="MicroPython"></a>MicroPython</h2><p><a target="_blank" rel="noopener" href="https://micropython.org/download/">MicroPython 固件</a>下载地址</p>
+<p>固件烧录</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/gjsl.png" alt="gjsl"></p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/gsrm.png" alt="gsrm"></p>
+<h2 id="esptool"><a href="#esptool" class="headerlink" title="esptool"></a>esptool</h2><p>一个基于 Python 的、开源的、独立于平台的实用程序，用于与 Espressif 芯片中的 ROM 引导加载程序进行通信。</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/esptools1.png" alt="esptools1"></p>
+<p>保证可以正常连接</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/esptools2.png" alt="esptools2"></p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/esptools3.png" alt="esptools3"></p>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>一、<strong>测试时报错如下</strong></p>
+<pre><code>lld: error: unable to find library -lunwind
+lld: error: unable to find library -lunwind
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+ninja: build stopped: subcommand failed.
+</code></pre>
+<p>说明在执行 idf.py build 时候没有以管理员身份运行。</p>
+<p>二、<strong>配置环境时报错如下</strong></p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ESP32/ESP32S3/error2.png" alt="error2"></p>
+<p>删除 d:\Tools\SDK\ESP32\Espressif\Espressif\tools\ 目录下的 idf-get 和 idf-python 目录重试即可</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">博主</a></li>
+        
+          <li><a href="/tags/">标签</a></li>
+        
+          <li><a href="/categories/">分类</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Arduino"><span class="toc-number">1.</span> <span class="toc-text">Arduino</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ESP-IDF"><span class="toc-number">2.</span> <span class="toc-text">ESP-IDF</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-number">2.1.</span> <span class="toc-text">环境搭建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4"><span class="toc-number">2.2.</span> <span class="toc-text">相关命令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#VSCode"><span class="toc-number">3.</span> <span class="toc-text">VSCode</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE"><span class="toc-number">3.1.</span> <span class="toc-text">配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%87%E6%8D%A2%E7%89%88%E6%9C%AC"><span class="toc-number">3.2.</span> <span class="toc-text">切换版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="toc-number">3.3.</span> <span class="toc-text">配置环境变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B0%E5%BB%BA%E9%A1%B9%E7%9B%AE"><span class="toc-number">3.4.</span> <span class="toc-text">新建项目</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MicroPython"><span class="toc-number">4.</span> <span class="toc-text">MicroPython</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#esptool"><span class="toc-number">5.</span> <span class="toc-text">esptool</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">6.</span> <span class="toc-text">问题</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/&text=开发环境"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/&title=开发环境"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/&is_video=false&description=开发环境"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=开发环境&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/&title=开发环境"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/&title=开发环境"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/&title=开发环境"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/&title=开发环境"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/&name=开发环境&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/&t=开发环境"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    kay
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

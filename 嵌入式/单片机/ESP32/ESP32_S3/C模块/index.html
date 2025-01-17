@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="在 MicroPython 中，C 模块是指用 C 语言编写并编译的模块，它可以作为扩展模块嵌入到 MicroPython 中，与 Python 代码一起运行。C 模块的主要作用是扩展 MicroPython 的功能，尤其在性能和底层硬件交互方面有显著优势。 MicroPython 中自带的模块无法满足需求（如我们这里需要一个摄像头的驱动、需要特殊的通信协议、算法库等），这里就需要通过 C 模块实">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C模块">
+<meta property="og:url" content="https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/C%E6%A8%A1%E5%9D%97/index.html">
+<meta property="og:site_name" content="流年不知心底事">
+<meta property="og:description" content="在 MicroPython 中，C 模块是指用 C 语言编写并编译的模块，它可以作为扩展模块嵌入到 MicroPython 中，与 Python 代码一起运行。C 模块的主要作用是扩展 MicroPython 的功能，尤其在性能和底层硬件交互方面有显著优势。 MicroPython 中自带的模块无法满足需求（如我们这里需要一个摄像头的驱动、需要特殊的通信协议、算法库等），这里就需要通过 C 模块实">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="c:\Users\kay\AppData\Roaming\Typora\typora-user-images\image-20241211171604360.png">
+<meta property="og:image" content="c:\Users\kay\AppData\Roaming\Typora\typora-user-images\image-20241211223614684.png">
+<meta property="og:image" content="c:\Users\kay\AppData\Roaming\Typora\typora-user-images\image-20241211233039943.png">
+<meta property="article:published_time" content="2024-12-10T11:13:00.000Z">
+<meta property="article:modified_time" content="2025-01-07T10:58:33.664Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="ESP32-S3">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="c:\Users\kay\AppData\Roaming\Typora\typora-user-images\image-20241211171604360.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>C模块</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/EM7028/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/BLE%E8%93%9D%E7%89%99/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/C%E6%A8%A1%E5%9D%97/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/C%E6%A8%A1%E5%9D%97/&text=C模块"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/C%E6%A8%A1%E5%9D%97/&title=C模块"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/C%E6%A8%A1%E5%9D%97/&is_video=false&description=C模块"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=C模块&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/C%E6%A8%A1%E5%9D%97/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/C%E6%A8%A1%E5%9D%97/&title=C模块"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/C%E6%A8%A1%E5%9D%97/&title=C模块"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/C%E6%A8%A1%E5%9D%97/&title=C模块"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/C%E6%A8%A1%E5%9D%97/&title=C模块"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/C%E6%A8%A1%E5%9D%97/&name=C模块&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/C%E6%A8%A1%E5%9D%97/&t=C模块"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E5%86%99-C-%E6%A8%A1%E5%9D%97"><span class="toc-number">1.</span> <span class="toc-text">编写 C 模块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E5%88%B0-MicroPython"><span class="toc-number">2.</span> <span class="toc-text">编译到 MicroPython</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        C模块
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">kay</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-12-10T11:13:00.000Z" class="dt-published" itemprop="datePublished">2024-12-10</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/ESP32/">ESP32</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/ESP32-S3/" rel="tag">ESP32-S3</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>在 <strong>MicroPython</strong> 中，<strong>C 模块</strong>是指用 C 语言编写并编译的模块，它可以作为扩展模块嵌入到 MicroPython 中，与 Python 代码一起运行。C 模块的主要作用是扩展 MicroPython 的功能，尤其在性能和底层硬件交互方面有显著优势。</p>
+<p>MicroPython 中自带的模块无法满足需求（如我们这里需要一个摄像头的驱动、需要特殊的通信协议、算法库等），这里就需要通过 C 模块实现新的功能扩展。</p>
+<blockquote>
+<p>C 模块并不是任意的他必须能被 MicroPython 解释器加载并执行的，也就是说他需要符合 MicroPython 的规范或者说他能够被 MicroPython 解释器所识别才可以被编译到 MicroPython 中去。</p>
+</blockquote>
+<p><strong>C 模块作用</strong></p>
+<p><img src="C:\Users\kay\AppData\Roaming\Typora\typora-user-images\image-20241211171604360.png" alt="image-20241211171604360"></p>
+<blockquote>
+<p><strong>ESP-IDF 是 ESP32 官方提供的开发框架</strong>，包含硬件驱动、协议栈和工具链，用于底层硬件控制和系统功能实现。<br><strong>MicroPython 固件</strong>对 ESP-IDF 的底层 C 接口进行了二次封装，将硬件控制和系统功能以更易用的 Python 接口暴露给开发者，同时提供了 <strong>MicroPython 解释器</strong>，用于解释和执行 MicroPython 脚本代码。这种封装机制让开发者可以通过简洁的 Python 语法快速控制 ESP32 的硬件，例如 GPIO、I2C 和 Wi-Fi 等外设。</p>
+<p>然而，对于某些硬件外设或功能，MicroPython 并未直接提供二次封装的接口支持。这种情况下，我们可以使用 <strong>C 模块</strong>来扩展 MicroPython 的功能：</p>
+<ol>
+<li><strong>C 模块的作用</strong><br>C 模块允许开发者直接调用硬件提供的底层 C API 驱动，同时将这些驱动接口封装为 Python 可调用的形式。这种方式结合了 <strong>C 语言的高性能和硬件控制能力</strong>，以及 <strong>Python 的简单易用性</strong>。</li>
+<li><strong>C 模块的实现方式</strong><br>开发者可以通过 MicroPython 提供的扩展机制，将 C 代码中的硬件控制逻辑按照 MicroPython 规定的格式封装为自定义 Python 模块接口。应用层代码可以直接调用这些接口，而无需直接编写 C 代码。</li>
+</ol>
+</blockquote>
+<p><strong>Python 调用 C 函数的实现原理</strong></p>
+<p>关键在于，如何用 C 语言的形式在 MicroPython 源代码中表示函数的入参和出参</p>
+<p><img src="C:\Users\kay\AppData\Roaming\Typora\typora-user-images\image-20241211223614684.png" alt="image-20241211223614684"></p>
+<blockquote>
+<p>在 Python 中万物皆对象，我们要将接收到的对象转换为我们对应的数值，然后再将处理后的结果从数值转换为对象然后返回；</p>
+</blockquote>
+<h2 id="编写-C-模块"><a href="#编写-C-模块" class="headerlink" title="编写 C 模块"></a>编写 C 模块</h2><p>这里我们以 cexample C 模块为例，可以在 GitHub 上下载 MciroPython 的源码然后在 \examples\usercmodule\cexample 文件中找到该示例。</p>
+<p>该目录下有三个文件</p>
+<p><img src="C:\Users\kay\AppData\Roaming\Typora\typora-user-images\image-20241211233039943.png" alt="image-20241211233039943"></p>
+<p>三个文件的作用如下：</p>
+<p><strong>.c 文件</strong></p>
+<p>核心文件，负责实现 C 模块的具体功能逻辑。</p>
+<p>定义 MicroPython 模块中要暴露给 Python 层的函数和对象。</p>
+<p>需要按照 MicroPython 的 C API 格式实现，主要包括：</p>
+<ul>
+<li>模块方法表：定义模块中的函数。</li>
+<li>模块对象结构：描述模块的属性和方法。</li>
+<li>模块注册：将模块注册到 MicroPython 的虚拟机中。</li>
+</ul>
+<p><strong>.make 文件</strong></p>
+<p>提供模块的编译配置，用于 <strong>CMake 构建系统</strong>。</p>
+<p>描述如何将 examplemodule.c 编译并链接到 MicroPython 的固件中。</p>
+<p>定义模块的源文件、目标名称及依赖关系。</p>
+<p><strong>.mk 文件</strong></p>
+<p>提供模块的编译配置，用于 <strong>Makefile 构建系统</strong>。</p>
+<p>定义如何通过 Make 工具将模块编译和链接到 MicroPython 的固件中。</p>
+<p>功能类似于 micropython.cmake，但适用于传统的 Makefile 系统。</p>
+<p><strong>这里展示第一个示例：通过模块.函数名的方式调用的如何定义</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># .c 内容示例</span></span><br><span class="line">/* 第一部分：添加所需要 API 的头文件 */</span><br><span class="line">// 包含 MicroPython API.</span><br><span class="line">// 提供了 MicroPython 运行时相关的各种函数、类型定义等基础功能，是在 C 代码中与 MicroPython 交互的核心头文件</span><br><span class="line"><span class="comment">#include &quot;py/runtime.h&quot;</span></span><br><span class="line">// 用于在涉及定时器（Timer）类示例等场景下获取时间相关操作的支持，方便后续代码与 MicroPython 中时间相关特性协同工作。</span><br><span class="line"><span class="comment">#include &quot;py/mphal.h&quot;</span></span><br><span class="line"></span><br><span class="line">/* 第二部分：实现功能 */</span><br><span class="line">// 这是将从 Python 调用的函数，名为 cexample.add_ints（a，b）。</span><br><span class="line">// 这里定义了一个名为 example_add_ints(a, b) 的静态函数</span><br><span class="line">// 它可以在 MicroPython 环境下实现 C 和 Python 的交互</span><br><span class="line">static mp_obj_t example_add_ints(mp_obj_t a_obj, mp_obj_t b_obj) &#123;</span><br><span class="line">    // 从 MicroPython 输入对象中提取整数。</span><br><span class="line">    <span class="built_in">int</span> a = mp_obj_get_int(a_obj);</span><br><span class="line">    <span class="built_in">int</span> b = mp_obj_get_int(b_obj);</span><br><span class="line"></span><br><span class="line">    // 相加后转换为 MicroPython 对象返回。</span><br><span class="line">    <span class="keyword">return</span> mp_obj_new_int(a + b);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/* 第三部分：将 example_add_ints 函数添加到 example_add_ints_obj 这个模块当中 */</span><br><span class="line">// 定义对上述函数的 Python 引用。使得这个 C 函数可以在 MicroPython 模块的层面被识别和调用，</span><br><span class="line">static MP_DEFINE_CONST_FUN_OBJ_2(example_add_ints_obj, example_add_ints);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">/* 第四部分：将模块注册到模块列表 */</span><br><span class="line">// 定义模块的所有属性。</span><br><span class="line">// 表条目是属性名(字符串)和MicroPython对象引用的键/值对。</span><br><span class="line">// 所有标识符和字符串都写为 MP_QSTR_xxx，并将由构建系统优化为字长整数(互联字符串)。</span><br><span class="line">// 这里定义了模块名以及模块内可被外部访问的函数等相关属性信息。</span><br><span class="line">static const mp_rom_map_elem_t example_module_globals_table[] = &#123;</span><br><span class="line">    &#123; MP_ROM_QSTR(MP_QSTR___name__), MP_ROM_QSTR(MP_QSTR_cexample) &#125;,</span><br><span class="line">    &#123; MP_ROM_QSTR(MP_QSTR_add_ints), MP_ROM_PTR(&amp;example_add_ints_obj) &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">/* 第五部分：将模块列表注册到 example_module_globals 字典对象中 */</span><br><span class="line">static MP_DEFINE_CONST_DICT(example_module_globals, example_module_globals_table);</span><br><span class="line"></span><br><span class="line">/* 第六部分：定义模块对象 */</span><br><span class="line">const mp_obj_module_t example_user_cmodule = &#123;</span><br><span class="line">    .base = &#123; &amp;mp_type_module &#125;,</span><br><span class="line">    .<span class="built_in">globals</span> = (mp_obj_dict_t *)&amp;example_module_globals,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">/* 第七部分：注册该模块，使其在 Python 中可用 */</span><br><span class="line">// 注册到 MicroPython 环境中，使得在 Python 代码里可以导入并使用这个 C 语言实现的模块及其提供的功能</span><br><span class="line">MP_REGISTER_MODULE(MP_QSTR_cexample, example_user_cmodule);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>那么我们在 MicroPython 中使用他的步骤如下：</p>
+<p>import cexample</p>
+<p>cexample.add_ints(a，b)，即可使用</p>
+<p>这里注意导入时候前面要有个 c </p>
+</blockquote>
+<p><strong>这里展示第二种：导入一个模块后，通过模块声明一个对象，然后对象.函数名的形式如何定义</strong></p>
+<h2 id="编译到-MicroPython"><a href="#编译到-MicroPython" class="headerlink" title="编译到 MicroPython"></a>编译到 MicroPython</h2>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">博主</a></li>
+        
+          <li><a href="/tags/">标签</a></li>
+        
+          <li><a href="/categories/">分类</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E5%86%99-C-%E6%A8%A1%E5%9D%97"><span class="toc-number">1.</span> <span class="toc-text">编写 C 模块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E5%88%B0-MicroPython"><span class="toc-number">2.</span> <span class="toc-text">编译到 MicroPython</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/C%E6%A8%A1%E5%9D%97/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/C%E6%A8%A1%E5%9D%97/&text=C模块"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/C%E6%A8%A1%E5%9D%97/&title=C模块"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/C%E6%A8%A1%E5%9D%97/&is_video=false&description=C模块"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=C模块&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/C%E6%A8%A1%E5%9D%97/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/C%E6%A8%A1%E5%9D%97/&title=C模块"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/C%E6%A8%A1%E5%9D%97/&title=C模块"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/C%E6%A8%A1%E5%9D%97/&title=C模块"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/C%E6%A8%A1%E5%9D%97/&title=C模块"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/C%E6%A8%A1%E5%9D%97/&name=C模块&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/C%E6%A8%A1%E5%9D%97/&t=C模块"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    kay
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

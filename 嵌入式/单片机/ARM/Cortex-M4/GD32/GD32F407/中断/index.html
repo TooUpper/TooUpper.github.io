@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="在嵌入式开发中，中断（Interrupt）是一种机制，可以使处理器暂停当前执行的任务，去处理一个紧急或高优先级的事件。中断机制能帮助嵌入式系统快速响应外部或内部的事件，提升实时性能和效率。 基本概念 中断是由硬件或软件事件触发的一种信号，用于打断处理器的当前流程，使其快速跳转到指定的 中断服务程序（ISR），以便处理特定事件。当 ISR 执行完毕，处理器会返回并继续执行被打断的任务。 中断的分类">
+<meta property="og:type" content="article">
+<meta property="og:title" content="中断">
+<meta property="og:url" content="https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E4%B8%AD%E6%96%AD/index.html">
+<meta property="og:site_name" content="流年不知心底事">
+<meta property="og:description" content="在嵌入式开发中，中断（Interrupt）是一种机制，可以使处理器暂停当前执行的任务，去处理一个紧急或高优先级的事件。中断机制能帮助嵌入式系统快速响应外部或内部的事件，提升实时性能和效率。 基本概念 中断是由硬件或软件事件触发的一种信号，用于打断处理器的当前流程，使其快速跳转到指定的 中断服务程序（ISR），以便处理特定事件。当 ISR 执行完毕，处理器会返回并继续执行被打断的任务。 中断的分类">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407waibuzhonduanlc.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407EXTIchufayuan.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407NVICbiao.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407RTCfpjissf.png">
+<meta property="article:published_time" content="2024-10-28T06:40:00.000Z">
+<meta property="article:modified_time" content="2025-01-07T10:58:33.664Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="GD32F407">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407waibuzhonduanlc.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>中断</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E5%85%85%E7%94%B5%E6%8C%87%E7%A4%BA%E7%81%AF/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E6%80%BB%E7%BA%BF%E4%B8%8E%E6%97%B6%E9%92%9F/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E4%B8%AD%E6%96%AD/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E4%B8%AD%E6%96%AD/&text=中断"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E4%B8%AD%E6%96%AD/&title=中断"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E4%B8%AD%E6%96%AD/&is_video=false&description=中断"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=中断&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E4%B8%AD%E6%96%AD/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E4%B8%AD%E6%96%AD/&title=中断"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E4%B8%AD%E6%96%AD/&title=中断"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E4%B8%AD%E6%96%AD/&title=中断"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E4%B8%AD%E6%96%AD/&title=中断"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E4%B8%AD%E6%96%AD/&name=中断&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E4%B8%AD%E6%96%AD/&t=中断"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6"><span class="toc-number">1.</span> <span class="toc-text">事件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NVIC"><span class="toc-number">2.</span> <span class="toc-text">NVIC</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%98%E5%85%88%E7%BA%A7%E5%88%86%E7%BB%84"><span class="toc-number">3.</span> <span class="toc-text">优先级分组</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0"><span class="toc-number">4.</span> <span class="toc-text">回调函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%AD%E6%96%AD"><span class="toc-number">5.</span> <span class="toc-text">中断</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#EXTI%EF%BC%88%E5%A4%96%E9%83%A8%E4%B8%AD%E6%96%AD%EF%BC%89"><span class="toc-number">5.1.</span> <span class="toc-text">EXTI（外部中断）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NVIC-1"><span class="toc-number">5.2.</span> <span class="toc-text">NVIC</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SYSCFG"><span class="toc-number">5.3.</span> <span class="toc-text">SYSCFG</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MISC"><span class="toc-number">5.4.</span> <span class="toc-text">MISC</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">5.5.</span> <span class="toc-text">实现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A1%AC%E4%BB%B6%E8%A7%A6%E5%8F%91"><span class="toc-number">5.5.1.</span> <span class="toc-text">硬件触发</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BD%AF%E4%BB%B6%E8%A7%A6%E5%8F%91"><span class="toc-number">5.5.2.</span> <span class="toc-text">软件触发</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">6.</span> <span class="toc-text">问题</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        中断
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">kay</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-10-28T06:40:00.000Z" class="dt-published" itemprop="datePublished">2024-10-28</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/ARM/">ARM</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/GD32F407/" rel="tag">GD32F407</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>在嵌入式开发中，中断（Interrupt）是一种机制，可以使处理器<strong>暂停当前执行的任务，去处理一个紧急或高优先级的事件</strong>。中断机制能帮助嵌入式系统快速响应外部或内部的事件，提升实时性能和效率。</p>
+<p><strong>基本概念</strong></p>
+<p>中断是由<strong>硬件</strong>或<strong>软件</strong>事件触发的一种信号，用于打断处理器的当前流程，使其快速跳转到指定的 <strong>中断服务程序（ISR）</strong>，以便处理特定事件。当 ISR 执行完毕，处理器会返回并继续执行被打断的任务。</p>
+<p><strong>中断的分类</strong></p>
+<p>中断大体可以分为以下几类：</p>
+<ul>
+<li><strong>外部中断</strong>：由外部硬件触发，例如按钮、传感器、计数器等。这类中断通常用于捕获外部事件。</li>
+<li><strong>内部中断</strong>：由处理器或外设内部事件触发，如定时器溢出、ADC 转换完成、串口数据接收等。</li>
+<li><strong>软件中断</strong>：通过软件指令触发的中断，用于实现特定的软件功能或系统调用。</li>
+</ul>
+<p><strong>中断的工作原理</strong></p>
+<p>中断的基本工作流程如下：</p>
+<ol>
+<li><strong>中断请求</strong>：中断源（如外设或软件）产生中断请求信号。</li>
+<li><strong>中断响应</strong>：处理器停止当前任务，并保存当前状态（如程序计数器和寄存器等）。</li>
+<li><strong>执行 ISR</strong>：处理器跳转到对应的中断服务程序，执行中断处理代码。</li>
+<li><strong>恢复执行</strong>：ISR 执行完成后，处理器恢复之前保存的状态，继续执行被打断的任务。</li>
+</ol>
+<p><strong>中断优先级和嵌套</strong></p>
+<p>在多中断系统中，中断的优先级决定了响应的先后顺序。中断的优先级可以进一步细分为不同的类型，以便更好地满足系统实时性和复杂性的需求。常见的中断优先级类型包括<strong>响应式优先级</strong>、<strong>抢占式优先级</strong>和<strong>自然优先级</strong>。</p>
+<ul>
+<li><strong>响应式优先级：</strong>响应式中断优先级指的是，中断的处理<strong>根据固定优先级顺序</strong>进行，不支持中断的嵌套或抢占；在多个中断发生时，优先响应高优先级的中断，直到 ISR 完成才响应下一个中断。</li>
+<li><strong>抢占式优先级：</strong>抢占式中断优先级允许<strong>高优先级中断打断低优先级中断的执行</strong>;</li>
+<li><strong>自然优先级：</strong>自然优先级是一种<strong>基于中断向量表</strong>的优先级机制，自然优先级实际上是中断向量表的序号，序号越小优先级越高。</li>
+</ul>
+<blockquote>
+<p>无论是抢占优先级还是响应优先级，都是用数值表示的，数值越小，优先级越高。</p>
+</blockquote>
+<p><strong>中断向量表</strong></p>
+<p>中断向量表存储了各个中断服务程序的入口地址。每个中断源都有一个固定的入口地址。当发生中断时，处理器通过中断向量表找到相应 ISR 的地址并跳转执行。</p>
+<p><strong>中断服务程序（ISR）</strong></p>
+<p>中断服务程序用于处理中断事件的具体逻辑。设计 ISR 时需要注意以下几点：</p>
+<ul>
+<li><strong>简短高效</strong>：ISR 应该尽量简洁，避免长时间运行，减少对主程序的影响。</li>
+<li><strong>避免阻塞操作</strong>：ISR 中不适合使用延时、复杂计算或等待操作，以避免影响系统的实时性。</li>
+<li><strong>使用中断标志位</strong>：很多中断事件触发后会设置特定的标志位，ISR 中通常需要检查和清除标志位，以防止重复触发。</li>
+</ul>
+<h2 id="事件"><a href="#事件" class="headerlink" title="事件"></a>事件</h2><p>事件是一种简化的触发机制，通常用于在不需要中断服务程序（ISR）的情况下唤醒处理器或触发某些外设的操作。<strong>事件不会打断当前的程序执行</strong>，也不会跳转到一个特定的中断服务程序。因此，事件的处理方式更加轻量，也没有优先级之分。</p>
+<h2 id="NVIC"><a href="#NVIC" class="headerlink" title="NVIC"></a>NVIC</h2><p><strong>NVIC</strong>（Nested Vectored Interrupt Controller，嵌套向量中断控制器）是 ARM Cortex-M 系列微控制器内核中的一个重要模块，负责管理和控制<strong>中断请求</strong>的响应和优先级处理。</p>
+<h2 id="优先级分组"><a href="#优先级分组" class="headerlink" title="优先级分组"></a>优先级分组</h2><p><strong>优先级分组机制</strong>是一种在嵌入式系统中<strong>管理中断优先级</strong>的方式，它允许系统在中断的<strong>抢占优先级</strong>和<strong>子优先级（响应式优先级）</strong>之间进行分配，以更灵活地控制中断响应顺序。ARM Cortex-M 系列处理器通过<strong>嵌套向量中断控制器（NVIC）</strong>提供了优先级分组机制，使得在处理多种中断时可以实现更高的系统实时性和响应能力。</p>
+<p>在 Cortex-M 架构中，中断优先级通过<strong>嵌套式向量型中断控制器（NVIC）</strong>进行配置；在 Cortex-M4 中使用 4 位来设置优先级；常见分组如下：</p>
+<table>
+<thead>
+<tr>
+<th align="center">优先级分组</th>
+<th align="center">抢占优先级位数</th>
+<th align="center">子优先级位数</th>
+<th align="center">优先级分组类型描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">0</td>
+<td align="center">4</td>
+<td align="center">0</td>
+<td align="center">全抢占优先级，没有子优先级</td>
+</tr>
+<tr>
+<td align="center">1</td>
+<td align="center">3</td>
+<td align="center">1</td>
+<td align="center">3 位抢占优先级，1 位子优先级</td>
+</tr>
+<tr>
+<td align="center">2</td>
+<td align="center">2</td>
+<td align="center">2</td>
+<td align="center">2 位抢占优先级，2 位子优先级</td>
+</tr>
+<tr>
+<td align="center">3</td>
+<td align="center">1</td>
+<td align="center">3</td>
+<td align="center">1 位抢占优先级，3 位子优先级</td>
+</tr>
+<tr>
+<td align="center">4</td>
+<td align="center">0</td>
+<td align="center">4</td>
+<td align="center">没有抢占优先级，全部为子优先级</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>举例：在 <strong>4 位抢占优先级、0 位子优先级</strong>的情况下，抢占优先级可以使用 <strong>0 到 15</strong> 之间的值进行设置；因为他占了四个字节。</p>
+</blockquote>
+<h2 id="回调函数"><a href="#回调函数" class="headerlink" title="回调函数"></a>回调函数</h2><p>回调函数是一种将函数作为参数传递给另一个函数的编程技术。回调函数的作用是：允许一个函数在完成某些特定任务后，通过调用另一个“回调”函数来通知调用方任务完成，或执行特定的后续操作。</p>
+<p>在中断处理中，我们不可以帮用户做决定，所以我们在中断中无法预知客户要做的事情是什么，这时候就可以使用回调函数；</p>
+<h2 id="中断"><a href="#中断" class="headerlink" title="中断"></a>中断</h2><p>ARM Cortex-M 系列中断分为三类：</p>
+<ul>
+<li><strong>系统异常（System Exceptions）</strong>：<ul>
+<li>内核自带的异常，例如复位（Reset）、不可屏蔽中断（NMI）、硬故障（Hard Fault）等。优先级较高，通常用于处理系统级的错误和状态。</li>
+</ul>
+</li>
+<li><strong>外部中断（External Interrupts）</strong>：<ul>
+<li>由外设（如 GPIO、UART、定时器等）产生的中断，通过 NVIC 进行管理。这些外部中断优先级由用户定义，响应外部事件，例如按钮按下、数据接收完成等。</li>
+</ul>
+</li>
+<li><strong>软件中断（Software Interrupts）</strong>：<ul>
+<li>由软件触发的中断，用于在代码中人为产生中断以实现特定功能，如任务调度或操作系统中的上下文切换。</li>
+</ul>
+</li>
+</ul>
+<h3 id="EXTI（外部中断）"><a href="#EXTI（外部中断）" class="headerlink" title="EXTI（外部中断）"></a>EXTI（外部中断）</h3><p><strong>EXTI</strong>（External Interrupt&#x2F;Event Controller，外部中断&#x2F;事件控制器）主要作用是捕获<strong>外部</strong>中断&#x2F;事件。</p>
+<p>EXTI 负责<strong>检测和生成中断事件</strong>，而 NVIC 负责<strong>管理和调度中断的响应</strong>。</p>
+<p><strong>EXTI 的结构与工作流程：</strong></p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407waibuzhonduanlc.png" alt="F407waibuzhonduanlc"></p>
+<ol>
+<li><strong>EXTI Line0~22</strong>：</li>
+</ol>
+<ul>
+<li>EXTI 控制器提供了多个外部中断线（Line0~Line22），这些线可以连接到外部设备或者 GPIO 引脚。</li>
+<li>每一条 EXTI 线可以设置为边沿检测，即检测上升沿或下降沿的信号变化。</li>
+</ul>
+<ol start="2">
+<li><strong>极性控制</strong>：</li>
+</ol>
+<ul>
+<li>用于设置信号的触发极性。可以选择触发上升沿、下降沿，或者两者都触发。</li>
+<li>极性控制模块通过设置不同的极性，控制边沿检测器检测信号变化的类型。</li>
+</ul>
+<ol start="3">
+<li><strong>边沿检测</strong>：</li>
+</ol>
+<ul>
+<li>边沿检测模块用于检测外部信号的变化。根据极性控制的设定，这里可以检测上升沿、下降沿，或者两者都检测。</li>
+<li>当检测到符合设定的边沿信号时，将触发后续的中断或事件。</li>
+</ul>
+<ol start="4">
+<li><strong>软件触发</strong>：</li>
+</ol>
+<ul>
+<li>软件触发模块允许通过编程来触发 EXTI 中断，而不依赖外部信号。</li>
+<li>通过软件触发，程序可以手动生成中断或事件，适用于某些特殊的控制场景。</li>
+</ul>
+<ol start="5">
+<li><strong>中断屏蔽控制</strong>：</li>
+</ol>
+<ul>
+<li>中断屏蔽控制模块用于控制 EXTI 信号是否生成中断。</li>
+<li>当中断屏蔽控制允许时，检测到的边沿信号将触发中断信号并传输给 NVIC。</li>
+</ul>
+<ol start="6">
+<li><strong>事件屏蔽控制</strong>：</li>
+</ol>
+<ul>
+<li>事件屏蔽控制模块用于控制 EXTI 信号是否生成事件。</li>
+<li>当事件屏蔽控制允许时，检测到的边沿信号将触发一个事件，用于系统内部的其他功能模块，如低功耗模式下的唤醒。</li>
+</ul>
+<ol start="7">
+<li><strong>事件产生</strong>：</li>
+</ol>
+<ul>
+<li>事件产生模块在满足边沿检测条件时产生事件。事件不同于中断，它不会直接引发 NVIC 的中断请求，而是用于系统的其他用途，比如唤醒单元等。</li>
+</ul>
+<ol start="8">
+<li><strong>至 NVIC</strong>：</li>
+</ol>
+<ul>
+<li>如果边沿检测模块检测到外部信号符合设定的条件，并且中断屏蔽控制允许，则通过 NVIC 触发中断服务程序。</li>
+</ul>
+<ol start="9">
+<li><strong>至唤醒单元</strong>：</li>
+</ol>
+<ul>
+<li>如果边沿检测满足条件且事件屏蔽控制允许，则可以触发事件产生，用于唤醒单元。</li>
+<li>该功能主要在低功耗模式下使用，用于处理待机或睡眠模式下的唤醒需求。</li>
+</ul>
+<blockquote>
+<p>中断和事件是独立控制的，可以通过配置相应的寄存器来独立启用或屏蔽中断和事件。</p>
+<ul>
+<li>若只开启中断屏蔽而屏蔽事件，则只会产生中断，不会产生事件。</li>
+<li>若只开启事件屏蔽而屏蔽中断，则只会产生事件，不会产生中断。</li>
+<li>若同时开启中断和事件屏蔽，那么信号变化时会同时产生中断和事件。</li>
+</ul>
+</blockquote>
+<p><strong>EXTI 编号与触发源</strong></p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407EXTIchufayuan.png" alt="F407EXTIchufayuan"></p>
+<h3 id="NVIC-1"><a href="#NVIC-1" class="headerlink" title="NVIC"></a>NVIC</h3><p>NVIC 是处理器核心中的一个模块，负责<strong>接收和管理中断请求</strong>。它可以将多个中断请求进行排序，按优先级分配中断，决定何时和以何种优先级响应中断。</p>
+<p><strong>中断向量表</strong></p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407NVICbiao.png" alt="F407NVICbiao"></p>
+<p><strong>示例流程</strong></p>
+<p>假设一个按键连接到 GPIO 引脚，用来触发 EXTI 中断，流程如下：</p>
+<ol>
+<li><strong>EXTI 监测按键状态</strong>，检测到按键按下，生成一个中断请求并将其发送到 NVIC。</li>
+<li><strong>NVIC 检查优先级</strong>：如果该中断优先级足够高，NVIC 将立即响应此请求，暂停其他任务。</li>
+<li><strong>执行中断服务程序</strong>：系统进入按键中断服务程序（ISR）进行处理，如记录按键状态或执行相应的功能。</li>
+<li><strong>清除中断标志</strong>：在 ISR 中处理完毕后，清除 EXTI 的中断标志，以便下一次按键按下时可以重新触发中断。</li>
+<li><strong>恢复正常运行</strong>：NVIC 将控制权交还给主程序或其他正在运行的任务。s</li>
+</ol>
+<h3 id="SYSCFG"><a href="#SYSCFG" class="headerlink" title="SYSCFG"></a>SYSCFG</h3><p>SYSCFG（系统配置控制器）是 ARM Cortex-M 微控制器（如 STM32 系列）中的一个重要外设，负责配置系统的各种功能和引导外设的资源管理。</p>
+<p><strong>外部中断配置</strong></p>
+<ul>
+<li><strong>引脚映射</strong>：SYSCFG 允许将外部 GPIO 引脚映射到 EXTI（外部中断）线。用户可以指定哪些引脚用于外部中断触发。</li>
+<li><strong>中断触发条件</strong>：支持设置中断触发条件（上升沿、下降沿、双边沿），以满足不同应用的需求。</li>
+</ul>
+<h3 id="MISC"><a href="#MISC" class="headerlink" title="MISC"></a>MISC</h3><p>MISC 是对嵌套向量中断控制器（NVIC）和系统定时器（SysTick）操作的软件包。</p>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>功能：通过外部中断监听按钮按下和抬起的动作</p>
+<h4 id="硬件触发"><a href="#硬件触发" class="headerlink" title="硬件触发"></a>硬件触发</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// GPIO 配置</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">GPIO_EXTI_Config</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">	<span class="comment">//启用GPIOA外部时钟</span></span><br><span class="line">	rcu_periph_clock_enable(RCU_GPIOA);</span><br><span class="line">	<span class="comment">// 配置GPIO工作模式为复用模式</span></span><br><span class="line">	gpio_mode_set(GPIOA, GPIO_MODE_INPUT, GPIO_PUPD_NONE, GPIO_PIN_0);</span><br><span class="line">	<span class="comment">// 选择复用哪一个模式，这时候就需要去查看 中断不需要进行复用选择</span></span><br><span class="line">	<span class="comment">//gpio_af_set(GPIOA, uint32_t alt_func_num, uint32_t pin);</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">EXTI_Config</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// 我们要使用外部中断功能，但是在端口复用配置中，却没有外部中断这个复用选项</span></span><br><span class="line">	<span class="comment">// 所以我们需要用其他的方法将这个引脚映射到 EXTI 上</span></span><br><span class="line">	<span class="comment">// 这里就要使用系统提供的配置工作：SYSCFG（系统配置控制器）</span></span><br><span class="line">	</span><br><span class="line">	<span class="comment">// 任何配置前我们先要配置时钟，我们用到的功能是 EXTI，但是 EXTI 的功能依赖于 SYSCFG 的配置</span></span><br><span class="line">	<span class="comment">// 所以我们要先配置 SYSCFG 的时钟，我们通过 SYSCFG 将 GPIO 映射到 EXTI</span></span><br><span class="line">    </span><br><span class="line">	<span class="comment">// 启用RCU_SYSCFG外部时钟</span></span><br><span class="line">	rcu_periph_clock_enable(RCU_SYSCFG);	</span><br><span class="line">	<span class="comment">// 将引脚映射到 EXTI</span></span><br><span class="line">	syscfg_exti_line_config(EXTI_SOURCE_GPIOA, EXTI_SOURCE_PIN0);</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// 中断处理需要用到 NVIC 所以还需要配置 NVIC</span></span><br><span class="line">	<span class="comment">// 使能 NIVC 请求，是来自什么的中断处理，优先级是什么样的</span></span><br><span class="line">	nvic_irq_enable(EXTI0_IRQn, <span class="number">2</span>, <span class="number">2</span>);</span><br><span class="line">	<span class="comment">// 配置 EXIT，那个外部中断寄存器、是中断还是事件、触发方式是什么</span></span><br><span class="line">    <span class="comment">// 中断触发源</span></span><br><span class="line">	exti_init(EXTI_0, EXTI_INTERRUPT, EXTI_TRIG_BOTH);</span><br><span class="line">	<span class="comment">// 使能外部中断</span></span><br><span class="line">	exti_interrupt_enable(EXTI_0);	</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 编写外部中断处理函数</span></span><br><span class="line"><span class="comment">// 查找初始化文件，找到 EXTI0 的中断处理函数</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">EXTI0_IRQHandler</span><span class="params">(<span class="type">void</span>)</span> &#123;	</span><br><span class="line">	<span class="keyword">if</span>(SET == exti_interrupt_flag_get(EXTI_0)) &#123;</span><br><span class="line">		exti_interrupt_flag_clear(EXTI_0);</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;Hi,chulihanshu\n&quot;</span>);	</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    systick_config();</span><br><span class="line">	GPIO_EXTI_Config();	</span><br><span class="line">	EXTI_Config();</span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>)&#123;		</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">============================================================================</span><br><span class="line"><span class="comment">// 回调函数</span></span><br><span class="line"><span class="comment">// main.c</span></span><br><span class="line"><span class="comment">// 这是用户要做的事情    </span></span><br><span class="line"><span class="type">void</span> EXTI0_Callback(USART0_KEY_STATE state) &#123;</span><br><span class="line">	<span class="keyword">if</span>(state) &#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;DOWN\n&quot;</span>);</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;UP\n&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;  </span><br><span class="line"><span class="comment">// 将用户的操作作为参数传递过去</span></span><br><span class="line">bsp_EXTI0_Callback(EXTI0_Callback);</span><br><span class="line"></span><br><span class="line"><span class="comment">// bsp_exti0.c</span></span><br><span class="line"><span class="comment">// 我们定义一个函数指针类型的变量，并初始化为 NULL;</span></span><br><span class="line"><span class="type">void</span> (*p_Callback)(USART0_KEY_STATE state) = <span class="literal">NULL</span>;</span><br><span class="line"><span class="comment">// 我们通过上面的这个变量接收用户传递过来的参数</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">bsp_EXTI0_Callback</span><span class="params">(<span class="type">void</span> (*p)(USART0_KEY_STATE state))</span>	&#123;</span><br><span class="line">	</span><br><span class="line">	p_Callback = p;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//在中断处理函数里面调用客户传过来的函数</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">EXTI0_IRQHandler</span><span class="params">(<span class="type">void</span>)</span> &#123;	</span><br><span class="line">	<span class="keyword">if</span>(SET == exti_interrupt_flag_get(EXTI_0)) &#123;</span><br><span class="line">		exti_interrupt_flag_clear(EXTI_0);</span><br><span class="line">		<span class="comment">// 我们不去帮用户做决定，让用户自己决定要干什么</span></span><br><span class="line">		<span class="keyword">if</span>(SET == gpio_input_bit_get(GPIOA, GPIO_PIN_0)) &#123;</span><br><span class="line"></span><br><span class="line">			<span class="keyword">if</span>(p_Callback != <span class="literal">NULL</span>) &#123;</span><br><span class="line">				p_Callback(DOWN);</span><br><span class="line">			&#125; 				</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			<span class="keyword">if</span>(p_Callback != <span class="literal">NULL</span>) &#123;</span><br><span class="line">				</span><br><span class="line">				p_Callback(UP);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;	</span><br><span class="line">&#125;</span><br><span class="line">=========================================================================</span><br><span class="line"> <span class="comment">// 软件消抖</span></span><br><span class="line"><span class="comment">//1. 延时，手动减少中断函数响应的次数</span></span><br><span class="line"><span class="type">void</span> EXTI0_IRQHandler(<span class="type">void</span>) &#123;	</span><br><span class="line">	<span class="keyword">if</span>(SET == exti_interrupt_flag_get(EXTI_0)) &#123;</span><br><span class="line">		exti_interrupt_flag_clear(EXTI_0);</span><br><span class="line">		<span class="comment">// 我们不去帮用户做决定，让用户自己决定要干什么</span></span><br><span class="line">		<span class="keyword">if</span>(SET == gpio_input_bit_get(GPIOA, GPIO_PIN_0)) &#123;</span><br><span class="line"></span><br><span class="line">			<span class="keyword">if</span>(p_Callback != <span class="literal">NULL</span>) &#123;</span><br><span class="line">				p_Callback(DOWN);</span><br><span class="line">			&#125; 				</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			<span class="keyword">if</span>(p_Callback != <span class="literal">NULL</span>) &#123;</span><br><span class="line">				</span><br><span class="line">				p_Callback(UP);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;	</span><br><span class="line">    delay_1ms(<span class="number">50</span>);</span><br><span class="line">&#125;  </span><br><span class="line">===============================================================</span><br><span class="line"><span class="comment">// 2.通过计数的方式来进行消抖</span></span><br><span class="line"><span class="comment">// 我们知道系统是通过滴答时钟来进行计数的</span></span><br><span class="line"><span class="type">void</span> delay_1ms(<span class="number">50</span>)</span><br><span class="line">&#123;</span><br><span class="line">    delay = count * <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span>(<span class="number">0U</span> != delay) &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">void</span> <span class="title function_">delay_decrement</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="number">0U</span> != delay) &#123;</span><br><span class="line">        delay--;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 通过上面这个不难看出，他的 50ms 记时是通过在 delay_decrement 中 delay-- 实现的；</span></span><br><span class="line"><span class="comment">// 也就是说 delay_decrement 这个函数调用一次就是 1ms，那我们可以通过这个函数的调用来计时</span></span><br><span class="line"><span class="comment">// 但是 ms 的时间太长了，我们需要 us 的时间，这里我们就需要将时间进行细化</span></span><br><span class="line"><span class="comment">// 我们在 main() 中通过 systick_config() 函数可以看到：</span></span><br><span class="line"><span class="comment">// SystemCoreClock 就是我们之前的外部高速晶振 8000000Hz</span></span><br><span class="line"><span class="comment">// 通过 SysTick_Config(SystemCoreClock / 1000U) 这个函数可以定时触发异常</span></span><br><span class="line"><span class="comment">// 这里我们看到它默认是 1000Hmz 也就是 1ms,</span></span><br><span class="line"><span class="comment">// 我们需要将其改为 1us 也就是除以 1000000u</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">systick_config</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    <span class="comment">/* setup systick timer for 1000Hz interrupts  */</span></span><br><span class="line">    <span class="keyword">if</span>(SysTick_Config(SystemCoreClock / <span class="number">1000U</span>)) &#123;</span><br><span class="line">        <span class="comment">/* capture error */</span></span><br><span class="line">        <span class="keyword">while</span>(<span class="number">1</span>) &#123;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/* configure the systick handler priority */</span></span><br><span class="line">    NVIC_SetPriority(SysTick_IRQn, <span class="number">0x00</span>U);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 改为=============================================</span></span><br><span class="line"><span class="comment">// 这样它就会在 1us 触发一次他的中断库函数 SysTick_Handler</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">systick_config</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    <span class="comment">/* setup systick timer for 1000Hz interrupts  */</span></span><br><span class="line">    <span class="keyword">if</span>(SysTick_Config(SystemCoreClock / <span class="number">1000000U</span>)) &#123;</span><br><span class="line">        <span class="comment">/* capture error */</span></span><br><span class="line">        <span class="keyword">while</span>(<span class="number">1</span>) &#123;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/* configure the systick handler priority */</span></span><br><span class="line">    NVIC_SetPriority(SysTick_IRQn, <span class="number">0x00</span>U);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 可以看到他的函数就是调用了 delay_decrement 也就是 1us 调用一次</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">SysTick_Handler</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="comment">//    led_spark();</span></span><br><span class="line">    delay_decrement();</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//这时候我们就可以进行如下修改：</span></span><br><span class="line"><span class="type">uint64_t</span> delay = <span class="number">0</span>;</span><br><span class="line"><span class="comment">// 这样 cnt 就是 us</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">delay_decrement</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    cnt ++;</span><br><span class="line">    <span class="keyword">if</span>(<span class="number">0U</span> != delay) &#123;</span><br><span class="line">        delay--;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 通过函数返回 us 的时间</span></span><br><span class="line"><span class="type">uint64_t</span> <span class="title function_">get_us</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> cnt;    </span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 1us</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">delay_1us</span><span class="params">(<span class="type">uint32_t</span> count)</span> &#123;</span><br><span class="line">    delay = count * <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span>(<span class="number">0U</span> != delay) &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 1ms</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">delay_1ms</span><span class="params">(<span class="type">uint32_t</span> count)</span>&#123;</span><br><span class="line">    delay = count * <span class="number">1000</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span>(<span class="number">0U</span> != delay) &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">==============================================================</span><br><span class="line"><span class="comment">// 这样就可以将中断函数改为如下</span></span><br><span class="line"><span class="comment">// 该函数只会在 100us 触发一次</span></span><br><span class="line"><span class="type">uint64_t</span> pre_cnt <span class="number">0</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">EXTI0_IRQHandler</span><span class="params">(<span class="type">void</span>)</span> &#123;	</span><br><span class="line">	<span class="keyword">if</span>(SET == exti_interrupt_flag_get(EXTI_0)) &#123;</span><br><span class="line">        <span class="comment">// 只能放在上面，否则不管是放在 if里面还是后面都会产生 bug</span></span><br><span class="line">        exti_interrupt_flag_clear(EXTI_0);      </span><br><span class="line">        <span class="comment">// 100us 让他执行一次</span></span><br><span class="line">        <span class="comment">// 函数不会阻塞，让他 100us 执行一次</span></span><br><span class="line">        <span class="comment">// 按键物理抖动通常在 5ms 到 50ms 之间，</span></span><br><span class="line">        <span class="type">uint64_t</span> cur_cnt = get_us();</span><br><span class="line">        <span class="keyword">if</span>(cur_cnt - pre_cnt &lt;= <span class="number">100</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> ;</span><br><span class="line">        &#125;</span><br><span class="line">        pre_cnt = cur_cnt;</span><br><span class="line">        </span><br><span class="line">		<span class="comment">// 我们不去帮用户做决定，让用户自己决定要干什么</span></span><br><span class="line">		<span class="keyword">if</span>(SET == gpio_input_bit_get(GPIOA, GPIO_PIN_0)) &#123;</span><br><span class="line"></span><br><span class="line">			<span class="keyword">if</span>(p_Callback != <span class="literal">NULL</span>) &#123;</span><br><span class="line">				p_Callback(DOWN);</span><br><span class="line">			&#125; 				</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			<span class="keyword">if</span>(p_Callback != <span class="literal">NULL</span>) &#123;</span><br><span class="line">				</span><br><span class="line">				p_Callback(UP);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>步骤：</p>
+<ol>
+<li><strong>GPIO 的配置</strong></li>
+</ol>
+<ul>
+<li>主要外部中断不在 GPIO的复用选项中，我们需要通过其他方式将 GPIO 映射到 EXIT。</li>
+</ul>
+<ol start="2">
+<li><strong>EXTI 配置</strong></li>
+</ol>
+<ul>
+<li>GPIO 配置完成后，查看用户手册了解所使用的引脚属于那个中断源</li>
+<li>使能 SYSCFG 外部时钟，将 GPIO 引脚映射到 EXTI</li>
+<li>配置 NVIC</li>
+<li>配置 EXIT，并使能</li>
+</ul>
+<ol start="3">
+<li><strong>编写中断处理函数</strong></li>
+</ol>
+<ul>
+<li>NVIC 所对应的中断处理函数要到启动文件（.s）文件中去找</li>
+<li>在编写时候注意查看用户手册，了解我们所使用的的中断源是否需要手动清除；</li>
+</ul>
+<h4 id="软件触发"><a href="#软件触发" class="headerlink" title="软件触发"></a>软件触发</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;gd32f4xx.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;systick.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Usart0.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 该函数在 USART 的中断处理函数中进行调用</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">Usart0_recv</span><span class="params">(<span class="type">uint8_t</span> *data, <span class="type">uint32_t</span> len)</span> &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;recv: %s\r\n&quot;</span>, data);</span><br><span class="line"></span><br><span class="line">    exti_software_interrupt_enable(EXTI_0);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">EXTI_config</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">uint32_t</span> extix = EXTI_0; <span class="comment">// 哪个中断</span></span><br><span class="line">    <span class="type">uint32_t</span> extix_irq = EXTI0_IRQn;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/********************* EXTI config *********************/</span></span><br><span class="line">    <span class="comment">// 时钟配置</span></span><br><span class="line">    rcu_periph_clock_enable(RCU_SYSCFG);</span><br><span class="line">    <span class="comment">// 中断初始化 因为是软件触发所以触发源就不需要选择上升或者下降沿了</span></span><br><span class="line">    exti_init(extix, EXTI_INTERRUPT, EXTI_TRIG_NONE);</span><br><span class="line">    <span class="comment">// 配置中断优先级</span></span><br><span class="line">    nvic_irq_enable(extix_irq, <span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line">    <span class="comment">// 使能中断</span></span><br><span class="line">    exti_interrupt_enable(extix);</span><br><span class="line">    <span class="comment">// 清除中断标志位</span></span><br><span class="line">    exti_interrupt_flag_clear(extix);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 中断函数</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">EXTI0_IRQHandler</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;IRQ \r\n&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span>(SET == exti_interrupt_flag_get(EXTI_0)) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;exti 0 \r\n&quot;</span>);</span><br><span class="line">        <span class="comment">// 清除中断标志位</span></span><br><span class="line">        exti_interrupt_flag_clear(EXTI_0);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// UART0 中断处理函数</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">USART0_IRQHandler</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">	<span class="comment">// 有数据了</span></span><br><span class="line">	<span class="keyword">if</span>(SET == usart_interrupt_flag_get(USART0, USART_INT_FLAG_RBNE)) &#123;</span><br><span class="line">		usart_interrupt_flag_clear(USART0, USART_INT_FLAG_RBNE);		</span><br><span class="line">		<span class="type">int8_t</span> data =  usart_data_receive(USART0);		</span><br><span class="line">		dataBuf[index] = data;</span><br><span class="line">		index++;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">if</span>(SET == usart_interrupt_flag_get(USART0, USART_INT_FLAG_IDLE)) &#123;</span><br><span class="line">        <span class="comment">// 清除 LDLE 中断标志位</span></span><br><span class="line">        <span class="comment">// 软件先读USART_STAT0，再读USART_DATA可清除该位。</span></span><br><span class="line">        <span class="comment">// usart_interrupt_flag_get 读取的就是 USART_STAT0 寄存器中的标志位</span></span><br><span class="line">        <span class="comment">// USART_STAT0 是状态寄存器，USART_DATA 为数据寄存器</span></span><br><span class="line">		usart_data_receive(USART0); <span class="comment">// 读数据寄存器，以清除 LDLE 中断标志位</span></span><br><span class="line">        <span class="comment">// 通过这个函数去调用 EXTI 的软件触发函数</span></span><br><span class="line">        Usart0_recv(dataBuf, index);        </span><br><span class="line">		index = <span class="number">0</span>;</span><br><span class="line">	&#125;	</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    systick_config();</span><br><span class="line">    Usart0_init();</span><br><span class="line">    EXTI_config();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>) &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>一·、<strong>在使用 EXTI 与 NVIC 时为什么不需要显示的开启外部时钟</strong></p>
+<p>因为这两个模块的工作原理和时钟管理与外部时钟的启用无关。</p>
+<p>EXTI 是用于处理外部硬件事件（如按键、传感器、外部信号等）触发的中断。它本质上是一个由外部事件触发的信号，依赖于微控制器的输入引脚（如 GPIO）上的状态变化。</p>
+<p>NVIC 本身并不依赖于外部时钟。NVIC 只是处理从不同外设或外部事件（如 EXTI）发出的中断请求。它的作用是管理中断的优先级、响应时间以及是否允许中断等，所有这些操作都基于内部时钟（通常是系统时钟或 APB 时钟）。所以，NVIC 与外部时钟并无直接关系。</p>
+<p>二、<strong>通过计数消抖这时间如何确定</strong></p>
+<p>以波特率为 <strong>115200 bps</strong> 为例，假设数据帧格式为<strong>1 位起始位 + 8 位数据位 + 1 位停止位</strong>，总共 <strong>10 位</strong>：</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407RTCfpjissf.png" alt="F407RTCfpjissf"></p>
+<p>也就是说我们延时的时间比这个大就可以了；</p>
+<p>三、<strong>exti_interrupt_flag_clear(EXTI_0);，可能会产生的bug</strong></p>
+<p>当凑巧我们按下的时候 EXTI0_IRQHandler 中的条件 cur_cnt - pre_cnt &lt;&#x3D; 100 为真时，函数会直接 return，而 <strong>在返回前没有清除 EXTI 的中断标志位</strong>。在这种情况下，<strong>该中断标志位依然保持为 1</strong>，因此后续也不会再触发相同的中断。</p>
+<p>因此我们应该在进入中断后第一时间清除标志位；</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">博主</a></li>
+        
+          <li><a href="/tags/">标签</a></li>
+        
+          <li><a href="/categories/">分类</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6"><span class="toc-number">1.</span> <span class="toc-text">事件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NVIC"><span class="toc-number">2.</span> <span class="toc-text">NVIC</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%98%E5%85%88%E7%BA%A7%E5%88%86%E7%BB%84"><span class="toc-number">3.</span> <span class="toc-text">优先级分组</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0"><span class="toc-number">4.</span> <span class="toc-text">回调函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%AD%E6%96%AD"><span class="toc-number">5.</span> <span class="toc-text">中断</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#EXTI%EF%BC%88%E5%A4%96%E9%83%A8%E4%B8%AD%E6%96%AD%EF%BC%89"><span class="toc-number">5.1.</span> <span class="toc-text">EXTI（外部中断）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NVIC-1"><span class="toc-number">5.2.</span> <span class="toc-text">NVIC</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SYSCFG"><span class="toc-number">5.3.</span> <span class="toc-text">SYSCFG</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MISC"><span class="toc-number">5.4.</span> <span class="toc-text">MISC</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">5.5.</span> <span class="toc-text">实现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A1%AC%E4%BB%B6%E8%A7%A6%E5%8F%91"><span class="toc-number">5.5.1.</span> <span class="toc-text">硬件触发</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BD%AF%E4%BB%B6%E8%A7%A6%E5%8F%91"><span class="toc-number">5.5.2.</span> <span class="toc-text">软件触发</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">6.</span> <span class="toc-text">问题</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E4%B8%AD%E6%96%AD/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E4%B8%AD%E6%96%AD/&text=中断"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E4%B8%AD%E6%96%AD/&title=中断"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E4%B8%AD%E6%96%AD/&is_video=false&description=中断"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=中断&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E4%B8%AD%E6%96%AD/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E4%B8%AD%E6%96%AD/&title=中断"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E4%B8%AD%E6%96%AD/&title=中断"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E4%B8%AD%E6%96%AD/&title=中断"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E4%B8%AD%E6%96%AD/&title=中断"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E4%B8%AD%E6%96%AD/&name=中断&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E4%B8%AD%E6%96%AD/&t=中断"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    kay
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

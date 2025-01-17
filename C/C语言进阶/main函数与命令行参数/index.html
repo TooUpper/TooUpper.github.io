@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="main 函数的本质究竟是什么?  main 函数是操作系统调用的函数 操作系统总是将 main 函数作为应用程序的开始 操作系统将 main 函数的返回值作为程序的退出状态  程序在运行的时候就会产生一个进程，那么操作系统如何去判断这个程序是否是异常退出的呢，有些操作系统会弹出一个对话框，告诉我们应用程序异常退出；  在 window 下可以使用 echo %ERRORLEUEL% 指令打印出">
+<meta property="og:type" content="article">
+<meta property="og:title" content="main函数与命令行参数">
+<meta property="og:url" content="https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/main%E5%87%BD%E6%95%B0%E4%B8%8E%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0/index.html">
+<meta property="og:site_name" content="流年不知心底事">
+<meta property="og:description" content="main 函数的本质究竟是什么?  main 函数是操作系统调用的函数 操作系统总是将 main 函数作为应用程序的开始 操作系统将 main 函数的返回值作为程序的退出状态  程序在运行的时候就会产生一个进程，那么操作系统如何去判断这个程序是否是异常退出的呢，有些操作系统会弹出一个对话框，告诉我们应用程序异常退出；  在 window 下可以使用 echo %ERRORLEUEL% 指令打印出">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.tooupper.org/public/image/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/CGCCliebiaocanshu.png">
+<meta property="article:published_time" content="2024-10-15T13:11:00.000Z">
+<meta property="article:modified_time" content="2025-01-07T10:58:33.625Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="C语言进阶">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.tooupper.org/public/image/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/CGCCliebiaocanshu.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>main函数与命令行参数</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/C%E8%AF%AD%E8%A8%80%E5%86%85%E5%AD%98%E5%B8%83%E5%B1%80/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/%E6%8C%87%E9%92%88%E5%92%8C%E6%95%B0%E7%BB%84/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/main%E5%87%BD%E6%95%B0%E4%B8%8E%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/main%E5%87%BD%E6%95%B0%E4%B8%8E%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0/&text=main函数与命令行参数"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/main%E5%87%BD%E6%95%B0%E4%B8%8E%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0/&title=main函数与命令行参数"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/main%E5%87%BD%E6%95%B0%E4%B8%8E%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0/&is_video=false&description=main函数与命令行参数"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=main函数与命令行参数&body=Check out this article: https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/main%E5%87%BD%E6%95%B0%E4%B8%8E%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/main%E5%87%BD%E6%95%B0%E4%B8%8E%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0/&title=main函数与命令行参数"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/main%E5%87%BD%E6%95%B0%E4%B8%8E%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0/&title=main函数与命令行参数"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/main%E5%87%BD%E6%95%B0%E4%B8%8E%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0/&title=main函数与命令行参数"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/main%E5%87%BD%E6%95%B0%E4%B8%8E%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0/&title=main函数与命令行参数"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/main%E5%87%BD%E6%95%B0%E4%B8%8E%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0/&name=main函数与命令行参数&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/main%E5%87%BD%E6%95%B0%E4%B8%8E%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0/&t=main函数与命令行参数"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        main函数与命令行参数
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">kay</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-10-15T13:11:00.000Z" class="dt-published" itemprop="datePublished">2024-10-15</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/C%E8%AF%AD%E8%A8%80/">C语言</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/" rel="tag">C语言进阶</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p><strong>main 函数的本质究竟是什么?</strong></p>
+<ul>
+<li>main 函数是操作系统调用的函数</li>
+<li>操作系统总是将 main 函数作为<strong>应用程序的开始</strong></li>
+<li>操作系统将 main 函数的<strong>返回值</strong>作为<strong>程序的退出状态</strong></li>
+</ul>
+<p>程序在运行的时候就会产生一个进程，那么操作系统如何去判断这个程序是否是异常退出的呢，有些操作系统会弹出一个对话框，告诉我们应用程序异常退出；</p>
+<blockquote>
+<p>在 window 下可以使用 echo %ERRORLEUEL% 指令打印出 main 函数返回的值</p>
+</blockquote>
+<p><strong>那么操作系统是如何使用 main 函数给他的返回值呢</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// A.c</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;I&#x27;m A&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// B.c</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;I&#x27;m B&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">99</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>此时我们只在 cmd 中执行 B.exe &amp;&amp; A.exe（从 C 语言来看功能就是正常执行完 B.exe 之后在去执行 A.exe）:</p>
+<p>这里我们会发现，程序只输出了 I’m B，说明 99 找个返回值对于操作系统来说是异常的，是不正常执行之后返回的状态；</p>
+<p>此时我们反过来  A.exe &amp;&amp; B.exe 就会发现，既输出了 I’m A 也输出了 I’m B，说明 0 找个返回值对于操作系统来说是个正常执行后所返回的状态；</p>
+<blockquote>
+<p>建议在写程序时候利用这种返回值为 int 0 的标准 main 函数；</p>
+</blockquote>
+<p><strong>main 函数的参数</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc)</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>* argv[])</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>* argv[], <span class="type">char</span>* env[])</span></span><br><span class="line"><span class="comment">// argc - 命令行参数的个数</span></span><br><span class="line"><span class="comment">// argv - 命令行数组</span></span><br><span class="line"><span class="comment">// env  - 环境变量数组    </span></span><br></pre></td></tr></table></figure>
+
+<p><strong>以 GCC 编译器为例，该如何使用：</strong></p>
+<p><img src="/public/image/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/CGCCliebiaocanshu.png" alt="CGCCliebiaocanshu"></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;stdio.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>* argv[], <span class="type">char</span>* env[])</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;==============Begin argv==============\n&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; argc; i++) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%s\n&quot;</span>, argv[i]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;==============End argv==============\n&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;==============Begin env==============\n&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(i = <span class="number">0</span>; env[i] != <span class="literal">NULL</span>; i++) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%s\n&quot;</span>, env [i]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;==============End env==============\n&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 运行 ./a.out 输出：</span></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">    </span></span><br><span class="line"><span class="comment">    ==============Begin argv==============</span></span><br><span class="line"><span class="comment">    ./a.out</span></span><br><span class="line"><span class="comment">    ==============End argv==============</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">    ==============Begin env==============</span></span><br><span class="line"><span class="comment">    SHELL=/bin/bash</span></span><br><span class="line"><span class="comment">    WSL2_GUI_APPS_ENABLED=1</span></span><br><span class="line"><span class="comment">    WSL_DISTRO_NAME=Ubuntu-22.04</span></span><br><span class="line"><span class="comment">    NAME=ThinkPad</span></span><br><span class="line"><span class="comment">    PWD=/home/kay/workspace/test</span></span><br><span class="line"><span class="comment">    LOGNAME=kay</span></span><br><span class="line"><span class="comment">    MOTD_SHOWN=update-motd</span></span><br><span class="line"><span class="comment">    HOME=/home/kay</span></span><br><span class="line"><span class="comment">    LANG=C.UTF-8</span></span><br><span class="line"><span class="comment">    ...</span></span><br><span class="line"><span class="comment">    ==============End env==============</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>环境变量数组中，并没有给出具体的长度信息，所以通过空去判断；</p>
+<p>env 中打印的是程序在运行过程中，操作系统传递进行来的环境变量的信息；</p>
+<p>argv 中的参数就是传递给 main 函数所使用的参数；</p>
+</blockquote>
+<p><strong>main 函数一定是程序执行的第一个函数吗？</strong></p>
+<p>这类问题要分情况讨论，以 GCC 编译器为例</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 判断是否是 GCC 编译器，如果不是则定义一个空的宏</span></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> __GNUC__</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> __attribute__(x) </span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// GCC 编译器的属性关键字，表示在 main 函数执行之前先执行下列的函数也就是 void before_main()</span></span><br><span class="line">__attribute__((constructor))</span><br><span class="line"><span class="type">void</span> <span class="title function_">before_main</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%s\n&quot;</span>,__FUNCTION__);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// GCC 编译器的属性关键字，表示在 main 函数执行之后再执行下列的函数也就是 void after_main()</span></span><br><span class="line">__attribute__((destructor)) </span><br><span class="line"><span class="type">void</span> <span class="title function_">after_main</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%s\n&quot;</span>,__FUNCTION__);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%s\n&quot;</span>,__FUNCTION__);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	before_main</span></span><br><span class="line"><span class="comment">	main</span></span><br><span class="line"><span class="comment">	after_main</span></span><br><span class="line"><span class="comment">	*/</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>小结</strong></p>
+<ul>
+<li>一个 C 程序是从 main 函数开始的</li>
+<li>main 函数是<strong>操作系统</strong>调用的函数</li>
+<li>main 函数有<strong>参数</strong>和<strong>返回值</strong></li>
+<li>现代编译器支持再 main 函数前调用其他函数</li>
+</ul>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">博主</a></li>
+        
+          <li><a href="/tags/">标签</a></li>
+        
+          <li><a href="/categories/">分类</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/main%E5%87%BD%E6%95%B0%E4%B8%8E%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/main%E5%87%BD%E6%95%B0%E4%B8%8E%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0/&text=main函数与命令行参数"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/main%E5%87%BD%E6%95%B0%E4%B8%8E%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0/&title=main函数与命令行参数"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/main%E5%87%BD%E6%95%B0%E4%B8%8E%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0/&is_video=false&description=main函数与命令行参数"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=main函数与命令行参数&body=Check out this article: https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/main%E5%87%BD%E6%95%B0%E4%B8%8E%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/main%E5%87%BD%E6%95%B0%E4%B8%8E%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0/&title=main函数与命令行参数"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/main%E5%87%BD%E6%95%B0%E4%B8%8E%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0/&title=main函数与命令行参数"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/main%E5%87%BD%E6%95%B0%E4%B8%8E%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0/&title=main函数与命令行参数"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/main%E5%87%BD%E6%95%B0%E4%B8%8E%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0/&title=main函数与命令行参数"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/main%E5%87%BD%E6%95%B0%E4%B8%8E%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0/&name=main函数与命令行参数&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/main%E5%87%BD%E6%95%B0%E4%B8%8E%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0/&t=main函数与命令行参数"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    kay
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

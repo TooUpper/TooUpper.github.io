@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="FreeRTOS 是一个开源的轻量级实时操作系统（RTOS），专为嵌入式系统设计。由 Real Time Engineers Ltd. 开发，目前由亚马逊维护并以 MIT License 开源。它广泛应用于物联网（IoT）、工业自动化和其他对实时性要求较高的场景。 FreeRTOS 的任务调度本质上是并发（Concurrency）而非并行（Parallelism）。 特点轻量化设计  代码量小，占">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RTOS介绍">
+<meta property="og:url" content="https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/FreeRTOS%E4%BB%8B%E7%BB%8D/index.html">
+<meta property="og:site_name" content="流年不知心底事">
+<meta property="og:description" content="FreeRTOS 是一个开源的轻量级实时操作系统（RTOS），专为嵌入式系统设计。由 Real Time Engineers Ltd. 开发，目前由亚马逊维护并以 MIT License 开源。它广泛应用于物联网（IoT）、工业自动化和其他对实时性要求较高的场景。 FreeRTOS 的任务调度本质上是并发（Concurrency）而非并行（Parallelism）。 特点轻量化设计  代码量小，占">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-11-22T02:52:00.000Z">
+<meta property="article:modified_time" content="2025-01-07T10:58:33.648Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="FreeRTOS">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>RTOS介绍</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BB%BB%E5%8A%A1%E7%AE%A1%E7%90%86/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E7%B3%BB%E7%BB%9F%E7%A7%BB%E6%A4%8D/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/FreeRTOS%E4%BB%8B%E7%BB%8D/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/FreeRTOS%E4%BB%8B%E7%BB%8D/&text=RTOS介绍"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/FreeRTOS%E4%BB%8B%E7%BB%8D/&title=RTOS介绍"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/FreeRTOS%E4%BB%8B%E7%BB%8D/&is_video=false&description=RTOS介绍"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=RTOS介绍&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/FreeRTOS%E4%BB%8B%E7%BB%8D/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/FreeRTOS%E4%BB%8B%E7%BB%8D/&title=RTOS介绍"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/FreeRTOS%E4%BB%8B%E7%BB%8D/&title=RTOS介绍"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/FreeRTOS%E4%BB%8B%E7%BB%8D/&title=RTOS介绍"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/FreeRTOS%E4%BB%8B%E7%BB%8D/&title=RTOS介绍"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/FreeRTOS%E4%BB%8B%E7%BB%8D/&name=RTOS介绍&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/FreeRTOS%E4%BB%8B%E7%BB%8D/&t=RTOS介绍"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%B9%E7%82%B9"><span class="toc-number">1.</span> <span class="toc-text">特点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E7%A0%81%E8%A7%84%E8%8C%83"><span class="toc-number">2.</span> <span class="toc-text">编码规范</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%91%BD%E5%90%8D%E8%A7%84%E8%8C%83"><span class="toc-number">2.1.</span> <span class="toc-text">命名规范</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">2.2.</span> <span class="toc-text">数据类型</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E7%BB%84%E4%BB%B6"><span class="toc-number">3.</span> <span class="toc-text">核心组件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%BB%E5%8A%A1%EF%BC%88Task%EF%BC%89"><span class="toc-number">3.1.</span> <span class="toc-text">任务（Task）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B0%83%E5%BA%A6%E5%99%A8%EF%BC%88Scheduler%EF%BC%89"><span class="toc-number">3.2.</span> <span class="toc-text">调度器（Scheduler）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AD%E6%96%AD%E6%9C%8D%E5%8A%A1%EF%BC%88Interrupt-Handling%EF%BC%89"><span class="toc-number">3.3.</span> <span class="toc-text">中断服务（Interrupt Handling）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%A1%E5%8F%B7%E9%87%8F%EF%BC%88Semaphore%EF%BC%89"><span class="toc-number">3.4.</span> <span class="toc-text">信号量（Semaphore）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%92%E6%96%A5%E9%94%81%EF%BC%88Mutex%EF%BC%89"><span class="toc-number">3.5.</span> <span class="toc-text">互斥锁（Mutex）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%EF%BC%88Queue%EF%BC%89"><span class="toc-number">3.6.</span> <span class="toc-text">消息队列（Queue）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E6%97%B6%E5%99%A8%EF%BC%88Timer%EF%BC%89"><span class="toc-number">3.7.</span> <span class="toc-text">定时器（Timer）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86"><span class="toc-number">3.8.</span> <span class="toc-text">内存管理</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        RTOS介绍
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">kay</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-11-22T02:52:00.000Z" class="dt-published" itemprop="datePublished">2024-11-22</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/FreeRTOS/">FreeRTOS</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/FreeRTOS/" rel="tag">FreeRTOS</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>FreeRTOS 是一个开源的轻量级<strong>实时操作系统</strong>（RTOS），专为嵌入式系统设计。由 Real Time Engineers Ltd. 开发，目前由亚马逊维护并以 MIT License 开源。它广泛应用于物联网（IoT）、工业自动化和其他对实时性要求较高的场景。</p>
+<p>FreeRTOS 的任务调度本质上是<strong>并发（Concurrency）</strong>而非并行（Parallelism）。</p>
+<h2 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h2><p><strong>轻量化设计</strong></p>
+<ul>
+<li>代码量小，占用内存低，适合资源受限的嵌入式系统。</li>
+<li>内核大小通常只有几 KB。</li>
+</ul>
+<p><strong>可移植性</strong></p>
+<ul>
+<li>支持多种架构（ARM Cortex-M、RISC-V、x86 等）。</li>
+<li>可跨平台运行，容易适配不同硬件。</li>
+</ul>
+<p><strong>实时性</strong></p>
+<ul>
+<li>支持<strong>抢占式调度</strong>、时间片轮转调度和优先级调度。</li>
+<li>延迟和抖动低。</li>
+</ul>
+<p><strong>模块化</strong></p>
+<ul>
+<li>可裁剪的内核，用户可以根据需求选用或裁剪功能模块。</li>
+</ul>
+<p><strong>丰富的功能</strong></p>
+<ul>
+<li>提供任务管理、信号量、队列、互斥锁、定时器等功能。</li>
+</ul>
+<p><strong>社区支持和生态</strong></p>
+<ul>
+<li>大量开发者和维护团队支持。</li>
+<li>与 AWS IoT 集成，提供 IoT 应用的解决方案。</li>
+</ul>
+<h2 id="编码规范"><a href="#编码规范" class="headerlink" title="编码规范"></a>编码规范</h2><h3 id="命名规范"><a href="#命名规范" class="headerlink" title="命名规范"></a>命名规范</h3><p>RTOS 内核和演示应用程序源代码使用以下惯例:<a target="_blank" rel="noopener" href="https://freertos.org/zh-cn-cmn-s/Documentation/02-Kernel/06-Coding-guidelines/02-FreeRTOS-Coding-Standard-and-Style-Guide">FreeRTOS编码标准风格指南</a></p>
+<ul>
+<li><p>变量</p>
+<ul>
+<li><p><em>uint32_t</em> 类型变量以 <em>ul</em> 为前缀，其中“u”表示“unsigned” ，“l”表示“long”。</p>
+</li>
+<li><p><em>uint16_t</em> 类型变量以 <em>us</em> 为前缀，其中“u”表示“unsigned” ，“s”表示“short”。</p>
+</li>
+<li><p><em>uint8_t</em> 类型变量以 <em>uc</em> 为前缀，其中“u”表示“unsigned” ，“c”表示“char ”。</p>
+</li>
+<li><p>非 stdint 类型的变量（我们自定义的变量类型，非 uint32_t、uint16_t 等这些类型）以 <em>x</em> 为前缀。例如，BaseType_t 和 TickType_t， 二者分别是可移植层定义的定义类型，主要架构的自然类型或最有效类型， 以及用于保存 RTOS 滴答计数的类型。(类似这样：BaseType_t  xA;)</p>
+</li>
+<li><p>非 stdint 类型的未签名变量（Unsigned Type）存在附加前缀 <em>u</em>。例如， UBaseType_t（未签名 BaseType_t）类型变量以 <em>ux</em> 为前缀。</p>
+</li>
+<li><p><em>size_t</em> 类型变量也带有 <em>ux</em> 前缀。</p>
+</li>
+<li><p>枚举变量以 <em>e</em> 为前缀</p>
+</li>
+<li><p>指针以附加 <em>p</em> 为前缀，例如，指向 uint16_t 的指针将以 <em>pus</em> 为前缀。</p>
+</li>
+<li><p>根据 MISRA 指南，未限定标准 <em>char</em> 类型仅可包含 ASCII 字符， 并以 <em>c</em> 为前缀。</p>
+</li>
+<li><p>根据 MISRA 指南，char* 类型变量仅可包含指向 ASCII 字符串的指针， 并以 <em>pc</em> 为前缀。</p>
+</li>
+</ul>
+</li>
+<li><p>函数</p>
+<ul>
+<li>文件作用域静态（私有）函数以 <em>prv</em> 为前缀。</li>
+<li>根据变量定义的相关规定，API 函数以其返回类型为前缀， 并为 <em>void</em> 添加前缀 <em>v</em>。</li>
+<li>API 函数名称以定义 API 函数文件的名称开头。例如，在 tasks.c 中定义 vTaskDelete， 并且具有 void 返回类型。</li>
+</ul>
+</li>
+<li><p>宏</p>
+<ul>
+<li>宏以定义宏的文件为前缀。前缀为小写。例如， configUSE_PREEMPTION 在 FreeRTOSConfig.h 中定义。</li>
+<li>除前缀外，所有宏均使用大写字母书写，并使用下划线来分隔单词。</li>
+</ul>
+</li>
+</ul>
+<h3 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h3><p>仅使用 stdint.h 类型和 RTOS 自带的 typedef，但以下情况除外：</p>
+<ul>
+<li><p>char</p>
+<p>根据 MISRA 指南，仅在未限定字符类型包含 ASCII 字符方可使用未限定字符类型。</p>
+</li>
+<li><p>char *</p>
+<p>根据 MISRA 指南，仅在未限定字符指针指向 ASCII 字符串时方可使用未限定字符指针 。使用需要 char * 参数的标准库函数时， 无需抑制良性编译器警告，此举尤其考虑到将一些编译器默认为未限定 char 类型是签名的， 而其他编译器默认未限定 char 类型是未签名的。</p>
+</li>
+</ul>
+<p>针对每个移植定义四种类型。即：</p>
+<ul>
+<li><p>TickType_t</p>
+<ul>
+<li>如果 configUSE_16_BIT_TICKS 设置为非零 (true) ，则将 TickType_t 定义为未签名的 16 位类型。</li>
+<li>如果 configUSE_16_BIT_TICKS 设置为零 (false)，则将 TickType_t 定义为未签名的 32 位类型。</li>
+</ul>
+<p>请参阅 API 文档的<a target="_blank" rel="noopener" href="https://freertos.org/Documentation/02-Kernel/03-Supported-devices/02-Customization/">自定义</a>章节 获取完整信息。</p>
+<p>32 位架构应始终将 configUSE_16_BIT_TICKS 设置为 0。</p>
+</li>
+<li><p>BaseType_t</p>
+<p>架构中最有效、最自然的类型。例如，在 32 位架构上， BaseType_t 会被定义为 32 位类型。在 16 位架构上，BaseType_t 会被定义为 16 位类型 。如果将 BaseType_t 定义为 char， 则须特别注意确保将签名字符用于可能为负的函数返回值来指示错误。</p>
+</li>
+<li><p>UBaseType_t</p>
+<p>未签名的 BaseType_t。</p>
+</li>
+<li><p>StackType_t</p>
+<p>意指架构用于存储堆栈项目的类型。通常是 16 位架构上的 16 位类型 和 32 位架构上的 32 位类型，但也有例外情况。供 FreeRTOS 内部使用。</p>
+</li>
+</ul>
+<blockquote>
+<p>pd 是 <strong>Portable Data</strong>（可移植数据）的缩写，用于表示布尔值、错误状态或状态码等。它通常出现在宏定义和返回值中，提供了一种统一的、平台无关的表示方式。</p>
+</blockquote>
+<h2 id="核心组件"><a href="#核心组件" class="headerlink" title="核心组件"></a>核心组件</h2><h3 id="任务（Task）"><a href="#任务（Task）" class="headerlink" title="任务（Task）"></a><strong>任务（Task）</strong></h3><ul>
+<li>FreeRTOS 的基本单元，每个任务相当于一个独立的线程。</li>
+<li>每个任务有优先级，调度时优先级高的任务先执行。</li>
+<li>任务的状态：<ul>
+<li>就绪态（Ready）</li>
+<li>运行态（Running）</li>
+<li>阻塞态（Blocked）</li>
+<li>挂起态（Suspended）</li>
+</ul>
+</li>
+</ul>
+<h3 id="调度器（Scheduler）"><a href="#调度器（Scheduler）" class="headerlink" title="调度器（Scheduler）"></a><strong>调度器（Scheduler）</strong></h3><ul>
+<li><strong>抢占式调度</strong>：优先级高的任务可以抢占低优先级任务。</li>
+<li><strong>时间片轮转</strong>：相同优先级的任务按时间片轮流执行。</li>
+<li><strong>静态优先级调度</strong>：优先级固定，调度简单高效。</li>
+</ul>
+<h3 id="中断服务（Interrupt-Handling）"><a href="#中断服务（Interrupt-Handling）" class="headerlink" title="中断服务（Interrupt Handling）"></a><strong>中断服务（Interrupt Handling）</strong></h3><ul>
+<li>支持中断嵌套。</li>
+<li>提供中断安全 API，如 xQueueSendFromISR。</li>
+</ul>
+<h3 id="信号量（Semaphore）"><a href="#信号量（Semaphore）" class="headerlink" title="信号量（Semaphore）"></a><strong>信号量（Semaphore）</strong></h3><ul>
+<li><strong>二值信号量</strong>：任务间简单同步。</li>
+<li><strong>计数信号量</strong>：用于计数资源访问次数。</li>
+</ul>
+<h3 id="互斥锁（Mutex）"><a href="#互斥锁（Mutex）" class="headerlink" title="互斥锁（Mutex）"></a><strong>互斥锁（Mutex）</strong></h3><ul>
+<li>防止多个任务同时访问共享资源。</li>
+<li>提供优先级继承机制，防止优先级反转。</li>
+</ul>
+<h3 id="消息队列（Queue）"><a href="#消息队列（Queue）" class="headerlink" title="消息队列（Queue）"></a><strong>消息队列（Queue）</strong></h3><ul>
+<li>用于任务间通信或中断与任务间通信。</li>
+<li>支持任意类型数据的传递。</li>
+</ul>
+<h3 id="定时器（Timer）"><a href="#定时器（Timer）" class="headerlink" title="定时器（Timer）"></a><strong>定时器（Timer）</strong></h3><ul>
+<li>软件定时器，用于定时执行任务。</li>
+<li>提供单次触发和周期触发两种模式。</li>
+</ul>
+<h3 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a><strong>内存管理</strong></h3><p>提供多种动态内存分配策略：</p>
+<ul>
+<li>heap_1：固定大小分配，不支持释放。</li>
+<li>heap_2：简单合并算法，支持释放。</li>
+<li>heap_4：最常用，内存碎片少。</li>
+<li>heap_5：支持多内存区域。</li>
+</ul>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">博主</a></li>
+        
+          <li><a href="/tags/">标签</a></li>
+        
+          <li><a href="/categories/">分类</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%B9%E7%82%B9"><span class="toc-number">1.</span> <span class="toc-text">特点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E7%A0%81%E8%A7%84%E8%8C%83"><span class="toc-number">2.</span> <span class="toc-text">编码规范</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%91%BD%E5%90%8D%E8%A7%84%E8%8C%83"><span class="toc-number">2.1.</span> <span class="toc-text">命名规范</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">2.2.</span> <span class="toc-text">数据类型</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E7%BB%84%E4%BB%B6"><span class="toc-number">3.</span> <span class="toc-text">核心组件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%BB%E5%8A%A1%EF%BC%88Task%EF%BC%89"><span class="toc-number">3.1.</span> <span class="toc-text">任务（Task）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B0%83%E5%BA%A6%E5%99%A8%EF%BC%88Scheduler%EF%BC%89"><span class="toc-number">3.2.</span> <span class="toc-text">调度器（Scheduler）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AD%E6%96%AD%E6%9C%8D%E5%8A%A1%EF%BC%88Interrupt-Handling%EF%BC%89"><span class="toc-number">3.3.</span> <span class="toc-text">中断服务（Interrupt Handling）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%A1%E5%8F%B7%E9%87%8F%EF%BC%88Semaphore%EF%BC%89"><span class="toc-number">3.4.</span> <span class="toc-text">信号量（Semaphore）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%92%E6%96%A5%E9%94%81%EF%BC%88Mutex%EF%BC%89"><span class="toc-number">3.5.</span> <span class="toc-text">互斥锁（Mutex）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%EF%BC%88Queue%EF%BC%89"><span class="toc-number">3.6.</span> <span class="toc-text">消息队列（Queue）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E6%97%B6%E5%99%A8%EF%BC%88Timer%EF%BC%89"><span class="toc-number">3.7.</span> <span class="toc-text">定时器（Timer）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86"><span class="toc-number">3.8.</span> <span class="toc-text">内存管理</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/FreeRTOS%E4%BB%8B%E7%BB%8D/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/FreeRTOS%E4%BB%8B%E7%BB%8D/&text=RTOS介绍"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/FreeRTOS%E4%BB%8B%E7%BB%8D/&title=RTOS介绍"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/FreeRTOS%E4%BB%8B%E7%BB%8D/&is_video=false&description=RTOS介绍"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=RTOS介绍&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/FreeRTOS%E4%BB%8B%E7%BB%8D/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/FreeRTOS%E4%BB%8B%E7%BB%8D/&title=RTOS介绍"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/FreeRTOS%E4%BB%8B%E7%BB%8D/&title=RTOS介绍"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/FreeRTOS%E4%BB%8B%E7%BB%8D/&title=RTOS介绍"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/FreeRTOS%E4%BB%8B%E7%BB%8D/&title=RTOS介绍"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/FreeRTOS%E4%BB%8B%E7%BB%8D/&name=RTOS介绍&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/FreeRTOS%E4%BB%8B%E7%BB%8D/&t=RTOS介绍"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    kay
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="在嵌入式开发中，I2C（Inter-Integrated Circuit）是一种用于短距离通信的半双工同步串行通信协议，仅需两条线（数据线 SDA 和时钟线 SCL）即可实现多主多从通信。主设备通过发送时钟信号控制通信节奏，以字节为单位与从设备进行数据交换。每个从设备具有唯一地址，主设备可以通过寻址选择特定从设备进行读写。 主要特性 半双工通信：I2C 使用两根信号线即可完成通信，具备半双工特性，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="I2C">
+<meta property="og:url" content="https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/I2C/index.html">
+<meta property="og:site_name" content="流年不知心底事">
+<meta property="og:description" content="在嵌入式开发中，I2C（Inter-Integrated Circuit）是一种用于短距离通信的半双工同步串行通信协议，仅需两条线（数据线 SDA 和时钟线 SCL）即可实现多主多从通信。主设备通过发送时钟信号控制通信节奏，以字节为单位与从设备进行数据交换。每个从设备具有唯一地址，主设备可以通过寻址选择特定从设备进行读写。 主要特性 半双工通信：I2C 使用两根信号线即可完成通信，具备半双工特性，">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="c:\Users\kay\Desktop\image-20241109111048626.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407yihuofeimen.png">
+<meta property="og:image" content="c:\Users\kay\AppData\Roaming\Typora\typora-user-images\image-20241111211544630.png">
+<meta property="article:published_time" content="2024-11-09T01:05:00.000Z">
+<meta property="article:modified_time" content="2025-01-07T10:58:33.648Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="GD32F407">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="c:\Users\kay\Desktop\image-20241109111048626.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>I2C</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/ADC/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/SysTick/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/I2C/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/I2C/&text=I2C"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/I2C/&title=I2C"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/I2C/&is_video=false&description=I2C"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=I2C&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/I2C/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/I2C/&title=I2C"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/I2C/&title=I2C"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/I2C/&title=I2C"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/I2C/&title=I2C"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/I2C/&name=I2C&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/I2C/&t=I2C"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E7%89%B9%E6%80%A7"><span class="toc-number">1.</span> <span class="toc-text">主要特性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#I2C-%E6%97%B6%E5%BA%8F"><span class="toc-number">2.</span> <span class="toc-text">I2C 时序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#I2C-%E9%80%9A%E4%BF%A1%E4%BF%A1%E5%8F%B7"><span class="toc-number">3.</span> <span class="toc-text">I2C 通信信号</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#I2C-%E9%80%9A%E4%BF%A1%E8%BF%87%E7%A8%8B"><span class="toc-number">4.</span> <span class="toc-text">I2C 通信过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#I2C-%E5%86%99%E5%85%A5%E8%BF%87%E7%A8%8B%EF%BC%9A"><span class="toc-number">4.1.</span> <span class="toc-text">I2C 写入过程：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#I2C-%E8%AF%BB%E5%8F%96%E8%BF%87%E7%A8%8B%EF%BC%9A"><span class="toc-number">4.2.</span> <span class="toc-text">I2C 读取过程：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#I2C-%E9%80%9A%E4%BF%A1%E8%A7%84%E5%88%99"><span class="toc-number">5.</span> <span class="toc-text">I2C 通信规则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%B6%E5%BA%8F%E5%9B%BE"><span class="toc-number">6.</span> <span class="toc-text">时序图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%B5%E8%B7%AF%E5%9B%BE"><span class="toc-number">7.</span> <span class="toc-text">电路图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">8.</span> <span class="toc-text">实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BD%AF%E4%BB%B6%E5%AE%9E%E7%8E%B0"><span class="toc-number">8.1.</span> <span class="toc-text">软件实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A1%AC%E4%BB%B6%E5%AE%9E%E7%8E%B0"><span class="toc-number">8.2.</span> <span class="toc-text">硬件实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">9.</span> <span class="toc-text">问题</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        I2C
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">kay</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-11-09T01:05:00.000Z" class="dt-published" itemprop="datePublished">2024-11-09</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/ARM/">ARM</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/GD32F407/" rel="tag">GD32F407</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>在嵌入式开发中，<strong>I2C（Inter-Integrated Circuit）</strong>是一种用于<strong>短距离通信</strong>的<strong>半双工同步串行</strong>通信<strong>协议</strong>，仅需两条线（数据线 SDA 和时钟线 SCL）即可实现<strong>多主多从</strong>通信。主设备通过发送<strong>时钟信号</strong>控制通信节奏，以<strong>字节</strong>为单位与从设备进行数据交换。每个从设备具有<strong>唯一</strong>地址，主设备可以通过寻址选择特定从设备进行读写。</p>
+<h2 id="主要特性"><a href="#主要特性" class="headerlink" title="主要特性"></a>主要特性</h2><ul>
+<li><p><strong>半双工通信</strong>：I2C 使用两根信号线即可完成通信，具备半双工特性，即数据在同一时间内只能沿一个方向传输。</p>
+</li>
+<li><p><strong>双线连接</strong>：I2C 使用两条线进行通信：</p>
+<ul>
+<li><p><strong>SDA（数据线）</strong>：负责数据的双向传输。</p>
+</li>
+<li><p><strong>SCL（时钟线）</strong>：提供同步信号，由主设备产生。</p>
+</li>
+</ul>
+</li>
+<li><p><strong>多主多从</strong>：IIC 支持多主多从结构，多个主设备可以连接到同一条总线上，但同时只有一个主设备可以主动控制总线。</p>
+</li>
+<li><p><strong>从设备地址</strong>：每个从设备通过唯一的 7 位或 10 位地址被识别，主设备通过地址区分和选择要通信的从设备。</p>
+</li>
+</ul>
+<blockquote>
+<p>SDA 和 SCL 都是双向线，当总线空闲时，两条线都是高电平；连接到总线的设备输出极必须是开漏或者开集，以提供线与功能。</p>
+</blockquote>
+<h2 id="I2C-时序"><a href="#I2C-时序" class="headerlink" title="I2C 时序"></a>I2C 时序</h2><p>IIC 的传输速率一般是 100kbps，最高可以达到 400kbps（快速模式）或更高（高速模式可达 3.4Mbps），并且遵循一定的时序约束：</p>
+<ul>
+<li><strong>时钟同步</strong>：主设备通过 SCL 控制传输节奏，数据必须在 SCL 高电平时保持稳定，只有在 SCL 低电平期间数据才允许变化。</li>
+<li><strong>确认应答（ACK&#x2F;NACK）</strong>：每传输 8 位数据后，接收方在第九个时钟周期内向发送方反馈 ACK（低电平）或 NACK（高电平）以表示数据接收状态。</li>
+</ul>
+<h2 id="I2C-通信信号"><a href="#I2C-通信信号" class="headerlink" title="I2C 通信信号"></a>I2C 通信信号</h2><p><strong>起始条件</strong></p>
+<ul>
+<li>主设备将 SDA 线从高电平拉至低电平，同时保持 SCL 线为高电平，表示通信开始。所有从设备都会检测到该起始信号，准备响应。</li>
+</ul>
+<p><strong>从设备地址</strong></p>
+<ul>
+<li><p>主设备在起始信号后发送从设备的7位地址（或10位地址，取决于协议版本）并在地址后加上 1 位读写位。</p>
+<ul>
+<li>读写位为 0 表示写操作（主设备向从设备发送数据），为 1 表示读操作（主设备从从设备读取数据）。</li>
+</ul>
+</li>
+<li><p>总线上的所有设备都接收地址信号，只有与地址匹配的从设备会响应。</p>
+</li>
+</ul>
+<p><strong>应答（ACK）</strong></p>
+<ul>
+<li>匹配的从设备将 SDA 线拉低，表示“应答”（ACK），通知主设备可以进行下一步。若没有从设备应答，则 SDA 保持高电平（非应答，NACK）。</li>
+</ul>
+<p><strong>数据传输</strong></p>
+<ul>
+<li><p>数据以字节为单位传输，每字节包含 8 位。</p>
+</li>
+<li><p>每发送完一字节数据，从设备（写操作时）或主设备（读操作时）都需要发送一个 ACK。</p>
+</li>
+<li><p>数据传输过程中，SDA 数据线在 SCL 时钟线的高电平期间保持稳定，数据变化发生在低电平期间。</p>
+</li>
+</ul>
+<p><strong>停止条件</strong></p>
+<ul>
+<li><p>当通信结束时，主设备将 SDA 从低电平拉至高电平，同时保持 SCL 为高电平，表示通信完成。</p>
+</li>
+<li><p>所有从设备返回待机模式，等待下一次通信。</p>
+</li>
+</ul>
+<h2 id="I2C-通信过程"><a href="#I2C-通信过程" class="headerlink" title="I2C 通信过程"></a>I2C 通信过程</h2><h3 id="I2C-写入过程："><a href="#I2C-写入过程：" class="headerlink" title="I2C 写入过程："></a><strong>I2C 写入过程：</strong></h3><ol>
+<li><strong>起始信号（START）</strong></li>
+<li><strong>发送从设备地址 + 写标志（0）</strong></li>
+<li><strong>接收从设备的应答（ACK）</strong></li>
+<li><strong>发送数据字节</strong></li>
+<li><strong>接收从设备的应答（ACK）</strong></li>
+<li><strong>重复步骤 4 和 5，直到发送完所有数据</strong></li>
+<li><strong>发送停止信号（STOP）</strong></li>
+</ol>
+<h3 id="I2C-读取过程："><a href="#I2C-读取过程：" class="headerlink" title="I2C 读取过程："></a><strong>I2C 读取过程：</strong></h3><ol>
+<li><strong>起始信号（START）</strong></li>
+<li><strong>发送从设备地址 + 写标志（0）</strong></li>
+<li><strong>接收从设备的应答（ACK）</strong></li>
+<li><strong>起始信号（START）</strong></li>
+<li><strong>发送从设备地址 + 读标志（1）</strong></li>
+<li><strong>接收从设备的应答（ACK）</strong></li>
+<li><strong>读取数据字节</strong></li>
+<li><strong>主设备发送应答（ACK）或不应答（NACK）</strong></li>
+<li><strong>重复步骤 7 和 8，直到读取完所有数据</strong></li>
+<li><strong>发送停止信号（STOP）</strong></li>
+</ol>
+<h2 id="I2C-通信规则"><a href="#I2C-通信规则" class="headerlink" title="I2C 通信规则"></a>I2C 通信规则</h2><ul>
+<li><strong>上升沿</strong>：I2C 协议在 <strong>SCL（时钟线）上升沿捕获数据</strong>。当 SCL 线上升沿到来时，从设备或主设备读取当前 SDA（数据线）上的数据位。</li>
+<li><strong>高电平</strong>：在 <strong>SCL 高电平期间传输数据</strong>。SDA 线上发送的数据位在 SCL 高电平时被稳定保持。</li>
+<li><strong>下降沿</strong>：当 SCL 从高到低时，I²C 通信方可 <strong>在 SDA 上准备下一位数据</strong>。</li>
+<li><strong>低电平</strong>：SCL 低电平期间用于 <strong>设置下一个数据位</strong>，主设备或从设备可以改变 SDA 线上的状态。</li>
+</ul>
+<p>这样每次上升沿都捕获数据位，确保数据的稳定性，而下降沿或低电平则允许调整数据线上的数据。</p>
+<h2 id="时序图"><a href="#时序图" class="headerlink" title="时序图"></a>时序图</h2><p><img src="C:\Users\kay\Desktop\image-20241109111048626.png" alt="image-20241109111048626"></p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407yihuofeimen.png" alt="F407yihuofeimen"></p>
+<h2 id="电路图"><a href="#电路图" class="headerlink" title="电路图"></a>电路图</h2><p><img src="C:\Users\kay\AppData\Roaming\Typora\typora-user-images\image-20241111211544630.png" alt="image-20241111211544630"></p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><h3 id="软件实现"><a href="#软件实现" class="headerlink" title="软件实现"></a>软件实现</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;stm32f1xx_hal.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义 SCL 和 SDA 所在的端口和引脚</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> I2C_SCL_PORT GPIOB</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> I2C_SCL_PIN  GPIO_PIN_6</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> I2C_SDA_PORT GPIOB</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> I2C_SDA_PIN  GPIO_PIN_7</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义 SCL 和 SDA 的操作宏</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> I2C_SCL_HIGH() HAL_GPIO_WritePin(I2C_SCL_PORT, I2C_SCL_PIN, GPIO_PIN_SET)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> I2C_SCL_LOW()  HAL_GPIO_WritePin(I2C_SCL_PORT, I2C_SCL_PIN, GPIO_PIN_RESET)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> I2C_SDA_HIGH() HAL_GPIO_WritePin(I2C_SDA_PORT, I2C_SDA_PIN, GPIO_PIN_SET)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> I2C_SDA_LOW()  HAL_GPIO_WritePin(I2C_SDA_PORT, I2C_SDA_PIN, GPIO_PIN_RESET)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 读取 SDA 状态</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> I2C_SDA_READ() HAL_GPIO_ReadPin(I2C_SDA_PORT, I2C_SDA_PIN)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 延时函数</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">I2C_Delay</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">volatile</span> <span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++); <span class="comment">// 调整延时以符合时序</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 起始信号</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">I2C_Start</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    I2C_SDA_HIGH();</span><br><span class="line">    I2C_SCL_HIGH();</span><br><span class="line">    I2C_Delay();</span><br><span class="line">    I2C_SDA_LOW();  <span class="comment">// SDA 从高到低，产生起始信号</span></span><br><span class="line">    I2C_Delay();</span><br><span class="line">    I2C_SCL_LOW();  <span class="comment">// SCL 拉低，准备传输数据</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 停止信号</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">I2C_Stop</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    I2C_SCL_LOW();</span><br><span class="line">    I2C_SDA_LOW();</span><br><span class="line">    I2C_Delay();</span><br><span class="line">    I2C_SCL_HIGH();  <span class="comment">// SCL 拉高</span></span><br><span class="line">    I2C_Delay();</span><br><span class="line">    I2C_SDA_HIGH();  <span class="comment">// SDA 从低到高，产生停止信号</span></span><br><span class="line">    I2C_Delay();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 发送应答信号</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">I2C_SendNACK</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    I2C_SCL_LOW();</span><br><span class="line">    I2C_SDA_HIGH();  <span class="comment">// SDA 拉高，表示非应答</span></span><br><span class="line">    I2C_Delay();</span><br><span class="line">    I2C_SCL_HIGH();  <span class="comment">// SCL 拉高，发送 NACK</span></span><br><span class="line">    I2C_Delay();</span><br><span class="line">    I2C_SCL_LOW();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 接收应答信号</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">I2C_ReceiveACK</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    I2C_SCL_LOW();</span><br><span class="line">    I2C_SDA_HIGH();  <span class="comment">// 释放 SDA，等待应答</span></span><br><span class="line">    I2C_Delay();</span><br><span class="line">    I2C_SCL_HIGH();  <span class="comment">// SCL 拉高，接收应答信号</span></span><br><span class="line">    <span class="type">int</span> ack = (I2C_SDA_READ() == GPIO_PIN_RESET);  <span class="comment">// SDA 低电平表示 ACK，高电平表示 NACK</span></span><br><span class="line">    I2C_Delay();</span><br><span class="line">    I2C_SCL_LOW();</span><br><span class="line">    <span class="keyword">return</span> ack;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 发送字节</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">I2C_SendByte</span><span class="params">(<span class="type">uint8_t</span> data)</span> &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">8</span>; i++) &#123;</span><br><span class="line">        I2C_SCL_LOW();</span><br><span class="line">        <span class="keyword">if</span> (data &amp; <span class="number">0x80</span>) &#123;</span><br><span class="line">            I2C_SDA_HIGH();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            I2C_SDA_LOW();</span><br><span class="line">        &#125;</span><br><span class="line">        data &lt;&lt;= <span class="number">1</span>;</span><br><span class="line">        I2C_Delay();</span><br><span class="line">        I2C_SCL_HIGH();  <span class="comment">// SCL 拉高，发送一位数据</span></span><br><span class="line">        I2C_Delay();</span><br><span class="line">    &#125;</span><br><span class="line">    I2C_SCL_LOW();  <span class="comment">// 一字节发送完，拉低 SCL 准备接收 ACK</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 接收字节</span></span><br><span class="line"><span class="type">uint8_t</span> <span class="title function_">I2C_ReceiveByte</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    <span class="type">uint8_t</span> data = <span class="number">0</span>;</span><br><span class="line">    I2C_SDA_HIGH();  <span class="comment">// 释放 SDA，准备接收数据</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">8</span>; i++) &#123;</span><br><span class="line">        data &lt;&lt;= <span class="number">1</span>;</span><br><span class="line">        I2C_SCL_LOW();</span><br><span class="line">        I2C_Delay();</span><br><span class="line">        I2C_SCL_HIGH();  <span class="comment">// 拉高 SCL，接收一位数据</span></span><br><span class="line">        <span class="keyword">if</span> (I2C_SDA_READ()) &#123;</span><br><span class="line">            data |= <span class="number">0x01</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        I2C_Delay();</span><br><span class="line">    &#125;</span><br><span class="line">    I2C_SCL_LOW();</span><br><span class="line">    <span class="keyword">return</span> data;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="硬件实现"><a href="#硬件实现" class="headerlink" title="硬件实现"></a>硬件实现</h3><h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>一、<strong>在软件时间时，高低电平的延时时间该怎么算</strong></p>
+<p>在软件模拟 I²C 时，延时的设置取决于目标的通信速率。</p>
+<p><strong>对于 100 kbps 的标准模式</strong>：</p>
+<ul>
+<li>每比特 10 微秒。</li>
+<li>因此，高电平和低电平每次的延时各需要 <strong>5 微秒</strong>，从而实现 10 微秒的总周期。</li>
+</ul>
+<p><strong>对于 400 kbps 的快速模式</strong>：</p>
+<ul>
+<li>每比特 2.5 微秒。</li>
+<li>在这种情况下，高电平和低电平每次的延时各 <strong>1.25 微秒</strong>。</li>
+</ul>
+<p>在 <strong>I2C 通信协议</strong> 中，传输 <strong>一个 bit</strong> 需要一个 <strong>高电平</strong>和<strong>低电平</strong>，这是因为 <strong>SCL（时钟信号）</strong> 是控制数据传输时序的时钟线，而 <strong>SDA（数据线）</strong> 是实际传输数据的线。每传输一个 bit，<strong>SCL 的时钟周期</strong>（一个高电平和一个低电平）就用来完成数据位的传输。</p>
+<p>二、<strong>I2C 协议为什么要专门指定为开漏输出</strong></p>
+<p>可能会出现这么一种情况，主设备将数据线拉高，从设备将数据线拉低，这时候如何是推挽则会造成短路，这是电路中绝不允许出现的情况，而开漏则不会有这种问题；因为他只能输出低电平，高电平要靠外部的上拉电阻进行提供；</p>
+<p><strong>避免电平冲突</strong>：主设备和从设备都可以安全地拉低总线电平，而不会出现高低电平冲突的情况。</p>
+<p><strong>总线仲裁</strong>：虽然单主单从不需要仲裁，但在通信中如果出现错误或异常，开漏设计可以让设备可靠地检测总线状态，并进行恢复。</p>
+<p><strong>方便扩展</strong>：即使现在是单主单从，未来可以轻松扩展成多主或多从系统，而不需要修改硬件设计。</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">博主</a></li>
+        
+          <li><a href="/tags/">标签</a></li>
+        
+          <li><a href="/categories/">分类</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E7%89%B9%E6%80%A7"><span class="toc-number">1.</span> <span class="toc-text">主要特性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#I2C-%E6%97%B6%E5%BA%8F"><span class="toc-number">2.</span> <span class="toc-text">I2C 时序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#I2C-%E9%80%9A%E4%BF%A1%E4%BF%A1%E5%8F%B7"><span class="toc-number">3.</span> <span class="toc-text">I2C 通信信号</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#I2C-%E9%80%9A%E4%BF%A1%E8%BF%87%E7%A8%8B"><span class="toc-number">4.</span> <span class="toc-text">I2C 通信过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#I2C-%E5%86%99%E5%85%A5%E8%BF%87%E7%A8%8B%EF%BC%9A"><span class="toc-number">4.1.</span> <span class="toc-text">I2C 写入过程：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#I2C-%E8%AF%BB%E5%8F%96%E8%BF%87%E7%A8%8B%EF%BC%9A"><span class="toc-number">4.2.</span> <span class="toc-text">I2C 读取过程：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#I2C-%E9%80%9A%E4%BF%A1%E8%A7%84%E5%88%99"><span class="toc-number">5.</span> <span class="toc-text">I2C 通信规则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%B6%E5%BA%8F%E5%9B%BE"><span class="toc-number">6.</span> <span class="toc-text">时序图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%B5%E8%B7%AF%E5%9B%BE"><span class="toc-number">7.</span> <span class="toc-text">电路图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">8.</span> <span class="toc-text">实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BD%AF%E4%BB%B6%E5%AE%9E%E7%8E%B0"><span class="toc-number">8.1.</span> <span class="toc-text">软件实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A1%AC%E4%BB%B6%E5%AE%9E%E7%8E%B0"><span class="toc-number">8.2.</span> <span class="toc-text">硬件实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">9.</span> <span class="toc-text">问题</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/I2C/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/I2C/&text=I2C"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/I2C/&title=I2C"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/I2C/&is_video=false&description=I2C"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=I2C&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/I2C/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/I2C/&title=I2C"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/I2C/&title=I2C"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/I2C/&title=I2C"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/I2C/&title=I2C"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/I2C/&name=I2C&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/I2C/&t=I2C"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    kay
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

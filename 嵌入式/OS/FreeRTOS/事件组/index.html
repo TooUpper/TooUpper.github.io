@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="事件组（Event Groups）是一种用于任务间通信的机制，主要用于多任务之间的同步。事件组允许任务通过设置和清除标志位来彼此协作，完成类似于“事件通知”的功能。事件组适合用于当多个任务需要等待某些条件或事件时，它们之间进行同步。 事件位(事件标志)事件位用于指示事件 是否发生。事件位通常称为事件标志。例如，应用程序可以：  定义一个位（或标志），设置为 1 时表示“已收到消息并准备好处理”，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="事件组">
+<meta property="og:url" content="https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BA%8B%E4%BB%B6%E7%BB%84/index.html">
+<meta property="og:site_name" content="流年不知心底事">
+<meta property="og:description" content="事件组（Event Groups）是一种用于任务间通信的机制，主要用于多任务之间的同步。事件组允许任务通过设置和清除标志位来彼此协作，完成类似于“事件通知”的功能。事件组适合用于当多个任务需要等待某些条件或事件时，它们之间进行同步。 事件位(事件标志)事件位用于指示事件 是否发生。事件位通常称为事件标志。例如，应用程序可以：  定义一个位（或标志），设置为 1 时表示“已收到消息并准备好处理”，">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/eventgroupshili.gif">
+<meta property="article:published_time" content="2024-11-24T14:23:00.000Z">
+<meta property="article:modified_time" content="2025-01-07T10:58:33.648Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="FreeRTOS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/eventgroupshili.gif">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>事件组</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/%E5%B8%83%E5%B1%80/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%B8%B4%E7%95%8C%E5%8C%BA/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BA%8B%E4%BB%B6%E7%BB%84/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BA%8B%E4%BB%B6%E7%BB%84/&text=事件组"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BA%8B%E4%BB%B6%E7%BB%84/&title=事件组"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BA%8B%E4%BB%B6%E7%BB%84/&is_video=false&description=事件组"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=事件组&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BA%8B%E4%BB%B6%E7%BB%84/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BA%8B%E4%BB%B6%E7%BB%84/&title=事件组"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BA%8B%E4%BB%B6%E7%BB%84/&title=事件组"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BA%8B%E4%BB%B6%E7%BB%84/&title=事件组"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BA%8B%E4%BB%B6%E7%BB%84/&title=事件组"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BA%8B%E4%BB%B6%E7%BB%84/&name=事件组&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BA%8B%E4%BB%B6%E7%BB%84/&t=事件组"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6%E4%BD%8D-%E4%BA%8B%E4%BB%B6%E6%A0%87%E5%BF%97"><span class="toc-number">1.</span> <span class="toc-text">事件位(事件标志)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6%E7%BB%84"><span class="toc-number">2.</span> <span class="toc-text">事件组</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6%E7%BB%84%E5%92%8C%E4%BA%8B%E4%BB%B6%E4%BD%8D%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">3.</span> <span class="toc-text">事件组和事件位数据类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6%E7%BB%84%E7%9B%B8%E5%85%B3%E5%87%BD%E6%95%B0"><span class="toc-number">4.</span> <span class="toc-text">事件组相关函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E4%BA%8B%E4%BB%B6%E7%BB%84%E6%97%B6-RTOS-%E5%BF%85%E9%A1%BB%E5%85%8B%E6%9C%8D%E7%9A%84%E6%8C%91%E6%88%98"><span class="toc-number">5.</span> <span class="toc-text">实现事件组时 RTOS 必须克服的挑战</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#API"><span class="toc-number">6.</span> <span class="toc-text">API</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#xEventGroupCreate"><span class="toc-number">6.1.</span> <span class="toc-text">xEventGroupCreate</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xEventGroupSetBits"><span class="toc-number">6.2.</span> <span class="toc-text">xEventGroupSetBits</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xEventGroupWaitBits"><span class="toc-number">6.3.</span> <span class="toc-text">xEventGroupWaitBits</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xEventGroupSync"><span class="toc-number">6.4.</span> <span class="toc-text">xEventGroupSync</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">7.</span> <span class="toc-text">实现</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        事件组
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">kay</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-11-24T14:23:00.000Z" class="dt-published" itemprop="datePublished">2024-11-24</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/FreeRTOS/">FreeRTOS</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/FreeRTOS/" rel="tag">FreeRTOS</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>事件组（Event Groups）是一种用于任务间通信的机制，主要用于多任务之间的同步。事件组允许任务通过设置和清除标志位来彼此协作，完成类似于“事件通知”的功能。事件组适合用于当多个任务需要等待某些条件或事件时，它们之间进行同步。</p>
+<h2 id="事件位-事件标志"><a href="#事件位-事件标志" class="headerlink" title="事件位(事件标志)"></a>事件位(事件标志)</h2><p>事件位用于指示事件 是否发生。事件位通常称为事件标志。例如，应用程序可以：</p>
+<ul>
+<li>定义一个位（或标志），设置为 1 时表示“已收到消息并准备好处理”， 设置为 0 时表示“没有消息等待处理”。</li>
+<li>定义一个位（或标志），设置为 1 时表示“应用程序已将准备发送到网络的消息排队”， 设置为 0 时表示 “没有消息需要排队准备发送到网络”。</li>
+<li>定义一个位（或标志），设置为 1 时表示“需要向网络发送心跳消息”， 设置为 0 时表示“不需要向网络发送心跳消息”。</li>
+</ul>
+<h2 id="事件组"><a href="#事件组" class="headerlink" title="事件组"></a>事件组</h2><p>事件组就是一组事件位。事件组中的事件位通过位编号来引用。同样，以上面列出的三个例子为例：</p>
+<ul>
+<li>事件组位 0 号位表示“已收到消息并准备好处理”。</li>
+<li>事件组位 1 号位表示“应用程序已将准备发送到网络的消息排队”。</li>
+<li>事件组位 2 号位表示“需要向网络发送心跳消息”。</li>
+</ul>
+<h2 id="事件组和事件位数据类型"><a href="#事件组和事件位数据类型" class="headerlink" title="事件组和事件位数据类型"></a>事件组和事件位数据类型</h2><p>事件组由 EventGroupHandle_t 类型的变量引用。</p>
+<p>如果 configUSE_16_BIT_TICKS 设为 1，则事件组中存储的位（或标志）数为 8； 如果 configUSE_16_BIT_TICKS 设为 0，则为 24。 configUSE_16_BIT_TICKS 的值取决于 任务内部实现中用于线程本地存储的数据类型。</p>
+<p>事件组中的所有事件位都存储在 EventBits_t 类型的单个无符号整数变量中。事件位 0 存储在位 0 中， 事件位 1 存储在位1 中，依此类推。</p>
+<p>包含 24 个事件位的事件组，其中包含了 3 个事件，在图片中仅设置了事件位 2</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/eventgroupshili.gif" alt="eventgroupshili"></p>
+<h2 id="事件组相关函数"><a href="#事件组相关函数" class="headerlink" title="事件组相关函数"></a>事件组相关函数</h2><p>提供的事件组 API 函数允许任务在事件组中设置一个或多个事件位， 清除事件组中的一个或多个事件位，并挂起（进入阻塞状态， 因此任务不会消耗任何处理时间）以等待事件组中一个或多个事件位固定下来。</p>
+<p>事件组也可用于同步任务，创建通常称为“集合”的任务。任务同步点是应用程序代码中的一个位置，在该位置任务将在阻塞状态（不消耗任何 CPU 时间）下等待，直到参与同步的所有其他任务也到达其同步点。</p>
+<h2 id="实现事件组时-RTOS-必须克服的挑战"><a href="#实现事件组时-RTOS-必须克服的挑战" class="headerlink" title="实现事件组时 RTOS 必须克服的挑战"></a>实现事件组时 RTOS 必须克服的挑战</h2><p>在实现事件组时，RTOS 必须克服以下两项主要挑战：</p>
+<ol>
+<li><p>避免在用户的应用程序中创建争用条件：<br>如果出现以下情况，事件组实现将在应用程序中创建争用条件：</p>
+<ul>
+<li>不清楚各个位（或标志）由谁清除。</li>
+<li>不清楚何时清除位。</li>
+<li>不清楚在任务退出测试位值的 API 函数时是否设置或清除了位（可能是 另一个任务或中断已更改该位的状态）。</li>
+</ul>
+<p>FreeRTOS 事件组的实现通过内置智能来确保位的设置、测试和清除具有原子性， 从而消除了争用条件的可能性。线程本地存储和谨慎使用 API 函数返回值使之成为可能。</p>
+</li>
+<li><p>避免不确定性：</p>
+<p>事件组概念意味着非确定性行为，因为 不知道在一个事件组上有多少任务被阻塞，因此 不清楚在设置事件位时 需要测试多少条件或解除多少阻塞任务。</p>
+<p>根据 FreeRTOS 质量标准，<strong>无法</strong>在禁用中断时 或在中断服务程序中 执行非确定性操作。为确保在设置事件位时 不违反这些严格的质量标准，需要以下两点：</p>
+<ul>
+<li>RTOS 调度器的锁定机制用于确保 在 RTOS 任务中设置事件位时中断仍处于启用状态。</li>
+<li>尝试在中断服务程序中设置事件位时， 集中延迟中断机制用于 将设置位的动作延迟到任务。</li>
+</ul>
+</li>
+</ol>
+<h2 id="API"><a href="#API" class="headerlink" title="API"></a>API</h2><h3 id="xEventGroupCreate"><a href="#xEventGroupCreate" class="headerlink" title="xEventGroupCreate"></a>xEventGroupCreate</h3><p>创建一个新的 RTOS 事件组，并返回可以引用新创建的事件组的句柄。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// event_groups.h</span></span><br><span class="line">EventGroupHandle_t <span class="title function_">xEventGroupCreate</span><span class="params">( <span class="type">void</span> )</span>;</span><br></pre></td></tr></table></figure>
+
+<p>要使此 RTOS API 函数可用：</p>
+<ol>
+<li>configSUPPORT_DYNAMIC_ALLOCATION 必须在 FreeRTOSConfig.h 中设置为 1，或保留未定义状态（此时 默认为 1）。</li>
+<li>必须将 RTOS 源文件 FreeRTOS&#x2F;source&#x2F;event_groups.c 包含在构建中。</li>
+</ol>
+<p>每个事件组都需要（非常）少量的 RAM 来保存 事件组的状态。如果使用 xEventGroupCreate() 创建事件组， 则所需的 RAM 将从 FreeRTOS 堆自动分配。 如果使用 xEventGroupCreateStatic() 创建事件组 则 RAM 由应用程序编写器提供，这需要用到一个附加参数， 但允许在编译时静态分配 RAM 。</p>
+<p>事件组存储在 EventBits_t 类型的变量中。如果 configUSE_16_BIT_TICKS 设置为 1，则事件组内实现的位数（或标志数）为 8； 如果 configUSE_16_BIT_TICKS 设置为 0，则事件组内实现的位数（或标志数）为 24。 对 configUSE_16_BIT_TICKS 的依赖 取决于 RTOS 任务内部实现中用于线程本地存储的数据类型。</p>
+<p><strong>参数：</strong></p>
+<p><em>无</em></p>
+<p><strong>返回：</strong></p>
+<ul>
+<li>如果创建了事件组，则返回事件组的句柄。</li>
+<li>如果没有足够的 FreeRTOS 堆来创建事件组，则返回 NULL。</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">EventGroupHandle_t xCreatedEventGroup;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(xCreatedEventGroup == <span class="literal">NULL</span>) &#123;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span> &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="xEventGroupSetBits"><a href="#xEventGroupSetBits" class="headerlink" title="xEventGroupSetBits"></a>xEventGroupSetBits</h3><p>在 RTOS 事件组中设置位（标志）。该函数不能从中断中调用。xEventGroupSetBitsFromISR() 是可从中断调用的版本。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EventBits_t <span class="title function_">xEventGroupSetBits</span><span class="params">(EventGroupHandle_t xEventGroup, <span class="type">const</span> EventBits_t uxBitsToSet )</span>;</span><br></pre></td></tr></table></figure>
+
+<p>在事件组中设置位时，所有等待该位的任务将自动解除阻塞。</p>
+<p>必须将 RTOS 源文件 FreeRTOS&#x2F;source&#x2F;event_groups.c 包含在构建中，xEventGroupSetBits() 函数才可用。</p>
+<p><strong>参数：</strong></p>
+<ul>
+<li><p>xEventGroup</p>
+<p>要设置位的事件组。必须事先通过调用 xEventGroupCreate() 创建事件组。</p>
+</li>
+<li><p>uxBitsToSet</p>
+<p>指定要在事件组中设置的一个或多个位的按位值。例如，将 uxBitsToSet 设置为 0x08，则只设置第 3 位。将 uxBitsToSet 设置为 0x09，即可设置第 3 位和第 0 位。</p>
+</li>
+</ul>
+<p><strong>返回：</strong></p>
+<p>返回的是事件组当前的值，即在调用该函数之后，事件组中所有位的最新状态。</p>
+<p>调用 xEventGroupSetBits() 后，返回的事件组值可能会受到以下两种情况的影响：</p>
+<ol>
+<li>如果设置某个事件位使得等待该位的任务从阻塞状态中解除，该位可能会被自动清除（具体取决于 xClearBitOnExit 参数的设置，参考 xEventGroupWaitBits() 函数）。</li>
+<li>如果在调用 xEventGroupSetBits() 之后，有优先级更高的任务变为就绪状态并执行，它们可能会在返回之前修改事件组的值。</li>
+</ol>
+<p><strong>示例</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">EventBits_t uxBits;</span><br><span class="line"></span><br><span class="line">uxBits = xEventGroupSetBits(xEventGroup, BIT_0 | BIT_4 );</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>((uxBits &amp; ( BIT_0 | BIT_4 ) ) == ( BIT_0 | BIT_4 ) )&#123;</span><br><span class="line">    <span class="comment">// 当前函数返回后 0、4 位报纸不变s</span></span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span>((uxBits &amp; BIT_0) != <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="comment">// 当函数返回时，位0保持不变，但位4被清除。可能是由于等待位4的任务从阻塞状态中移除，位4被自动清除。</span></span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span>((uxBits &amp; BIT_4) != <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="comment">// 当函数返回时，位4保持不变，但位0被清除。可能是由于等待位0的任务从阻塞状态中移除，位0被自动清除。.</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// 位0和位4未被设置。可能有一个任务正在等待这两个位被设置，当任务离开“阻塞”状态时，这些位被清除。</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="xEventGroupWaitBits"><a href="#xEventGroupWaitBits" class="headerlink" title="xEventGroupWaitBits"></a>xEventGroupWaitBits</h3><p>读取 RTOS 事件组中的位，选择性地进入“阻塞”状态（已设置 超时值）以等待设置单个位或一组位。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// event_groups.h</span></span><br><span class="line">EventBits_t <span class="title function_">xEventGroupWaitBits</span><span class="params">(</span></span><br><span class="line"><span class="params">                      <span class="type">const</span> EventGroupHandle_t xEventGroup,</span></span><br><span class="line"><span class="params">                      <span class="type">const</span> EventBits_t uxBitsToWaitFor,</span></span><br><span class="line"><span class="params">                      <span class="type">const</span> BaseType_t xClearOnExit,</span></span><br><span class="line"><span class="params">                      <span class="type">const</span> BaseType_t xWaitForAllBits,</span></span><br><span class="line"><span class="params">                      TickType_t xTicksToWait )</span>;</span><br></pre></td></tr></table></figure>
+
+<p>无法从中断调用此函数。</p>
+<p>必须将 RTOS 源文件 FreeRTOS&#x2F;source&#x2F;event_groups.c 包含在构建中，xEventGroupWaitBits() 函数才可用。</p>
+<p><strong>参数：</strong></p>
+<ul>
+<li><p>xEventGroup</p>
+<p>事件组的句柄，表示你想要操作的事件组。必须事先通过调用 xEventGroupCreate() 创建事件组。</p>
+</li>
+<li><p>uxBitsToWaitFor</p>
+<p>指定你希望等待的位。它是一个位掩码，每一位对应一个特定的事件标志。</p>
+<p>例如，要等待 第 0 位和&#x2F;或第 2 位，将 uxBitsToWaitFor 设置为 0x05 即可。要等待第 0 位和&#x2F;或第 1 位和&#x2F;或第 2 位， 将 uxBitsToWaitFor 设置为 0x07 即可。uxBitsToWaitFor <strong>不得</strong> 设置为 0。</p>
+</li>
+<li><p>xClearOnExit</p>
+<p>如果 xClearOnExit 设置为 pdTRUE，那么在发生以下情况之前，作为 uxBitsToWaitFor 参数传递的值中设置的任何位都将在 xEventGroupWaitBits() 返回之前在事件组中清除；xEventGroupWaitBits() 因超时以外的任何原因返回。超时值由 xTicksToWait 参数设置。（只要不是超时返回都将清除标志位）</p>
+<p>如果 xClearOnExit 设置为 pdFALSE，那么当调用 xEventGroupWaitBits() 返回时，事件组中设置的位不会改变。</p>
+</li>
+<li><p>xWaitForAllBits</p>
+<p>xWaitForAllBits 用于创建逻辑 AND（必须设置所有位） 或逻辑 OR（必须设置一个或多个位）：</p>
+<p>如果 xWaitForAllBits 设置为 pdTRUE（逻辑 &amp;&amp;），那么 xEventGroupWaitBits() 在以下条件下将返回：</p>
+<ul>
+<li>作为 uxBitsToWaitFor 参数传递的值中的所有位在事件组中被设置（置 1）或指定的阻塞时间到期。</li>
+</ul>
+<p>如果 xWaitForAllBits 设置为 pdFALSE（逻辑 ||），那么 xEventGroupWaitBits() 在以下条件下将返回：</p>
+<ul>
+<li>作为 uxBitsToWaitFor 参数传递的值中的任何位在事件组中被设置（置 1）或指定的阻塞时间到期。</li>
+</ul>
+</li>
+<li><p>xTicksToWait</p>
+<p>等待以下情况发生的最长时间（以“滴答”为单位，取决于 xWaitForAllBits 值）：</p>
+<ul>
+<li>uxBitsToWaitFor 指定的一个&#x2F;所有位被设置。</li>
+</ul>
+</li>
+</ul>
+<p><strong>返回：</strong></p>
+<ul>
+<li><p>事件位等待完成设置或阻塞时间过期时的事件组值。在以下情况下，事件组中事件位的当前值将与返回值不同： 高优先级任务或中断在调用任务解除“阻塞”状态和退出 xEventGroupWaitBits() 函数之间更改了事件位的值 。</p>
+<p>测试返回值以确定哪些位已完成设置。如果 xEventGroupWaitBits() 因为超时过期而返回， 则并非在等待的所有位都会进行设置。如果 xEventGroupWaitBits() 返回因为其等待的位被设置而返回， 则返回值是由于任何位因为 xClearOnExit 参数被设置为 pdTRUE </p>
+<p>而自动清除之前的事件组值。</p>
+</li>
+</ul>
+<p><strong>示例</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> BIT_0	( 1 &lt;&lt; 0 )</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> BIT_4	( 1 &lt;&lt; 4 )</span></span><br><span class="line"></span><br><span class="line">uxBits = xEventGroupWaitBits(</span><br><span class="line">               xEventGroup,   </span><br><span class="line">               BIT_0 | BIT_4,</span><br><span class="line">               pdTRUE,</span><br><span class="line">               pdFALSE, </span><br><span class="line">               xTicksToWait );</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>((uxBits &amp; ( BIT_0 | BIT_4)) == (BIT_0 | BIT_4)) &#123;</span><br><span class="line">    <span class="comment">// 两个位都是 1</span></span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span>((uxBits &amp; BIT_0) != <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="comment">// 只设置了 bit 0</span></span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span>(( uxBits &amp; BIT_4) != <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="comment">// 只设置了 bit 4</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// 二者都没有修改</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="xEventGroupSync"><a href="#xEventGroupSync" class="headerlink" title="xEventGroupSync"></a>xEventGroupSync</h3><p>以原子方式设置 RTOS 事件组中的位（标志），然后等待在同一事件组中设置位的组合。此功能通常<strong>用于同步多个任务</strong>（通常称为任务集合），其中每个 任务必须等待其他任务到达同步点后才能继续。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">event_groups.h</span><br><span class="line">EventBits_t <span class="title function_">xEventGroupSync</span><span class="params">( EventGroupHandle_t xEventGroup,</span></span><br><span class="line"><span class="params">                             <span class="type">const</span> EventBits_t uxBitsToSet,</span></span><br><span class="line"><span class="params">                             <span class="type">const</span> EventBits_t uxBitsToWaitFor,</span></span><br><span class="line"><span class="params">                             TickType_t xTicksToWait )</span>;</span><br></pre></td></tr></table></figure>
+
+<p>不能从中断使用此函数。</p>
+<p>如果设置了 uxBitsToWait 参数指定的位，或者在该时间内设置了这些位，则该函数将在其阻塞时间到期之前返回。这种情况下，uxBitsToWait 指定的所有位将在 函数返回之前自动清除。</p>
+<p>必须将 RTOS 源文件 FreeRTOS&#x2F;source&#x2F;event_groups.c 包含在构建中，xEventGroupSync() 函数才可用。</p>
+<p><strong>参数：</strong></p>
+<ul>
+<li><p>xEventGroup</p>
+<p>事件组的句柄，表示你想要操作的事件组。必须事先通过调用 xEventGroupCreate() 创建事件组。</p>
+</li>
+<li><p>uxBitsToSet</p>
+<p>在确定 uxBitsToWait 参数指定的所有位是否都已设置（可能还要等待）之前，要在事件组中设置的一个或多个位。</p>
+<p>例如，将 uxBitsToSet 设置为 0x04， 即可设置事件组内的第 2 位。</p>
+</li>
+<li><p>uxBitsToWaitFor</p>
+<p>表示任务希望等待哪些位被设置为 1。只有当这些位中的所有位都被设置时，任务才会解除阻塞并继续执行。</p>
+<p>例如，将 uxBitsToWaitFor 设置为 0x05，即可等待第 0 位和第 2 位。将 uxBitsToWaitFor 设置为 0x07，即可等待第 0 位、第 1 位和第 2 位等。</p>
+</li>
+<li><p>xTicksToWait</p>
+<p>等待 uxBitsToWaitFor 参数值指定的所有位被设置的最长时间（以滴答为单位） 。</p>
+</li>
+</ul>
+<p><strong>返回：</strong></p>
+<ul>
+<li><p>等待置位时或阻塞到期时事件组的值。测表示事件组中所有位的当前状态。</p>
+<p>如果 xEventGroupSync() 因为超时过期而返回， 则并非在等待的所有位都会进行设置（有部分状态位没有被设置）。它会返回事件组的当前状态。</p>
+<p>如果 xEventGroupSync() 因其所等待的所有位都被设置而返回， 那么返回值是自动清除任何位<strong>之前</strong>的事件组值。</p>
+</li>
+</ul>
+<p><strong>示例</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 设置 0 标志位，等待 ALL_SYNC_BITS 对应的标志位被置位</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ALL_SYNC_BITS ( TASK_0_BIT | TASK_1_BIT | TASK_2_BIT )</span></span><br><span class="line"></span><br><span class="line">uxReturn = xEventGroupSync( xEventBits,</span><br><span class="line">                                    TASK_0_BIT,</span><br><span class="line">                                    ALL_SYNC_BITS,</span><br><span class="line">                                    xTicksToWait );</span><br><span class="line"><span class="keyword">if</span>((uxReturn &amp; ALL_SYNC_BITS) == ALL_SYNC_BITS) &#123;</span><br><span class="line">    <span class="comment">// 当三个任务同步时的操作</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>按键被按下时，通过事件组触发三个任务依次执行，打印不同的消息。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;gd32f4xx.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;systick.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;main.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;FreeRTOS.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;task.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;event_groups.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Usart0.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span>	EVENT_BIT(N)		(1 &lt;&lt; N)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EVENT_BIT_0			EVENT_BIT(0)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EVENT_BIT_1			EVENT_BIT(1)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EVENT_BIT_2			EVENT_BIT(2)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EVENT_BIT_3			EVENT_BIT(3)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EVENT_BIT_4			EVENT_BIT(4)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EVENT_BIT_5			EVENT_BIT(5)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EVENT_BIT_6			EVENT_BIT(6)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EVENT_BIT_7			EVENT_BIT(7)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EVENT_BIT_8			EVENT_BIT(8)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EVENT_BIT_9			EVENT_BIT(9)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EVENT_BIT_10		EVENT_BIT(10)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EVENT_BIT_11		EVENT_BIT(11)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EVENT_BIT_12		EVENT_BIT(12)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EVENT_BIT_13		EVENT_BIT(13)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EVENT_BIT_14		EVENT_BIT(14)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EVENT_BIT_15		EVENT_BIT(15)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EVENT_BIT_16		EVENT_BIT(16)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EVENT_BIT_17		EVENT_BIT(17)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EVENT_BIT_18		EVENT_BIT(18)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EVENT_BIT_19		EVENT_BIT(19)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EVENT_BIT_20		EVENT_BIT(20)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EVENT_BIT_21		EVENT_BIT(21)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EVENT_BIT_22		EVENT_BIT(22)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EVENT_BIT_23		EVENT_BIT(23)</span></span><br><span class="line"></span><br><span class="line">TaskHandle_t            task_handler;</span><br><span class="line">TaskHandle_t            task_key_handler;</span><br><span class="line">TaskHandle_t            task1_handler;</span><br><span class="line">TaskHandle_t            task2_handler;</span><br><span class="line">TaskHandle_t            task3_handler;</span><br><span class="line">EventGroupHandle_t			event_group;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">task1</span><span class="params">(<span class="type">void</span> *pvParameters)</span> &#123;</span><br><span class="line">    EventBits_t bits;</span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>) &#123;</span><br><span class="line">        bits = xEventGroupWaitBits(event_group, EVENT_BIT_0, pdTRUE, pdFALSE, portMAX_DELAY);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;task1: %d\r\n&quot;</span>, bits);</span><br><span class="line">        vTaskDelay(<span class="number">1000</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    vTaskDelete(<span class="literal">NULL</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">task2</span><span class="params">(<span class="type">void</span> *pvParameters)</span> &#123;</span><br><span class="line">    EventBits_t bits;</span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>) &#123;</span><br><span class="line">        bits = xEventGroupWaitBits(event_group, EVENT_BIT_0, pdTRUE, pdTRUE, portMAX_DELAY);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;task2: %d\r\n&quot;</span>, bits);</span><br><span class="line">        vTaskDelay(<span class="number">2000</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    vTaskDelete(<span class="literal">NULL</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">task3</span><span class="params">(<span class="type">void</span> *pvParameters)</span> &#123;</span><br><span class="line">    EventBits_t bits = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>) &#123;</span><br><span class="line">        bits = xEventGroupWaitBits(event_group, EVENT_BIT_0, pdTRUE, pdTRUE, portMAX_DELAY);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;task3: %d\r\n&quot;</span>, bits);</span><br><span class="line">        vTaskDelay(<span class="number">3000</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    vTaskDelete(<span class="literal">NULL</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">task_key</span><span class="params">(<span class="type">void</span> *pvParameters)</span> &#123;</span><br><span class="line">    FlagStatus pre_state = RESET;</span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>) &#123;</span><br><span class="line">        FlagStatus state = gpio_input_bit_get(GPIOA, GPIO_PIN_0);</span><br><span class="line">        <span class="keyword">if</span>(SET == state &amp;&amp; pre_state == RESET) &#123;</span><br><span class="line">            <span class="comment">// 当前高电平, 上一次为低电平,按下</span></span><br><span class="line">            pre_state = state;</span><br><span class="line"></span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;set bit \r\n&quot;</span>);</span><br><span class="line">            xEventGroupSetBits(event_group, EVENT_BIT_0);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span>(RESET == state &amp;&amp; pre_state == SET) &#123;</span><br><span class="line">            <span class="comment">// 当前高电平, 上一次为低电平,抬起</span></span><br><span class="line">            pre_state = state;</span><br><span class="line">        &#125;</span><br><span class="line">        vTaskDelay(<span class="number">20</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">start_task</span><span class="params">(<span class="type">void</span> *pvParameters)</span> &#123;</span><br><span class="line">    GPIO_config();</span><br><span class="line">    Usart0_init();</span><br><span class="line"></span><br><span class="line">    event_group = xEventGroupCreate();</span><br><span class="line">    <span class="keyword">if</span>(event_group != <span class="literal">NULL</span>) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;group success\r\n&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    taskENTER_CRITICAL();</span><br><span class="line"></span><br><span class="line">    xTaskCreate(task_key, <span class="string">&quot;task_key&quot;</span>, <span class="number">64</span>, <span class="literal">NULL</span>, <span class="number">0</span>, &amp;task_key_handler);</span><br><span class="line">    xTaskCreate(task1, <span class="string">&quot;task1&quot;</span>, <span class="number">64</span>, <span class="literal">NULL</span>, <span class="number">4</span>, &amp;task1_handler);</span><br><span class="line">    xTaskCreate(task2, <span class="string">&quot;task2&quot;</span>, <span class="number">64</span>, <span class="literal">NULL</span>, <span class="number">3</span>, &amp;task2_handler);</span><br><span class="line">    xTaskCreate(task3, <span class="string">&quot;task3&quot;</span>, <span class="number">64</span>, <span class="literal">NULL</span>, <span class="number">2</span>, &amp;task3_handler);</span><br><span class="line">    vTaskDelete(task_handler);</span><br><span class="line"></span><br><span class="line">    taskEXIT_CRITICAL();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">Usart0_recv</span><span class="params">(<span class="type">uint8_t</span> *data, <span class="type">uint32_t</span> len)</span> &#123;</span><br><span class="line">    <span class="comment">// printf(&quot;recv: %s\n&quot;, data);</span></span><br><span class="line">    xEventGroupSetBitsFromISR(event_group, EVENT_BIT_0, <span class="literal">NULL</span>);</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">GPIO_config</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="comment">// 时钟初始化</span></span><br><span class="line">    rcu_periph_clock_enable(RCU_GPIOA);</span><br><span class="line">    <span class="comment">// 配置GPIO模式</span></span><br><span class="line">    gpio_mode_set(GPIOA, GPIO_MODE_INPUT, GPIO_PUPD_PULLDOWN, GPIO_PIN_0);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    nvic_priority_group_set(NVIC_PRIGROUP_PRE4_SUB0);</span><br><span class="line">    xTaskCreate(start_task, <span class="string">&quot;start_task&quot;</span>, <span class="number">128</span>, <span class="literal">NULL</span>, <span class="number">0</span>, &amp;task_handler);</span><br><span class="line">    vTaskStartScheduler();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>) &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">博主</a></li>
+        
+          <li><a href="/tags/">标签</a></li>
+        
+          <li><a href="/categories/">分类</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6%E4%BD%8D-%E4%BA%8B%E4%BB%B6%E6%A0%87%E5%BF%97"><span class="toc-number">1.</span> <span class="toc-text">事件位(事件标志)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6%E7%BB%84"><span class="toc-number">2.</span> <span class="toc-text">事件组</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6%E7%BB%84%E5%92%8C%E4%BA%8B%E4%BB%B6%E4%BD%8D%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">3.</span> <span class="toc-text">事件组和事件位数据类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6%E7%BB%84%E7%9B%B8%E5%85%B3%E5%87%BD%E6%95%B0"><span class="toc-number">4.</span> <span class="toc-text">事件组相关函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E4%BA%8B%E4%BB%B6%E7%BB%84%E6%97%B6-RTOS-%E5%BF%85%E9%A1%BB%E5%85%8B%E6%9C%8D%E7%9A%84%E6%8C%91%E6%88%98"><span class="toc-number">5.</span> <span class="toc-text">实现事件组时 RTOS 必须克服的挑战</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#API"><span class="toc-number">6.</span> <span class="toc-text">API</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#xEventGroupCreate"><span class="toc-number">6.1.</span> <span class="toc-text">xEventGroupCreate</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xEventGroupSetBits"><span class="toc-number">6.2.</span> <span class="toc-text">xEventGroupSetBits</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xEventGroupWaitBits"><span class="toc-number">6.3.</span> <span class="toc-text">xEventGroupWaitBits</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xEventGroupSync"><span class="toc-number">6.4.</span> <span class="toc-text">xEventGroupSync</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">7.</span> <span class="toc-text">实现</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BA%8B%E4%BB%B6%E7%BB%84/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BA%8B%E4%BB%B6%E7%BB%84/&text=事件组"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BA%8B%E4%BB%B6%E7%BB%84/&title=事件组"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BA%8B%E4%BB%B6%E7%BB%84/&is_video=false&description=事件组"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=事件组&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BA%8B%E4%BB%B6%E7%BB%84/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BA%8B%E4%BB%B6%E7%BB%84/&title=事件组"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BA%8B%E4%BB%B6%E7%BB%84/&title=事件组"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BA%8B%E4%BB%B6%E7%BB%84/&title=事件组"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BA%8B%E4%BB%B6%E7%BB%84/&title=事件组"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BA%8B%E4%BB%B6%E7%BB%84/&name=事件组&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BA%8B%E4%BB%B6%E7%BB%84/&t=事件组"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    kay
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

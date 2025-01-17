@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="电源管理单元（Power Management Unit, PMU）是用于管理芯片电源状态、低功耗模式、供电监控以及唤醒功能的重要模块。它通过多个功能和配置选项，使芯片能够平衡性能与功耗需求，非常适合应用于低功耗设计中。  省电模式省电模式是指处理器为了降低功耗而设计的一系列低功耗状态。这些模式通过暂停或关闭处理器的部分功能、时钟信号或供电，来减少功耗，延长设备的电池寿命。 睡眠模式Sleep m">
+<meta property="og:type" content="article">
+<meta property="og:title" content="电源管理单元">
+<meta property="og:url" content="https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E7%94%B5%E6%BA%90%E7%AE%A1%E7%90%86%E5%8D%95%E5%85%83/index.html">
+<meta property="og:site_name" content="流年不知心底事">
+<meta property="og:description" content="电源管理单元（Power Management Unit, PMU）是用于管理芯片电源状态、低功耗模式、供电监控以及唤醒功能的重要模块。它通过多个功能和配置选项，使芯片能够平衡性能与功耗需求，非常适合应用于低功耗设计中。  省电模式省电模式是指处理器为了降低功耗而设计的一系列低功耗状态。这些模式通过暂停或关闭处理器的部分功能、时钟信号或供电，来减少功耗，延长设备的电池寿命。 睡眠模式Sleep m">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407MPUdygldy.png">
+<meta property="article:published_time" content="2024-11-18T15:08:00.000Z">
+<meta property="article:modified_time" content="2025-01-07T10:58:33.664Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="GD32F407">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407MPUdygldy.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>电源管理单元</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/PID%E6%8E%A7%E5%88%B6%E7%AE%97%E6%B3%95/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/SPI_Flash/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E7%94%B5%E6%BA%90%E7%AE%A1%E7%90%86%E5%8D%95%E5%85%83/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E7%94%B5%E6%BA%90%E7%AE%A1%E7%90%86%E5%8D%95%E5%85%83/&text=电源管理单元"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E7%94%B5%E6%BA%90%E7%AE%A1%E7%90%86%E5%8D%95%E5%85%83/&title=电源管理单元"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E7%94%B5%E6%BA%90%E7%AE%A1%E7%90%86%E5%8D%95%E5%85%83/&is_video=false&description=电源管理单元"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=电源管理单元&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E7%94%B5%E6%BA%90%E7%AE%A1%E7%90%86%E5%8D%95%E5%85%83/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E7%94%B5%E6%BA%90%E7%AE%A1%E7%90%86%E5%8D%95%E5%85%83/&title=电源管理单元"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E7%94%B5%E6%BA%90%E7%AE%A1%E7%90%86%E5%8D%95%E5%85%83/&title=电源管理单元"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E7%94%B5%E6%BA%90%E7%AE%A1%E7%90%86%E5%8D%95%E5%85%83/&title=电源管理单元"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E7%94%B5%E6%BA%90%E7%AE%A1%E7%90%86%E5%8D%95%E5%85%83/&title=电源管理单元"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E7%94%B5%E6%BA%90%E7%AE%A1%E7%90%86%E5%8D%95%E5%85%83/&name=电源管理单元&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E7%94%B5%E6%BA%90%E7%AE%A1%E7%90%86%E5%8D%95%E5%85%83/&t=电源管理单元"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9C%81%E7%94%B5%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.</span> <span class="toc-text">省电模式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9D%A1%E7%9C%A0%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.1.</span> <span class="toc-text">睡眠模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B7%B1%E5%BA%A6%E7%9D%A1%E7%9C%A0%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.2.</span> <span class="toc-text">深度睡眠模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BE%85%E6%9C%BA%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.3.</span> <span class="toc-text">待机模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E7%A7%8D%E6%A8%A1%E5%BC%8F%E5%AF%B9%E6%AF%94"><span class="toc-number">1.4.</span> <span class="toc-text">三种模式对比</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#WFI-%E5%92%8C-WFE-%E6%8C%87%E4%BB%A4"><span class="toc-number">1.5.</span> <span class="toc-text">WFI 和 WFE 指令</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#WFI"><span class="toc-number">1.5.1.</span> <span class="toc-text">WFI</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#WFE"><span class="toc-number">1.5.2.</span> <span class="toc-text">WFE</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">2.</span> <span class="toc-text">实现</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        电源管理单元
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">kay</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-11-18T15:08:00.000Z" class="dt-published" itemprop="datePublished">2024-11-18</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/ARM/">ARM</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/GD32F407/" rel="tag">GD32F407</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>电源管理单元（Power Management Unit, PMU）是用于管理芯片电源状态、低功耗模式、供电监控以及唤醒功能的重要模块。它通过多个功能和配置选项，使芯片能够平衡性能与功耗需求，非常适合应用于低功耗设计中。</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407MPUdygldy.png" alt="F407MPUdygldy"></p>
+<h2 id="省电模式"><a href="#省电模式" class="headerlink" title="省电模式"></a>省电模式</h2><p>省电模式是指处理器为了降低功耗而设计的一系列低功耗状态。这些模式通过暂停或关闭处理器的部分功能、时钟信号或供电，来减少功耗，延长设备的电池寿命。</p>
+<h3 id="睡眠模式"><a href="#睡眠模式" class="headerlink" title="睡眠模式"></a>睡眠模式</h3><p>Sleep mode (Cortex®-M4 with FPU core stopped, peripherals kept running)</p>
+<p><strong>描述</strong>：<br>在 <strong>Sleep 模式</strong>中，Cortex®-M4 内核（包括浮点单元 FPU）停止运行，但外设和时钟继续运行。此模式适合需要外设保持活跃、但允许处理器暂停任务的场景。</p>
+<p>任何唤醒事件都可以唤醒系统（如果SEVONPEND 为1，任何中断都可以唤醒系统，请参考Cortex®-M4技术手册）。</p>
+<p><strong>特点</strong>：</p>
+<ul>
+<li><strong>CPU 停止工作</strong>：通过执行 WFI（Wait For Interrupt） 或 WFE（Wait For Event）指令进入。</li>
+<li><strong>外设继续运行</strong>：所有启用的外设（如 UART、I2C、ADC 等）保持正常工作。</li>
+<li><strong>快速唤醒</strong>：唤醒时间极短，仅需几个时钟周期即可恢复到运行模式。</li>
+<li><strong>功耗</strong>：相较运行模式功耗大幅降低，但高于 Stop 和 Standby 模式。</li>
+</ul>
+<h3 id="深度睡眠模式"><a href="#深度睡眠模式" class="headerlink" title="深度睡眠模式"></a>深度睡眠模式</h3><p>深度睡眠模式又叫停止模式（Stop mode (all clocks are stopped)）</p>
+<p><strong>描述</strong>：<br>在 <strong>Stop 模式</strong>中，基于 Cortex®-M4   架构的的所有时钟（包括 1.2 供电域、系统时钟、外设时钟、PLL）都被停止，进入更深层次的低功耗状态。RAM 和寄存器内容会保持不变。</p>
+<p>刚退出深度睡眠模式时，IRC16M 被选中作为系统时钟。请注意，如 果 LDO 工作在低功耗模式，那么唤醒时需额外的延时时间。</p>
+<p><strong>特点</strong>：</p>
+<ul>
+<li><strong>所有时钟停止</strong>：主时钟 HCLK、AHB&#x2F;APB 总线时钟以及外设时钟完全停止。</li>
+<li><strong>RAM 和寄存器内容保持</strong>：支持从停止模式快速恢复。</li>
+<li><strong>低功耗</strong>：相比 Sleep 模式功耗更低。</li>
+<li><strong>唤醒方式：</strong><ul>
+<li>外部中断（例如：GPIO 引脚或 EXTI）。</li>
+<li>RTC 闹钟中断或唤醒计时器。</li>
+</ul>
+</li>
+<li><strong>恢复时间较短</strong>：由于无需重新配置寄存器和时钟，恢复速度比 Standby 模式快。</li>
+</ul>
+<h3 id="待机模式"><a href="#待机模式" class="headerlink" title="待机模式"></a>待机模式</h3><p>Standby mode (1.2 V domain powered off)</p>
+<p><strong>描述</strong>：<br><strong>Standby 模式</strong>是 Cortex®-M4   架构最深度低功耗模式，整个 1.2V 供电区域被断电来达到最低功耗（同时 LDO 和包括 IRC16M、HXTAL 和 PLL 也会被关闭）。此模式下，系统状态信息几乎全部丢失，仅保留备用域供电。</p>
+<p>退出待机模式时，会发生上电复位，复位 之后 Cortex®-M4 将从 0x00000000 地址开始执行指令代码。</p>
+<p><strong>特点</strong>：</p>
+<ul>
+<li><strong>核心电源关闭</strong>：1.2 V 电源域（VCORE）完全断电，仅保持备用域供电（如 RTC 和备份寄存器）。</li>
+<li><strong>所有时钟停止</strong>：系统所有时钟（包括外设时钟）停止。</li>
+<li><strong>数据丢失：</strong><ul>
+<li>RAM 和大部分寄存器内容丢失。</li>
+<li>仅 RTC 和备用寄存器（Backup Domain）保存数据。</li>
+</ul>
+</li>
+<li><strong>唤醒方式：</strong><ul>
+<li>通过外部信号（例如 WKUP 引脚）。</li>
+<li>RTC 闹钟。</li>
+</ul>
+</li>
+<li><strong>恢复时间较长</strong>：需要重新初始化所有寄存器和时钟。</li>
+</ul>
+<blockquote>
+<p>在 ARM 架构中，部分处理器内核（如 Cortex-M4 和 Cortex-M7）集成了 FPU，用于高效处理浮点运算，从而提升运算速度并减少处理器负载。</p>
+</blockquote>
+<h3 id="三种模式对比"><a href="#三种模式对比" class="headerlink" title="三种模式对比"></a>三种模式对比</h3><table>
+<thead>
+<tr>
+<th align="center"><strong>模式</strong></th>
+<th align="center"><strong>描述</strong></th>
+<th align="center"><strong>功耗</strong></th>
+<th align="center"><strong>时钟状态</strong></th>
+<th align="center"><strong>内存和寄存器状态</strong></th>
+<th align="center"><strong>唤醒时间</strong></th>
+<th align="center"><strong>唤醒方式</strong></th>
+<th align="center"><strong>适用场景</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>Sleep 模式</strong></td>
+<td align="center">Cortex®-M4 内核停止，外设和时钟继续运行</td>
+<td align="center">较低</td>
+<td align="center">系统时钟和外设时钟保持运行</td>
+<td align="center">RAM 和寄存器保持</td>
+<td align="center">极短（几个时钟周期）</td>
+<td align="center">任何中断或事件（如外设中断、GPIO 中断）</td>
+<td align="center">系统需快速响应中断，但内核无需持续运行的场景。</td>
+</tr>
+<tr>
+<td align="center"><strong>Stop 模式</strong></td>
+<td align="center">所有时钟停止，进入深度低功耗状态</td>
+<td align="center">更低</td>
+<td align="center">所有系统时钟和外设时钟完全停止</td>
+<td align="center">RAM 和寄存器保持</td>
+<td align="center">较短</td>
+<td align="center">外部中断（如 GPIO、EXTI）、RTC 闹钟</td>
+<td align="center">中长时间低功耗待机，需保持内存状态且快速恢复的场景。</td>
+</tr>
+<tr>
+<td align="center"><strong>Standby 模式</strong></td>
+<td align="center">核心电源关闭，仅保留备用域供电，达到最低功耗</td>
+<td align="center">最低</td>
+<td align="center">所有系统时钟和外设时钟停止</td>
+<td align="center">RAM 和寄存器丢失，仅备份域保存数据</td>
+<td align="center">较长</td>
+<td align="center">外部中断（如 WKUP 引脚）、RTC 闹钟</td>
+<td align="center">超长时间待机，追求最低功耗且无需保存内存状态的场景。</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>刚退出深度睡眠模式时，IRC16M 被选中作为系统时钟。请注意，如 果 LDO 工作在低功耗模式，那么唤醒时需额外的延时时间。</p>
+</blockquote>
+<h3 id="WFI-和-WFE-指令"><a href="#WFI-和-WFE-指令" class="headerlink" title="WFI 和 WFE 指令"></a>WFI 和 WFE 指令</h3><p>在 ARM Cortex-M 架构中，<strong>WFI</strong> 和 <strong>WFE</strong> 是两条用于低功耗管理的指令，它们主要用于让处理器进入等待状态，以降低功耗。</p>
+<p>不同的进入指令通常对应着不同的换新方式；</p>
+<h4 id="WFI"><a href="#WFI" class="headerlink" title="WFI"></a>WFI</h4><ul>
+<li><p><strong>WFI</strong> 指令会让处理器进入低功耗状态，直到出现中断请求将其唤醒。</p>
+</li>
+<li><p>通常用于等待下一次中断的触发。</p>
+</li>
+</ul>
+<p><strong>唤醒条件</strong>：</p>
+<ul>
+<li>有中断请求时唤醒。</li>
+<li>如果中断已被屏蔽，但 SEVONPEND 位设置为 1，也可以唤醒。</li>
+</ul>
+<p><strong>操作逻辑</strong>：</p>
+<ul>
+<li>如果没有中断发生，处理器保持休眠；</li>
+<li>如果中断发生，处理器退出低功耗模式并执行中断服务程序。</li>
+</ul>
+<h4 id="WFE"><a href="#WFE" class="headerlink" title="WFE"></a>WFE</h4><ul>
+<li><p><strong>WFE</strong> 指令会让处理器进入低功耗状态，直到检测到事件信号。</p>
+</li>
+<li><p>与 WFI 不同，WFE 不仅可以通过中断唤醒，还可以通过事件唤醒。</p>
+</li>
+</ul>
+<p><strong>唤醒条件</strong>：</p>
+<ul>
+<li>有中断请求（中断标志置位）。</li>
+<li>外部事件或 SEVONPEND 被设置为 1。</li>
+</ul>
+<p><strong>操作逻辑</strong>：</p>
+<ul>
+<li>如果事件寄存器为 1，WFE 指令立即返回，事件寄存器清零。</li>
+<li>如果事件寄存器为 0，处理器进入低功耗模式，直到事件信号到来。</li>
+</ul>
+<blockquote>
+<p>事件和中断</p>
+<p>中断是一种异步信号，通常由外设或内部系统异常触发，用于通知处理器需要立即执行特定任务。</p>
+<p>事件是一种同步信号，用于在系统中传递较低优先级的触发信息。事件不会打断处理器的正常工作，而是依靠事件寄存器记录状态。</p>
+</blockquote>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;gd32f4xx.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;systick.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;main.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;USART0.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;EXTI.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">EXTI_on_trig</span><span class="params">(exti_line_enum linex)</span> &#123;</span><br><span class="line">	<span class="keyword">if</span>(linex == EXTI_1)&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;Key Trig\n&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">sleep_mode</span><span class="params">()</span>&#123;	<span class="comment">// 睡眠模式</span></span><br><span class="line">	<span class="comment">// PMU -&gt; RCU</span></span><br><span class="line">	rcu_periph_clock_enable(RCU_PMU);	</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;sleepmode1\n&quot;</span>);</span><br><span class="line">	<span class="comment">// sleep mode</span></span><br><span class="line">	pmu_to_sleepmode(WFI_CMD);	</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;sleepmode2\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">deepsleep_mode</span><span class="params">()</span> &#123; <span class="comment">// 深度睡眠模式</span></span><br><span class="line">	<span class="comment">// PMU -&gt; RCU</span></span><br><span class="line">	rcu_periph_clock_enable(RCU_PMU);	</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;deepsleep 1\n&quot;</span>);</span><br><span class="line">	<span class="comment">// deepsleep</span></span><br><span class="line">	pmu_to_deepsleepmode(PMU_LDO_LOWPOWER, PMU_LOWDRIVER_ENABLE, WFI_CMD);	</span><br><span class="line">	<span class="comment">// 把主频设置回来，当被唤醒后会从此处开始执行</span></span><br><span class="line">	SystemInit();</span><br><span class="line">	</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;deepsleep 2\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">standby_mode</span><span class="params">()</span>&#123; <span class="comment">// 待机模式	</span></span><br><span class="line">	<span class="comment">// PMU -&gt; RCU</span></span><br><span class="line">	rcu_periph_clock_enable(RCU_PMU);	</span><br><span class="line">	<span class="comment">/* 清理待机模式标记 */</span></span><br><span class="line">	pmu_flag_clear(PMU_FLAG_RESET_STANDBY);	</span><br><span class="line">	<span class="comment">/* 启用唤醒按钮 enable PMU wakeup pin */</span></span><br><span class="line">	pmu_wakeup_pin_enable();	</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;standby 1\n&quot;</span>);</span><br><span class="line">	<span class="comment">// standby待机模式</span></span><br><span class="line">	pmu_to_standbymode();	</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;standby 2\n&quot;</span>);</span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">USART0_on_recv</span><span class="params">(<span class="type">uint8_t</span>* data, <span class="type">uint32_t</span> len)</span> &#123;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;recv: %s\n&quot;</span>, data);</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">switch</span>(data[<span class="number">0</span>]) &#123;</span><br><span class="line">		<span class="keyword">case</span> <span class="number">0x00</span>:	<span class="comment">// 睡眠模式</span></span><br><span class="line">			sleep_mode();</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">case</span> <span class="number">0x01</span>:	<span class="comment">// 深度睡眠模式</span></span><br><span class="line">			deepsleep_mode();</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">case</span> <span class="number">0x02</span>:	<span class="comment">// 待机模式</span></span><br><span class="line">			standby_mode();</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">default</span>:</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">	&#125;	</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">GPIO_config</span><span class="params">()</span>&#123;</span><br><span class="line">	<span class="comment">// 初始化GPIO PB2</span></span><br><span class="line">	rcu_periph_clock_enable(RCU_GPIOB);</span><br><span class="line">	gpio_mode_set(GPIOB, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO_PIN_2);</span><br><span class="line">	gpio_output_options_set(GPIOB, GPIO_OTYPE_PP, GPIO_OSPEED_MAX, GPIO_PIN_2);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">delay</span><span class="params">()</span> &#123;</span><br><span class="line">	<span class="type">uint32_t</span> i = <span class="number">50000000</span>;	</span><br><span class="line">	<span class="keyword">while</span>(i--)&#123;</span><br><span class="line">		__NOP();</span><br><span class="line">	&#125;	</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">  nvic_priority_group_set(NVIC_PRIGROUP_PRE2_SUB2);</span><br><span class="line">  USART0_init();    	</span><br><span class="line">  EXTI_init();    </span><br><span class="line">  GPIO_config();    </span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;Main Init\n&quot;</span>);</span><br><span class="line">	</span><br><span class="line">  <span class="keyword">while</span>(<span class="number">1</span>) &#123;	</span><br><span class="line">		<span class="comment">// 让PB2切换亮灭</span></span><br><span class="line">		gpio_bit_toggle(GPIOB, GPIO_PIN_2);</span><br><span class="line">		<span class="comment">// 使用自己的睡眠函数</span></span><br><span class="line">		delay();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">博主</a></li>
+        
+          <li><a href="/tags/">标签</a></li>
+        
+          <li><a href="/categories/">分类</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9C%81%E7%94%B5%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.</span> <span class="toc-text">省电模式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9D%A1%E7%9C%A0%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.1.</span> <span class="toc-text">睡眠模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B7%B1%E5%BA%A6%E7%9D%A1%E7%9C%A0%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.2.</span> <span class="toc-text">深度睡眠模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BE%85%E6%9C%BA%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.3.</span> <span class="toc-text">待机模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E7%A7%8D%E6%A8%A1%E5%BC%8F%E5%AF%B9%E6%AF%94"><span class="toc-number">1.4.</span> <span class="toc-text">三种模式对比</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#WFI-%E5%92%8C-WFE-%E6%8C%87%E4%BB%A4"><span class="toc-number">1.5.</span> <span class="toc-text">WFI 和 WFE 指令</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#WFI"><span class="toc-number">1.5.1.</span> <span class="toc-text">WFI</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#WFE"><span class="toc-number">1.5.2.</span> <span class="toc-text">WFE</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">2.</span> <span class="toc-text">实现</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E7%94%B5%E6%BA%90%E7%AE%A1%E7%90%86%E5%8D%95%E5%85%83/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E7%94%B5%E6%BA%90%E7%AE%A1%E7%90%86%E5%8D%95%E5%85%83/&text=电源管理单元"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E7%94%B5%E6%BA%90%E7%AE%A1%E7%90%86%E5%8D%95%E5%85%83/&title=电源管理单元"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E7%94%B5%E6%BA%90%E7%AE%A1%E7%90%86%E5%8D%95%E5%85%83/&is_video=false&description=电源管理单元"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=电源管理单元&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E7%94%B5%E6%BA%90%E7%AE%A1%E7%90%86%E5%8D%95%E5%85%83/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E7%94%B5%E6%BA%90%E7%AE%A1%E7%90%86%E5%8D%95%E5%85%83/&title=电源管理单元"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E7%94%B5%E6%BA%90%E7%AE%A1%E7%90%86%E5%8D%95%E5%85%83/&title=电源管理单元"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E7%94%B5%E6%BA%90%E7%AE%A1%E7%90%86%E5%8D%95%E5%85%83/&title=电源管理单元"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E7%94%B5%E6%BA%90%E7%AE%A1%E7%90%86%E5%8D%95%E5%85%83/&title=电源管理单元"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E7%94%B5%E6%BA%90%E7%AE%A1%E7%90%86%E5%8D%95%E5%85%83/&name=电源管理单元&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E7%94%B5%E6%BA%90%E7%AE%A1%E7%90%86%E5%8D%95%E5%85%83/&t=电源管理单元"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    kay
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

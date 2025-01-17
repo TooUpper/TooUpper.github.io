@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="在嵌入式开发中，自定义通信协议是指开发者根据具体应用的需求，设计并实现一个专门的协议，用于在嵌入式系统与外部设备（如上位机、传感器、其他微控制器等）之间进行数据交换。这种协议通常定义了数据的格式、传输规则、错误检测机制等，确保通信的正确性与可靠性。 自定义通信的目的简化通信：通过明确的数据格式和规则，确保嵌入式系统与其他设备之间能够顺利、准确地交换数据。 提高效率：根据实际需求设计协议，使通信更加">
+<meta property="og:type" content="article">
+<meta property="og:title" content="自定义通信协议">
+<meta property="og:url" content="https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%87%AA%E5%AE%9A%E4%B9%89%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE/index.html">
+<meta property="og:site_name" content="流年不知心底事">
+<meta property="og:description" content="在嵌入式开发中，自定义通信协议是指开发者根据具体应用的需求，设计并实现一个专门的协议，用于在嵌入式系统与外部设备（如上位机、传感器、其他微控制器等）之间进行数据交换。这种协议通常定义了数据的格式、传输规则、错误检测机制等，确保通信的正确性与可靠性。 自定义通信的目的简化通信：通过明确的数据格式和规则，确保嵌入式系统与其他设备之间能够顺利、准确地交换数据。 提高效率：根据实际需求设计协议，使通信更加">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407yihuofeimen.png">
+<meta property="article:published_time" content="2024-11-21T07:18:00.000Z">
+<meta property="article:modified_time" content="2025-01-07T10:58:33.664Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="GD32F407">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407yihuofeimen.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>自定义通信协议</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E7%B3%BB%E7%BB%9F%E7%A7%BB%E6%A4%8D/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%A3%B8%E6%9C%BA%E5%A4%9A%E4%BB%BB%E5%8A%A1/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%87%AA%E5%AE%9A%E4%B9%89%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%87%AA%E5%AE%9A%E4%B9%89%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE/&text=自定义通信协议"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%87%AA%E5%AE%9A%E4%B9%89%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE/&title=自定义通信协议"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%87%AA%E5%AE%9A%E4%B9%89%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE/&is_video=false&description=自定义通信协议"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=自定义通信协议&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%87%AA%E5%AE%9A%E4%B9%89%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%87%AA%E5%AE%9A%E4%B9%89%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE/&title=自定义通信协议"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%87%AA%E5%AE%9A%E4%B9%89%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE/&title=自定义通信协议"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%87%AA%E5%AE%9A%E4%B9%89%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE/&title=自定义通信协议"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%87%AA%E5%AE%9A%E4%B9%89%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE/&title=自定义通信协议"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%87%AA%E5%AE%9A%E4%B9%89%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE/&name=自定义通信协议&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%87%AA%E5%AE%9A%E4%B9%89%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE/&t=自定义通信协议"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E9%80%9A%E4%BF%A1%E7%9A%84%E7%9B%AE%E7%9A%84"><span class="toc-number">1.</span> <span class="toc-text">自定义通信的目的</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89hex%E5%8D%8F%E8%AE%AE"><span class="toc-number">2.</span> <span class="toc-text">自定义hex协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E5%B0%8F%E7%90%83%E4%BD%8D%E7%BD%AE"><span class="toc-number">2.1.</span> <span class="toc-text">设置小球位置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE-PID-%E7%9B%B8%E5%85%B3%E5%8F%82%E6%95%B0"><span class="toc-number">2.2.</span> <span class="toc-text">设置 PID 相关参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E5%BD%93%E5%89%8D%E5%B0%8F%E7%90%83%E4%BD%8D%E7%BD%AE"><span class="toc-number">2.3.</span> <span class="toc-text">获取当前小球位置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E5%BD%93%E5%89%8D-PID-%E7%9B%B8%E5%85%B3%E5%8F%82%E6%95%B0"><span class="toc-number">2.4.</span> <span class="toc-text">获取当前 PID 相关参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#float-%E7%9A%84%E5%86%85%E5%AD%98%E8%A1%A8%E7%A4%BA"><span class="toc-number">2.5.</span> <span class="toc-text">float 的内存表示</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">2.6.</span> <span class="toc-text">实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%BD%A2%E9%98%9F%E5%88%97"><span class="toc-number">3.</span> <span class="toc-text">环形队列</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%B9%E7%82%B9"><span class="toc-number">3.1.</span> <span class="toc-text">特点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%B3%95"><span class="toc-number">3.2.</span> <span class="toc-text">实现方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%98%9F%E5%88%97%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="toc-number">3.3.</span> <span class="toc-text">队列的基本操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0-1"><span class="toc-number">3.4.</span> <span class="toc-text">实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">4.</span> <span class="toc-text">问题</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        自定义通信协议
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">kay</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-11-21T07:18:00.000Z" class="dt-published" itemprop="datePublished">2024-11-21</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/ARM/">ARM</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/GD32F407/" rel="tag">GD32F407</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>在嵌入式开发中，自定义通信协议是指开发者根据具体应用的需求，设计并实现一个专门的协议，用于在嵌入式系统与外部设备（如上位机、传感器、其他微控制器等）之间进行数据交换。这种协议通常定义了数据的格式、传输规则、错误检测机制等，确保通信的正确性与可靠性。</p>
+<h2 id="自定义通信的目的"><a href="#自定义通信的目的" class="headerlink" title="自定义通信的目的"></a>自定义通信的目的</h2><p><strong>简化通信</strong>：通过明确的数据格式和规则，确保嵌入式系统与其他设备之间能够顺利、准确地交换数据。</p>
+<p><strong>提高效率</strong>：根据实际需求设计协议，使通信更加高效、低功耗、节省带宽。</p>
+<p><strong>解决兼容性问题</strong>：避免使用标准协议时可能出现的兼容性问题，特别是当设备数量、数据类型等不确定时。</p>
+<p><strong>增加可控性</strong>：在嵌入式开发中，通过自定义协议可以精确控制数据的传输方式和格式。</p>
+<h2 id="自定义hex协议"><a href="#自定义hex协议" class="headerlink" title="自定义hex协议"></a>自定义hex协议</h2><p>我们在使用 USART 与上位机通信时，有时标准的 USART 协议不能满足我们的功能需求，故我们需要在 USART 的基础上定义我们自己的通信协议；</p>
+<p>我们首先规定，PC 与 MCU 通信过程中，先发送高位的字节（0x1213456 先发送 12），以小端方式存储（具体需要验证当前环境的存储方式）；</p>
+<p>以平衡小球为例，我们需要定义如下规则：</p>
+<h3 id="设置小球位置"><a href="#设置小球位置" class="headerlink" title="设置小球位置"></a>设置小球位置</h3><table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center">帧头</th>
+<th align="center">命令位</th>
+<th align="center">数据长度</th>
+<th align="center">数据位</th>
+<th align="center">校验位</th>
+<th align="center">帧尾</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>字节数</strong></td>
+<td align="center">2</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center"><strong>默认值</strong></td>
+<td align="center">0xAA 0xAA</td>
+<td align="center">0xB0</td>
+<td align="center">0x02</td>
+<td align="center">上位机传入</td>
+<td align="center">Add(8)</td>
+<td align="center">0xBB</td>
+</tr>
+</tbody></table>
+<p>小球的位置可以从 0ms ~ 2000+ms，所以我们这里用两个字节存放小球返回的位置；</p>
+<p>Add(8)：对命令位、数据长度和数据位进行累加后取低 8 位。</p>
+<h3 id="设置-PID-相关参数"><a href="#设置-PID-相关参数" class="headerlink" title="设置 PID 相关参数"></a>设置 PID 相关参数</h3><table>
+<thead>
+<tr>
+<th></th>
+<th align="center">帧头</th>
+<th align="center">命令位</th>
+<th align="center">数据长度</th>
+<th align="center">数据位</th>
+<th align="center">校验位</th>
+<th align="center">帧尾</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>字节数</strong></td>
+<td align="center">2</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">12</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td><strong>默认值</strong></td>
+<td align="center">0xAA 0xAA</td>
+<td align="center">0xB1</td>
+<td align="center">0x0C</td>
+<td align="center">上位机传入</td>
+<td align="center">Add(8)</td>
+<td align="center">0xBB</td>
+</tr>
+</tbody></table>
+<p>数据位：数据位包含P、I、D三个参数，每个参数 4 个字节所以一共 12 个字节</p>
+<ul>
+<li>P:   4 个字节，float 类型。P 值</li>
+<li>I:  4 个字节，float 类型。I 值</li>
+<li>D:  4 个字节，float 类型。D 值</li>
+</ul>
+<h3 id="获取当前小球位置"><a href="#获取当前小球位置" class="headerlink" title="获取当前小球位置"></a>获取当前小球位置</h3><table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center">帧头</th>
+<th align="center">命令位</th>
+<th align="center">数据长度</th>
+<th align="center">数据</th>
+<th align="center">校验位</th>
+<th align="center">帧尾</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">字节数</td>
+<td align="center">2</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">默认值</td>
+<td align="center">0xAA 0xAA</td>
+<td align="center">0xF0</td>
+<td align="center">0x02</td>
+<td align="center">MPU 返回</td>
+<td align="center">Add(8)</td>
+<td align="center">0xBB</td>
+</tr>
+</tbody></table>
+<h3 id="获取当前-PID-相关参数"><a href="#获取当前-PID-相关参数" class="headerlink" title="获取当前 PID 相关参数"></a>获取当前 PID 相关参数</h3><table>
+<thead>
+<tr>
+<th></th>
+<th align="center">帧头</th>
+<th align="center">命令位</th>
+<th align="center">数据长度</th>
+<th align="center">数据位</th>
+<th align="center">校验位</th>
+<th align="center">帧尾</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>字节数</strong></td>
+<td align="center">2</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">type(1)  | P&#x2F;I&#x2F;D(4)</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td><strong>默认值</strong></td>
+<td align="center">0xAA 0xAA</td>
+<td align="center">0xE0</td>
+<td align="center">0x05</td>
+<td align="center">MPU 返回</td>
+<td align="center">Add(8)</td>
+<td align="center">0xBB</td>
+</tr>
+</tbody></table>
+<p>数据位包含一个 type 用于区分参数（P、I、D三个参数），后 4 个字节是前面 type 所返回的具体数值</p>
+<ul>
+<li><p>0x00 : Kp</p>
+</li>
+<li><p>0x01：Ki</p>
+</li>
+<li><p>0x02：Kd</p>
+</li>
+</ul>
+<h3 id="float-的内存表示"><a href="#float-的内存表示" class="headerlink" title="float 的内存表示"></a>float 的内存表示</h3><p>因为 PC 在与 MCU 通信时会涉及到小数的传输，所以这里需要先了解下 float 在内存中是如何表示的：在 C 语言中，float 通常以 <strong>IEEE 754 单精度浮点数</strong>格式存储，占 <strong>4字节（32位）</strong>。</p>
+<p>PC 在与 MCU 通信时我们如果直接传输一个小数比如 12.1231，MCU 就需要通过字符串来接收这个指令，虽然简单但是会造成数据位的大小不固定，协议是需要规定数据位大小的。（12.1 是 4 个字节，12.1213 是 7 个字节）</p>
+<p>所以我们这里采取将 float 转为 十六进制码进行发送，这样 MCU 只需要通过 char[4] 大小的数组接收并组装为 float 即可。（12.1 是 4 个字节，12.1213 还是 4 个字节）</p>
+<p><a target="_blank" rel="noopener" href="https://www.asciim.cn/hex/float.html">浮点数十六进制转换器</a></p>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// USART 接收处理</span></span><br><span class="line"><span class="comment">// 上位机发送后我们要按照定义的协议进行解析</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// USART 发送处理</span></span><br><span class="line"><span class="comment">// 我们要发送给上位机进行实时显示</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 何时将数据搬运到环形队列中</span></span><br><span class="line"><span class="comment">// 这里我们就简单来一个字节搬运一次</span></span><br><span class="line"><span class="comment">// 搬运应该是实时的</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="环形队列"><a href="#环形队列" class="headerlink" title="环形队列"></a>环形队列</h2><p>PC 通过 USART 与 MCU 通信过程中通常会产生如下一些问题：</p>
+<p>MCU 的接收处理速度跟不上 PC 的发送速度，未完整处理接收到的数据，从而导致丢包或者粘包的问题；因此我们引入了环形队列这一数据结构进行处理；</p>
+<p>环形队列是一种特殊的队列数据结构，它使用固定长度的数组实现队列的功能，并通过逻辑上的“首尾相接”形成一个环形的结构。</p>
+<h3 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h3><ul>
+<li><p>队列的最后一个元素的下一个位置可以与第一个元素相连，形成一个循环结构。</p>
+</li>
+<li><p>当队尾指针到达数组末尾时，如果还有空余空间，可以绕回到数组的开头继续存储数据。</p>
+</li>
+<li><p>为了区分队列是“空”还是“满”，通常会保留一个空闲位置或者使用额外的标志位。</p>
+</li>
+</ul>
+<h3 id="实现方法"><a href="#实现方法" class="headerlink" title="实现方法"></a>实现方法</h3><p>假设用一个固定长度为 N 的数组来实现环形队列：</p>
+<ul>
+<li><strong>队头指针（head）</strong>：指向队列中第一个元素的位置。</li>
+<li><strong>队尾指针（tail）</strong>：指向下一个可以插入的位置（注意，不是最后一个元素）。</li>
+</ul>
+<h3 id="队列的基本操作"><a href="#队列的基本操作" class="headerlink" title="队列的基本操作"></a><strong>队列的基本操作</strong></h3><ol>
+<li><p><strong>入队（enqueue）</strong>：</p>
+<ul>
+<li>检查队列是否已满： (tail + 1) % N &#x3D;&#x3D; head 若成立，则队列已满。</li>
+<li>插入数据后，将 tail 指针向前移动： tail &#x3D; (tail + 1) % N</li>
+</ul>
+</li>
+<li><p><strong>出队（dequeue）</strong>：</p>
+<ul>
+<li>检查队列是否为空： tail &#x3D;&#x3D; head 若成立，则队列为空。</li>
+<li>删除数据后，将 head 指针向前移动： head &#x3D; (head + 1) % N</li>
+</ul>
+</li>
+<li><p><strong>判断队列是否为空</strong>：</p>
+<p>tail &#x3D;&#x3D; head</p>
+</li>
+<li><p><strong>判断队列是否已满</strong>：</p>
+<p>(tail + 1) % N &#x3D;&#x3D; head</p>
+</li>
+<li><p><strong>计算队列中元素个数</strong>：</p>
+<p>size &#x3D; (tail − head + N) % N</p>
+</li>
+</ol>
+<h3 id="实现-1"><a href="#实现-1" class="headerlink" title="实现"></a>实现</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifndef</span> __CIRCULAR_QUEUE_H__</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> __CIRCULAR_QUEUE_H__</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdint.h&gt;</span></span></span><br><span class="line"><span class="comment">// 循环队列</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">    <span class="type">uint32_t</span> head;      <span class="comment">// 队头指针</span></span><br><span class="line">    <span class="type">uint32_t</span> tail;      <span class="comment">// 队尾指针</span></span><br><span class="line">    <span class="type">uint32_t</span> size;      <span class="comment">// 队列大小</span></span><br><span class="line">    <span class="type">uint8_t</span> *buffer;    <span class="comment">// 队列缓冲区</span></span><br><span class="line">&#125; CircularQueue_t;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">enum</span> &#123;</span></span><br><span class="line">    QUEUE_OK = <span class="number">0</span>,  <span class="comment">// 成功</span></span><br><span class="line">    QUEUE_FULL,   <span class="comment">// 队列满</span></span><br><span class="line">    QUEUE_EMPTY,  <span class="comment">// 队列空</span></span><br><span class="line">    QUEUE_ERROR   <span class="comment">// 错误</span></span><br><span class="line"></span><br><span class="line">&#125; CircularQueueStatus_t;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @brief 初始化环形队列    </span></span><br><span class="line"><span class="comment"> * \param queue  队列结构体变量指针</span></span><br><span class="line"><span class="comment"> * \param buffer 队列缓存区地址</span></span><br><span class="line"><span class="comment"> * \param buffer_size   队列最大大小</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">CircularQueue_Init</span><span class="params">(CircularQueue_t *<span class="built_in">queue</span>, <span class="type">uint8_t</span> *buffer, <span class="type">uint32_t</span> buffer_size)</span> &#123;</span><br><span class="line">    <span class="built_in">queue</span>-&gt;head = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">queue</span>-&gt;tail = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">queue</span>-&gt;size = buffer_size;</span><br><span class="line">    <span class="built_in">queue</span>-&gt;buffer = buffer;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @brief 数据入队（向队列尾部插入数据）</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * \param queue 队列结构体变量指针</span></span><br><span class="line"><span class="comment"> * \param dat  一个字节数据</span></span><br><span class="line"><span class="comment"> * \return QueueStatus_t  入队结果 QUEUE_OK 成功</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">CircularQueueStatus_t <span class="title function_">CircularQueue_push</span><span class="params">(CircularQueue_t *<span class="built_in">queue</span>, <span class="type">uint8_t</span> dat)</span> &#123;</span><br><span class="line">    <span class="comment">// 计算下一个元素的索引</span></span><br><span class="line">    <span class="type">uint32_t</span> next_index = (<span class="built_in">queue</span>-&gt;tail + <span class="number">1</span>)  % <span class="built_in">queue</span>-&gt;size;</span><br><span class="line">    <span class="comment">// 队列满(保留一个空位)</span></span><br><span class="line">    <span class="keyword">if</span> (next_index == <span class="built_in">queue</span>-&gt;head) &#123;</span><br><span class="line">        <span class="keyword">return</span> QUEUE_FULL;</span><br><span class="line">    &#125; </span><br><span class="line">    <span class="comment">// 写入数据</span></span><br><span class="line">    <span class="built_in">queue</span>-&gt;buffer[<span class="built_in">queue</span>-&gt;tail] = dat;</span><br><span class="line">    <span class="comment">// 更新队尾指针</span></span><br><span class="line">    <span class="built_in">queue</span>-&gt;tail = next_index;</span><br><span class="line">    <span class="keyword">return</span> QUEUE_OK;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @brief 数据出队（从队首弹出数据）</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * \param queue 队列结构体变量指针</span></span><br><span class="line"><span class="comment"> * \param pdat  出队数据指针</span></span><br><span class="line"><span class="comment"> * \return QueueStatus_t </span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">CircularQueueStatus_t <span class="title function_">circularQueue_pop</span><span class="params">(CircularQueue_t *<span class="built_in">queue</span>, <span class="type">uint8_t</span> *p_dat)</span> &#123;</span><br><span class="line">    <span class="comment">// 如果head与tail相等，说明队列为空</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">queue</span>-&gt;head == <span class="built_in">queue</span>-&gt;tail) &#123;</span><br><span class="line">        <span class="keyword">return</span> QUEUE_EMPTY;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 取head的数据</span></span><br><span class="line">    *p_dat = <span class="built_in">queue</span>-&gt;buffer[<span class="built_in">queue</span>-&gt;head];</span><br><span class="line">    <span class="comment">// 更新队头指针</span></span><br><span class="line">    <span class="built_in">queue</span>-&gt;head = (<span class="built_in">queue</span>-&gt;head + <span class="number">1</span>) % <span class="built_in">queue</span>-&gt;size;</span><br><span class="line">    <span class="keyword">return</span> QUEUE_OK;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @brief 获取队列数据个数</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * \param queue  队列指针</span></span><br><span class="line"><span class="comment"> * \return uint32_t  队列有效数据个数</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">uint32_t</span> <span class="title function_">CircularQueue_DataCount</span><span class="params">(CircularQueue_t *<span class="built_in">queue</span>)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">queue</span>-&gt;tail &gt;= <span class="built_in">queue</span>-&gt;head) &#123;</span><br><span class="line">        <span class="comment">// 队尾指针在队头指针后边</span></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">queue</span>-&gt;tail - <span class="built_in">queue</span>-&gt;head;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 队尾指针在队头指针前边（转了一圈到了队头指针之前）</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">queue</span>-&gt;size + <span class="built_in">queue</span>-&gt;tail - <span class="built_in">queue</span>-&gt;head;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @brief 压入一组数据</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * \param queue  队列结构体变量指针</span></span><br><span class="line"><span class="comment"> * \param p_arr  待入队数组指针</span></span><br><span class="line"><span class="comment"> * \param len    待入队数组长度 </span></span><br><span class="line"><span class="comment"> * \return uint32_t 实际写入的数据个数 </span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">uint32_t</span> <span class="title function_">circularQueue_pushArray</span><span class="params">(CircularQueue_t *<span class="built_in">queue</span>, <span class="type">uint8_t</span> *p_arr, <span class="type">uint32_t</span> len)</span>&#123;</span><br><span class="line">    <span class="type">uint32_t</span> i;</span><br><span class="line">    <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; len; i++)&#123;</span><br><span class="line">        <span class="keyword">if</span> (circularQueue_push(<span class="built_in">queue</span>, p_arr[i]) == QUEUE_FULL)&#123;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> i;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @brief 出队一组数据</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * \param queue 队列指针</span></span><br><span class="line"><span class="comment"> * \param p_arr 待出队数组指针</span></span><br><span class="line"><span class="comment"> * \param len   待出队数组长度</span></span><br><span class="line"><span class="comment"> * \return QueueStatus_t </span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">uint32_t</span> <span class="title function_">circularQueue_popArray</span><span class="params">(CircularQueue_t *<span class="built_in">queue</span>, <span class="type">uint8_t</span> *p_arr, <span class="type">uint32_t</span> len)</span>&#123;</span><br><span class="line">    <span class="type">uint32_t</span> i;</span><br><span class="line">    <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; len; i++)&#123;</span><br><span class="line">        <span class="keyword">if</span> (circularQueue_pop(<span class="built_in">queue</span>, &amp;p_arr[i]) == QUEUE_EMPTY)&#123;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> i;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407yihuofeimen.png" alt="F407yihuofeimen"></p>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>一、<strong>环形队列中为什么要预留一个空位</strong></p>
+<p>环形队列中的数据是通过头指针（head）和尾指针（tail）来管理的：</p>
+<ul>
+<li><strong>空队列</strong>：当 head &#x3D;&#x3D; tail 时，队列为空。</li>
+<li><strong>满队列</strong>：如果不预留空位，当所有缓冲区都填满时，head 和 tail 也会变成相等，这会导致无法区分“队列满”和“队列空”这两种状态。</li>
+</ul>
+<p>因此，为了简化逻辑并明确状态，环形队列中通常会<strong>留出一个空位作为缓冲</strong>，这样就可以通过以下规则来判断队列是否满或空：</p>
+<ul>
+<li>队列<strong>空</strong>：head &#x3D;&#x3D; tail</li>
+<li>队列<strong>满</strong>：(tail + 1) % size &#x3D;&#x3D; head</li>
+</ul>
+<p>二、<strong>同时使用 DMA 和 RBEN 中断时的数据竞争问题</strong></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">博主</a></li>
+        
+          <li><a href="/tags/">标签</a></li>
+        
+          <li><a href="/categories/">分类</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E9%80%9A%E4%BF%A1%E7%9A%84%E7%9B%AE%E7%9A%84"><span class="toc-number">1.</span> <span class="toc-text">自定义通信的目的</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89hex%E5%8D%8F%E8%AE%AE"><span class="toc-number">2.</span> <span class="toc-text">自定义hex协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E5%B0%8F%E7%90%83%E4%BD%8D%E7%BD%AE"><span class="toc-number">2.1.</span> <span class="toc-text">设置小球位置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE-PID-%E7%9B%B8%E5%85%B3%E5%8F%82%E6%95%B0"><span class="toc-number">2.2.</span> <span class="toc-text">设置 PID 相关参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E5%BD%93%E5%89%8D%E5%B0%8F%E7%90%83%E4%BD%8D%E7%BD%AE"><span class="toc-number">2.3.</span> <span class="toc-text">获取当前小球位置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E5%BD%93%E5%89%8D-PID-%E7%9B%B8%E5%85%B3%E5%8F%82%E6%95%B0"><span class="toc-number">2.4.</span> <span class="toc-text">获取当前 PID 相关参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#float-%E7%9A%84%E5%86%85%E5%AD%98%E8%A1%A8%E7%A4%BA"><span class="toc-number">2.5.</span> <span class="toc-text">float 的内存表示</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">2.6.</span> <span class="toc-text">实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%BD%A2%E9%98%9F%E5%88%97"><span class="toc-number">3.</span> <span class="toc-text">环形队列</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%B9%E7%82%B9"><span class="toc-number">3.1.</span> <span class="toc-text">特点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%B3%95"><span class="toc-number">3.2.</span> <span class="toc-text">实现方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%98%9F%E5%88%97%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="toc-number">3.3.</span> <span class="toc-text">队列的基本操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0-1"><span class="toc-number">3.4.</span> <span class="toc-text">实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">4.</span> <span class="toc-text">问题</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%87%AA%E5%AE%9A%E4%B9%89%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%87%AA%E5%AE%9A%E4%B9%89%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE/&text=自定义通信协议"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%87%AA%E5%AE%9A%E4%B9%89%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE/&title=自定义通信协议"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%87%AA%E5%AE%9A%E4%B9%89%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE/&is_video=false&description=自定义通信协议"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=自定义通信协议&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%87%AA%E5%AE%9A%E4%B9%89%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%87%AA%E5%AE%9A%E4%B9%89%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE/&title=自定义通信协议"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%87%AA%E5%AE%9A%E4%B9%89%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE/&title=自定义通信协议"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%87%AA%E5%AE%9A%E4%B9%89%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE/&title=自定义通信协议"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%87%AA%E5%AE%9A%E4%B9%89%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE/&title=自定义通信协议"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%87%AA%E5%AE%9A%E4%B9%89%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE/&name=自定义通信协议&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%87%AA%E5%AE%9A%E4%B9%89%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE/&t=自定义通信协议"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    kay
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="OTA（Over-The-Air）即“空中升级”，指通过无线通信（如蓝牙、Wi-Fi、蜂窝网络等）向设备发送数据包进行远程更新的一种技术。它可以用于更新设备的固件、软件应用程序或配置数据，无需通过物理接口（如 USB、JTAG）连接设备。这种技术广泛用于 IoT 设备、嵌入式系统、智能设备（如手表、家电）、汽车电子等领域。 OTA 的核心概念 固件更新（Firmware Update）OTA 中最">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OTA">
+<meta property="og:url" content="https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/OTA/index.html">
+<meta property="og:site_name" content="流年不知心底事">
+<meta property="og:description" content="OTA（Over-The-Air）即“空中升级”，指通过无线通信（如蓝牙、Wi-Fi、蜂窝网络等）向设备发送数据包进行远程更新的一种技术。它可以用于更新设备的固件、软件应用程序或配置数据，无需通过物理接口（如 USB、JTAG）连接设备。这种技术广泛用于 IoT 设备、嵌入式系统、智能设备（如手表、家电）、汽车电子等领域。 OTA 的核心概念 固件更新（Firmware Update）OTA 中最">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-12-18T02:24:00.000Z">
+<meta property="article:modified_time" content="2025-01-07T10:58:33.648Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="嵌入式系统">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>OTA</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/BootLoader/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/KT6368A/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/OTA/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/OTA/&text=OTA"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/OTA/&title=OTA"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/OTA/&is_video=false&description=OTA"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=OTA&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/OTA/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/OTA/&title=OTA"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/OTA/&title=OTA"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/OTA/&title=OTA"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/OTA/&title=OTA"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/OTA/&name=OTA&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/OTA/&t=OTA"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#OTA-%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5"><span class="toc-number">1.</span> <span class="toc-text">OTA 的核心概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#OTA-%E5%8D%87%E7%BA%A7%E7%9A%84%E5%AD%98%E5%82%A8%E9%9C%80%E6%B1%82"><span class="toc-number">2.</span> <span class="toc-text">OTA 升级的存储需求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#OTA-%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%B5%81%E7%A8%8B"><span class="toc-number">3.</span> <span class="toc-text">OTA 的实现流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1"><span class="toc-number">4.</span> <span class="toc-text">架构设计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Flash-%E5%88%92%E5%88%86"><span class="toc-number">4.1.</span> <span class="toc-text">Flash 划分</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E6%93%8D%E4%BD%9C"><span class="toc-number">4.2.</span> <span class="toc-text">存储操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BootLoader-%E6%B5%81%E7%A8%8B"><span class="toc-number">4.3.</span> <span class="toc-text">BootLoader 流程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81"><span class="toc-number">5.</span> <span class="toc-text">示例代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">6.</span> <span class="toc-text">注意事项</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        OTA
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">kay</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-12-18T02:24:00.000Z" class="dt-published" itemprop="datePublished">2024-12-18</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/OS/">OS</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/%E5%B5%8C%E5%85%A5%E5%BC%8F%E7%B3%BB%E7%BB%9F/" rel="tag">嵌入式系统</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>OTA（Over-The-Air）即“空中升级”，指通过无线通信（如蓝牙、Wi-Fi、蜂窝网络等）向设备发送数据包进行远程更新的一种技术。它可以用于更新设备的固件、软件应用程序或配置数据，无需通过物理接口（如 USB、JTAG）连接设备。这种技术广泛用于 IoT 设备、嵌入式系统、智能设备（如手表、家电）、汽车电子等领域。</p>
+<h2 id="OTA-的核心概念"><a href="#OTA-的核心概念" class="headerlink" title="OTA 的核心概念"></a>OTA 的核心概念</h2><ol>
+<li><strong>固件更新（Firmware Update）</strong><br>OTA 中最常见的用途是更新 MCU 的固件。固件是嵌入式设备运行的核心程序。通过 OTA 更新固件，可以修复漏洞、添加新功能或优化性能。</li>
+<li><strong>增量更新（Delta Update）</strong><br>增量更新指只发送固件中修改的部分数据，而不是整个固件，从而减少传输数据量，提高更新效率。</li>
+<li><strong>数据传输协议</strong><br>OTA 通常依赖蓝牙（如 BLE）、Wi-Fi（MQTT&#x2F;HTTP）、LoRa 或蜂窝网络。蓝牙设备常用 GATT 服务进行数据传输，而 Wi-Fi 设备则常用 HTTP 或自定义协议。</li>
+<li><strong>可靠性保证</strong><br>为了确保 OTA 更新的可靠性，通常需要以下机制：<ul>
+<li><strong>校验机制</strong>：通过校验和（Checksum）、CRC 或数字签名验证数据完整性和来源可信性。</li>
+<li><strong>回滚机制</strong>：更新失败后，系统应能够恢复到之前的稳定版本。</li>
+<li><strong>双分区机制</strong>：设备固件分为两个分区（Active&#x2F;Backup），更新时在备用分区写入新固件，测试成功后切换分区。</li>
+</ul>
+</li>
+</ol>
+<h2 id="OTA-升级的存储需求"><a href="#OTA-升级的存储需求" class="headerlink" title="OTA 升级的存储需求"></a>OTA 升级的存储需求</h2><p>为了实现 OTA 升级及回滚，典型的存储需求如下：</p>
+<ol>
+<li><strong>当前固件</strong>：即设备当前正在运行的固件。</li>
+<li><strong>新固件</strong>：从上位机通过 OTA 下载的新固件。</li>
+<li><strong>BootLoader</strong>：负责固件加载、升级验证以及回滚逻辑。</li>
+<li><strong>元数据区域</strong>：OTA 升级标志位、固件版本信息、存储升级状态、校验信息（如 CRC32）等。</li>
+</ol>
+<p>如果 MCU 内部 Flash 空间不足，可以通过以下两种方式解决：</p>
+<ul>
+<li><strong>压缩升级固件</strong>（如使用差分升级）。</li>
+<li><strong>使用外部 Flash</strong>（SPI Flash、NOR Flash 等）。</li>
+</ul>
+<h2 id="OTA-的实现流程"><a href="#OTA-的实现流程" class="headerlink" title="OTA 的实现流程"></a>OTA 的实现流程</h2><p>1.<strong>新固件存储到外部 Flash</strong></p>
+<ul>
+<li>在 OTA 数据接收阶段，通过蓝牙、Wi-Fi 等无线协议接收新固件，将其逐包写入外部 Flash 的指定存储区。</li>
+<li>写入完成后，可以通过校验（如 CRC32、MD5）验证固件数据的完整性。</li>
+<li>如果校验失败，可以删除这部分数据或通知上位机重新上传。</li>
+<li>当新的固件下载完成后设置 OAT_Flag &#x3D; 1，表示固件准备好了。</li>
+</ul>
+<p>2.<strong>等待触发升级</strong></p>
+<ul>
+<li><strong>触发方式</strong>：升级可以通过多种方式触发，例如：<ul>
+<li>按键触发：当用户按下特定按键（例如 UI 上的“升级”按钮或硬件按键）时，MCU 检查 OAT_Flag。如果标志位为 1，则进入 BootLoader 执行固件升级。</li>
+<li>定时器触发：可以设置定时器，在设备空闲时自动检查 OAT_Flag。如果标志位为 1，则自动进入 BootLoader 执行升级流程。</li>
+<li>外部指令触发：可以通过外部设备（如手机 App 或云端）发送指令，MCU 在接收到指令后检查 OAT_Flag，如果标志位为 1，则进入 BootLoader 执行固件升级。</li>
+</ul>
+</li>
+<li>升级时机：<ul>
+<li>选择在设备空闲时进行，避免正在运行的任务中断。</li>
+<li>如果设备有低功耗模式，确保升级期间设备有足够的电量支持完成升级流程。</li>
+</ul>
+</li>
+</ul>
+<p>3.<strong>固件升级（BootLoader 阶段）</strong></p>
+<ul>
+<li>MCU 的 BootLoader 程序负责从外部 Flash 中读取新固件，并将其烧录到内部 Flash。</li>
+<li>升级步骤如下：<ol>
+<li>BootLoader 检测到 OAT_Flag 标志位为 1。</li>
+<li>将外部 Flash 中存储的新固件逐页（Page）拷贝到 MCU 的内部 Flash。</li>
+<li>拷贝完成后，通过固件校验机制（如再次校验 CRC32）验证固件是否完整无误。</li>
+<li>如果验证通过，设置启动标志位，指向新固件所在地址，将 OAT_Flag 标志位为 0。</li>
+<li>重启 MCU，运行新固件。</li>
+</ol>
+</li>
+</ul>
+<p>4.<strong>回滚机制</strong></p>
+<ul>
+<li>如果新固件启动失败或校验失败：<ol>
+<li>BootLoader 将回滚到旧固件（通常存储在 Flash 的固定分区或另一个镜像中）。</li>
+<li>设备恢复正常运行，避免完全不可用的情况。</li>
+</ol>
+</li>
+</ul>
+<blockquote>
+<p><strong>断点续传</strong></p>
+<ul>
+<li>MCU 需要跟踪已下载和写入的分片偏移地址，记录进度到非易失性存储（如内部 Flash 或 EEPROM）。</li>
+<li>在断电或升级中断后，MCU 可以从上次中断的位置继续下载，而无需重新开始。</li>
+</ul>
+<p>CRC32 校验</p>
+<ul>
+<li><p><strong>CRC（Cyclic Redundancy Check，循环冗余校验）</strong> 是一种常用的数据校验算法，用于检测数据在传输或存储过程中是否发生错误。</p>
+</li>
+<li><p>CRC32</p>
+<p> 是一种常见的 CRC 校验方法，产生一个 32 位的校验值（校验码），用于验证数据的完整性。</p>
+<ul>
+<li>输入：一段数据（比如 256 字节、4 KB 等）。</li>
+<li>输出：一个 32 位校验值（通常表示为十六进制数）。</li>
+</ul>
+</li>
+</ul>
+<p>校验的核心思想是通过算法将一段数据压缩为一个固定长度的校验值。如果两次计算的校验值相同，则认为数据完整无误；否则说明数据有损坏。</p>
+</blockquote>
+<h2 id="架构设计"><a href="#架构设计" class="headerlink" title="架构设计"></a>架构设计</h2><h3 id="Flash-划分"><a href="#Flash-划分" class="headerlink" title="Flash 划分"></a>Flash 划分</h3><p><strong>内部 Flash</strong></p>
+<table>
+<thead>
+<tr>
+<th>区域</th>
+<th>地址范围</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>BootLoader</strong></td>
+<td>固定区域，0x0000~0x3FFF</td>
+<td>系统启动区，用于引导新旧固件运行和升级管理</td>
+</tr>
+<tr>
+<td><strong>运行固件区</strong></td>
+<td>0x4000~0xBFFF</td>
+<td>当前正在运行的固件</td>
+</tr>
+</tbody></table>
+<p><strong>外部 Flash</strong></p>
+<table>
+<thead>
+<tr>
+<th>区域</th>
+<th>地址范围</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>运行固件区</strong></td>
+<td>0x4000~0xBFFF</td>
+<td>当前正在运行的固件（旧固件）</td>
+</tr>
+<tr>
+<td><strong>备份固件区</strong></td>
+<td>0xC000~0x13FFF</td>
+<td>用于存储新固件，升级后切换到此区域</td>
+</tr>
+<tr>
+<td><strong>配置区</strong></td>
+<td>0x14000~0x14FFF</td>
+<td>存储固件状态、版本信息、升级标志等元数据</td>
+</tr>
+</tbody></table>
+<h3 id="存储操作"><a href="#存储操作" class="headerlink" title="存储操作"></a>存储操作</h3><p><strong>擦写外部 Flash</strong></p>
+<ul>
+<li>蓝牙模块通过 UART 向 MCU 发送数据。</li>
+<li>MCU 将数据包解析后，写入外部 Flash 的固件存储区。</li>
+<li>每写完一部分数据（比如一页），立即读取并校验，确保写入正确。</li>
+<li>在写入完成后，保存校验信息（如 CRC32）到 Flash 的校验区。</li>
+</ul>
+<p><strong>擦写内部 Flash</strong></p>
+<ul>
+<li><p>将 BootLoader 的代码烧写到 BootLoader 区中</p>
+</li>
+<li><p>将运行代码烧录到运行固件区中</p>
+</li>
+<li><p>注意要将 BootLoader 放在前面，保证上电第一时间执行的是 BootLoader 中的代码</p>
+</li>
+</ul>
+<h3 id="BootLoader-流程"><a href="#BootLoader-流程" class="headerlink" title="BootLoader 流程"></a>BootLoader 流程</h3><p>BootLoader 的主要工作是：</p>
+<ul>
+<li>判断是否需要进行升级：<ul>
+<li>通过读取外部 Flash 的升级标志位，确认是否存在新的固件需要烧录。</li>
+</ul>
+</li>
+<li>如果需要升级：<ul>
+<li>读取外部 Flash 的固件校验信息，验证其完整性。</li>
+<li>将新固件逐页写入 MCU 内部 Flash 的应用区。</li>
+<li>写入完成后，修改升级标志位 OTA_Flag。</li>
+</ul>
+</li>
+<li>如果不需要升级：<ul>
+<li>设置栈指针（SP），指向运行区的地址</li>
+<li>设置程序计数器 PC（Reset_Handler） 指向运行区中程序的地址</li>
+<li>复位 B 区中使用的一些外设</li>
+<li>跳转到 A 区开始执行</li>
+</ul>
+</li>
+<li>如果升级失败：<ul>
+<li>清除新固件的升级标志位。</li>
+<li>回滚到旧固件，确保设备稳定运行。</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>在 Cortex-M 微控制器中，<strong>程序起始位置存储的内容是栈指针（SP）初始值，而不是程序的入口地址</strong>。程序入口地址存储在 <strong>起始位置 + 4 的地址</strong>中。这是 ARM Cortex-M 系列的芯片设计规定的一部分。</p>
+</blockquote>
+<h2 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// BootLoader.h</span></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> __BOOTLOADER_H_</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> __BOOTLOADER_H_</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* bootloader版本号 */</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> BooTLoader_VERSION  <span class="string">&quot;0.1&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 设备序号 */</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> DEVICE_NO        1      <span class="comment">//根据设备名进行更改，定死写在bootloader中</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/*=====用户配置(根据自己的分区进行配置)=====*/</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MCU_FLASH 			0x80000U 						   <span class="comment">// MCU 的 Flash 大小</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MCU_FALSH_ADDR		0x08000000U				   		   <span class="comment">// MCU 的 Flash 首地址</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> BootLoader_SIZE		0x20000U						   <span class="comment">// BootLoader 的大小 128K</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> Application_SIZE	(MCU_FLASH - BootLoader_SIZE) 	   <span class="comment">// 应用程序的大小 384K</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> Application_1_Addr	(MCU_FALSH_ADDR + BootLoader_SIZE) <span class="comment">// 运行固件区的首地址</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> BACKUP_ADDR =  <span class="comment">// 备份固件区的首地址，我们的备份固件存放在外部 Flash 中</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">/*==========================================*/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 启动的步骤 */</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> Startup_Normal 0xFFFFFFFF	<span class="comment">// 正常启动</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> Startup_Update 0xAAAAAAAA	<span class="comment">// 升级再启动</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> Startup_Reset  0x5555AAAA	<span class="comment">// ***恢复出厂 目前没使用***</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">Start_BootLoader</span><span class="params">(<span class="type">void</span>)</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span> <span class="comment">// !__BOOTLER_H_</span></span></span><br><span class="line">===========================================</span><br><span class="line"><span class="comment">// BootLoader.c</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;bootloader.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;stdio.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;main.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;stdlib.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;string.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;usart.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @brief 串口重定向（需要开启Use MicroLIB）</span></span><br><span class="line"><span class="comment"> * @param ch  		发送的数据	</span></span><br><span class="line"><span class="comment"> * @param f         文件流</span></span><br><span class="line"><span class="comment"> * @return ch</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">int</span> fputc(<span class="type">int</span> ch, FILE *f) &#123;</span><br><span class="line">    HAL_UART_Transmit(&amp;huart1, (<span class="type">uint8_t</span> *)&amp;ch,<span class="number">1</span>, <span class="number">0xFFFF</span>);</span><br><span class="line">    <span class="keyword">return</span> ch;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @brief 获取地址所在的 Flash 扇区</span></span><br><span class="line"><span class="comment"> * @param address 起始地址</span></span><br><span class="line"><span class="comment"> * @return 返回地址所在的 Flash 扇区编号，若地址无效则返回一个错误标志</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">static</span> <span class="type">uint32_t</span> <span class="title function_">Get_Sector</span><span class="params">(<span class="type">uint32_t</span> address)</span> &#123;</span><br><span class="line">    <span class="comment">// 检查地址是否在有效的 Flash 区间内</span></span><br><span class="line">    <span class="keyword">if</span> (address &lt; FLASH_BASE || address &gt; FLASH_END) &#123;</span><br><span class="line">        <span class="keyword">return</span> INVALID_SECTOR;  <span class="comment">// 返回无效扇区标志</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Bank 1 扇区划分</span></span><br><span class="line">    <span class="keyword">if</span> (address &gt;= <span class="number">0x0802C000</span> &amp;&amp; address &lt; <span class="number">0x08030000</span>) <span class="keyword">return</span> <span class="number">11</span>;</span><br><span class="line">    <span class="keyword">if</span> (address &gt;= <span class="number">0x08028000</span> &amp;&amp; address &lt; <span class="number">0x0802C000</span>) <span class="keyword">return</span> <span class="number">10</span>;</span><br><span class="line">    <span class="keyword">if</span> (address &gt;= <span class="number">0x08024000</span> &amp;&amp; address &lt; <span class="number">0x08028000</span>) <span class="keyword">return</span> <span class="number">9</span>;</span><br><span class="line">    <span class="keyword">if</span> (address &gt;= <span class="number">0x08020000</span> &amp;&amp; address &lt; <span class="number">0x08024000</span>) <span class="keyword">return</span> <span class="number">8</span>;</span><br><span class="line">    <span class="keyword">if</span> (address &gt;= <span class="number">0x0801C000</span> &amp;&amp; address &lt; <span class="number">0x08020000</span>) <span class="keyword">return</span> <span class="number">7</span>;</span><br><span class="line">    <span class="keyword">if</span> (address &gt;= <span class="number">0x08018000</span> &amp;&amp; address &lt; <span class="number">0x0801C000</span>) <span class="keyword">return</span> <span class="number">6</span>;</span><br><span class="line">    <span class="keyword">if</span> (address &gt;= <span class="number">0x08014000</span> &amp;&amp; address &lt; <span class="number">0x08018000</span>) <span class="keyword">return</span> <span class="number">5</span>;</span><br><span class="line">    <span class="keyword">if</span> (address &gt;= <span class="number">0x08010000</span> &amp;&amp; address &lt; <span class="number">0x08014000</span>) <span class="keyword">return</span> <span class="number">4</span>;</span><br><span class="line">    <span class="keyword">if</span> (address &gt;= <span class="number">0x0800C000</span> &amp;&amp; address &lt; <span class="number">0x08010000</span>) <span class="keyword">return</span> <span class="number">3</span>;</span><br><span class="line">    <span class="keyword">if</span> (address &gt;= <span class="number">0x08008000</span> &amp;&amp; address &lt; <span class="number">0x0800C000</span>) <span class="keyword">return</span> <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">if</span> (address &gt;= <span class="number">0x08004000</span> &amp;&amp; address &lt; <span class="number">0x08008000</span>) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> (address &gt;= <span class="number">0x08000000</span> &amp;&amp; address &lt; <span class="number">0x08004000</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Bank 2 扇区划分</span></span><br><span class="line">    <span class="keyword">if</span> (address &gt;= <span class="number">0x08060000</span> &amp;&amp; address &lt; <span class="number">0x08064000</span>) <span class="keyword">return</span> <span class="number">26</span>;</span><br><span class="line">    <span class="keyword">if</span> (address &gt;= <span class="number">0x08058000</span> &amp;&amp; address &lt; <span class="number">0x0805C000</span>) <span class="keyword">return</span> <span class="number">25</span>;</span><br><span class="line">    <span class="keyword">if</span> (address &gt;= <span class="number">0x08054000</span> &amp;&amp; address &lt; <span class="number">0x08058000</span>) <span class="keyword">return</span> <span class="number">24</span>;</span><br><span class="line">    <span class="keyword">if</span> (address &gt;= <span class="number">0x08050000</span> &amp;&amp; address &lt; <span class="number">0x08054000</span>) <span class="keyword">return</span> <span class="number">23</span>;</span><br><span class="line">    <span class="keyword">if</span> (address &gt;= <span class="number">0x08048000</span> &amp;&amp; address &lt; <span class="number">0x0804C000</span>) <span class="keyword">return</span> <span class="number">22</span>;</span><br><span class="line">    <span class="keyword">if</span> (address &gt;= <span class="number">0x08044000</span> &amp;&amp; address &lt; <span class="number">0x08048000</span>) <span class="keyword">return</span> <span class="number">21</span>;</span><br><span class="line">    <span class="keyword">if</span> (address &gt;= <span class="number">0x08040000</span> &amp;&amp; address &lt; <span class="number">0x08044000</span>) <span class="keyword">return</span> <span class="number">20</span>;</span><br><span class="line">    <span class="keyword">if</span> (address &gt;= <span class="number">0x0803C000</span> &amp;&amp; address &lt; <span class="number">0x08040000</span>) <span class="keyword">return</span> <span class="number">19</span>;</span><br><span class="line">    <span class="keyword">if</span> (address &gt;= <span class="number">0x08038000</span> &amp;&amp; address &lt; <span class="number">0x0803C000</span>) <span class="keyword">return</span> <span class="number">18</span>;</span><br><span class="line">    <span class="keyword">if</span> (address &gt;= <span class="number">0x08034000</span> &amp;&amp; address &lt; <span class="number">0x08038000</span>) <span class="keyword">return</span> <span class="number">17</span>;</span><br><span class="line">    <span class="keyword">if</span> (address &gt;= <span class="number">0x08030000</span> &amp;&amp; address &lt; <span class="number">0x08034000</span>) <span class="keyword">return</span> <span class="number">16</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> INVALID_SECTOR;  <span class="comment">// 返回无效扇区</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @brief Flash擦除指定范围的扇区</span></span><br><span class="line"><span class="comment"> * @param start_addr 起始地址</span></span><br><span class="line"><span class="comment"> * @param end_addr   结束地址</span></span><br><span class="line"><span class="comment"> * @return 0 成功, 非0 失败，返回错误代码</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">static</span> <span class="type">int</span> <span class="title function_">Flash_Erase_Sector</span><span class="params">(<span class="type">uint32_t</span> start_addr, <span class="type">uint32_t</span> end_addr)</span> &#123;</span><br><span class="line">    <span class="type">uint32_t</span> UserStartSector;</span><br><span class="line">    <span class="type">uint32_t</span> UserEndSector;</span><br><span class="line">    <span class="type">uint32_t</span> SectorError = <span class="number">0</span>;</span><br><span class="line">    FLASH_EraseInitTypeDef FlashSet;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 解锁flash</span></span><br><span class="line">    HAL_FLASH_Unlock();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取起始地址和结束地址的扇区号</span></span><br><span class="line">    UserStartSector = Get_Sector(start_addr);</span><br><span class="line">    UserEndSector = Get_Sector(end_addr);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 确保起始扇区不大于结束扇区</span></span><br><span class="line">    <span class="keyword">if</span> (UserStartSector &gt; UserEndSector) &#123;</span><br><span class="line">        HAL_FLASH_Lock();</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>; <span class="comment">// 错误：起始扇区大于结束扇区</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 配置擦除参数</span></span><br><span class="line">    FlashSet.TypeErase = TYPEERASE_SECTORS;</span><br><span class="line">    FlashSet.Sector = UserStartSector;</span><br><span class="line">    FlashSet.NbSectors = UserEndSector - UserStartSector + <span class="number">1</span>;</span><br><span class="line">    FlashSet.VoltageRange = VOLTAGE_RANGE_3;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 调用擦除函数</span></span><br><span class="line">    <span class="keyword">if</span> (HAL_FLASHEx_Erase(&amp;FlashSet, &amp;SectorError) != HAL_OK) &#123;</span><br><span class="line">        <span class="comment">// 错误处理</span></span><br><span class="line">        HAL_FLASH_Lock();</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-2</span>; <span class="comment">// 错误：擦除操作失败</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 锁定flash</span></span><br><span class="line">    HAL_FLASH_Lock();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 成功</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @brief Flash写若干个数据（word）</span></span><br><span class="line"><span class="comment"> * @param addr       写入的地址</span></span><br><span class="line"><span class="comment"> * @param buf        写入数据的起始地址</span></span><br><span class="line"><span class="comment"> * @param word_size  数据的单词数量</span></span><br><span class="line"><span class="comment"> * @return 0 成功，其他值表示失败</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">static</span> <span class="type">int</span> <span class="title function_">Flash_Write</span><span class="params">(<span class="type">uint32_t</span> addr, <span class="type">uint32_t</span> *buf, <span class="type">uint32_t</span> word_size)</span> &#123;</span><br><span class="line">    <span class="comment">// 解锁 flash</span></span><br><span class="line">    <span class="keyword">if</span> (HAL_FLASH_Unlock() != HAL_OK) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>; <span class="comment">// 解锁失败</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 写入数据</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; word_size; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, addr + <span class="number">4</span> * i, buf[i]) != HAL_OK) &#123;</span><br><span class="line">            HAL_FLASH_Lock(); <span class="comment">// 写入失败后锁定 Flash</span></span><br><span class="line">            <span class="keyword">return</span> <span class="number">-2</span>; <span class="comment">// 写入失败</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 锁定 flash</span></span><br><span class="line">    HAL_FLASH_Lock();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 成功</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @brief flash读若干个数据(word)</span></span><br><span class="line"><span class="comment"> * @param addr       读数据的地址</span></span><br><span class="line"><span class="comment"> * @param buf        读出数据的数组指针</span></span><br><span class="line"><span class="comment"> * @param word_size  长度</span></span><br><span class="line"><span class="comment"> * @return </span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">static</span> <span class="keyword">inline</span> <span class="type">void</span> <span class="title function_">Flash_Read</span><span class="params">(<span class="type">uint32_t</span> addr, <span class="type">uint32_t</span> *buf,<span class="type">uint32_t</span> word_size)</span> &#123;</span><br><span class="line">	<span class="built_in">memcpy</span>(buf, (<span class="type">uint32_t</span>*) addr, word_size * <span class="keyword">sizeof</span>(<span class="type">uint32_t</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @brief  将固件从源地址拷贝到目标地址</span></span><br><span class="line"><span class="comment"> * @param  src_addr   源地址</span></span><br><span class="line"><span class="comment"> * @param  des_addr   目标地址</span></span><br><span class="line"><span class="comment"> * @param  byte_size  拷贝的字节大小</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">Flash_CopyFirmware</span><span class="params">(<span class="type">uint32_t</span> src_addr, <span class="type">uint32_t</span> des_addr, <span class="type">uint32_t</span> byte_size)</span> &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;&gt; Starting firmware copy...\r\n&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 擦除目的地址</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Erasing destination flash (0x%X - 0x%X)...\r\n&quot;</span>, des_addr, des_addr + byte_size - <span class="number">1</span>);</span><br><span class="line">	<span class="comment">// FLASH_SUCCESS 表示擦除成功</span></span><br><span class="line">    <span class="keyword">if</span> (Flash_Erase_Sector(des_addr, des_addr + byte_size - <span class="number">1</span>) != FLASH_SUCCESS) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;Error: Failed to erase destination flash!\r\n&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Destination flash erased successfully.\r\n&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 分配临时缓冲区</span></span><br><span class="line">	<span class="comment">// Flash 通常不可以同时进行读写操作，所以要使用一个缓冲区进行过度</span></span><br><span class="line">	<span class="comment">// 为了适配同一个 Flash 的操作</span></span><br><span class="line">    <span class="type">uint8_t</span> *buffer = (<span class="type">uint8_t</span> *)<span class="built_in">calloc</span>(<span class="number">256</span>, <span class="keyword">sizeof</span>(<span class="type">uint8_t</span>));</span><br><span class="line">    <span class="keyword">if</span> (buffer == <span class="literal">NULL</span>) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;Error: Memory allocation failed!\r\n&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 开始拷贝</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Copying firmware from 0x%X to 0x%X, total size: %d bytes.\r\n&quot;</span>, src_addr, des_addr, byte_size);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">uint32_t</span> offset = <span class="number">0</span>; offset &lt; byte_size; offset += <span class="number">1024</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (Flash_Read(src_addr + offset, buffer, <span class="number">256</span>) != FLASH_SUCCESS) &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;Error: Flash read failed at 0x%X!\r\n&quot;</span>, src_addr + offset);</span><br><span class="line">            <span class="built_in">free</span>(buffer);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (Flash_Write(des_addr + offset, buffer, <span class="number">256</span>) != FLASH_SUCCESS) &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;Error: Flash write failed at 0x%X!\r\n&quot;</span>, des_addr + offset);</span><br><span class="line">            <span class="built_in">free</span>(buffer);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="built_in">memset</span>(buffer, <span class="number">0</span>, <span class="number">256</span>);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;Copied %d KB...\r\n&quot;</span>, (offset + <span class="number">1024</span>) / <span class="number">1024</span>);</span><br><span class="line">    &#125;</span><br><span class="line">	</span><br><span class="line">    <span class="built_in">free</span>(buffer);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Firmware copy completed successfully.\r\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @brief 采用汇编设置栈的值</span></span><br><span class="line"><span class="comment"> * @param  ulAddr	地址</span></span><br><span class="line"><span class="comment"> * @return NULL</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">__asm <span class="type">void</span> <span class="title function_">MSR_MSP</span><span class="params">(<span class="type">uint32_t</span> ulAddr)</span> &#123;</span><br><span class="line">    MSR MSP, r0</span><br><span class="line">    BX r14</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="title function_">void</span> <span class="params">(*Jump_Fun)</span><span class="params">(<span class="type">void</span>)</span>;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @brief 程序跳转函数</span></span><br><span class="line"><span class="comment"> * @param  App_Addr 应用程序地址</span></span><br><span class="line"><span class="comment"> * @return NULL</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">JumpToApplication</span><span class="params">(<span class="type">uint32_t</span> App_Addr)</span> &#123;</span><br><span class="line">    Jump_Fun JumpToApp;</span><br><span class="line">    <span class="type">uint32_t</span> reset_handler;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 检查应用程序的栈顶地址是否合法</span></span><br><span class="line">    <span class="keyword">if</span> (((*(__IO <span class="type">uint32_t</span> *) App_Addr) &amp; <span class="number">0x2FFE0000</span>) == <span class="number">0x20000000</span>) &#123;</span><br><span class="line">        <span class="comment">// 获取复位处理函数地址</span></span><br><span class="line">        reset_handler = *(__IO <span class="type">uint32_t</span> *)(App_Addr + <span class="number">4</span>);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 如果复位地址无效，打印错误信息并退出</span></span><br><span class="line">        <span class="keyword">if</span> (reset_handler == <span class="number">0xFFFFFFFF</span>) &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;Error: Invalid Reset Handler at address: %08X\n&quot;</span>, App_Addr + <span class="number">4</span>);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 设置应用程序的栈顶地址</span></span><br><span class="line">        MSR_MSP(*(__IO <span class="type">uint32_t</span> *) App_Addr);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 禁用所有中断，清除中断标志</span></span><br><span class="line">        __disable_irq();  <span class="comment">// 直接使用 CMSIS 的宏来禁用中断</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 可选：如果时钟配置需要重置，可以选择调用 HAL_RCC_DeInit()</span></span><br><span class="line">        <span class="comment">// 如果需要保留时钟配置，跳过这一步</span></span><br><span class="line">        HAL_RCC_DeInit();</span><br><span class="line">        SysTick-&gt;CTRL = <span class="number">0</span>;</span><br><span class="line">        SysTick-&gt;LOAD = <span class="number">0</span>;</span><br><span class="line">        SysTick-&gt;VAL = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 跳转到应用程序的复位处理函数</span></span><br><span class="line">        JumpToApp = (Jump_Fun)reset_handler;</span><br><span class="line">        <span class="keyword">if</span> (JumpToApp != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            JumpToApp();  <span class="comment">// 执行跳转</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;Error: Invalid JumpToApp function!\n&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;Error: Invalid Stack Pointer address! (Address: %08X)\n&quot;</span>, App_Addr);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @brief 进行BootLoader的启动</span></span><br><span class="line"><span class="comment"> * @param NULL</span></span><br><span class="line"><span class="comment"> * @return NULL</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">Start_BootLoader</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">	<span class="comment">/* Bootloader 信息打印 */</span></span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;\r\n&quot;</span>);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;Bootloader %s %s\r\n&quot;</span>,__DATE__,__TIME__);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;Bootloader Version %s\r\n&quot;</span>,BooTLoader_VERSION);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Device Name: D%d\r\n&quot;</span>,DEVICE_NO);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;MCU: STM32F407ZGT6 Running at 168MHz\r\n&quot;</span>);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;Bootloader Area from %#x - %#x\r\n&quot;</span>,MCU_FALSH_ADDR,APPLICATION_ADDR - <span class="number">1</span>);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;Application_1 Area from %#x - %#x\r\n&quot;</span>,APPLICATION_ADDR,APPLICATION_ADDR + Application_SIZE <span class="number">-1</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;\r\n&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 先读取外部 Flash 中的 OTA_Flag 标志位判断是否需要升级</span></span><br><span class="line">	</span><br><span class="line">	<span class="keyword">if</span>(OTA.OTA_Flag) &#123;</span><br><span class="line">		<span class="comment">// 更新固件</span></span><br><span class="line">		<span class="comment">// 修改 OTA_Flag 标志位</span></span><br><span class="line">		</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="comment">// 跳转到 A 区执行代码</span></span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">/* 跳转到应用程序 */</span></span><br><span class="line">	__disable_irq(); 	<span class="comment">//关闭中断</span></span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;=&gt; Start Application_1......\r\n\r\n&quot;</span>);	</span><br><span class="line">	JumpToApplication(APPLICATION_ADDR);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><p>如果你的 MCU 的内部 Flash 已经可以存放完整的固件，并且足以支持所有应用功能，那么也可以考虑以下优化方案：</p>
+<ul>
+<li>将运行固件完全存储在 MCU 的内部 Flash 中，避免对外部 Flash 的依赖。</li>
+<li>外部 Flash 仅用于存储备份固件或临时数据。</li>
+<li>通过 BootLoader 动态加载外部 Flash 中的新固件到内部 Flash，完成固件更新。</li>
+</ul>
+<p>这种方法的优点是：</p>
+<ul>
+<li><strong>启动速度更快：</strong> 固件直接从内部 Flash 加载，无需访问外存。</li>
+<li><strong>功耗更低：</strong> 外部 Flash 的读取会增加系统功耗，尤其是在频繁启动的场景下。</li>
+<li><strong>更高的可靠性：</strong> 外部 Flash 的稳定性可能不如内部 Flash（如受电源波动或环境温度影响）。</li>
+</ul>
+<p>二、<strong>什么时候更新外部 Flash 代码</strong></p>
+<p>什么时候将外部 Flash 中<strong>备份固件区</strong>的代码更新到<strong>运行固件区</strong>：</p>
+<p>OAT_flag &#x3D; 0；表示当前不需要进行固件升级，执行的固件是最新的</p>
+<p>运行固件区与备份固件区的代码版本不一致；不一致就执行更新，一致就说明不需要更新；</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">博主</a></li>
+        
+          <li><a href="/tags/">标签</a></li>
+        
+          <li><a href="/categories/">分类</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#OTA-%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5"><span class="toc-number">1.</span> <span class="toc-text">OTA 的核心概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#OTA-%E5%8D%87%E7%BA%A7%E7%9A%84%E5%AD%98%E5%82%A8%E9%9C%80%E6%B1%82"><span class="toc-number">2.</span> <span class="toc-text">OTA 升级的存储需求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#OTA-%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%B5%81%E7%A8%8B"><span class="toc-number">3.</span> <span class="toc-text">OTA 的实现流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1"><span class="toc-number">4.</span> <span class="toc-text">架构设计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Flash-%E5%88%92%E5%88%86"><span class="toc-number">4.1.</span> <span class="toc-text">Flash 划分</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E6%93%8D%E4%BD%9C"><span class="toc-number">4.2.</span> <span class="toc-text">存储操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BootLoader-%E6%B5%81%E7%A8%8B"><span class="toc-number">4.3.</span> <span class="toc-text">BootLoader 流程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81"><span class="toc-number">5.</span> <span class="toc-text">示例代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">6.</span> <span class="toc-text">注意事项</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/OTA/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/OTA/&text=OTA"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/OTA/&title=OTA"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/OTA/&is_video=false&description=OTA"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=OTA&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/OTA/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/OTA/&title=OTA"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/OTA/&title=OTA"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/OTA/&title=OTA"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/OTA/&title=OTA"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/OTA/&name=OTA&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/OTA/&t=OTA"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    kay
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

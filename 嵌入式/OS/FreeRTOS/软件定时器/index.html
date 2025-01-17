@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="软件定时器能够让函数在未来设定的时间执行。由定时器执行的函数称为定时器回调函数。从定时器启动到其回调函数执行之间的时间 被称为定时器的周期。简而言之， 当定时器的周期到期时，定时器的回调函数会被执行。 请注意，在使用软件定时器之前，必须明确地创建它。 定时器服务任务（主要）利用现有 FreeRTOS 功能， 允许在对应用程序的可执行二进制文件的大小造成影响最小的情况下， 将定时器功能添加到应用程序">
+<meta property="og:type" content="article">
+<meta property="og:title" content="软件定时器">
+<meta property="og:url" content="https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E8%BD%AF%E4%BB%B6%E5%AE%9A%E6%97%B6%E5%99%A8/index.html">
+<meta property="og:site_name" content="流年不知心底事">
+<meta property="og:description" content="软件定时器能够让函数在未来设定的时间执行。由定时器执行的函数称为定时器回调函数。从定时器启动到其回调函数执行之间的时间 被称为定时器的周期。简而言之， 当定时器的周期到期时，定时器的回调函数会被执行。 请注意，在使用软件定时器之前，必须明确地创建它。 定时器服务任务（主要）利用现有 FreeRTOS 功能， 允许在对应用程序的可执行二进制文件的大小造成影响最小的情况下， 将定时器功能添加到应用程序">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/rtosrjdsjrwdd.png">
+<meta property="article:published_time" content="2024-11-24T02:50:00.000Z">
+<meta property="article:modified_time" content="2025-01-07T10:58:33.648Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="FreeRTOS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/rtosrjdsjrwdd.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>软件定时器</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%B8%B4%E7%95%8C%E5%8C%BA/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%B8%AD%E6%96%AD%E7%AE%A1%E7%90%86/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E8%BD%AF%E4%BB%B6%E5%AE%9A%E6%97%B6%E5%99%A8/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E8%BD%AF%E4%BB%B6%E5%AE%9A%E6%97%B6%E5%99%A8/&text=软件定时器"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E8%BD%AF%E4%BB%B6%E5%AE%9A%E6%97%B6%E5%99%A8/&title=软件定时器"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E8%BD%AF%E4%BB%B6%E5%AE%9A%E6%97%B6%E5%99%A8/&is_video=false&description=软件定时器"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=软件定时器&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E8%BD%AF%E4%BB%B6%E5%AE%9A%E6%97%B6%E5%99%A8/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E8%BD%AF%E4%BB%B6%E5%AE%9A%E6%97%B6%E5%99%A8/&title=软件定时器"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E8%BD%AF%E4%BB%B6%E5%AE%9A%E6%97%B6%E5%99%A8/&title=软件定时器"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E8%BD%AF%E4%BB%B6%E5%AE%9A%E6%97%B6%E5%99%A8/&title=软件定时器"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E8%BD%AF%E4%BB%B6%E5%AE%9A%E6%97%B6%E5%99%A8/&title=软件定时器"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E8%BD%AF%E4%BB%B6%E5%AE%9A%E6%97%B6%E5%99%A8/&name=软件定时器&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E8%BD%AF%E4%BB%B6%E5%AE%9A%E6%97%B6%E5%99%A8/&t=软件定时器"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0"><span class="toc-number">1.</span> <span class="toc-text">回调函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9A%E6%97%B6%E5%99%A8%E6%9C%8D%E5%8A%A1-%E5%AE%88%E6%8A%A4%E8%BF%9B%E7%A8%8B%E4%BB%BB%E5%8A%A1%E5%92%8C%E5%AE%9A%E6%97%B6%E5%99%A8%E5%91%BD%E4%BB%A4%E9%98%9F%E5%88%97"><span class="toc-number">2.</span> <span class="toc-text">定时器服务&#x2F;守护进程任务和定时器命令队列</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE"><span class="toc-number">2.1.</span> <span class="toc-text">配置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9A%E6%97%B6%E5%99%A8%E8%BF%90%E8%A1%8C%E6%9C%BA%E5%88%B6"><span class="toc-number">3.</span> <span class="toc-text">定时器运行机制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9A%E6%97%B6%E5%99%A8-API"><span class="toc-number">4.</span> <span class="toc-text">定时器 API</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#xTimerCreate"><span class="toc-number">4.1.</span> <span class="toc-text">xTimerCreate</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xTimerStart"><span class="toc-number">4.2.</span> <span class="toc-text">xTimerStart</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xTimerStartFromISR"><span class="toc-number">4.3.</span> <span class="toc-text">xTimerStartFromISR</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xTimerStop"><span class="toc-number">4.4.</span> <span class="toc-text">xTimerStop</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xTimerDelete"><span class="toc-number">4.5.</span> <span class="toc-text">xTimerDelete</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XTimerlsTimerActive"><span class="toc-number">4.6.</span> <span class="toc-text">XTimerlsTimerActive</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">5.</span> <span class="toc-text">实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">6.</span> <span class="toc-text">问题</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        软件定时器
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">kay</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-11-24T02:50:00.000Z" class="dt-published" itemprop="datePublished">2024-11-24</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/FreeRTOS/">FreeRTOS</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/FreeRTOS/" rel="tag">FreeRTOS</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>软件定时器能够让函数在未来设定的时间执行。由定时器执行的函数称为定时器回调函数。从定时器启动到其回调函数执行之间的时间 被称为定时器的周期。简而言之， 当定时器的周期到期时，定时器的回调函数会被执行。</p>
+<p>请注意，在使用软件定时器之前，必须明确地创建它。</p>
+<p><strong>定时器服务任务</strong>（主要）利用现有 FreeRTOS 功能， 允许在对应用程序的可执行二进制文件的大小造成影响最小的情况下， 将定时器功能添加到应用程序中。</p>
+<h2 id="回调函数"><a href="#回调函数" class="headerlink" title="回调函数"></a>回调函数</h2><p>FreeRTOS 的定时器实现<strong>不从中断上下文中执行定时器回调函数</strong>， 不消耗<strong>任何</strong>处理时间， 除非定时器实际上已经过期，不给 tick 中断增加任何处理开销，并且在中断被禁用时不走行任何链接列表结构体。</p>
+<blockquote>
+<p>FreeRTOS 定时器的回调函数并不会直接在中断服务程序（ISR）中运行，而是在<strong>定时器服务任务的上下文中执行</strong>。</p>
+<p>定时器没有到期时，它只需要记录剩余的时间。</p>
+<p>只有当定时器到期后，才会触发定时器服务任务执行定时器回调函数。</p>
+<p>在 tick 中断中，仅简单地更新 tick 计数，定时器到期后，将任务转移到定时器服务任务中处理。</p>
+<p>中断被禁用时，尽量不执行复杂的链表操作，确保系统的实时性和稳定性。</p>
+</blockquote>
+<p>定时器回调函数在<strong>定时器服务任务</strong>的上下文中执行不从中断上下文中执行。因此，定时器回调函数永远不试图阻塞是<strong>至关重要的</strong> 。</p>
+<blockquote>
+<p>如果某个定时器回调函数执行了阻塞操作（例如死循环），定时器服务任务将被阻塞，导致以下问题：</p>
+<ul>
+<li><p>其他定时器的回调函数无法被及时执行。</p>
+</li>
+<li><p>定时器服务任务无法处理新到期的定时器。</p>
+</li>
+<li><p>可能阻塞其他依赖于定时器服务任务的功能，例如动态软件定时器的创建或删除。</p>
+</li>
+</ul>
+</blockquote>
+<p>例如，定时器回调函数在访问队列或信号量时，不得调用 vTaskDelay()、 vTaskDelayUntil()，也不得指定非零阻塞时间。</p>
+<h2 id="定时器服务-守护进程任务和定时器命令队列"><a href="#定时器服务-守护进程任务和定时器命令队列" class="headerlink" title="定时器服务&#x2F;守护进程任务和定时器命令队列"></a>定时器服务&#x2F;守护进程任务和定时器命令队列</h2><p>定时器是一个不属于核心 FreeRTOS 内核的可选功能，由 <strong>定时器服务任务（定时器守护进程任务）</strong>提供。</p>
+<p>FreeRTOS 提供了一组与定时器相关的 API 函数。其中许多函数使用标准 FreeRTOS 队列向定时器服务任务发送命令。用于此目的的队列称为<strong>定时器命令队列</strong>。“定时器命令队列” 专用于 FreeRTOS 定时器实现，无法直接访问。</p>
+<p>下图演示了这种情景。左边的代码表示 一个函数，属于用户应用程序的一部分， 并由作为同一用户应用程序的一部分创建的任务调用。右边的代码表示 定时器服务任务实现。 <strong>定时器命令队列将用户应用任务和定时器服务任务连接在一起</strong>（定时器 API 将任务添加到定时器任务队列中，定时器服务程序从任务队列中获取命令并执行）。 在此演示案例中，应用程序代码 调用 xTimerReset() API 函数。其结果是复位命令会发送到定时器命令队列中， 再由定时器服务任务来处理。应用程序代码 只会调用 xTimerReset() API 函数，不会（也无法）直接 访问定时器命令队列。</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/rtosrjdsjrwdd.png" alt="rtosrjdsjrwdd"></p>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>要使 FreeRTOS 软件计时器 API 在应用程序中可用， 只需：</p>
+<ol>
+<li>将 FreeRTOS&#x2F;Source&#x2F;timers.c 源文件添加到项目中，以及</li>
+<li>在应用程序 FreeRTOSConfig.h 头文件中定义下表详述的常量。</li>
+</ol>
+<p><strong>常量</strong></p>
+<ul>
+<li><p>configUSE_TIMERS</p>
+<p>设置为 1 以包括定时器功能。<strong>当 configUSE_TIMERS 设置为 1 时， RTOS 定时器服务任务将在调度器启动时自动创建</strong>。</p>
+</li>
+<li><p>configTIMER_TASK_PRIORITY</p>
+<p>设置定时器服务任务的优先级。与所有任务一样，定时器服务任务可以 在 0 到 (configMAX_PRIORITIES - 1) 之间的任何优先级运行。</p>
+<p>需要仔细选择此数值，以满足应用程序的要求。例如，如果 定时器服务任务被设置为系统中最高优先级的任务， 则发送到定时器服务任务（当调用定时器 API 函数时）和过期的定时器的命令都将立即得到处理。 相反，如果定时器服务任务被赋予低优先级， 则发送到定时器服务任务和过期定时器的命令将不会被处理， 直到定时器服务任务成为能够运行的最高优先级任务。然而，值得注意的是，定时器到期时间是相对于发送命令的时间计算的， 而不是相对于处理命令的时间计算的。</p>
+</li>
+<li><p>configTIMER_QUEUE_LENGTH</p>
+<p>这设置了定时器命令队列在任一时间可以容纳的未处理命令的最大数量 。定时器命令队列可能已满的原因包括：</p>
+<ul>
+<li>在 RTOS 调度器启动之前（即创建定时器服务任务之前） 进行多次定时器 API 函数调用。</li>
+<li>从中断服务程序 (ISR) 进行多次（中断安全）定时器 API 函数调用。</li>
+<li>从优先级高于定时器服务任务的任务进行多次定时器 API 函数调用。</li>
+</ul>
+</li>
+<li><p>configTIMER_TASK_STACK_DEPTH</p>
+<p>设置分配给定时器服务任务的堆栈大小（以字为单位，而不是以字节为单位）。</p>
+<p>定时器回调函数在定时器服务任务的上下文中执行。因此，定时器服务任务的堆栈要求 取决于定时器回调函数的堆栈要求。</p>
+</li>
+</ul>
+<h2 id="定时器运行机制"><a href="#定时器运行机制" class="headerlink" title="定时器运行机制"></a>定时器运行机制</h2><p><strong>定时器创建</strong>：用户通过 xTimerCreate() 函数创建一个定时器，并为其指定一个时间间隔和回调函数。</p>
+<p><strong>启动定时器</strong>：定时器通过 xTimerStart() 或 xTimerChangePeriod() 启动。一旦定时器启动，它就开始计时。</p>
+<p><strong>计时</strong>：软件定时器的计时是基于系统的 tick 中断。每次 tick 中断发生时，FreeRTOS 会检查所有定时器，看是否有定时器已到期。如果有到期的定时器，它会将其移到待处理队列中，等待定时器服务任务处理。</p>
+<p><strong>定时器回调</strong>：所有定时器的回调函数都由定时器服务任务（Timer Service Task）来执行。当定时器到期时，回调函数会在定时器服务任务上下文中执行，而不是在中断上下文中执行。定时器服务任务在</p>
+<p><strong>定时器服务任务</strong>：定时器服务任务是一个系统级的任务，通常以最低优先级运行。它会定期检查是否有定时器回调需要执行。</p>
+<h2 id="定时器-API"><a href="#定时器-API" class="headerlink" title="定时器 API"></a>定时器 API</h2><h3 id="xTimerCreate"><a href="#xTimerCreate" class="headerlink" title="xTimerCreate"></a>xTimerCreate</h3><p>创建一个新的软件定时器实例， 并返回一个可以引用定时器的句柄。</p>
+<p>定时器是在休眠状态下创建的。需要显示的激活使用；</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// timers.h</span></span><br><span class="line">TimerHandle_t <span class="title function_">xTimerCreate</span></span><br><span class="line">             <span class="params">( <span class="type">const</span> <span class="type">char</span> * <span class="type">const</span> pcTimerName,</span></span><br><span class="line"><span class="params">               <span class="type">const</span> TickType_t xTimerPeriod,</span></span><br><span class="line"><span class="params">               <span class="type">const</span> UBaseType_t uxAutoReload,</span></span><br><span class="line"><span class="params">               <span class="type">void</span> * <span class="type">const</span> pvTimerID,</span></span><br><span class="line"><span class="params">               TimerCallbackFunction_t pxCallbackFunction )</span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>参数：</strong></p>
+<ul>
+<li><p>pcTimerName</p>
+<p>分配给定时器的可读文本名称。这样做纯粹是为了协助调试。 RTOS 内核本身只通过句柄引用定时器，而不是通过其名称。</p>
+</li>
+<li><p>xTimerPeriod</p>
+<p>定时器的周期。周期以滴答为单位，宏 pdMS_TO_TICKS() 可用于 将以毫秒为单位的时间转换为以滴答为单位的时间。</p>
+</li>
+<li><p>uxAutoReload</p>
+<p>如果 uxAutoReload 设置为 pdTRUE， 那么定时器将以 xTimerPeriod 参数设置的频率重复过期。如果 uxAutoReload 设置为 pdFALSE，则此定时器为一次性定时器， 它会在到期后进入休眠状态。</p>
+</li>
+<li><p>pvTimerID</p>
+<p>分配给正在创建的定时器的标识符。通常情况下， 当同一回调函数分配给多个定时器时，该 ID 将用于定时器回调函数， 以识别哪个定时器过期，或者与 vTimerSetTimerID 和 pvTimerGetTimerID()API 函数一起用于在定时器回调函数调用之间保存值。</p>
+</li>
+<li><p>pxCallbackFunction</p>
+<p>定时器到期时调用的函数。回调函数必须具有 TimerCallbackFunction_t 定义的原型，即：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">vCallbackFunction</span><span class="params">( TimerHandle_t xTimer )</span>;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p><strong>返回：</strong></p>
+<ul>
+<li>如果定时器创建成功， 则返回新创建的定时器的句柄。如果由于剩余的 FreeRTOS 堆不足以分配定时器结构体而无法创建定时器， 则返回 NULL。</li>
+</ul>
+<h3 id="xTimerStart"><a href="#xTimerStart" class="headerlink" title="xTimerStart"></a>xTimerStart</h3><p>xTimerStart 用于启动之前使用 xTimerCreate API 函数创建的定时器。如果定时器已经启动且已处于活跃状态， 则 xTimerStart()</p>
+<p> 具有与 xTimerReset API 函数相同的功能。</p>
+<p>在 RTOS 调度器启动之前调用 xTimerStart() 是有效的， 但是完成此操作后，直到启动 RTOS 调度器之前，定时器都不会真正启动。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>( xTimerStart(xTimer, xBlockTime ) != pdPASS ) &#123;</span><br><span class="line">     <span class="comment">// 启动失败的处理</span></span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>参数：</strong></p>
+<ul>
+<li><p>xTimer</p>
+<p>正在启动&#x2F;重新启动的定时器的句柄。</p>
+</li>
+<li><p>xBlockTime</p>
+<p>在调用 xTimerStart 时队列已满的情况下，调用任务处于阻塞状态以等待启动命令成功发送到定时器命令队列的时间（单位：滴答）。</p>
+<p>如果在 RTOS 调度器启动之前就调用 xTimerStart ，则 xBlockTime 将被忽略</p>
+</li>
+</ul>
+<p><strong>返回：</strong></p>
+<ul>
+<li><p>在经过 xBlockTime 个滴答后，启动命令依旧无法发送至定时器命令队列，则返回 pdFAIL</p>
+</li>
+<li><p>如果能将此命令成功发送到定时器命令队列，则返回 pdPASS</p>
+<p>实际处理命令的时间取决于定时器服务&#x2F;守护进程任务相对于系统中其他任务的优先级，尽管定时器到期时间与实际调用 xTimerStart  的时间有关。</p>
+<p>定时器服务&#x2F;守护进程任务的优先级由 configTIMER_TASK_PRIORITY 配置常量设置。</p>
+</li>
+</ul>
+<h3 id="xTimerStartFromISR"><a href="#xTimerStartFromISR" class="headerlink" title="xTimerStartFromISR"></a>xTimerStartFromISR</h3><p>从中断服务例程调用的 xTimerStart() 函数。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>( xTimerStartFromISR( xBacklightTimer,&amp;xHigherPriorityTaskWoken ) != pdPASS ) &#123;</span><br><span class="line">    <span class="comment">// 启动失败的处理</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>参数：</strong></p>
+<ul>
+<li><p>xTimer</p>
+<p>正在启动&#x2F;重新启动的定时器的句柄。</p>
+</li>
+<li><p>pxHigherPriorityTaskWoken</p>
+<p>定时器服务&#x2F;守护进程任务大部分时间都处于“阻塞”状态，等待消息到达定时器命令队列。调用 xTimerStartFromISR() 会将消息写入定时器命令队列，从而让定时器服务&#x2F;守护进程任务转换为非阻塞状态。</p>
+<p>如果调用 xTimerStartFromISR() 导致定时器服务&#x2F;守护进程任务退出阻塞状态，并且定时器服务&#x2F;守护进程任务的优先级等于或高于当前执行的任务 （被中断的任务），则 *pxHigherPriorityTaskWoken 将在 xTimerStartFromISR() 函数内部被设置为 pdTRUE。如果 xTimerStartFromISR () 将此值设置为 pdTRUE， 那么应在退出中断之前执行上下文切换。</p>
+</li>
+</ul>
+<p><strong>返回：</strong></p>
+<p>如果启动命令无法发送至定时器命令队列，则返回 pdFAIL。如果命令成功发送至定时器命令队列， 则返回 pdPASS。实际处理命令的时间取决于定时器服务&#x2F;守护进程任务相对于系统中其他任务的优先级， 尽管定时器到期时间是相对于实际调用 xTimerStartFromISR() 的时间而言。定时器服务&#x2F;守护进程 任务优先级由 configTIMER_TASK_PRIORITY 配置常量设置。</p>
+<h3 id="xTimerStop"><a href="#xTimerStop" class="headerlink" title="xTimerStop"></a>xTimerStop</h3><p>停止先前使用 xTimerStart()、xTimerReset()、xTimerStartFromISR()、xTimerResetFromISR()、xTimerChangePeriod() 和xTimerChangePeriodFromISR() API 函数创建的定时器。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xTimerStop(xTimer, xBlockTime);</span><br></pre></td></tr></table></figure>
+
+<p><strong>参数：</strong></p>
+<ul>
+<li><p>xTimer</p>
+<p>正在停止的定时器的句柄。</p>
+</li>
+<li><p>xBlockTime</p>
+<p>指定在调用 xTimerStop 时队列已满的情况下，调用任务处于阻塞状态以等待停止命令成功发送到定时器命令队列的时间（单位：滴答）。</p>
+</li>
+</ul>
+<p><strong>返回：</strong></p>
+<ul>
+<li><p><em>pdFAIL</em></p>
+<p>如果在 xBlockTime 滴答已过之后仍无法向定时器命令队列发送删除命令，则返回 pdFAIL</p>
+</li>
+<li><p>pdPASS</p>
+<p>如果能将此命令成功发送到定时器命令队列，则返回 pdPASS</p>
+</li>
+</ul>
+<h3 id="xTimerDelete"><a href="#xTimerDelete" class="headerlink" title="xTimerDelete"></a>xTimerDelete</h3><p>xTimerDelete() 可删除之前使用 xTimerCreate() 函数创建的定时器。</p>
+<p>请注意，删除静态分配的定时器时， 在 xTimerIsTimerActive() 指示该定时器处于非活动状态之前，无法重复使用其静态内存。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">BaseType_t <span class="title function_">xTimerDelete</span><span class="params">(TimerHandle_t xTimer,TickType_t xBlockTime)</span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>参数：</strong></p>
+<ul>
+<li><p><em>xTimer</em></p>
+<p>正在删除的定时器的句柄。</p>
+</li>
+<li><p><em>xBlockTime</em></p>
+<p>指定在调用 xTimerDelete() 时队列已满的情况下， 调用任务处于阻塞状态以等待删除命令成功发送到定时器命令队列的时间 （单位：滴答）。如果 在 RTOS 调度器启动前调用 xTimerDelete()，xBlockTime 将被忽略。</p>
+</li>
+</ul>
+<p><strong>返回：</strong></p>
+<ul>
+<li>如果在 xBlockTime 滴答已过之后仍无法向定时器命令队列发送删除命令， 则返回 pdFAIL。</li>
+<li>如果能将此命令成功发送到定时器命令队列，则返回 pdPASS。实际处理命令的时间 取决于定时器服务&#x2F;守护进程任务相对于系统中其他任务的优先级 。定时器服务&#x2F;守护进程任务的优先级由 configTIMER_TASK_PRIORITY 配置常量设置。</li>
+</ul>
+<h3 id="XTimerlsTimerActive"><a href="#XTimerlsTimerActive" class="headerlink" title="XTimerlsTimerActive"></a>XTimerlsTimerActive</h3><p>查询软件定时器是否处于活动或休眠状态。</p>
+<p>如果出现以下情况，定时器将处于休眠状态：</p>
+<ol>
+<li>已创建但尚未启动</li>
+<li>这是一个尚未重启的过期的一次性计时器。</li>
+</ol>
+<p>xTimerStart()、xTimerReset()、xTimerStartFromISR()、xTimerResetFromISR()、xTimerChangePeriod() 和xTimerChangePeriodFromISR() 函数都可以用于将定时器转换为活跃状态。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">BaseType_t <span class="title function_">xTimerIsTimerActive</span><span class="params">( TimerHandle_t xTimer )</span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>参数：</strong></p>
+<ul>
+<li><p>xTimer</p>
+<p>被查询的定时器。</p>
+</li>
+</ul>
+<p><strong>返回：</strong></p>
+<ul>
+<li>如果定时器处于休眠状态，将返回 pdFALSE。</li>
+<li>如果定时器处于活动状态，将返回 pdFALSE 以外的值。</li>
+</ul>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;gd32f4xx.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;systick.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;main.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;FreeRTOS.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;task.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;timers.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;usart0.h&quot;</span></span></span><br><span class="line"></span><br><span class="line">TaskHandle_t  start_handler;</span><br><span class="line">TimerHandle_t timer1;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">Usart0_recv</span><span class="params">(<span class="type">uint8_t</span> *data, <span class="type">uint32_t</span> len)</span> &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;recv: %s\r\n&quot;</span>, data);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">timerCallback</span><span class="params">(TimerHandle_t xTimer)</span> &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;timer\r\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">GPIO_config</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="comment">// 时钟初始化</span></span><br><span class="line">    rcu_periph_clock_enable(RCU_GPIOA);</span><br><span class="line">    <span class="comment">// 配置GPIO模式</span></span><br><span class="line">    gpio_mode_set(GPIOA, GPIO_MODE_INPUT, GPIO_PUPD_PULLDOWN, GPIO_PIN_0);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    NVIC_SetPriorityGrouping(NVIC_PRIGROUP_PRE4_SUB0);</span><br><span class="line"></span><br><span class="line">    GPIO_config();</span><br><span class="line">    Usart0_init();</span><br><span class="line">    </span><br><span class="line">    timer1 = xTimerCreate(<span class="string">&quot;Timer1&quot;</span>, pdMS_TO_TICKS(<span class="number">1000</span>), pdTRUE, (<span class="type">void</span> *)<span class="number">1</span>, timerCallback);</span><br><span class="line">    xTimerStart(timer1, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    vTaskStartScheduler();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>) &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>一、<strong>小技巧</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// FreeRTOSConfig.h </span></span><br><span class="line"><span class="comment">// 注释掉原有内容</span></span><br><span class="line"><span class="comment">//#define configASSERT( x ) if( ( x ) == 0 ) &#123; taskDISABLE_INTERRUPTS(); for( ;; ); &#125;</span></span><br><span class="line"><span class="comment">//#define configASSERT( x ) 0</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 替换成新的内容：断言结果通过printf输出 */</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> vAssertCalled(char, int) printf(<span class="string">&quot;-&gt; Error: %s, %d\r\n&quot;</span>, char, int)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> configASSERT( x ) <span class="keyword">if</span>( ( x ) == 0 ) vAssertCalled( __FILE__, __LINE__ )</span></span><br></pre></td></tr></table></figure>
+
+<p>二、<strong>定时器回调函数为什么不可以阻塞</strong></p>
+<p><strong>定时器回调函数的执行方式</strong>： FreeRTOS 定时器回调函数是在定时器管理任务（<code>vTimerTask</code>）中执行的，这意味着定时器回调函数会在 <code>vTimerTask</code> 任务的上下文中执行。这个任务的优先级通常较低，它会在其他更高优先级的任务（包括中断）执行之后被调度。</p>
+<p><strong>阻塞操作</strong>： 在 FreeRTOS 中，如果定时器回调函数中调用了 <code>vTaskDelay</code>、<code>vTaskDelayUntil</code> 或类似的 API 来显式地让自己“阻塞”，或者如果回调函数执行了一个需要较长时间的操作（例如等待 I&#x2F;O 或同步操作），那么它会占用 <code>vTimerTask</code> 的执行时间，导致其他定时器的回调函数被延迟执行。</p>
+<p><strong>任务调度</strong>： 如果一个定时器回调函数在执行过程中阻塞了，那么 FreeRTOS 将不会在此期间调度其他定时器回调函数。由于定时器回调函数是由同一个任务 (<code>vTimerTask</code>) 执行的，如果 <code>vTimerTask</code> 被阻塞，其他定时器的回调也会被延迟直到 <code>vTimerTask</code> 完成当前任务。因此，多个定时器回调函数的并行性可能会受到影响。</p>
+<p>三、<strong>调用 xTimerDelete 删除了该定时器，然后再次调用 xTimerStart，仍然可以重新启动同一个定时器</strong></p>
+<p>？</p>
+<p>四、<strong>软件定时器启动后是如何计数的</strong></p>
+<p>在 FreeRTOS 中，定时器的计时值是通过系统的 Tick 定时器中断来减少的，但这个过程并不会占用额外的时间片，它是在 <strong>中断上下文</strong> 中执行的。</p>
+<p><strong>Tick 定时器中断</strong>（也叫做时钟中断）是由硬件定时器触发的，通常会以固定的时间间隔触发（例如，每 1 毫秒）。</p>
+<p>每次 Tick 中断发生时，FreeRTOS 会执行一个中断服务例程（ISR），并执行以下几项重要操作：</p>
+<ol>
+<li><strong>增加 Tick 计数器</strong>：每次 Tick 中断时，系统的 Tick 计数器会增加 1。</li>
+<li><strong>更新定时器的计时值</strong>：FreeRTOS 会检查所有软件定时器的计时值（xTimeToExpiration），并在每次 Tick 中断时，将这些定时器的计时值减去 1。</li>
+</ol>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">博主</a></li>
+        
+          <li><a href="/tags/">标签</a></li>
+        
+          <li><a href="/categories/">分类</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0"><span class="toc-number">1.</span> <span class="toc-text">回调函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9A%E6%97%B6%E5%99%A8%E6%9C%8D%E5%8A%A1-%E5%AE%88%E6%8A%A4%E8%BF%9B%E7%A8%8B%E4%BB%BB%E5%8A%A1%E5%92%8C%E5%AE%9A%E6%97%B6%E5%99%A8%E5%91%BD%E4%BB%A4%E9%98%9F%E5%88%97"><span class="toc-number">2.</span> <span class="toc-text">定时器服务&#x2F;守护进程任务和定时器命令队列</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE"><span class="toc-number">2.1.</span> <span class="toc-text">配置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9A%E6%97%B6%E5%99%A8%E8%BF%90%E8%A1%8C%E6%9C%BA%E5%88%B6"><span class="toc-number">3.</span> <span class="toc-text">定时器运行机制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9A%E6%97%B6%E5%99%A8-API"><span class="toc-number">4.</span> <span class="toc-text">定时器 API</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#xTimerCreate"><span class="toc-number">4.1.</span> <span class="toc-text">xTimerCreate</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xTimerStart"><span class="toc-number">4.2.</span> <span class="toc-text">xTimerStart</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xTimerStartFromISR"><span class="toc-number">4.3.</span> <span class="toc-text">xTimerStartFromISR</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xTimerStop"><span class="toc-number">4.4.</span> <span class="toc-text">xTimerStop</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xTimerDelete"><span class="toc-number">4.5.</span> <span class="toc-text">xTimerDelete</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XTimerlsTimerActive"><span class="toc-number">4.6.</span> <span class="toc-text">XTimerlsTimerActive</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">5.</span> <span class="toc-text">实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">6.</span> <span class="toc-text">问题</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E8%BD%AF%E4%BB%B6%E5%AE%9A%E6%97%B6%E5%99%A8/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E8%BD%AF%E4%BB%B6%E5%AE%9A%E6%97%B6%E5%99%A8/&text=软件定时器"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E8%BD%AF%E4%BB%B6%E5%AE%9A%E6%97%B6%E5%99%A8/&title=软件定时器"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E8%BD%AF%E4%BB%B6%E5%AE%9A%E6%97%B6%E5%99%A8/&is_video=false&description=软件定时器"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=软件定时器&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E8%BD%AF%E4%BB%B6%E5%AE%9A%E6%97%B6%E5%99%A8/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E8%BD%AF%E4%BB%B6%E5%AE%9A%E6%97%B6%E5%99%A8/&title=软件定时器"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E8%BD%AF%E4%BB%B6%E5%AE%9A%E6%97%B6%E5%99%A8/&title=软件定时器"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E8%BD%AF%E4%BB%B6%E5%AE%9A%E6%97%B6%E5%99%A8/&title=软件定时器"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E8%BD%AF%E4%BB%B6%E5%AE%9A%E6%97%B6%E5%99%A8/&title=软件定时器"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E8%BD%AF%E4%BB%B6%E5%AE%9A%E6%97%B6%E5%99%A8/&name=软件定时器&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E8%BD%AF%E4%BB%B6%E5%AE%9A%E6%97%B6%E5%99%A8/&t=软件定时器"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    kay
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

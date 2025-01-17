@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="LVGL（LittlevGL） 是一个功能强大的开源图形用户界面（GUI）库，主要应用于嵌入式设备。为了在不同的硬件平台上运行 LVGL，我们需要进行移植（porting）。移植的目标是让 LVGL 库能够在特定的硬件和操作环境下正常运行，从而显示图形界面并响应用户输入。 测试屏幕在移植 LVGL 之前我们最好先测试一个我们的 LED 显示屏是否可以正常工作，如果可以正常工作再将 LVGL 生成的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="移植流程">
+<meta property="og:url" content="https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/%E7%A7%BB%E6%A4%8D%E6%B5%81%E7%A8%8B/index.html">
+<meta property="og:site_name" content="流年不知心底事">
+<meta property="og:description" content="LVGL（LittlevGL） 是一个功能强大的开源图形用户界面（GUI）库，主要应用于嵌入式设备。为了在不同的硬件平台上运行 LVGL，我们需要进行移植（porting）。移植的目标是让 LVGL 库能够在特定的硬件和操作环境下正常运行，从而显示图形界面并响应用户输入。 测试屏幕在移植 LVGL 之前我们最好先测试一个我们的 LED 显示屏是否可以正常工作，如果可以正常工作再将 LVGL 生成的">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-11-25T10:03:00.000Z">
+<meta property="article:modified_time" content="2025-01-07T10:58:33.648Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="LVGL">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>移植流程</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/LVGL%E4%BB%8B%E7%BB%8D/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/%E7%A7%BB%E6%A4%8D%E6%B5%81%E7%A8%8B/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/%E7%A7%BB%E6%A4%8D%E6%B5%81%E7%A8%8B/&text=移植流程"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/%E7%A7%BB%E6%A4%8D%E6%B5%81%E7%A8%8B/&title=移植流程"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/%E7%A7%BB%E6%A4%8D%E6%B5%81%E7%A8%8B/&is_video=false&description=移植流程"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=移植流程&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/%E7%A7%BB%E6%A4%8D%E6%B5%81%E7%A8%8B/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/%E7%A7%BB%E6%A4%8D%E6%B5%81%E7%A8%8B/&title=移植流程"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/%E7%A7%BB%E6%A4%8D%E6%B5%81%E7%A8%8B/&title=移植流程"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/%E7%A7%BB%E6%A4%8D%E6%B5%81%E7%A8%8B/&title=移植流程"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/%E7%A7%BB%E6%A4%8D%E6%B5%81%E7%A8%8B/&title=移植流程"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/%E7%A7%BB%E6%A4%8D%E6%B5%81%E7%A8%8B/&name=移植流程&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/%E7%A7%BB%E6%A4%8D%E6%B5%81%E7%A8%8B/&t=移植流程"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E5%B1%8F%E5%B9%95"><span class="toc-number">1.</span> <span class="toc-text">测试屏幕</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A7%BB%E6%A4%8D%E6%B5%81%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">移植流程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96-LVGL"><span class="toc-number">2.1.</span> <span class="toc-text">获取 LVGL</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA-lv-conf-h"><span class="toc-number">2.2.</span> <span class="toc-text">创建 lv_conf.h</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E7%A7%BB%E6%A4%8D"><span class="toc-number">2.3.</span> <span class="toc-text">代码移植</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E9%A9%B1%E5%8A%A8"><span class="toc-number">2.4.</span> <span class="toc-text">配置驱动</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%98%BE%E7%A4%BA%E9%A9%B1%E5%8A%A8"><span class="toc-number">2.4.1.</span> <span class="toc-text">显示驱动</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A6%E6%91%B8%E9%A9%B1%E5%8A%A8"><span class="toc-number">2.4.2.</span> <span class="toc-text">触摸驱动</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96-LVGL"><span class="toc-number">2.5.</span> <span class="toc-text">初始化 LVGL</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A7%BB%E6%A4%8D%E5%88%B0-FreeRTOS"><span class="toc-number">3.</span> <span class="toc-text">移植到 FreeRTOS</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%96%E9%83%A8-SRAM"><span class="toc-number">4.</span> <span class="toc-text">外部 SRAM</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86"><span class="toc-number">5.</span> <span class="toc-text">内存管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LVGL-%E5%86%85%E5%AD%98%E6%8A%A5%E9%94%99"><span class="toc-number">6.</span> <span class="toc-text">LVGL 内存报错</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%94%99%E8%AF%AF"><span class="toc-number">7.</span> <span class="toc-text">错误</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        移植流程
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">kay</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-11-25T10:03:00.000Z" class="dt-published" itemprop="datePublished">2024-11-25</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/">嵌入式</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/LVGL/" rel="tag">LVGL</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p><strong>LVGL（LittlevGL）</strong> 是一个功能强大的<strong>开源图形用户界面（GUI）库</strong>，主要应用于嵌入式设备。为了在不同的硬件平台上运行 <strong>LVGL</strong>，我们需要进行移植（porting）。移植的目标是让 <strong>LVGL</strong> 库能够在特定的硬件和操作环境下正常运行，从而显示图形界面并响应用户输入。</p>
+<h2 id="测试屏幕"><a href="#测试屏幕" class="headerlink" title="测试屏幕"></a>测试屏幕</h2><p>在移植 LVGL 之前我们最好先测试一个我们的 LED 显示屏是否可以正常工作，如果可以正常工作再将 LVGL 生成的图像渲染到屏幕上；</p>
+<p>我们这里使用的是 P169H002-CTP 型号的 1.69 寸显示屏；他的显示芯片为 ST7789V，触控芯片为 CST816T，我们可以先通过官方提供的驱动函数先试着点亮屏幕，看屏幕是否可以支持工作</p>
+<p><strong>显示驱动</strong></p>
+<p>拷贝官方 ST7789 的驱动程序等到我们工程中；</p>
+<p>我们需要修改官方驱动程序的引脚与我们板子上所使用的是一致的：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// st7789.h</span></span><br><span class="line"><span class="comment">/* choose a Hardware SPI port to use. */</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ST7789_SPIX_RCU RCU_SPI0</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ST7789_SPIX_PORT SPI0</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Define the pins tp connect */</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ST7789_RST_RCU	RCU_GPIOD</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ST7789_RST_PORT GPIOD</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ST7789_RST_PIN GPIO_PIN_6</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ST7789_DC_RCU	RCU_GPIOB</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ST7789_DC_PORT GPIOB</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ST7789_DC_PIN GPIO_PIN_1</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ST7789_CS_RCU	RCU_GPIOB</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ST7789_CS_PORT GPIOB</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ST7789_CS_PIN GPIO_PIN_0</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ST7789_BLK_RCU	RCU_GPIOB</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ST7789_BLK_PORT GPIOB</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ST7789_BLK_PIN GPIO_PIN_10</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// st77789.c</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> SPI_CLK_RCU RCU_GPIOA</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> SPI_CLK_PORT GPIOA</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> SPI_CLK_PIN GPIO_PIN_5</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> SPI_CLK_AF GPIO_AF_5</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> SPI_SDA_RCU RCU_GPIOA</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> SPI_SDA_PORT GPIOA</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> SPI_SDA_PIN GPIO_PIN_7</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> SPI_SDA_AF GPIO_AF_5</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// main.c</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;st7789.h&quot;</span></span></span><br><span class="line">    <span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    ST7789_Init();</span><br><span class="line">    <span class="comment">// 铺满颜色，也就是背景</span></span><br><span class="line">    ST7789_Fill_Color(<span class="number">0xFFFF</span>);</span><br><span class="line">    <span class="comment">// 画一条线	</span></span><br><span class="line">    ST7789_DrawLine(<span class="number">50</span>, <span class="number">50</span>, <span class="number">100</span>, <span class="number">100</span>, <span class="number">0xFF00</span>);</span><br><span class="line">&#125;    </span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>在修改时候一定要注意，如果官方提供的代码示例（SPI 实现）是通过硬件实现的，我们在修改引脚后一定不要忘记修改引脚的复用编号，和具体使用的复用功能（SPI几）的编号；</p>
+</blockquote>
+<p><strong>触控驱动</strong></p>
+<p>拷贝官方 CST816T 的驱动程序等到我们工程中，因为触控驱动使用的是 I2C 进行通信所以这里还需要拷贝 I2C 的实现代码；</p>
+<p>修改驱动引脚；</p>
+<p>这里要知道触控的实现是我们点击屏幕，然后它对应的引脚就会产生变化，我们需要去监听这个引脚的变化，也就是需要一个外部中断；所以官方提供的驱动中有引脚是需要外部中断的；</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// cst816t.h</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> CST816T_RESET_RCU     		RCU_GPIOD</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> CST816T_RESET_GPIO          GPIOD</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> CST816T_RESET_GPIO_PIN      GPIO_PIN_7</span></span><br><span class="line"><span class="comment">// PA7</span></span><br><span class="line"><span class="comment">// #define CST816T_IRQ 				PBout(4)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> CST816T_IRQ_RCU     	 	RCU_GPIOB</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> CST816T_IRQ_GPIO         	GPIOB</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> CST816T_IRQ_GPIO_PIN    	GPIO_PIN_4</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> CST816T_EXTI_Line			EXTI_4</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// cst816t.c</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">CST816T_GPIOInit</span><span class="params">(<span class="type">void</span>)</span> &#123;	</span><br><span class="line">	<span class="comment">//PA_6(RST)</span></span><br><span class="line">	rcu_periph_clock_enable(CST816T_RESET_RCU);</span><br><span class="line">	gpio_mode_set(CST816T_RESET_GPIO, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, CST816T_RESET_GPIO_PIN);</span><br><span class="line">	gpio_output_options_set(CST816T_RESET_GPIO, GPIO_OTYPE_PP, GPIO_OSPEED_50MHZ, CST816T_RESET_GPIO_PIN);</span><br><span class="line">	<span class="comment">//PA_7(INT)</span></span><br><span class="line">	rcu_periph_clock_enable(CST816T_IRQ_RCU);</span><br><span class="line">	gpio_mode_set(CST816T_IRQ_GPIO, GPIO_MODE_INPUT, GPIO_PUPD_PULLUP, CST816T_IRQ_GPIO_PIN);</span><br><span class="line">		</span><br><span class="line">	<span class="comment">//1.2 开启系统配置时钟</span></span><br><span class="line">	rcu_periph_clock_enable(RCU_SYSCFG); </span><br><span class="line">	</span><br><span class="line">	<span class="comment">/*3.使能NVIC中断并配置优先级*/</span></span><br><span class="line">	<span class="comment">//3.1 设置中断优先级分组(只需要配置一次  可以放在main中)</span></span><br><span class="line">	<span class="comment">//	nvic_priority_group_set(NVIC_PRIGROUP_PRE2_SUB2);</span></span><br><span class="line">	<span class="comment">//3.2 配置中断的抢占优先级和响应优先级 抢占优先级3,子优先级3</span></span><br><span class="line">	nvic_irq_enable(EXTI4_IRQn,<span class="number">3</span>,<span class="number">3</span>);</span><br><span class="line">	<span class="comment">/*4.配置GPIO中断 中断引脚资源端口和中断引脚*/</span></span><br><span class="line">	syscfg_exti_line_config(EXTI_SOURCE_GPIOB,EXTI_SOURCE_PIN4);</span><br><span class="line">	<span class="comment">/*5.初始化中断线  第三个参数指定上升沿和下降沿均触发*/</span></span><br><span class="line">	exti_init(CST816T_EXTI_Line,EXTI_INTERRUPT,EXTI_TRIG_FALLING);</span><br><span class="line">	<span class="comment">/*6.使能中断和清除中断标志位*/</span></span><br><span class="line">	<span class="comment">//清除中断标志位</span></span><br><span class="line">	exti_interrupt_flag_clear(CST816T_EXTI_Line);</span><br><span class="line">	<span class="comment">//使能中断</span></span><br><span class="line">	exti_interrupt_enable(CST816T_EXTI_Line);</span><br><span class="line">	<span class="comment">/*7.编写中断服务函数*/</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">//初始化</span></span><br><span class="line">	_CST816T_RESET_HIGH_();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">EXTI4_IRQHandler</span><span class="params">(<span class="type">void</span>)</span>&#123;	 </span><br><span class="line">	 <span class="keyword">if</span>(exti_interrupt_flag_get(CST816T_EXTI_Line) == SET) &#123;</span><br><span class="line">			exti_interrupt_flag_clear(CST816T_EXTI_Line);</span><br><span class="line">			CST816_GetAction();</span><br><span class="line">			<span class="built_in">printf</span>(<span class="string">&quot;touch down\r\n&quot;</span>);</span><br><span class="line">	 &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">		  CST816_GetAction();</span><br><span class="line">			<span class="comment">//CST816T_ClrBaseDatas();</span></span><br><span class="line">		  <span class="built_in">printf</span>(<span class="string">&quot;touch release\r\n&quot;</span>);</span><br><span class="line">	 &#125;	 </span><br><span class="line">	 exti_interrupt_flag_clear(CST816T_EXTI_Line); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>修改的时候细心些，修改完引脚后，中断配置中的一些也需要修改，不要漏了，否则会导致中断无法触发；</p>
+</blockquote>
+<p>如果上面正确，会在屏幕上显示一条线，并且点击屏幕会在中断中有打印输出；</p>
+<h2 id="移植流程"><a href="#移植流程" class="headerlink" title="移植流程"></a>移植流程</h2><h3 id="获取-LVGL"><a href="#获取-LVGL" class="headerlink" title="获取 LVGL"></a>获取 LVGL</h3><p>获取 <a target="_blank" rel="noopener" href="https://github.com/lvgl/lvgl">LVGL</a>（为了保证与 LVGL 图形化工具生成的代码兼容，二者最好选择一样的版本 v8.3）</p>
+<p>lvgl 图形库下包含多个子目录，要移植 LVGL，只需要 src 目录下的 <strong>.c</strong> 和 <strong>.h</strong> 文件，以及根目录下的 <strong>lvgl.h</strong> 这个文件即可。</p>
+<blockquote>
+<p><strong>lvgl</strong> 官方库中还包含了 <strong>examples</strong> 和 <strong>demos</strong> 目录。如果你的项目需要示例或演示，你可以将这些目录添加到你的项目中。如果使用 <strong>make</strong> 或 <strong>CMake</strong> 来处理 <strong>examples</strong> 和 <strong>demos</strong> 目录，那么就不需要额外的操作。</p>
+<p>LVGL 本身只是一个 GUI 的图形库，他将图像生成后，需要通过驱动程序将数据发送给屏幕；</p>
+<p>为了检测移植是否成功所以我们需要保留 examples 和 demos 目录</p>
+</blockquote>
+<h3 id="创建-lv-conf-h"><a href="#创建-lv-conf-h" class="headerlink" title="创建 lv_conf.h"></a>创建 lv_conf.h</h3><p>当你第一次设置项目时，首先将 lvgl 目录下的 lv_conf_template.h 重命名为 lv_conf.h。</p>
+<p>接着，将文件中第一个 #if 0 改为 #if 1，以启用该文件的内容。</p>
+<p>然后，根据你使用的显示屏的颜色深度，设置 LV_COLOR_DEPTH 这个宏。有关详细信息，请查看 <strong>lv_conf.h</strong> 文件中的注释。</p>
+<blockquote>
+<p>这里我们需要去看下我们屏幕所使用的颜色格式或者说颜色深度，我们使用的屏幕显示部分驱动用的是 ST7789 芯片，颜色深度为可选择为 6&#x2F;16&#x2F;18 色，这里我们让二者保持一致都选择呢 16 色即可； </p>
+<p>#define LV_COLOR_DEPTH 16</p>
+</blockquote>
+<p>此时我们需要的目录结构如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">lvgl/</span><br><span class="line">├── demos/        # 演示代码目录</span><br><span class="line">│   └── ...       # 演示代码</span><br><span class="line">│</span><br><span class="line">├── examples/     # 示例代码目录</span><br><span class="line">│   └── ...       # 示例代码</span><br><span class="line">│</span><br><span class="line">├── src/          # LVGL 核心源代码</span><br><span class="line">│   └── ...       # 核心实现</span><br><span class="line">│</span><br><span class="line">├── lvgl.h        # LVGL 主头文件</span><br><span class="line">├── lv_version.h  # LVGL 版本信息 <span class="comment">// 如果没有可以不拷贝</span></span><br><span class="line">└── lv_conf.h     # LVGL 配置文件</span><br></pre></td></tr></table></figure>
+
+<h3 id="代码移植"><a href="#代码移植" class="headerlink" title="代码移植"></a>代码移植</h3><ol>
+<li><p>此时我们需要将裁剪后的代码添加到我们的项目中去，将 lvgl 目录下裁剪后的代码复制到我们工程下的 Middleware&#x2F;LVGL 目录中；</p>
+</li>
+<li><p>在 Keil 中添加 lvgl 相关文件时候，要注意我们并不是要拷贝 src 下的所有代码，他有些代码是为了兼容其他架构的我们就不需要添加进来;</p>
+</li>
+</ol>
+<p>兼容性驱动代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Middlewares/</span><br><span class="line">└── lvgl/</span><br><span class="line">    │   ├── draw/	# 渲染方案</span><br><span class="line">    │   │   ├── arm2d/        # 针对 ARM2D 硬件加速库相关的代码</span><br><span class="line">    │   │   ├── nxp/          # 针对 NXP 处理器相关的代码</span><br><span class="line">    │   │   ├── renesas/      # 针对 Renesas 处理器相关的代码</span><br><span class="line">    │   │   ├── sdl/          # 针对 SDL 图形库相关的代码</span><br><span class="line">    │   │   ├── stm32_dma2d/  # 针对 STM32 的 DMA2D 图形加速的代码</span><br><span class="line">    │   │   ├── sw/           # 纯 CPU 软件渲染的实现（这个目录下的代码是需要添加进去的）</span><br><span class="line">    │   │   ├── swm341_dma2d/ # 针对 SWM341 的 DMA2D 图形加速的代码</span><br><span class="line">    └── └── └── ...           # 其他必要的渲染实现代码</span><br></pre></td></tr></table></figure>
+
+<p>我们再添加代码时候，上述目录中与我们使用的硬件不相关管的代码可以不用添加到我们的 Keil 工程中去；</p>
+<ol start="3">
+<li>src 目录下的代码负责生成 2D 图像的像素数据，但要将这些数据传输到屏幕并正确显示出来，还需要具体硬件的驱动程序来完成屏幕的初始化和数据传输。因此，我们需要添加并移植显示设备驱动和输入设备驱动的<strong>模板文件</strong>，以实现屏幕显示功能和输入交互功能。</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Middleware/</span><br><span class="line">└── LVGL/</span><br><span class="line">    └── examples/                        </span><br><span class="line">        └── porting/                     </span><br><span class="line">            └── lv_port_disp_template.c   # 显示驱动的移植模板</span><br><span class="line">    	    └── lv_port_fs_template.c     # 文件系统驱动的移植模板。</span><br><span class="line">            └── lv_port_indev_template.c  # 输入设备驱动的移植模板。</span><br><span class="line">            └── lv_port_disp_template.h   # 显示驱动的移植模板头文件</span><br><span class="line">    	    └── lv_port_fs_template.h     # 文件系统驱动的移植模板头文件</span><br><span class="line">            └── lv_port_indev_template.h  # 输入设备驱动的移植模板头文件 </span><br></pre></td></tr></table></figure>
+
+<p>我们需要将图像显示在屏幕中，并通过触摸屏去操控屏幕，所以这里我们还需要添加 lv_port_disp_template.c 和 lv_port_indev_template.c 两个文件；</p>
+<blockquote>
+<p>添加完成后记得将头文件目录加到项目中去；</p>
+<p> lv_conf.h ;</p>
+<p>Middleware&#x2F;LVGL&#x2F;examples&#x2F;porting 下驱动程序相关的头文件</p>
+</blockquote>
+<p>如果编译不报错，则代表初步移植完成，但它此时他还会爆一些警告，因为我们还没有添加一些必须要的参数信息；</p>
+<h3 id="配置驱动"><a href="#配置驱动" class="headerlink" title="配置驱动"></a>配置驱动</h3><h4 id="显示驱动"><a href="#显示驱动" class="headerlink" title="显示驱动"></a>显示驱动</h4><p><strong>启用输出模板代码</strong></p>
+<p>我们虽然添加了显示的驱动程序模板，但是它默认是不启用的，所以我们这里需要配置以启用它；</p>
+<p>我们需要修改 lv_port_disp_template.c 和 lv_port_disp_template.h 中的条件编译选项以启用他的输出模板代码；</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">if</span> 0 修改为 #<span class="keyword">if</span> 1</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>在输出模板中初始化我们的屏幕驱动</strong></p>
+<ol>
+<li>我们要先设置显示屏的分辨率，这样可以让 LVGL 生成的图像适配我们的屏幕</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// lv_port_disp_template.h</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MY_DISP_HOR_RES 240     <span class="comment">//水平分辨率</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MY_DISP_VER_RES 280     <span class="comment">//垂直分辨率</span></span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>初始化我们屏幕驱动</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// lv_port_disp_template.c</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;st7789.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">lv_port_disp_init</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    <span class="comment">/*-------------------------</span></span><br><span class="line"><span class="comment">     * Initialize your display</span></span><br><span class="line"><span class="comment">     * -----------------------*/</span></span><br><span class="line">    disp_init();</span><br><span class="line">&#125;    </span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">disp_init</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    <span class="comment">/*You code here*/</span></span><br><span class="line">	ST7789_Init();		</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>相当于官方给我们提供了一个统一的显示接口，所有的显示都放在这个模板文件中，在 LVGL 层面起到了一个屏蔽不同硬件差异的一个效果</p>
+</blockquote>
+<p>屏幕显示驱动的代码一般是由硬件的供应商提供的，我们只需要引入到我们的工程目录下并在显示驱动文件中调用即可</p>
+<ol start="3">
+<li>配置我们的输出缓冲区</li>
+</ol>
+<p>LVGL 的渲染流程是先将生成的图像存放在一个缓冲区中，然后通过硬件的显示驱动，将缓冲区中的数据显示到屏幕上。</p>
+<p>LVGL 提供了三种不同的缓冲区类型，这里我们需要配置其中选择一个</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// lv_port_disp_template.c</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">lv_port_disp_init</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">        <span class="comment">/* Example for 1) */</span></span><br><span class="line">    <span class="type">static</span> <span class="type">lv_disp_draw_buf_t</span> draw_buf_dsc_1;</span><br><span class="line">    <span class="type">static</span> <span class="type">lv_color_t</span> buf_1[MY_DISP_HOR_RES * <span class="number">10</span>]; <span class="comment">/*A buffer for 10 rows*/</span></span><br><span class="line">    <span class="comment">/*Initialize the display buffer*/</span></span><br><span class="line">    lv_disp_draw_buf_init(&amp;draw_buf_dsc_1, buf_1, <span class="literal">NULL</span>, MY_DISP_HOR_RES * <span class="number">10</span>);   </span><br><span class="line"><span class="comment">/*    </span></span><br><span class="line"><span class="comment">     Example for 2) </span></span><br><span class="line"><span class="comment">    static lv_disp_draw_buf_t draw_buf_dsc_2;</span></span><br><span class="line"><span class="comment">    static lv_color_t buf_2_1[MY_DISP_HOR_RES * 10];  // A buffer for 10 rows</span></span><br><span class="line"><span class="comment">    static lv_color_t buf_2_2[MY_DISP_HOR_RES * 10];  // An other buffer for 10 rows</span></span><br><span class="line"><span class="comment">    // Initialize the display buffer</span></span><br><span class="line"><span class="comment">    lv_disp_draw_buf_init(&amp;draw_buf_dsc_2, buf_2_1, buf_2_2, MY_DISP_HOR_RES * 10);   </span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">    // Example for 3) also set disp_drv.full_refresh = 1 below</span></span><br><span class="line"><span class="comment">    static lv_disp_draw_buf_t draw_buf_dsc_3;</span></span><br><span class="line"><span class="comment">    static lv_color_t buf_3_1[MY_DISP_HOR_RES * MY_DISP_VER_RES]; // A screen sized buffer</span></span><br><span class="line"><span class="comment">    static lv_color_t buf_3_2[MY_DISP_HOR_RES * MY_DISP_VER_RES]; //  Another screen sized buffer</span></span><br><span class="line"><span class="comment">     // Initialize the display buffer  </span></span><br><span class="line"><span class="comment">    lv_disp_draw_buf_init(&amp;draw_buf_dsc_3, buf_3_1, buf_3_2,MY_DISP_VER_RES * LV_VER_RES_MAX);    </span></span><br><span class="line"><span class="comment">*/</span>    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>lv_port_disp_init 函数中包含了显示驱动和显示器绘图缓冲区的配置</p>
+</blockquote>
+<p><strong>在 disp_flush 函数中配置打点输出</strong></p>
+<p>在配置完后，它会调用 disp_flush  这个函数将图形缓冲区中的内容正式的推送或者说刷新到屏幕上进行显示；</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// lv_port_disp_template.c</span></span><br><span class="line"><span class="comment">// 他的代码逻辑是这样的 如果需要刷新，那么将需要刷新的区域给我，（通过 x1,y1 和 x2, y2 确定）area</span></span><br><span class="line"><span class="comment">// 然后将你需要刷新到屏幕上的数据也就是缓冲区的地址给我 color_p</span></span><br><span class="line"><span class="comment">// 然后我们就可以调用屏幕驱动提供的代码将输入写入到屏幕中去了</span></span><br><span class="line"><span class="comment">// lv_disp_flush_ready 用于通知 LVGL 本次刷新已经完成，可以进行下一次绘制了</span></span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">disp_flush</span><span class="params">(<span class="type">lv_disp_drv_t</span> * disp_drv, <span class="type">const</span> <span class="type">lv_area_t</span> * area, <span class="type">lv_color_t</span> * color_p)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span>(disp_flush_enabled) &#123;</span><br><span class="line">        <span class="comment">/*The most simple case (but also the slowest) to put all pixels to the screen one-by-one*/</span></span><br><span class="line">        <span class="type">int32_t</span> x;</span><br><span class="line">        <span class="type">int32_t</span> y;</span><br><span class="line">        <span class="keyword">for</span>(y = area-&gt;y1; y &lt;= area-&gt;y2; y++) &#123;</span><br><span class="line">            <span class="keyword">for</span>(x = area-&gt;x1; x &lt;= area-&gt;x2; x++) &#123;</span><br><span class="line">                <span class="comment">/*Put a pixel to the display. For example:*/</span></span><br><span class="line">                <span class="comment">/*put_px(x, y, *color_p)*/</span></span><br><span class="line">                color_p++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/*IMPORTANT!!!</span></span><br><span class="line"><span class="comment">     *Inform the graphics library that you are ready with the flushing*/</span></span><br><span class="line">    lv_disp_flush_ready(disp_drv);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 因为 ST7789 提供了刷新屏幕的代码所以我们这里需要一下替换</span></span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">disp_flush</span><span class="params">(<span class="type">lv_disp_drv_t</span> * disp_drv, <span class="type">const</span> <span class="type">lv_area_t</span> * area, <span class="type">lv_color_t</span> * color_p)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span>(disp_flush_enabled) &#123;</span><br><span class="line">    	ST7789_Fill(area-&gt;x1,area-&gt;y1,area-&gt;x2,area-&gt;y2,(<span class="type">uint16_t</span>*)color_p);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/*IMPORTANT!!!</span></span><br><span class="line"><span class="comment">     *Inform the graphics library that you are ready with the flushing*/</span></span><br><span class="line">    lv_disp_flush_ready(disp_drv);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>我们需要在 LVGL 官方提供的输出模板中初始化我们屏幕的显示芯片，然后调用显示函数将 LVGL 生成的图像显示在我们的屏幕上；</p>
+</blockquote>
+<h4 id="触摸驱动"><a href="#触摸驱动" class="headerlink" title="触摸驱动"></a>触摸驱动</h4><p>配置触摸驱动与显示流程是一样的，区别在于文件换成了 lv_port_indev_template.h 和 lv_port_indev_template.c</p>
+<p><strong>注释不必要的代码</strong></p>
+<p>这里要注意的是，LVGL 支持多种输入方式，而我们硬件只支持触摸的方式，所以我们需要先将除了触摸意外的输如配置给删掉</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// lv_port_indev_template.c</span></span><br><span class="line"><span class="comment">// 只保留触屏相关的代码</span></span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">touchpad_init</span><span class="params">(<span class="type">void</span>)</span>;</span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">touchpad_read</span><span class="params">(<span class="type">lv_indev_drv_t</span> * indev_drv, <span class="type">lv_indev_data_t</span> * data)</span>;</span><br><span class="line"><span class="type">static</span> <span class="type">bool</span> <span class="title function_">touchpad_is_pressed</span><span class="params">(<span class="type">void</span>)</span>;</span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">touchpad_get_xy</span><span class="params">(<span class="type">lv_coord_t</span> * x, <span class="type">lv_coord_t</span> * y)</span>;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">static void mouse_init(void);</span></span><br><span class="line"><span class="comment">static void mouse_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data);</span></span><br><span class="line"><span class="comment">static bool mouse_is_pressed(void);</span></span><br><span class="line"><span class="comment">static void mouse_get_xy(lv_coord_t * x, lv_coord_t * y);</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">static void keypad_init(void);</span></span><br><span class="line"><span class="comment">static void keypad_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data);</span></span><br><span class="line"><span class="comment">static uint32_t keypad_get_key(void);</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">static void encoder_init(void);</span></span><br><span class="line"><span class="comment">static void encoder_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data);</span></span><br><span class="line"><span class="comment">static void encoder_handler(void);</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">static void button_init(void);</span></span><br><span class="line"><span class="comment">static void button_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data);</span></span><br><span class="line"><span class="comment">static int8_t button_get_pressed_id(void);</span></span><br><span class="line"><span class="comment">static bool button_is_pressed(uint8_t id);</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="comment">// 删除上面不需要的具体的方法</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>初始化驱动配置</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*Initialize your touchpad*/</span></span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">touchpad_init</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    <span class="comment">/*Your code comes here*/</span></span><br><span class="line">	CST816T_Init();	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>判断屏幕是否被按下</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*Return true is the touchpad is pressed*/</span></span><br><span class="line"><span class="type">static</span> <span class="type">bool</span> <span class="title function_">touchpad_is_pressed</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    <span class="comment">/*Your code comes here*/</span></span><br><span class="line">		<span class="keyword">return</span> CST816T_is_pressed();</span><br><span class="line">    <span class="comment">// return false;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>获取被按下位置的坐标</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*Get the x and y coordinates if the touchpad is pressed*/</span></span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">touchpad_get_xy</span><span class="params">(<span class="type">lv_coord_t</span> * x, <span class="type">lv_coord_t</span> * y)</span> &#123;</span><br><span class="line">    <span class="comment">/*Your code comes here*/</span></span><br><span class="line">	CST816T_get_xy((<span class="type">uint16_t</span>*)x,(<span class="type">uint16_t</span>*)y);</span><br><span class="line">    <span class="comment">//(*x) = 0;</span></span><br><span class="line">    <span class="comment">//(*y) = 0;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>我们可以通过触控芯片判断是否被按下和获取坐标，这里为什么还需要多此一举在封装一次呢？</p>
+<p>1.规范化，LVGL 提供了一个统一的接口这样可以避免硬件之间的差异化，</p>
+<p>2.LVGL 本身他也有一些事件的处理机制，如果我们直接通过触控芯片去判断是否有操作，那么就相当于绕过 LVGL 的事件处理机制，他不知道屏幕上有一些操作，也就会导致UI 元件的事件回调将无法被触发，我们需要手动触发，这样就太麻烦了；</p>
+<p>LVGL 的事件处理机制是当他检测到有操作时候，会去执行对应的回调函数，然后等到 lv_timer_handler() 执行时就会将图像缓冲区的内容显示到屏幕上，如果绕过去，他就无法判断是否有操作，那么也就无法执行回调函数，那么他就会认为图像缓冲区中的内存没有改动，他也就不会将内容显示在屏幕上；</p>
+</blockquote>
+<h3 id="初始化-LVGL"><a href="#初始化-LVGL" class="headerlink" title="初始化 LVGL"></a>初始化 LVGL</h3><p>按照官方示例，初始化 LVGL 步骤如下：</p>
+<ol>
+<li><p>在系统执行早期通过调用初始化 LVGL 一次 lv_init()。这需要在进行任何其他 LVGL 调用之前完成。</p>
+<p>lv_init();</p>
+</li>
+<li><p>初始化您的驱动程序。</p>
+<p>lv_port_disp_init();、lv_port_indev_init();</p>
+</li>
+<li><p>连接 Tick 接口。</p>
+<p>lv_tick_inc(1)</p>
+</li>
+<li><p>连接显示接口。</p>
+</li>
+<li><p>连接输入设备接口。</p>
+</li>
+<li><p>lv_timer_handler() 通过每隔几毫秒调用一次来管理 LVGL 计时器，从而驱动 LVGL 时间相关任务。请参阅计时器处理程序以了解执行此操作的不同方法。</p>
+<p>lv_timer_handler()</p>
+</li>
+<li><p>可选择使用 来设置主题 lv_display_set_theme()。</p>
+</li>
+<li><p>此后，在需要使用 LVGL 函数的源文件中 #include “lvgl&#x2F;lvgl.h”。</p>
+</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// main.c</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">	<span class="type">int</span> count = <span class="number">0</span>;</span><br><span class="line">    systick_config();</span><br><span class="line">	nvic_priority_group_set(NVIC_PRIGROUP_PRE2_SUB2);</span><br><span class="line">	usart0_init();</span><br><span class="line">	</span><br><span class="line">	bsp_hard_iic_config();</span><br><span class="line">     <span class="comment">// 1. LVGL 初始化</span></span><br><span class="line">	lv_init();</span><br><span class="line">    <span class="comment">// 2. 驱动初始化</span></span><br><span class="line">	lv_port_disp_init();</span><br><span class="line">	lv_port_indev_init();</span><br><span class="line">	</span><br><span class="line">	ST7789_Test();	</span><br><span class="line">	</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;App_start...\n&quot;</span>);	</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>)&#123;</span><br><span class="line">		<span class="keyword">if</span>(count &gt;= <span class="number">5</span>) &#123;</span><br><span class="line">			count = <span class="number">0</span>;</span><br><span class="line">            <span class="comment">// 6.调用回调函数</span></span><br><span class="line">			lv_timer_handler();</span><br><span class="line">		&#125;</span><br><span class="line">        <span class="comment">// 3. 连接 Tick 接口</span></span><br><span class="line">		lv_tick_inc(<span class="number">1</span>);		</span><br><span class="line">		delay_1ms(<span class="number">1</span>);</span><br><span class="line">		count++;		</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>1.我们要使用 LVGL 图像库，必须要在使用前需要先初始化 LVGL，他会初始化其内部的数据结构和功能模块（例如，任务管理器、显示缓冲区管理等）。不初始化会导致后续的 LVGL 代码无法执行。</p>
+<p>2.我们要将图像显示在屏幕上，并通过触屏去操控屏幕，所以需要初始化屏幕和触控的驱动，他会初始化显示缓冲区等。</p>
+<p>3.连接 Tick 接口，因为 LVGL 有些任务是和时间挂钩的，他需要感知时间的流逝，他不像我们板子可以依靠晶振去计数时间，所以需要我们给他提供一个计数的方式（时基或者心跳）, lv_tick_inc(1) 中 1 表示 1ms 也就是说这个函数调用一次就表示过去了 1 ms，LVGL 通过这种函数调用的方式来进行计数；</p>
+<p>4.连接显示接口，LVGL 只是一个图形库，它本身并不会直接操控屏幕；为了让 LVGL 能将绘制的内容显示到屏幕上，我们需要将使用的显示驱动添加或者说注册 LVGL 中，它会将一些配置，比如缓冲区的内容、屏幕像素的大小添加进 LVGL 中；这一步在初始化屏幕时候它会自动调用，我们通常不需要显示的去手动执行；lv_disp_drv_register(&amp;disp_drv);</p>
+<p>5.连接输入设备接口同上，但要注意的是我们需要给输出设备提供一个回调函数用于处理 LVGL 返回的数据； </p>
+<p>6.定期调用 lv_timer_handler() 函数，这个函数它会检查并执行所有定时器任务、动画任务，以及更新显示缓冲区并触发渲染；</p>
+</blockquote>
+<h2 id="移植到-FreeRTOS"><a href="#移植到-FreeRTOS" class="headerlink" title="移植到 FreeRTOS"></a>移植到 FreeRTOS</h2><p>移植到 FreeRTOS 就是在项目中同时导入 FreeRTOS 和 LVGL，然后将 LVGL 的时基和中断回调函数放在 FreeRTOS 的任务中去执行；</p>
+<p><strong>修改 stm43fxxx.h 中 __NVIC_PRIO_BITS 的值</strong></p>
+<p>将 __NVIC_PRIO_BITS 的值从 4U 改为 4；</p>
+<p>__NVIC_PRIO_BITS 是一个宏，它定义了<strong>中断优先级字段的位数</strong>；FreeRTOS 会通过这个宏去适配 STM32 的优先级，让二者能够保持一致，而在 FreeRTOS 中类型（5 &lt;&lt; (8 - 4U)）这种写法他是不识别的，在以前的 ARM 编译器中他是不支持这种写法的，他会认为这是两种不同的类（常量类型和一种未定义的类型）他会认为这二者是不可以进行逻辑运算的所以我们需要修改这个宏将 4U 改为4</p>
+<blockquote>
+<p>在当前的版本中如果不报错一般可以不用进行修改，1 是在 STM32fxxx.h 中 __NVIC_PRIO_BITS 它被定义为了 4，二是在高版本的 ARM 编译器中，他已经可以识别 4U 这种写法并会去做一些优化；</p>
+</blockquote>
+<p><strong>在 lv_conf.h 文件中配置自定义时钟源</strong></p>
+<p>在不用 FreeRTOS 之前我们是将 LVGL 的时基或者说心跳直接写在我们的main函数或者定时器中的，既然使用了 FreeRTOS 我们就需要将时基交给 FreeRTOS 去处理；</p>
+<p>LVGL 提供了自定义时钟源的配置，可以让我们指定时基时从哪产生的</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> LV_TICK_CUSTOM 1</span></span><br><span class="line"><span class="meta">#<span class="keyword">if</span> LV_TICK_CUSTOM</span></span><br><span class="line">	<span class="comment">// Header for the system time function</span></span><br><span class="line">    <span class="meta">#<span class="keyword">define</span> LV_TICK_CUSTOM_INCLUDE <span class="string">&quot;FreeRTOS.h&quot;</span>         </span></span><br><span class="line">    <span class="comment">// Expression evaluating to current system time in ms</span></span><br><span class="line">    <span class="meta">#<span class="keyword">define</span> LV_TICK_CUSTOM_SYS_TIME_EXPR (xTaskGetCount())    </span></span><br><span class="line">    <span class="comment">/*If using lvgl as ESP32 component*/</span></span><br><span class="line">    <span class="comment">// #define LV_TICK_CUSTOM_INCLUDE &quot;esp_timer.h&quot;</span></span><br><span class="line">    <span class="comment">// #define LV_TICK_CUSTOM_SYS_TIME_EXPR ((esp_timer_get_time() / 1000LL))</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span>   <span class="comment">/*LV_TICK_CUSTOM*/</span></span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>#define LV_TICK_CUSTOM 1，启用自定义时钟源</p>
+<p>#if LV_TICK_CUSTOM，相当于一个开关，非 0 时执行下面的代码</p>
+<p>#define LV_TICK_CUSTOM_INCLUDE “FreeRTOS.h”，定义一个宏指向 “FreeRTOS.h” 这个头文件，这个文件提供了 FreeRTOS 中的各种任务管理、调度器、时间管理等接口函数。</p>
+<p>#define LV_TICK_CUSTOM_SYS_TIME_EXPR (xTaskGetCount())，指向了 xTaskGetCount()) 这个函数，该函数用于获取系统启动以来的 tick 数（时钟节拍次数），它相当于系统的 <strong>tick 计数器</strong>；每个 tick 通常是 1 毫秒（或更小，具体由 configTICK_RATE_HZ 配置决定）。</p>
+</blockquote>
+<p><strong>编写 FreeRTOS 任务函数进行 LVGL 任务调度</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">lv_Timer_task</span><span class="params">(<span class="type">void</span>* pvParameters)</span> &#123;</span><br><span class="line">    pvParameters = pvParameters;    </span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>) &#123;</span><br><span class="line">        lv_timer_handler();</span><br><span class="line">        vTaskDelay(<span class="number">4</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>创建一个任务专门用于 LVGL 的任务调度，这样就成功将 FreeRTOS 与 LVGL 结合在一起了；</p>
+<h2 id="外部-SRAM"><a href="#外部-SRAM" class="headerlink" title="外部 SRAM"></a>外部 SRAM</h2><p>外部 SRAM 是个硬件，当内部 SRAM 不足以存放所需的数据时，我们就需要外接一个 SRAM 用来提供额外的存储空间；</p>
+<p>由于 LVGL 是一个图形库，涉及大量的界面渲染和控件更新，这些操作会消耗较多的内存。如果系统内部的 SRAM 不够用，尤其是在处理较大的 GUI 元素或图形时，外部 SRAM 就变得非常重要。</p>
+<p>我们就正常把 SRAM 当成一个外设芯片，将他的驱动添加到我们的工程中去使用就可以了；</p>
+<p><strong>使用</strong></p>
+<ol>
+<li><p>将 LVGL 管理的内存空间放到外部 SRAM 中（非常不推荐，因为速度会变慢）</p>
+<ol>
+<li>确定外部 SDRAM 首地址，根据需求确定地址偏移</li>
+<li>在 lv_conf.h 中将 LV_MEN_ADR 定义到外部的 SRAM 中去（不一定是首地址）</li>
+</ol>
+</li>
+<li><p>将 绘图缓冲区放到外部 SARM 中去（如果内存不够用时候可以采取）</p>
+<ol>
+<li>确定外部 SDRAM 首地址，根据需求确定地址偏移</li>
+<li>在 lv_port_disp_template.c 中创建全屏分辨率大小的数组，并将其定位到外部 SRAM 的地址</li>
+</ol>
+</li>
+</ol>
+<h2 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h2><h2 id="LVGL-内存报错"><a href="#LVGL-内存报错" class="headerlink" title="LVGL 内存报错"></a>LVGL 内存报错</h2><p>LVGL 本身渲染会占用一定的内存如果报错我们可以从以下几个角度去分析：</p>
+<p>1.修改 lv_conf.h，适当减小分配给 LVGL 管理的内存</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*1: use custom malloc/free, 0: use the built-in `lv_mem_alloc()` and `lv_mem_free()`*/</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> LV_MEM_CUSTOM 0</span></span><br><span class="line"><span class="meta">#<span class="keyword">if</span> LV_MEM_CUSTOM == 0</span></span><br><span class="line">    <span class="comment">/*Size of the memory available for `lv_mem_alloc()` in bytes (&gt;= 2kB)*/</span></span><br><span class="line">    <span class="meta">#<span class="keyword">define</span> LV_MEM_SIZE (48U * 1024U)          <span class="comment">/*[bytes]*/</span></span></span><br><span class="line">    <span class="comment">/*Set an address for the memory pool instead of allocating it as a normal array. Can be in external SRAM too.*/</span></span><br><span class="line">    <span class="meta">#<span class="keyword">define</span> LV_MEM_ADR 0     <span class="comment">/*0: unused*/</span></span></span><br><span class="line">    <span class="comment">/*Instead of an address give a memory allocator that will be called to get a memory pool for LVGL. E.g. my_malloc*/</span></span><br><span class="line">    <span class="meta">#<span class="keyword">if</span> LV_MEM_ADR == 0</span></span><br><span class="line">        <span class="meta">#<span class="keyword">undef</span> LV_MEM_POOL_INCLUDE</span></span><br><span class="line">        <span class="meta">#<span class="keyword">undef</span> LV_MEM_POOL_ALLOC</span></span><br><span class="line">    <span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">else</span>       <span class="comment">/*LV_MEM_CUSTOM*/</span></span></span><br><span class="line">    <span class="meta">#<span class="keyword">define</span> LV_MEM_CUSTOM_INCLUDE <span class="string">&lt;stdlib.h&gt;</span>   <span class="comment">/*Header for the dynamic memory function*/</span></span></span><br><span class="line">    <span class="meta">#<span class="keyword">define</span> LV_MEM_CUSTOM_ALLOC   malloc</span></span><br><span class="line">    <span class="meta">#<span class="keyword">define</span> LV_MEM_CUSTOM_FREE    free</span></span><br><span class="line">    <span class="meta">#<span class="keyword">define</span> LV_MEM_CUSTOM_REALLOC realloc</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span>     <span class="comment">/*LV_MEM_CUSTOM*/</span></span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>#define LV_MEM_CUSTOM 0 表示是使用自动内存管理的方式，我们不去动他；我们只需要修改  #define LV_MEM_SIZE (48U * 1024U) 定义的大小即可，要保证可以显示 LVGL 的所有小组件，但是又不能太大；可以试着一点一点去进行调试；</p>
+</blockquote>
+<p>2.lv_port_diso_timplate.c，适当减小图像缓冲区的大小，同时需要兼顾运行效果</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">        <span class="comment">/* Example for 1) */</span></span><br><span class="line">    <span class="type">static</span> <span class="type">lv_disp_draw_buf_t</span> draw_buf_dsc_1;</span><br><span class="line">    <span class="type">static</span> <span class="type">lv_color_t</span> buf_1[MY_DISP_HOR_RES * <span class="number">10</span>]; <span class="comment">/*A buffer for 10 rows*/</span></span><br><span class="line">    <span class="comment">/*Initialize the display buffer*/</span></span><br><span class="line">    lv_disp_draw_buf_init(&amp;draw_buf_dsc_1, buf_1, <span class="literal">NULL</span>, MY_DISP_HOR_RES * <span class="number">10</span>);   </span><br><span class="line"><span class="comment">/*    </span></span><br><span class="line"><span class="comment">     Example for 2) </span></span><br><span class="line"><span class="comment">    static lv_disp_draw_buf_t draw_buf_dsc_2;</span></span><br><span class="line"><span class="comment">    static lv_color_t buf_2_1[MY_DISP_HOR_RES * 10];  // A buffer for 10 rows</span></span><br><span class="line"><span class="comment">    static lv_color_t buf_2_2[MY_DISP_HOR_RES * 10];  // An other buffer for 10 rows</span></span><br><span class="line"><span class="comment">    // Initialize the display buffer</span></span><br><span class="line"><span class="comment">    lv_disp_draw_buf_init(&amp;draw_buf_dsc_2, buf_2_1, buf_2_2, MY_DISP_HOR_RES * 10);   </span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">    // Example for 3) also set disp_drv.full_refresh = 1 below</span></span><br><span class="line"><span class="comment">    static lv_disp_draw_buf_t draw_buf_dsc_3;</span></span><br><span class="line"><span class="comment">    static lv_color_t buf_3_1[MY_DISP_HOR_RES * MY_DISP_VER_RES]; // A screen sized buffer</span></span><br><span class="line"><span class="comment">    static lv_color_t buf_3_2[MY_DISP_HOR_RES * MY_DISP_VER_RES]; //  Another screen sized buffer</span></span><br><span class="line"><span class="comment">     // Initialize the display buffer  </span></span><br><span class="line"><span class="comment">    lv_disp_draw_buf_init(&amp;draw_buf_dsc_3, buf_3_1, buf_3_2,MY_DISP_VER_RES * LV_VER_RES_MAX);    </span></span><br><span class="line"><span class="comment">*/</span> </span><br></pre></td></tr></table></figure>
+
+<p>这个空间越大，理论上运行的效果越好，我们尽量不是去给他调的太小；</p>
+<p>3.FreeRTOSConfig.h，适当减小分配给 FreeRTOS 的内存，简单的工程一般 10~20k 就够了</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> configTOTAL_HEAP_SIZE ( ( size_t ) ( 75 * 1024 ) ) <span class="comment">// 堆的大小，单位是字节</span></span></span><br></pre></td></tr></table></figure>
+
+<p>这里设置减小但一般不要小于 10~20k;</p>
+<h2 id="错误"><a href="#错误" class="headerlink" title="错误"></a>错误</h2><p>一、**..&#x2F;Middleware&#x2F;LVGL&#x2F;src&#x2F;core..&#x2F;lv_conf_internal.h(41): error: ‘..&#x2F;..&#x2F;lv_conf.h’ file not found**</p>
+<p>说明没有添加 lv_conf.h 头文件目录，添加即可；</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">博主</a></li>
+        
+          <li><a href="/tags/">标签</a></li>
+        
+          <li><a href="/categories/">分类</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E5%B1%8F%E5%B9%95"><span class="toc-number">1.</span> <span class="toc-text">测试屏幕</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A7%BB%E6%A4%8D%E6%B5%81%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">移植流程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96-LVGL"><span class="toc-number">2.1.</span> <span class="toc-text">获取 LVGL</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA-lv-conf-h"><span class="toc-number">2.2.</span> <span class="toc-text">创建 lv_conf.h</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E7%A7%BB%E6%A4%8D"><span class="toc-number">2.3.</span> <span class="toc-text">代码移植</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E9%A9%B1%E5%8A%A8"><span class="toc-number">2.4.</span> <span class="toc-text">配置驱动</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%98%BE%E7%A4%BA%E9%A9%B1%E5%8A%A8"><span class="toc-number">2.4.1.</span> <span class="toc-text">显示驱动</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A6%E6%91%B8%E9%A9%B1%E5%8A%A8"><span class="toc-number">2.4.2.</span> <span class="toc-text">触摸驱动</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96-LVGL"><span class="toc-number">2.5.</span> <span class="toc-text">初始化 LVGL</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A7%BB%E6%A4%8D%E5%88%B0-FreeRTOS"><span class="toc-number">3.</span> <span class="toc-text">移植到 FreeRTOS</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%96%E9%83%A8-SRAM"><span class="toc-number">4.</span> <span class="toc-text">外部 SRAM</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86"><span class="toc-number">5.</span> <span class="toc-text">内存管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LVGL-%E5%86%85%E5%AD%98%E6%8A%A5%E9%94%99"><span class="toc-number">6.</span> <span class="toc-text">LVGL 内存报错</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%94%99%E8%AF%AF"><span class="toc-number">7.</span> <span class="toc-text">错误</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/%E7%A7%BB%E6%A4%8D%E6%B5%81%E7%A8%8B/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/%E7%A7%BB%E6%A4%8D%E6%B5%81%E7%A8%8B/&text=移植流程"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/%E7%A7%BB%E6%A4%8D%E6%B5%81%E7%A8%8B/&title=移植流程"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/%E7%A7%BB%E6%A4%8D%E6%B5%81%E7%A8%8B/&is_video=false&description=移植流程"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=移植流程&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/%E7%A7%BB%E6%A4%8D%E6%B5%81%E7%A8%8B/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/%E7%A7%BB%E6%A4%8D%E6%B5%81%E7%A8%8B/&title=移植流程"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/%E7%A7%BB%E6%A4%8D%E6%B5%81%E7%A8%8B/&title=移植流程"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/%E7%A7%BB%E6%A4%8D%E6%B5%81%E7%A8%8B/&title=移植流程"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/%E7%A7%BB%E6%A4%8D%E6%B5%81%E7%A8%8B/&title=移植流程"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/%E7%A7%BB%E6%A4%8D%E6%B5%81%E7%A8%8B/&name=移植流程&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/%E7%A7%BB%E6%A4%8D%E6%B5%81%E7%A8%8B/&t=移植流程"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    kay
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

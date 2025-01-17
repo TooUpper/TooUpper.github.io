@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="J-Link 是由 SEGGER 公司推出的一款高性能的调试和烧录工具，广泛用于嵌入式开发领域，支持多种微控制器（MCU）的调试和烧录功能。J-Link 烧录是通过该工具与目标硬件进行通信，将程序固件烧录到目标芯片的闪存中，通常与开发环境（如 IAR Embedded Workbench、Keil MDK、GCC 等）配合使用。下面我将从多个角度详细介绍 J-Link 烧录的过程和特点。 J-Li">
+<meta property="og:type" content="article">
+<meta property="og:title" content="J-Link烧录器">
+<meta property="og:url" content="https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/%E7%83%A7%E5%BD%95%E5%99%A8/J-Link%E7%83%A7%E5%BD%95%E5%99%A8/index.html">
+<meta property="og:site_name" content="流年不知心底事">
+<meta property="og:description" content="J-Link 是由 SEGGER 公司推出的一款高性能的调试和烧录工具，广泛用于嵌入式开发领域，支持多种微控制器（MCU）的调试和烧录功能。J-Link 烧录是通过该工具与目标硬件进行通信，将程序固件烧录到目标芯片的闪存中，通常与开发环境（如 IAR Embedded Workbench、Keil MDK、GCC 等）配合使用。下面我将从多个角度详细介绍 J-Link 烧录的过程和特点。 J-Li">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/%E7%83%A7%E5%BD%95%E5%99%A8/JLink/lxt.png">
+<meta property="article:published_time" content="2025-01-03T12:39:00.000Z">
+<meta property="article:modified_time" content="2025-01-09T01:10:20.602Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="烧录器">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/%E7%83%A7%E5%BD%95%E5%99%A8/JLink/lxt.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>J-Link烧录器</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/STC8H/%E7%83%AD%E6%95%8F%E7%94%B5%E9%98%BB/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/DRV8301/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/%E7%83%A7%E5%BD%95%E5%99%A8/J-Link%E7%83%A7%E5%BD%95%E5%99%A8/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/%E7%83%A7%E5%BD%95%E5%99%A8/J-Link%E7%83%A7%E5%BD%95%E5%99%A8/&text=J-Link烧录器"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/%E7%83%A7%E5%BD%95%E5%99%A8/J-Link%E7%83%A7%E5%BD%95%E5%99%A8/&title=J-Link烧录器"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/%E7%83%A7%E5%BD%95%E5%99%A8/J-Link%E7%83%A7%E5%BD%95%E5%99%A8/&is_video=false&description=J-Link烧录器"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=J-Link烧录器&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/%E7%83%A7%E5%BD%95%E5%99%A8/J-Link%E7%83%A7%E5%BD%95%E5%99%A8/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/%E7%83%A7%E5%BD%95%E5%99%A8/J-Link%E7%83%A7%E5%BD%95%E5%99%A8/&title=J-Link烧录器"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/%E7%83%A7%E5%BD%95%E5%99%A8/J-Link%E7%83%A7%E5%BD%95%E5%99%A8/&title=J-Link烧录器"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/%E7%83%A7%E5%BD%95%E5%99%A8/J-Link%E7%83%A7%E5%BD%95%E5%99%A8/&title=J-Link烧录器"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/%E7%83%A7%E5%BD%95%E5%99%A8/J-Link%E7%83%A7%E5%BD%95%E5%99%A8/&title=J-Link烧录器"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/%E7%83%A7%E5%BD%95%E5%99%A8/J-Link%E7%83%A7%E5%BD%95%E5%99%A8/&name=J-Link烧录器&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/%E7%83%A7%E5%BD%95%E5%99%A8/J-Link%E7%83%A7%E5%BD%95%E5%99%A8/&t=J-Link烧录器"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#J-Link-%E7%A1%AC%E4%BB%B6%E6%A6%82%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">J-Link 硬件概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#J-Link-%E7%83%A7%E5%BD%95%E6%B5%81%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">J-Link 烧录流程</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-J-Link-%E9%A9%B1%E5%8A%A8"><span class="toc-number">2.1.</span> <span class="toc-text">安装 J-Link 驱动</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%9E%E6%8E%A5%E7%9B%AE%E6%A0%87%E7%A1%AC%E4%BB%B6"><span class="toc-number">2.2.</span> <span class="toc-text">连接目标硬件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8%E7%83%A7%E5%BD%95%E5%B7%A5%E5%85%B7"><span class="toc-number">2.3.</span> <span class="toc-text">启动烧录工具</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E7%9B%AE%E6%A0%87-MCU"><span class="toc-number">2.4.</span> <span class="toc-text">配置目标 MCU</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%83%A7%E5%BD%95%E5%9B%BA%E4%BB%B6"><span class="toc-number">2.5.</span> <span class="toc-text">烧录固件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%8C%E6%88%90%E7%83%A7%E5%BD%95%E5%B9%B6%E5%A4%8D%E4%BD%8D"><span class="toc-number">2.6.</span> <span class="toc-text">完成烧录并复位</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#J-Link-%E7%83%A7%E5%BD%95%E7%9A%84%E4%BC%98%E5%8A%BF"><span class="toc-number">3.</span> <span class="toc-text">J-Link 烧录的优势</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#J-Link-%E7%83%A7%E5%BD%95%E4%B8%AD%E7%9A%84%E8%B0%83%E8%AF%95%E5%8A%9F%E8%83%BD"><span class="toc-number">4.</span> <span class="toc-text">J-Link 烧录中的调试功能</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E5%92%8C%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95"><span class="toc-number">5.</span> <span class="toc-text">常见问题和解决办法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">6.</span> <span class="toc-text">总结</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        J-Link烧录器
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">kay</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-01-03T12:39:00.000Z" class="dt-published" itemprop="datePublished">2025-01-03</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/">嵌入式</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/%E7%83%A7%E5%BD%95%E5%99%A8/" rel="tag">烧录器</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>J-Link 是由 SEGGER 公司推出的一款高性能的<strong>调试</strong>和<strong>烧录</strong>工具，广泛用于嵌入式开发领域，支持多种微控制器（MCU）的调试和烧录功能。J-Link 烧录是通过该工具与目标硬件进行通信，将程序固件烧录到目标芯片的闪存中，通常与开发环境（如 IAR Embedded Workbench、Keil MDK、GCC 等）配合使用。下面我将从多个角度详细介绍 J-Link 烧录的过程和特点。</p>
+<h3 id="J-Link-硬件概述"><a href="#J-Link-硬件概述" class="headerlink" title="J-Link 硬件概述"></a><strong>J-Link 硬件概述</strong></h3><p>J-Link 是一款 USB 接口的调试器，它通过 <strong>USB 连接到开发主机</strong>（通常是 PC），并通过 <strong>JTAG</strong> 或 <strong>SWD</strong> 接口<strong>与目标微控制器进行通信</strong>。J-Link 兼容多种微控制器架构，最常见的有 ARM Cortex-M 系列、Cortex-A 系列、RX、Renesas 等。</p>
+<p>J-Link 的工作原理是通过在主机和目标硬件之间建立一个高效的通信通道，进行数据交换和控制。它不仅支持调试功能，还可以实现烧录、读取、擦除闪存等功能。</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/%E7%83%A7%E5%BD%95%E5%99%A8/JLink/lxt.png" alt="lxt"></p>
+<h3 id="J-Link-烧录流程"><a href="#J-Link-烧录流程" class="headerlink" title="J-Link 烧录流程"></a><strong>J-Link 烧录流程</strong></h3><h4 id="安装-J-Link-驱动"><a href="#安装-J-Link-驱动" class="headerlink" title="安装 J-Link 驱动"></a>安装 J-Link 驱动</h4><p>在 PC 上需要安装 J-Link 的驱动程序和相关软件工具包。可以通过 SEGGER 官方网站下载最新版本的 J-Link 软件和驱动程序。安装后，J-Link 会被识别为一个调试器设备，通常在设备管理器中显示为“J-Link”或“J-Link Plus”。</p>
+<blockquote>
+<p>注意有些非正版的 J-Link 设备，可能由于被屏蔽等问题导致安装驱动后不显示“J-Link”或“J-Link Plus”只显示一个 USB Composite Device，那么这时候就需要去找厂家要硬件所支持的版本驱动；</p>
+</blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.segger.com/downloads/jlink/">J-Link官方下载链接</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.segger.com/products/debug-probes/j-link/">查看J-Link支持的设备</a></p>
+<h4 id="连接目标硬件"><a href="#连接目标硬件" class="headerlink" title="连接目标硬件"></a>连接目标硬件</h4><p>首先需要通过 J-Link 将目标开发板（如 STM32、NXP、TI 等 MCU 开发板）连接到 PC。<strong>连接时使用的是 JTAG 或 SWD 接口</strong>。这些接口是调试和烧录操作的通信通道。需要确保目标板正确连接并供电。</p>
+<h4 id="启动烧录工具"><a href="#启动烧录工具" class="headerlink" title="启动烧录工具"></a>启动烧录工具</h4><p>J-Link 支持多种烧录方式，可以通过以下工具进行烧录：</p>
+<ul>
+<li><strong>J-Link Commander (JLinkExe)</strong>: 这是 SEGGER 提供的命令行工具，能够直接与 J-Link 通信，进行闪存的擦除、写入、读取等操作。</li>
+<li><strong>J-Flash</strong>: 这是 SEGGER 提供的图形化烧录工具，可以选择烧录文件并进行相关配置。</li>
+<li><strong>集成开发环境（IDE）</strong>: 许多嵌入式开发环境（如 IAR Embedded Workbench、Keil MDK）也内置了 J-Link 的支持，可以通过 IDE 中的烧录功能进行操作。</li>
+</ul>
+<h4 id="配置目标-MCU"><a href="#配置目标-MCU" class="headerlink" title="配置目标 MCU"></a>配置目标 MCU</h4><p>在烧录之前，需要在烧录工具中选择目标 MCU。目标设备的型号和烧录方式（例如：是否需要启用 Flash 编程选项）需要根据实际情况进行配置。J-Link 支持广泛的 MCU 型号，烧录工具会根据所选 MCU 自动加载相关的配置和驱动。</p>
+<h4 id="烧录固件"><a href="#烧录固件" class="headerlink" title="烧录固件"></a>烧录固件</h4><p>选择好固件（通常是 HEX、BIN 或 ELF 文件）后，开始执行烧录操作。烧录过程通常包括以下几个步骤：</p>
+<ul>
+<li><strong>擦除闪存</strong>：有时需要擦除 MCU 中的闪存区域，以确保旧的固件被彻底清除。擦除过程通常由 J-Link 自动完成。</li>
+<li><strong>写入固件</strong>：将编译后的固件文件（.bin 或 .hex）写入目标芯片的闪存。写入过程包括数据传输和验证，确保烧录的固件与源文件一致。</li>
+<li><strong>验证固件</strong>：写入完成后，J-Link 会自动读取目标闪存中的数据并与源文件进行对比，确保烧录没有错误。如果有问题，烧录过程会失败，并反馈错误信息。</li>
+</ul>
+<h4 id="完成烧录并复位"><a href="#完成烧录并复位" class="headerlink" title="完成烧录并复位"></a>完成烧录并复位</h4><p>烧录完成后，通常需要复位 MCU 以启动新烧录的固件。J-Link 可以通过复位信号自动重启目标硬件。此时，新的固件就可以开始执行。</p>
+<h3 id="J-Link-烧录的优势"><a href="#J-Link-烧录的优势" class="headerlink" title="J-Link 烧录的优势"></a><strong>J-Link 烧录的优势</strong></h3><ul>
+<li><strong>高速性能</strong>：J-Link 采用高效的 USB 2.0 或 3.0 接口与目标硬件通信，具有较高的烧录速度，尤其是在大量数据需要烧录时，能显著减少开发周期。</li>
+<li><strong>广泛支持</strong>：J-Link 支持多种架构和平台（如 ARM、Renesas、ST、NXP 等），为开发者提供了更大的灵活性。</li>
+<li><strong>稳定性</strong>：J-Link 在烧录和调试过程中非常稳定，适合工业级的开发需求。</li>
+<li><strong>强大的集成工具</strong>：与 IAR、Keil、Eclipse 等主流 IDE 配合，J-Link 提供了丰富的调试和烧录选项，使开发人员能方便地进行烧录和调试操作。</li>
+<li><strong>批量烧录支持</strong>：对于大规模生产，J-Link 提供了批量烧录的功能，可以通过脚本或自动化工具进行快速烧录。</li>
+</ul>
+<h3 id="J-Link-烧录中的调试功能"><a href="#J-Link-烧录中的调试功能" class="headerlink" title="J-Link 烧录中的调试功能"></a><strong>J-Link 烧录中的调试功能</strong></h3><p>J-Link 不仅仅是一个烧录工具，它还提供了强大的调试功能。在烧录完成后，你可以使用 J-Link 进行实时调试，如单步执行、断点设置、变量监控、内存查看等功能。这些功能可以帮助开发者快速定位问题和优化代码。</p>
+<h3 id="常见问题和解决办法"><a href="#常见问题和解决办法" class="headerlink" title="常见问题和解决办法"></a><strong>常见问题和解决办法</strong></h3><ul>
+<li><strong>连接失败</strong>：检查 J-Link 与目标板之间的连接，确保 JTAG 或 SWD 接口正确连接，目标设备已经上电。</li>
+<li><strong>烧录失败</strong>：检查固件文件是否完整，尝试擦除目标闪存后再烧录。确认目标 MCU 和 J-Link 的驱动是否正确安装。</li>
+<li><strong>速度过慢</strong>：J-Link 提供多种调试和编程速度设置，可以通过调整这些设置来提高烧录速度。</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>J-Link 烧录是一项高效、稳定的固件烧录工具，适用于多种嵌入式开发平台。它支持通过 JTAG 或 SWD 接口与目标硬件进行通信，并且能够实现高速度、可靠性的烧录和调试功能。对于嵌入式开发人员来说，熟悉 J-Link 的使用可以大大提高开发效率，减少调试时间。</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">博主</a></li>
+        
+          <li><a href="/tags/">标签</a></li>
+        
+          <li><a href="/categories/">分类</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#J-Link-%E7%A1%AC%E4%BB%B6%E6%A6%82%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">J-Link 硬件概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#J-Link-%E7%83%A7%E5%BD%95%E6%B5%81%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">J-Link 烧录流程</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-J-Link-%E9%A9%B1%E5%8A%A8"><span class="toc-number">2.1.</span> <span class="toc-text">安装 J-Link 驱动</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%9E%E6%8E%A5%E7%9B%AE%E6%A0%87%E7%A1%AC%E4%BB%B6"><span class="toc-number">2.2.</span> <span class="toc-text">连接目标硬件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8%E7%83%A7%E5%BD%95%E5%B7%A5%E5%85%B7"><span class="toc-number">2.3.</span> <span class="toc-text">启动烧录工具</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E7%9B%AE%E6%A0%87-MCU"><span class="toc-number">2.4.</span> <span class="toc-text">配置目标 MCU</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%83%A7%E5%BD%95%E5%9B%BA%E4%BB%B6"><span class="toc-number">2.5.</span> <span class="toc-text">烧录固件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%8C%E6%88%90%E7%83%A7%E5%BD%95%E5%B9%B6%E5%A4%8D%E4%BD%8D"><span class="toc-number">2.6.</span> <span class="toc-text">完成烧录并复位</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#J-Link-%E7%83%A7%E5%BD%95%E7%9A%84%E4%BC%98%E5%8A%BF"><span class="toc-number">3.</span> <span class="toc-text">J-Link 烧录的优势</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#J-Link-%E7%83%A7%E5%BD%95%E4%B8%AD%E7%9A%84%E8%B0%83%E8%AF%95%E5%8A%9F%E8%83%BD"><span class="toc-number">4.</span> <span class="toc-text">J-Link 烧录中的调试功能</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E5%92%8C%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95"><span class="toc-number">5.</span> <span class="toc-text">常见问题和解决办法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">6.</span> <span class="toc-text">总结</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/%E7%83%A7%E5%BD%95%E5%99%A8/J-Link%E7%83%A7%E5%BD%95%E5%99%A8/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/%E7%83%A7%E5%BD%95%E5%99%A8/J-Link%E7%83%A7%E5%BD%95%E5%99%A8/&text=J-Link烧录器"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/%E7%83%A7%E5%BD%95%E5%99%A8/J-Link%E7%83%A7%E5%BD%95%E5%99%A8/&title=J-Link烧录器"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/%E7%83%A7%E5%BD%95%E5%99%A8/J-Link%E7%83%A7%E5%BD%95%E5%99%A8/&is_video=false&description=J-Link烧录器"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=J-Link烧录器&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/%E7%83%A7%E5%BD%95%E5%99%A8/J-Link%E7%83%A7%E5%BD%95%E5%99%A8/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/%E7%83%A7%E5%BD%95%E5%99%A8/J-Link%E7%83%A7%E5%BD%95%E5%99%A8/&title=J-Link烧录器"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/%E7%83%A7%E5%BD%95%E5%99%A8/J-Link%E7%83%A7%E5%BD%95%E5%99%A8/&title=J-Link烧录器"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/%E7%83%A7%E5%BD%95%E5%99%A8/J-Link%E7%83%A7%E5%BD%95%E5%99%A8/&title=J-Link烧录器"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/%E7%83%A7%E5%BD%95%E5%99%A8/J-Link%E7%83%A7%E5%BD%95%E5%99%A8/&title=J-Link烧录器"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/%E7%83%A7%E5%BD%95%E5%99%A8/J-Link%E7%83%A7%E5%BD%95%E5%99%A8/&name=J-Link烧录器&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/%E7%83%A7%E5%BD%95%E5%99%A8/J-Link%E7%83%A7%E5%BD%95%E5%99%A8/&t=J-Link烧录器"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    kay
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

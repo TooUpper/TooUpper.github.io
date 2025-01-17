@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="准备阶段下载相关文件，GD32F407 的用户手册、数组手册、选型手册、固件使用指南（一般下载固件库时会附带）等。 创建项目与配置创建项目 在工程目录中创捷下列文件夹 1234567891011&#x2F;&#x2F; 目录结构Demo01└── Docs&#x2F;		    &#x2F;&#x2F; 说明文档 README.md└── Project&#x2F;		&#x2F;&#x2F; 存放 Keil 文件和生成的一些配置文件、hex 文件     ├── CMSIS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Init">
+<meta property="og:url" content="https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Init/index.html">
+<meta property="og:site_name" content="流年不知心底事">
+<meta property="og:description" content="准备阶段下载相关文件，GD32F407 的用户手册、数组手册、选型手册、固件使用指南（一般下载固件库时会附带）等。 创建项目与配置创建项目 在工程目录中创捷下列文件夹 1234567891011&#x2F;&#x2F; 目录结构Demo01└── Docs&#x2F;		    &#x2F;&#x2F; 说明文档 README.md└── Project&#x2F;		&#x2F;&#x2F; 存放 Keil 文件和生成的一些配置文件、hex 文件     ├── CMSIS">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407Keilyinruwenjian.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407Keilinclude.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407DAPlianxian.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407shaolumulu.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407DAPpezhi01.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407DAPpeizhi02.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407DAPpeizhi03.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407DAPpeizhi04.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407xinpianxuanxingbiao.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407jinzhenbufen.png">
+<meta property="article:published_time" content="2024-10-24T11:48:00.000Z">
+<meta property="article:modified_time" content="2025-01-07T10:58:33.648Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="GD32F407">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407Keilyinruwenjian.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Init</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M3/STM32/STM32F103/Init/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/%E5%AD%97%E7%AC%A6%E4%B8%B2/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Init/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Init/&text=Init"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Init/&title=Init"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Init/&is_video=false&description=Init"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Init&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Init/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Init/&title=Init"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Init/&title=Init"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Init/&title=Init"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Init/&title=Init"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Init/&name=Init&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Init/&t=Init"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%86%E5%A4%87%E9%98%B6%E6%AE%B5"><span class="toc-number">1.</span> <span class="toc-text">准备阶段</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE%E4%B8%8E%E9%85%8D%E7%BD%AE"><span class="toc-number">2.</span> <span class="toc-text">创建项目与配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E5%8F%91%E4%B8%8E%E8%B0%83%E8%AF%95"><span class="toc-number">3.</span> <span class="toc-text">开发与调试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%83%A7%E5%86%99%E4%B8%8E%E9%AA%8C%E8%AF%81"><span class="toc-number">4.</span> <span class="toc-text">烧写与验证</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#DAP-Link-%E4%B8%8B%E8%BD%BD"><span class="toc-number">4.1.</span> <span class="toc-text">DAP-Link 下载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-DFU-%E7%83%A7%E5%BD%95"><span class="toc-number">4.2.</span> <span class="toc-text">使用 DFU 烧录</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B0%83%E6%95%B4%E7%B3%BB%E7%BB%9F%E4%B8%BB%E9%A2%91"><span class="toc-number">5.</span> <span class="toc-text">调整系统主频</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE-SysTick"><span class="toc-number">6.</span> <span class="toc-text">配置 SysTick</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">7.</span> <span class="toc-text">问题</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Init
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">kay</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-10-24T11:48:00.000Z" class="dt-published" itemprop="datePublished">2024-10-24</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/ARM/">ARM</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/GD32F407/" rel="tag">GD32F407</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="准备阶段"><a href="#准备阶段" class="headerlink" title="准备阶段"></a>准备阶段</h2><p>下载相关文件，GD32F407 的用户手册、数组手册、选型手册、固件使用指南（一般下载固件库时会附带）等。</p>
+<h2 id="创建项目与配置"><a href="#创建项目与配置" class="headerlink" title="创建项目与配置"></a>创建项目与配置</h2><p><strong>创建项目</strong></p>
+<p>在工程目录中创捷下列文件夹</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 目录结构</span></span><br><span class="line"></span><br><span class="line">Demo01</span><br><span class="line">└── Docs/		    <span class="comment">// 说明文档 README.md</span></span><br><span class="line">└── Project/		<span class="comment">// 存放 Keil 文件和生成的一些配置文件、hex 文件     </span></span><br><span class="line">├── CMSIS/          <span class="comment">// CMSIS 中 ARM 相关文件</span></span><br><span class="line">├── Firmware/       <span class="comment">// 官方标准固件库中的驱动程序</span></span><br><span class="line">├── Drivers/        <span class="comment">// 外设硬件驱动程序</span></span><br><span class="line">├── Middleware/     <span class="comment">// 中间件组件</span></span><br><span class="line">├── App/            <span class="comment">// 应用层代码</span></span><br><span class="line">└── User/      		<span class="comment">// 入口层     </span></span><br></pre></td></tr></table></figure>
+
+<p><strong>文件移植</strong></p>
+<p>将官方标准固件库中我们需要的的文件拷贝到对应的工程目录中去：</p>
+<p><strong>CMSIS</strong> –&gt; 官方标准固件库中的 CMSIS 中的代码；</p>
+<p><strong>Firmware</strong> –&gt; 官方标准固件库中的外设驱动；</p>
+<p><strong>Drivers</strong> –&gt; 我们自己封装的驱动，如按键、显示屏等；</p>
+<p><strong>Middleware</strong> –&gt; 项目中的中间件，如上位机的可视化界面等；</p>
+<p><strong>App</strong> –&gt; 具体的业务处理逻辑</p>
+<p><strong>User</strong> –&gt; 程序的入口和一些工具文件</p>
+<p><strong>Project</strong> –&gt; Keil 文件的目录</p>
+<p>那么具体都是要拷贝哪些软件呢，</p>
+<ul>
+<li><p>将对应目录下文件都拷贝过去，然后将所有 .c 文件添加进项目中然后在解决错误问题（不建议）</p>
+</li>
+<li><p>查看官方的示例代码，看看人家官方示例是需要拷贝那些，</p>
+<ul>
+<li>打开 Keil 查看他的工程目录，然后从官方库中复制对应的文件到我们自己的项目中；(注意，一般工程中只会显示 .c 文件但我们要记得将对应的 .h 文件一起拷贝)</li>
+</ul>
+</li>
+</ul>
+<p><strong>在 Keil 工程中创建工程目录并添加对应的文件</strong></p>
+<ul>
+<li>创建 Keil 工程并新建对应的工程目录</li>
+<li>将工程文件夹下的 .C 文件添加到 Keil 工程中去</li>
+</ul>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407Keilyinruwenjian.png" alt="F407Keilyinruwenjian"></p>
+<p><strong>添加 Include PATH 路径</strong></p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407Keilinclude.png" alt="F407Keilinclude"></p>
+<p><strong>其他 Keil 配置</strong></p>
+<ol>
+<li><strong>芯片的型号要与所用硬件一致</strong></li>
+</ol>
+<p>“”魔术棒” –&gt; “Device” 下的芯片型号与我们用的硬件是否一样，不一样就要改；</p>
+<ol start="2">
+<li><strong>编译器版本是否正确</strong></li>
+</ol>
+<p>“”魔术棒” –&gt; “Target” 下 ARM Compiler 的版本是否为 “Use default compiler version 6”，如果 “missing compiler version 5” 表示 5 这个版本的不存在那么我们也要去安装；</p>
+<p>勾选 “Use Micro LIB” 以优化代码；</p>
+<blockquote>
+<p>这里注意，编译器版本最好与官方提供的示例代码中的版本一致，不然会有非常多的一些警告</p>
+</blockquote>
+<ol start="3">
+<li><strong>是否生成 .HEX 文件</strong></li>
+</ol>
+<p>“魔术棒” –&gt; “Output” 下勾选 “Create HEX File”;</p>
+<ol start="4">
+<li><strong>设置 C 和 C++ 的编译器版本，不然有些宏关键字它可能不识别，设置代码优化级别</strong></li>
+</ol>
+<p>“魔术棒” –&gt; “C&#x2F;C++” 下的 Language C 设置为 “C990”，Language C++ 设置为 “C++ 11”</p>
+<p>设置编译警告的级别，选择 “Wamings” 中的内容为 “AC5-like Wamings”，表示与 Keil5 一致；</p>
+<p>设置代码优化的级别，选择 “Optimizaion” 中的内容为 “-O1”，级别越高优化程序越高，但是太高了有时候会出错，此处设置为 “-O1” 即可；</p>
+<ol start="5">
+<li><strong>添加 Keil 工程中的使用文件的路径</strong></li>
+</ol>
+<p>“魔术棒” –&gt; “C&#x2F;C++” 下的 “Include Path” 中进行添加；</p>
+<ol start="6">
+<li><strong>选择所使用的烧录器</strong></li>
+</ol>
+<p>“魔术棒” –&gt; “Debug” 下右侧 “Use” 中的烧录器，此处我们设置为 “CMSIS-DAP Debugger”;</p>
+<p>勾选自动复位并运行，左侧 “Setting” –&gt; “Flash Download” 中勾选 “Reset and Run”;</p>
+<p>通常如果烧录器连上后可以在  “Setting” –&gt; “Debug” 右侧中的 “SW Device” 中看到；</p>
+<h2 id="开发与调试"><a href="#开发与调试" class="headerlink" title="开发与调试"></a>开发与调试</h2><ol>
+<li><strong>示例的 main.c 中使用的芯片与我们不一致，所以需要删掉他的头文件和其代码</strong></li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;gd32f4xx.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;systick.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;main.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;gd32f450i_eval.h&quot;</span> <span class="comment">// 删掉</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 整个函数删掉</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">led_spark</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    <span class="type">static</span> __IO <span class="type">uint32_t</span> timingdelaylocal = <span class="number">0U</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(timingdelaylocal) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(timingdelaylocal &lt; <span class="number">500U</span>) &#123;</span><br><span class="line">            gd_eval_led_on(LED1);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            gd_eval_led_off(LED1);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        timingdelaylocal--;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        timingdelaylocal = <span class="number">1000U</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line"></span><br><span class="line">    gd_eval_led_init(LED1); <span class="comment">// 这个调用语句也删掉</span></span><br><span class="line">    systick_config();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>) &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// gd32f4xx_it.c 中调用了 led_spark() 我们也要讲他删掉</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><p><strong>编译运行这时他会报错，提示缺少一些文件，我们去看这些文件在我们的目录中是否存在，如果不存在就加进来</strong></p>
+<p>这里一般情况下是缺少 “core_cmFunc.h”，”core_cm4.h”，”core_cm4_simd.h”，”core_cmlnstr.h”，这四个</p>
+</li>
+<li><p><strong>此时还是报错，我们点击报错的语句，发现他会跳到某些个 include 处报错：D:&#x2F;Tools&#x2F;IDE&#x2F;keil&#x2F;keil&#x2F;ARM&#x2F;Packs&#x2F;GigaDevice&#x2F;GD32F4xx_DFP&#x2F;3.0.3&#x2F;Device&#x2F;F4XX&#x2F;Include\gd32f4xx_libopt.h(11): error: ‘RTE_Components.h’ file not found；</strong></p>
+</li>
+</ol>
+<ul>
+<li><p>注意看他这个报错信息中的路径好像用的不是我们本地的那个呀，那么 ok，我们首先要将 gd32f4xx_libopt.h 包含在我们的项目本地，确保他在本地是存在的，</p>
+</li>
+<li><p>gd32f4xx_libopt.h 这个文件是在哪被声明使用的呢？，我们发现，他是在 gd32f4xx.h 中被声明使用的，那么 gd32f4xx.h 这个文件在本地是否存在呢，如果不存在就需要从标准固件库中添加进我们的项目中；</p>
+</li>
+</ul>
+<p>此时，运行它使用的就是我们本地的 gd32f4xx_libopt.h 文件了，这时它有时候还会报错某些引用错误，但这是官方的标准文件是不会出错了，那么大概率就是某些头没有导入，他某些头文件的导入是通过宏来定义的；我们需要在 Keil 中定义某些宏；</p>
+<ol start="4">
+<li><strong>简化外设库的使用</strong></li>
+</ol>
+<p>我们看 gd32f4xx_libopt.h 文件发现其中定义了很多的头文件，但是它需要通过宏去判断是否导入这些头文件，所以此时我们需要添加这些宏关键字；</p>
+<p>“魔术棒” –&gt; “C&#x2F;C++” 下的 “Define” 中进行添加；”USE_STDPERIPH_DRIVER,GD32F407”，这两个宏定义，</p>
+<p>USE_STDPERIPH_DRIVER 用于在 gd32f4xx.h 中展开 gd32f4xx_libopt.h 头文件（这一句可以不加，它本身会做判断，不存在就自动定义）；</p>
+<p>GD32F407 用于在 gd32f4xx_libopt.h 展开标准固件库中的头文件；</p>
+<h2 id="烧写与验证"><a href="#烧写与验证" class="headerlink" title="烧写与验证"></a>烧写与验证</h2><p>在嵌入式开发中，<strong>拿到一块开发板后，烧录方式不能随意选择</strong>，而是需要<strong>根据开发板的硬件支持情况</strong>来选择适合的烧录方法。</p>
+<p><strong>如何查看开发板的烧录方式支持情况</strong></p>
+<ul>
+<li><p><strong>查看数据手册</strong>：芯片的数据手册通常会列出支持的烧录接口和方法，例如 ST-Link、J-Link、UART、USB DFU 等。</p>
+</li>
+<li><p><strong>检查开发板的接口</strong>：查看开发板是否有特定的调试&#x2F;编程接口，例如 <strong>SWD</strong> 接口、<strong>JTAG</strong> 接口、<strong>USB</strong> 接口、或 <strong>UART</strong> 引脚等。</p>
+</li>
+<li><p><strong>开发板文档</strong>：一些开发板还会提供专门的用户手册，其中会详细说明支持的烧录方法和推荐的工具。</p>
+</li>
+</ul>
+<h3 id="DAP-Link-下载"><a href="#DAP-Link-下载" class="headerlink" title="DAP-Link 下载"></a>DAP-Link 下载</h3><ol>
+<li>DAP-Link 连线</li>
+</ol>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407DAPlianxian.png" alt="F407DAPlianxian"></p>
+<ol start="2">
+<li>Keil 设置</li>
+</ol>
+<p>Debug 中的设置此处不再赘述，如果发现一直无法识别烧录器则需要换一个烧录器或者换一种烧录方式；</p>
+<ol start="3">
+<li>烧录</li>
+</ol>
+<p>“主界面” –&gt; “保存” –&gt; “Rebuild” –&gt; “Download” 即可</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407shaolumulu.png" alt="F407shaolumulu"></p>
+<h3 id="使用-DFU-烧录"><a href="#使用-DFU-烧录" class="headerlink" title="使用 DFU 烧录"></a>使用 DFU 烧录</h3><p><strong>下载安装 CH340 驱动</strong></p>
+<p><a target="_blank" rel="noopener" href="https://www.wch.cn/download/CH341SER_EXE.html">CH341SER.EXE - 南京沁恒微电子股份有限公司</a></p>
+<p><strong>下载安装 DFU 驱动</strong></p>
+<p><a target="_blank" rel="noopener" href="https://www.gd32mcu.com/cn/download?kw=DFU&lan=cn">兆易创新GigaDevice-资料下载兆易创新GD32 MCU</a></p>
+<p><strong>下载烧录软件</strong></p>
+<p><a target="_blank" rel="noopener" href="https://www.gd32mcu.com/en/download?kw=GD32+All-In-One+Programmer">兆易创新GigaDevice-资料下载GigaDevice GD32 MCU</a></p>
+<p><strong>Keil配置</strong></p>
+<p>“魔术棒” –&gt; “Output” 下勾选 “Create HEX File”;</p>
+<p><strong>烧录器使用</strong></p>
+<ol>
+<li>解压后以管理员身份运行</li>
+<li>软件配置</li>
+</ol>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407DAPpezhi01.png" alt="F407DAPpezhi01"></p>
+<ol start="3">
+<li>开始进入升级模式。首先按住BOOT0不要松手，然后再按一次RESET进入到升级模式。</li>
+</ol>
+<p>进入升级模式成功之后，会在软件中显示设备 <strong>GD DFU DEVICE 1</strong> 。如果没有进入请多次尝试。</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407DAPpeizhi02.png" alt="F407DAPpeizhi02"></p>
+<ol start="4">
+<li>点击 “Connect” 连接开发板。</li>
+</ol>
+<p>连接成功之后，会显示出芯片内存大小。</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407DAPpeizhi03.png" alt="F407DAPpeizhi03"></p>
+<ol start="5">
+<li>查看有无读写保护</li>
+</ol>
+<p>主界面中选择 “Erase selected pages” ，点击 “Erase”，如果有读写保护则需要解除保护如果没有就不管他</p>
+<ol start="6">
+<li>下载测试代码</li>
+</ol>
+<p>在主界面，点击 “Browse” ,选择 .hex 文件，之后点击 “Download”；</p>
+<p>然后我们按一下复位按键，就可以让程序开始运行。</p>
+<ol start="6">
+<li>解除写保护</li>
+</ol>
+<p>在主界面，点击 “Edit Option Bytes”;</p>
+<p>主要内容为修改 SPC 的值为非 0XAA 和非 0XCC 值，比如 0x55</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407DAPpeizhi04.png" alt="F407DAPpeizhi04"></p>
+<blockquote>
+<p>但我测试时候发现，将 WP0 下面的两个沟去掉也可以接触写保护;</p>
+</blockquote>
+<h2 id="调整系统主频"><a href="#调整系统主频" class="headerlink" title="调整系统主频"></a>调整系统主频</h2><p>芯片选型手册</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407xinpianxuanxingbiao.png" alt="F407xinpianxuanxingbiao"></p>
+<p>这张图表展示了 GD32F407VET6 芯片的主要参数和特性，以下是对各项的详细说明：</p>
+<p><strong>基本参数</strong></p>
+<ul>
+<li><p><strong>Max Speed (MHz)</strong> - <strong>最大速度</strong>:</p>
+<ul>
+<li>GD32F407VET6 的主频最高可达 168 MHz，适合处理需要较高运算速度的嵌入式应用场景。</li>
+</ul>
+</li>
+<li><p><strong>Memory (Bytes)</strong> - <strong>内存</strong>:</p>
+</li>
+<li><p><strong>Flash</strong>: 512 KB 的内部 Flash 存储，用于存储程序代码。</p>
+</li>
+<li><p><strong>SRAM</strong>: 192 KB 的 SRAM，供程序运行时使用，存储临时数据和变量。</p>
+</li>
+</ul>
+<p><strong>输入&#x2F;输出 (I&#x2F;O)</strong></p>
+<ul>
+<li><strong>I&#x2F;O Pins</strong>: 提供了最多 82 个 GPIO 引脚（通用输入输出引脚），这些引脚可以用于连接外部设备或控制器件。</li>
+</ul>
+<p><strong>定时器 (Timer)</strong></p>
+<ul>
+<li><p><strong>Adv TM (16bit)</strong> - <strong>高级定时器</strong>:</p>
+<ul>
+<li>包含 2 个 16 位高级定时器，通常用于需要复杂 PWM 生成的应用，比如电机控制。</li>
+</ul>
+</li>
+<li><p><strong>GPTM (16bit)</strong> - <strong>通用定时器</strong>:</p>
+<ul>
+<li>配置了 4 个 16 位通用定时器，适合用于普通计时任务或输入捕获。</li>
+</ul>
+</li>
+<li><p><strong>GPTM (32bit)</strong> - <strong>32 位通用定时器</strong>:</p>
+<ul>
+<li>配置了 2 个 32 位通用定时器，适合计时精度要求较高的场景。</li>
+</ul>
+</li>
+<li><p><strong>Basic TM (16bit)</strong> - <strong>基本定时器</strong>:</p>
+<ul>
+<li>配置了 2 个基本定时器，适合简单的计数或时间延迟任务。</li>
+</ul>
+</li>
+<li><p><strong>WDG</strong> - <strong>看门狗定时器</strong>:</p>
+<ul>
+<li>配置了 2 个看门狗定时器，用于在程序异常时重启系统，以确保系统安全。</li>
+</ul>
+</li>
+<li><p><strong>RTC</strong> - <strong>实时时钟</strong>:</p>
+<ul>
+<li>具备 1 个 RTC 实时时钟，通常用于计时任务，如数据记录或时间戳生成。</li>
+</ul>
+</li>
+</ul>
+<p><strong>通信接口 (Connectivity)</strong></p>
+<ul>
+<li><p><strong>USART + UART</strong>:</p>
+<ul>
+<li>提供 4 个 USART 和 2 个 UART 接口，可以用于串口通信，如与其他设备通信或调试信息输出。</li>
+</ul>
+</li>
+<li><p><strong>I²C</strong>:</p>
+<ul>
+<li>配置了 3 个 I²C 接口，用于与 I²C 总线设备通信，比如传感器和存储设备。</li>
+</ul>
+</li>
+<li><p><strong>SPI</strong>:</p>
+<ul>
+<li>包含 3 个 SPI 接口，支持与 SPI 设备的高速数据交换，比如与 ADC、DAC 通信。</li>
+</ul>
+</li>
+<li><p><strong>CAN 2.0B</strong>:</p>
+<ul>
+<li>包含 2 个 CAN 2.0B 接口，用于工业控制网络中的数据传输。</li>
+</ul>
+</li>
+<li><p><strong>USB OTG</strong>:</p>
+<ul>
+<li>配置了 USB 全速 (FS) 和高速 (HS) 双模式 OTG（On-The-Go）接口，可以用于 USB 设备或主机功能。</li>
+</ul>
+</li>
+<li><p><strong>I²S</strong>:</p>
+<ul>
+<li>具有 2 个 I²S 接口，用于音频数据传输。</li>
+</ul>
+</li>
+<li><p><strong>SDIO</strong>:</p>
+</li>
+<li><p>支持 SDIO 接口，可以与 SD 卡通信，用于数据存储应用。</p>
+</li>
+</ul>
+<ol>
+<li><strong>LCD-SDIO TFT</strong>:<ul>
+<li>提供 1 个 LCD 接口，用于连接显示屏（如 TFT 屏幕）。</li>
+</ul>
+</li>
+<li><strong>Camera</strong>:<ul>
+<li>配置 1 个摄像头接口，支持外接摄像头模块，实现图像采集功能。</li>
+</ul>
+</li>
+<li><strong>ETH MAC</strong>:<ul>
+<li>配置了 1 个 Ethernet MAC 接口，可以用于网络通信应用。</li>
+</ul>
+</li>
+</ol>
+<p><strong>模拟接口 (Analog Interface)</strong></p>
+<ul>
+<li><p><strong>12-bit ADC Units (CHs)</strong> - <strong>ADC 单元和通道</strong>:</p>
+<ul>
+<li>配置了 3 个 12 位 ADC，拥有总共 16 个通道，用于模拟信号采集。</li>
+</ul>
+</li>
+<li><p><strong>12-bit DAC Units</strong> - <strong>DAC 单元</strong>:</p>
+<ul>
+<li>配置了 2 个 12 位 DAC，用于将数字信号转换为模拟信号输出。</li>
+</ul>
+</li>
+</ul>
+<p><strong>存储器接口 (EMMC&#x2F;SDRAM)</strong></p>
+<ul>
+<li>EXMC<ul>
+<li>配置了 1 个 EXMC 外部存储控制器接口，可以连接外部 SDRAM 或 NOR Flash 扩展存储器。</li>
+</ul>
+</li>
+</ul>
+<p><strong>封装 (Package)</strong></p>
+<ul>
+<li>LQFP100<ul>
+<li>该型号的芯片封装类型为 LQFP100（100 引脚的低轮廓方形封装），方便焊接和电路板设计。</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>根据手册我们要设置系统主频为 168 MHz，那么要如何实现这个 168MHz 的频率，这时候就要去看板子商家的原理图和用户手册了，看他们是如何实现的，然后选择为对应的方式，如果他们设置了外部就选择外部否则可以选择内部的（通常情况下一般都是默认选择外部高速晶振）；</p>
+</blockquote>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407jinzhenbufen.png" alt="F407jinzhenbufen"></p>
+<p>这里我们先简单走一遍 ARM32 系列设置系统主频的流程：</p>
+<p>上电复位后他会去执行 Reset_Handler 这个启动代码，它负责在系统复位（Reset）后初始化处理器状态和程序运行环境；同时在这个代码中他会去调用 SystemInit这个初始化函数；</p>
+<p>在 SystemInit 这个初始化函数中，他会进行一系列的初始化配置，这里我们只关心它对于系统时钟的配置也就是调用的 SetSysClock 这个函数；</p>
+<p>在 SetSysClock 这个函数中他打开了了外部时钟，并设置了锁相环等一些列操作；这里我们关心的是如何将 8MHz 外部高速晶振设置为 168MHz 的系统主频，也就是如何通过锁相环将 8MHz 设置为 168MHz；</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 锁相环配置如下</span></span><br><span class="line">RCC-&gt;PLLCFGR = PLL_M | (PLL_N &lt;&lt; <span class="number">6</span>) | (((PLL_P &gt;&gt; <span class="number">1</span>) <span class="number">-1</span>) &lt;&lt; <span class="number">16</span>) |</span><br><span class="line">                   (RCC_PLLCFGR_PLLSRC_HSE) | (PLL_Q &lt;&lt; <span class="number">24</span>);</span><br></pre></td></tr></table></figure>
+
+<p>在上面的锁相环配置中，我们可以看到，它是通过先除以 PLL_M 乘以 PLL_N 在除以 PLL_P 最终得到一个系统主频的，所以我们只需要修改这三个常量的值就可以了 ；</p>
+<p>也就是将 PLL_M 设置为 8，PLL_N 设置为 336，PLL_P 设置为 2 即可；当然你也可以有其他的组合只要得到的是 168MHz 就可以；</p>
+<blockquote>
+<p>不理解记住就可以，因为只要是 Cortex-M 系列的他的锁相环基本上都是这样配置的</p>
+</blockquote>
+<p>此时系统主频就被配置为了 168MHz</p>
+<h2 id="配置-SysTick"><a href="#配置-SysTick" class="headerlink" title="配置 SysTick"></a>配置 SysTick</h2><p>设置完系统主频后，我们还需要设置下滴答时钟以得到一个精准的延时；SysTick 的具体原理可以参考 <a href="">SysTick</a> 这一篇文章，这里只教大家如何去配置；</p>
+<p>我们找到 main() 函数中系统滴答时钟的配置语句，然后跳转后找到 SysTick_Config 这个函数，这里面就是对于系统滴答时钟的配置，我们通常使用默认配置不去动他，只需要给他一个具体的周期值即可；</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// STM32</span></span><br><span class="line">RCC_GetClocksFreq(&amp;RCC_Clocks);</span><br><span class="line">SysTick_Config(RCC_Clocks.HCLK_Frequency / <span class="number">100</span>);</span><br><span class="line"><span class="comment">// GD32</span></span><br><span class="line">SysTick_Config(SystemCoreClock / <span class="number">1000000U</span>);</span><br></pre></td></tr></table></figure>
+
+<p>通过上面语句可以发现在 Cortex-M 架构中，我们只需要设置 SysTick_Config 这个函数的参数即可，在 GD32 中 SystemCoreClock 是调用的一个宏我们只需要修改他为 168000000（系统主频）即可；在 SMT32 中稍微麻烦一点我们要去看他的默认配置也就是 RCC_GetClocksFreq(&amp;RCC_Clocks) 这个函数;</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// GD32 中的修改</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> __SYSTEM_CLOCK_168M_PLL_8M_HXTAL        (uint32_t)(168000000)</span></span><br><span class="line"><span class="comment">// STM32 中会通过寄存器去配置所以通常情况下我们不需要去修改它，只需要修改如下即可：</span></span><br><span class="line"><span class="comment">// (我感觉 STM32 可以不需要配置，它会自动去选择时钟源，通过时钟源作为系统滴答时钟进行计算)</span></span><br><span class="line"><span class="comment">// 这一条代码我感觉通常情况下不会用到，除非我们像 GD32 那样去使用；</span></span><br><span class="line"><span class="type">uint32_t</span> SystemCoreClock = <span class="number">168000000</span>;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>一般情况下我们将 GD32 中 SysTick 的代码复制到 STM32 中去使用，因为更简单些</p>
+</blockquote>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>一、<strong>外部的 8MHz 是如何实现 168MHz 的？</strong></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">博主</a></li>
+        
+          <li><a href="/tags/">标签</a></li>
+        
+          <li><a href="/categories/">分类</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%86%E5%A4%87%E9%98%B6%E6%AE%B5"><span class="toc-number">1.</span> <span class="toc-text">准备阶段</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE%E4%B8%8E%E9%85%8D%E7%BD%AE"><span class="toc-number">2.</span> <span class="toc-text">创建项目与配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E5%8F%91%E4%B8%8E%E8%B0%83%E8%AF%95"><span class="toc-number">3.</span> <span class="toc-text">开发与调试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%83%A7%E5%86%99%E4%B8%8E%E9%AA%8C%E8%AF%81"><span class="toc-number">4.</span> <span class="toc-text">烧写与验证</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#DAP-Link-%E4%B8%8B%E8%BD%BD"><span class="toc-number">4.1.</span> <span class="toc-text">DAP-Link 下载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-DFU-%E7%83%A7%E5%BD%95"><span class="toc-number">4.2.</span> <span class="toc-text">使用 DFU 烧录</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B0%83%E6%95%B4%E7%B3%BB%E7%BB%9F%E4%B8%BB%E9%A2%91"><span class="toc-number">5.</span> <span class="toc-text">调整系统主频</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE-SysTick"><span class="toc-number">6.</span> <span class="toc-text">配置 SysTick</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">7.</span> <span class="toc-text">问题</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Init/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Init/&text=Init"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Init/&title=Init"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Init/&is_video=false&description=Init"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Init&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Init/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Init/&title=Init"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Init/&title=Init"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Init/&title=Init"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Init/&title=Init"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Init/&name=Init&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Init/&t=Init"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    kay
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

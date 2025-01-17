@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="移植 FreeRTOS 的主要原因是将其核心功能与目标硬件平台结合，从而为嵌入式开发提供实时操作系统支持，解决裸机开发中的不足。 准备 开发板。案例是以立创天空星为开发板。 Windows 系统的电脑。当前是以 Win11 的电脑来实现案例的。 Keil 开发工具。并且已经安装好 GD32 依赖环境。 FreeRTOS 源码包。下载地址为: https:&#x2F;&#x2F;github.com&#x2F;FreeRTOS&#x2F;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="系统移植">
+<meta property="og:url" content="https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E7%B3%BB%E7%BB%9F%E7%A7%BB%E6%A4%8D/index.html">
+<meta property="og:site_name" content="流年不知心底事">
+<meta property="og:description" content="移植 FreeRTOS 的主要原因是将其核心功能与目标硬件平台结合，从而为嵌入式开发提供实时操作系统支持，解决裸机开发中的不足。 准备 开发板。案例是以立创天空星为开发板。 Windows 系统的电脑。当前是以 Win11 的电脑来实现案例的。 Keil 开发工具。并且已经安装好 GD32 依赖环境。 FreeRTOS 源码包。下载地址为: https:&#x2F;&#x2F;github.com&#x2F;FreeRTOS&#x2F;">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/freertosmljg.png">
+<meta property="article:published_time" content="2024-11-22T02:52:00.000Z">
+<meta property="article:modified_time" content="2025-01-07T10:58:33.648Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="FreeRTOS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/freertosmljg.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>系统移植</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/FreeRTOS%E4%BB%8B%E7%BB%8D/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%87%AA%E5%AE%9A%E4%B9%89%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E7%B3%BB%E7%BB%9F%E7%A7%BB%E6%A4%8D/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E7%B3%BB%E7%BB%9F%E7%A7%BB%E6%A4%8D/&text=系统移植"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E7%B3%BB%E7%BB%9F%E7%A7%BB%E6%A4%8D/&title=系统移植"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E7%B3%BB%E7%BB%9F%E7%A7%BB%E6%A4%8D/&is_video=false&description=系统移植"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=系统移植&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E7%B3%BB%E7%BB%9F%E7%A7%BB%E6%A4%8D/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E7%B3%BB%E7%BB%9F%E7%A7%BB%E6%A4%8D/&title=系统移植"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E7%B3%BB%E7%BB%9F%E7%A7%BB%E6%A4%8D/&title=系统移植"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E7%B3%BB%E7%BB%9F%E7%A7%BB%E6%A4%8D/&title=系统移植"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E7%B3%BB%E7%BB%9F%E7%A7%BB%E6%A4%8D/&title=系统移植"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E7%B3%BB%E7%BB%9F%E7%A7%BB%E6%A4%8D/&name=系统移植&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E7%B3%BB%E7%BB%9F%E7%A7%BB%E6%A4%8D/&t=系统移植"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%86%E5%A4%87"><span class="toc-number">1.</span> <span class="toc-text">准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A7%BB%E6%A4%8D"><span class="toc-number">2.</span> <span class="toc-text">移植</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%86%9F%E6%82%89%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84"><span class="toc-number">2.1.</span> <span class="toc-text">熟悉目录结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8B%B7%E8%B4%9D"><span class="toc-number">2.2.</span> <span class="toc-text">拷贝</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C"><span class="toc-number">3.</span> <span class="toc-text">运行</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E6%97%B6%E9%92%9F"><span class="toc-number">4.</span> <span class="toc-text">配置时钟</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E6%97%B6%E9%92%9F"><span class="toc-number">4.1.</span> <span class="toc-text">系统时钟</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SysTick"><span class="toc-number">4.2.</span> <span class="toc-text">SysTick</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%BB%B6%E6%97%B6%E5%87%BD%E6%95%B0"><span class="toc-number">5.</span> <span class="toc-text">自定义延时函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">6.</span> <span class="toc-text">问题</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        系统移植
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">kay</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-11-22T02:52:00.000Z" class="dt-published" itemprop="datePublished">2024-11-22</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/FreeRTOS/">FreeRTOS</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/FreeRTOS/" rel="tag">FreeRTOS</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>移植 FreeRTOS 的主要原因是将其核心功能与目标硬件平台结合，从而为嵌入式开发提供实时操作系统支持，解决裸机开发中的不足。</p>
+<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><ol>
+<li>开发板。案例是以立创天空星为开发板。</li>
+<li>Windows 系统的电脑。当前是以 Win11 的电脑来实现案例的。</li>
+<li>Keil 开发工具。并且已经安装好 GD32 依赖环境。</li>
+<li>FreeRTOS 源码包。下载地址为: <a target="_blank" rel="noopener" href="https://github.com/FreeRTOS/FreeRTOS/releases">https://github.com/FreeRTOS/FreeRTOS/releases</a></li>
+</ol>
+<p>我们下载好 FreeRTOS 源码包之后可以参照官方示例代码，也就是 Demo 中的例程进行参考。</p>
+<h2 id="移植"><a href="#移植" class="headerlink" title="移植"></a>移植</h2><p><a target="_blank" rel="noopener" href="https://freertos.org/zh-cn-cmn-s/Documentation/02-Kernel/03-Supported-devices/01-FreeRTOS-porting-guide">FreeRTOS 移植指南</a></p>
+<h3 id="熟悉目录结构"><a href="#熟悉目录结构" class="headerlink" title="熟悉目录结构"></a>熟悉目录结构</h3><p>从顶部开始，下载被分割成两个子目录：FreeRTOS 和 FreeRTOS-Plus。如下所示：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">+-FreeRTOS-Plus <span class="comment">// 包含[FreeRTOS Plus]（/文档/03库/02 FreeRTOS Plus/01简介）组件和演示项目。</span></span><br><span class="line">|</span><br><span class="line">+-FreeRTOS 	    <span class="comment">// 包含FreeRTOS实时内核源文件和演示项目</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>FreeRTOS：</strong>包含 FreeRTOS 内核（Kernel）的源代码（例如 task.c, queue.c, timers.c 等核心文件）。</p>
+<p><strong>FreeRTOS-Plus：</strong>包含 FreeRTOS Plus 系列库和组件，这些是对 FreeRTOS 内核功能的扩展。</p>
+<p><strong>FreeRTOS 内核目录结构</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">FreeRTOS</span><br><span class="line">    |</span><br><span class="line">    +-Demo   <span class="comment">// 包含演示应用程序项目。</span></span><br><span class="line">    |</span><br><span class="line">    +-Source <span class="comment">// 包含 RTOS 内核源代码。</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>FreeRTOS&#x2F;Source 目录的结构如下所示</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">FreeRTOS</span><br><span class="line">    |</span><br><span class="line">    +-Source            <span class="comment">// FreeRTOS内核文件</span></span><br><span class="line">        |</span><br><span class="line">        +-include      <span class="comment">// FreeRTOS内核头文件</span></span><br><span class="line">        |</span><br><span class="line">        +-Portable    <span class="comment">// 处理器相关的代码</span></span><br><span class="line">            |</span><br><span class="line">            +-MemMang <span class="comment">// 内存管理实现</span></span><br><span class="line">            +-....    <span class="comment">// 与处理器相关的代码</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>FreeRTOS&#x2F;Demo 目录的结构如下所示</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">FreeRTOS</span><br><span class="line">    |</span><br><span class="line">    +-Demo</span><br><span class="line">        |</span><br><span class="line">        +-Common    The demo application files that are used by all the demos.</span><br><span class="line">        +-Dir x     The demo application build files <span class="keyword">for</span> port x</span><br><span class="line">        +-Dir y     The demo application build files <span class="keyword">for</span> port y</span><br></pre></td></tr></table></figure>
+
+<h3 id="拷贝"><a href="#拷贝" class="headerlink" title="拷贝"></a>拷贝</h3><p>FreeRTOS 官方提供了丰富且详细的示例代码，我们只需根据需求拷贝并适配即可。</p>
+<p>在 FreeRTOS&#x2F;Demo 目录下，有大量针对不同架构平台的示例项目。我们需要找到与当前使用的架构和开发环境匹配的示例代码进行移植。</p>
+<p>当前我们的开发环境为 Keil，编译器是 GCC，目标处理器的内核架构为 Cortex-M4F。按照这些条件选择合适的示例代码即可。</p>
+<blockquote>
+<p>CORTEX_M4F_STM32F407ZG-SK 这里先不要参考这个， SK 指代的是 STM32 官方自带的 IDE，它可以在创建项目的时候自动添加 FreeRTOS 相关的库文件，所有我们打开会发现除了一个 .h 外它不包含任何与 FreeRTOS 相关的库文件；</p>
+</blockquote>
+<p>在示例代码中我们可以找 CORTEX_M4F_CEC1302_Keil_GCC 这个示例代码进行参考，通过 Keil 将其打开：</p>
+<p>会发现它包含的文件如下：</p>
+<ul>
+<li>FreeRTOS&#x2F;Source&#x2F;include 目录下所有的头文件</li>
+<li>FreeRTOS&#x2F;Source&#x2F;Portable 目录下处理器相关的代码 </li>
+<li>FreeRTOS&#x2F;Source 目录下 FreeRTOS 处理器相关代码</li>
+<li>FreeRTOSConfig.h 头文件；</li>
+</ul>
+<p>我们参照例程将这些文件拷贝到我们自己对应的 Middleware&#x2F;FreeRTOS 目录下；</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">/FreeRTOS</span><br><span class="line">│</span><br><span class="line">├── /portable      </span><br><span class="line">│   ├── /GCC/ARM_CM4F          # 针对 ARM Cortex-M4 架构和 GCC 编译器的移植代码</span><br><span class="line">│   │   ├── port.c   </span><br><span class="line">│   │   └── portmacro.h</span><br><span class="line">│   └──  /MemMang              # 内存管理相关代码        </span><br><span class="line">│       └── heap_4.c                                 </span><br><span class="line">│</span><br><span class="line">├── /include                  # FreeRTOS 公共头文件</span><br><span class="line">│   ├── FreeRTOS.h         </span><br><span class="line">│   └── …                     </span><br><span class="line">│</span><br><span class="line">├── croutine.c                  # 协程相关代码</span><br><span class="line">├── event_groups.c            # 事件组相关代码</span><br><span class="line">├── heap_4.c                  # 内存分配代码</span><br><span class="line">├── <span class="built_in">list</span>.c                    # 链表操作代码</span><br><span class="line">├── <span class="built_in">queue</span>.c                   # 队列操作代码</span><br><span class="line">├── stream_buffer.c           # 流缓冲区相关代码</span><br><span class="line">├── tasks.c                   # 任务管理相关代码</span><br><span class="line">└── timers.c                  # 定时器管理相关代码</span><br><span class="line">    </span><br><span class="line">/User   </span><br><span class="line">│    </span><br><span class="line">└── FreeRTOSConfig.h          # FreeRTOS 配置文件</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>简单点来说就是将 FreeRTOS&#x2F;Source 下所有的文件都复制到我们 FreeRTOS 目录中；删除 Portable 中不需要的文件，再将 FreeRTOSConfig.h   放置在 main.c 同级目录下即可；</p>
+</blockquote>
+<h2 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h2><p>将上述 FreeRTOS 文件添加到到 Keil 工程中，添加后的目录如下：</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/freertosmljg.png" alt="freertosmljg"></p>
+<p>添加完成后运行，解决对应错误即可；</p>
+<h2 id="配置时钟"><a href="#配置时钟" class="headerlink" title="配置时钟"></a>配置时钟</h2><p>在 FreeRTOS 成功移植并且不报错之后，系统就已经具备了基本的任务调度能力，但要让它完全正常运行，还需要完成一些硬件初始化和配置工作。这些配置工作通常与时钟、外设、系统节拍等相关，确保 FreeRTOS 的调度器能够正确地运行并与硬件配合。</p>
+<h3 id="系统时钟"><a href="#系统时钟" class="headerlink" title="系统时钟"></a>系统时钟</h3><p>配置当前 FreeRTOS 的 <strong>CPU 主频</strong>（即系统时钟频率）。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> configCPU_CLOCK_HZ ( SystemCoreClock )</span></span><br></pre></td></tr></table></figure>
+
+<p>SystemCoreClock 通常是由硬件库定义的全局变量，它会根据系统时钟初始化过程自动更新。</p>
+<h3 id="SysTick"><a href="#SysTick" class="headerlink" title="SysTick"></a>SysTick</h3><p>滴答时钟用于产生系统节拍中断，驱动 FreeRTOS 的任务调度器。</p>
+<p>滴答时钟的频率由 configTICK_RATE_HZ 定义;</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> configTICK_RATE_HZ ( ( TickType_t ) 1000 )</span></span><br></pre></td></tr></table></figure>
+
+<p>这里的 <code>1000</code> 表示每秒产生 1000 次节拍中断，即 1 毫秒一次。</p>
+<p>滴答频率的选择需要根据应用需求决定：</p>
+<ul>
+<li>高频（如 1000 Hz）：调度更频繁，但 CPU 负载增加。</li>
+<li>低频（如 100 Hz）：调度较少，适合实时性要求不高的场景。</li>
+</ul>
+<p><strong>时间片的长度</strong>由滴答时钟（tick rate）与调度方式决定。如果启用了<strong>时间片轮转</strong>，每个任务的时间片是基于系统的滴答周期来分配的，如果启用了<strong>抢占式调度（configUSE_PREEMPTION 1）</strong>系统会在每个滴答周期内检查是否有更高优先级的任务需要执行，确保高优先级任务及时获得 CPU 时间。</p>
+<blockquote>
+<p>由于滴答时钟已经交予 FreeRTOS 进行是使用，我们就不能在 main 中初始化 SysTick 了（systick_config()），因为二者同时去操作 SysTick 寄存器就会产生一些错误问题；</p>
+<p>所以这里我们还是和前面一样通过宏进行判断，如果移植了 FreeRTOS 就让 FreeRTOS 控制滴答时钟的配置，否则就是用我们芯片自己的；</p>
+</blockquote>
+<h2 id="自定义延时函数"><a href="#自定义延时函数" class="headerlink" title="自定义延时函数"></a>自定义延时函数</h2><p>在某些情况下我们需要使用我们自定义的延时函数，这里我们还是和之前一样过读取 <strong>SysTick 定时器的计数值</strong>，利用系统的时钟频率来精确计算经过的时间。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">delay_1us</span><span class="params">(<span class="type">uint32_t</span> count)</span> &#123;</span><br><span class="line">  <span class="type">uint32_t</span> ticks;</span><br><span class="line">  <span class="type">uint32_t</span> told, tnow, reload, tcnt = <span class="number">0</span>;</span><br><span class="line">  reload = SysTick -&gt; LOAD;</span><br><span class="line">  ticks = count * (SystemCoreClock / <span class="number">1000000</span>);</span><br><span class="line">  told = SysTick -&gt; VAL;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">while</span>(<span class="number">1</span>) &#123;</span><br><span class="line">    tnow = SysTick -&gt; VAL;</span><br><span class="line">    <span class="keyword">if</span>(tnow != told) &#123;</span><br><span class="line">      <span class="keyword">if</span>(tnow &lt; told) tcnt += told - tnow;</span><br><span class="line">      <span class="keyword">else</span> tcnt += reload - tnow + told;</span><br><span class="line">      told = tnow;</span><br><span class="line">      <span class="keyword">if</span>(tcnt &gt;= ticks) <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">delay_1ms</span><span class="params">(<span class="type">uint32_t</span> count)</span> &#123;</span><br><span class="line">  <span class="type">uint32_t</span> i;</span><br><span class="line">  <span class="keyword">for</span> (i=<span class="number">0</span>; i&lt;count; i++)</span><br><span class="line">  &#123;</span><br><span class="line">    delay_1us(<span class="number">1000</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>一、<strong>我没有调用 FreeRTOS 相关函数他为啥会自动运行并报错呢</strong></p>
+<p>FreeRTOS 的部分代码（例如任务调度器、内存管理等）可能依赖于特定的硬件初始化或全局配置。如果你的工程中没有正确配置它的基础环境，编译或链接时就可能报错。</p>
+<p>FreeRTOS 的部分代码可能会在工程初始化或链接时被调用，即使未在 <code>main</code> 中使用。</p>
+<p>二、<strong>error: use of undeclared identifier ‘SystemCoreClock’错误</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifdef</span> __ICCARM__</span></span><br><span class="line">	<span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdint.h&gt;</span></span></span><br><span class="line">	<span class="keyword">extern</span> <span class="type">uint32_t</span> SystemCoreClock;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+
+<p>在 port.c 文件中，这个变量只有在 <strong>ICCARM</strong> 这个宏存在，也就是说编译器是 ICC 的时候才执行其中的代码，而我们是 Keil 编译器，所以我们需要修改为：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">if</span> defined(__ICCARM__)||defined(__CC_ARM)||defined(__GNUC__)</span></span><br><span class="line">	<span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdint.h&gt;</span></span></span><br><span class="line">	<span class="keyword">extern</span> <span class="type">uint32_t</span> SystemCoreClock;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+
+<p>三、<strong>重复定义错误</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 中断处理函数重复定义</span></span><br><span class="line">Error: L6200E: Symbol SysTick_Handler multiply <span class="title function_">defined</span> <span class="params">(by port.o and gd32f4xx_it.o)</span>.</span><br><span class="line">Error: L6200E: Symbol SVC_Handler multiply <span class="title function_">defined</span> <span class="params">(by port.o and gd32f4xx_it.o)</span>.</span><br><span class="line">Error: L6200E: Symbol PendSV_Handler multiply <span class="title function_">defined</span> <span class="params">(by port.o and gd32f4xx_it.o)</span>.</span><br></pre></td></tr></table></figure>
+
+<p><strong>中断处理函数重复定义错误原因：</strong></p>
+<p>FreeRTOS 的移植代码（port.c 文件）会定义 Cortex-M 核心的中断处理函数，例如：</p>
+<ul>
+<li>SysTick_Handler：用于系统节拍定时器（SysTick）的中断服务。</li>
+<li>PendSV_Handler：用于上下文切换。</li>
+<li>SVC_Handler：用于启动第一个任务。</li>
+</ul>
+<p>同时，你的工程中可能有一个文件（例如 gd32f4xx_it.c），也定义了这些中断处理函数，导致冲突。</p>
+<p>我们希望的是，如果移植了 FreeRTOS 就使用 FreeRTOS 中的函数，否则就使用我们自己函数；这就可以通过宏定义来实现：</p>
+<p>当我们移植 FreeRTOS 时，我们可以手动在 Keil 中添加一个自定义宏（ SYS_SUPPORT_OS 这个宏定义），将重复的函数包裹起来；</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// gd32f407xx.it.h</span></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> SYS_SUPPORT_OS</span></span><br><span class="line"><span class="comment">/* this function handles SVC exception */</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">SVC_Handler</span><span class="params">(<span class="type">void</span>)</span>;</span><br><span class="line"><span class="comment">/* this function handles PendSV exception */</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">PendSV_Handler</span><span class="params">(<span class="type">void</span>)</span>;</span><br><span class="line"><span class="comment">/* this function handles SysTick exception */</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">SysTick_Handler</span><span class="params">(<span class="type">void</span>)</span>;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// gd32f407xx.it.c</span></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> SYS_SUPPORT_OS</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">SVC_Handler</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    <span class="comment">/* if SVC exception occurs, go to infinite loop */</span></span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>) &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">void</span> <span class="title function_">PendSV_Handler</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    <span class="comment">/* if PendSV exception occurs, go to infinite loop */</span></span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>) &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">void</span> <span class="title function_">SysTick_Handler</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line"><span class="comment">//    led_spark();</span></span><br><span class="line">    delay_decrement();</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+
+<p>四、<strong>变量未定义错误</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Error: L6218E: Undefined symbol <span class="title function_">vApplicationStackOverflowHook</span> <span class="params">(referred from tasks.o)</span>.</span><br><span class="line">Error: L6218E: Undefined symbol <span class="title function_">vApplicationIdleHook</span> <span class="params">(referred from tasks.o)</span>.</span><br><span class="line">Error: L6218E: Undefined symbol <span class="title function_">vApplicationTickHook</span> <span class="params">(referred from tasks.o)</span>.</span><br><span class="line">Error: L6218E: Undefined symbol <span class="title function_">vApplicationMallocFailedHook</span> <span class="params">(referred from heap_4_1.o)</span>.</span><br></pre></td></tr></table></figure>
+
+<p>上述错误表明你的工程中缺少一些 FreeRTOS 要求的钩子函数的定义。这些函数用于处理特定的系统事件，如任务堆栈溢出、空闲任务的操作、系统时钟节拍钩子等。虽然它们在某些场景中是可选的，但如果在配置文件 FreeRTOSConfig.h 中启用了相关功能而未定义这些钩子函数，就会导致链接时的 undefined symbol 错误。</p>
+<p>这里我们以 vApplicationStackOverflowHook 为例了解如何解决</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// task.h</span></span><br><span class="line"><span class="meta">#<span class="keyword">if</span> ( configCHECK_FOR_STACK_OVERFLOW &gt; 0 )</span></span><br><span class="line">    <span class="type">void</span> <span class="title function_">vApplicationStackOverflowHook</span><span class="params">( TaskHandle_t xTask, <span class="type">char</span> * pcTaskName )</span>;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">if</span> ( ( configCHECK_FOR_STACK_OVERFLOW == 1 ) &amp;&amp; ( portSTACK_GROWTH &gt; 0 ) )</span></span><br><span class="line">    <span class="meta">#<span class="keyword">define</span> taskCHECK_FOR_STACK_OVERFLOW() &#123;                                                             </span></span><br><span class="line">        <span class="keyword">if</span>( pxCurrentTCB-&gt;pxTopOfStack &gt;= pxCurrentTCB-&gt;pxEndOfStack - portSTACK_LIMIT_PADDING ) &#123;                 		vApplicationStackOverflowHook( ( TaskHandle_t ) pxCurrentTCB, pxCurrentTCB-&gt;pcTaskName ); </span><br><span class="line">        &#125;                                                                                             </span><br><span class="line">    &#125;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// FreeRTOSConfig.h</span></span><br><span class="line">#configCHECK_FOR_STACK_OVERFLOW 	 <span class="number">0</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> configUSE_IDLE_HOOK			 0</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> configUSE_TICK_HOOK			 0</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> configUSE_MALLOC_FAILED_HOOK 0</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到 vApplicationStackOverflowHook 的声明与使用是通过 configCHECK_FOR_STACK_OVERFLOW 这个宏是否 &gt; 0 来控制的，所以我们这里有两个解决方案，1 是将 configCHECK_FOR_STACK_OVERFLOW 定义小于 0，而是手动实现这个函数；这里我们简单一点我们将这个宏的值改为 0；</p>
+<p>其他三个也是同理；</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">博主</a></li>
+        
+          <li><a href="/tags/">标签</a></li>
+        
+          <li><a href="/categories/">分类</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%86%E5%A4%87"><span class="toc-number">1.</span> <span class="toc-text">准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A7%BB%E6%A4%8D"><span class="toc-number">2.</span> <span class="toc-text">移植</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%86%9F%E6%82%89%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84"><span class="toc-number">2.1.</span> <span class="toc-text">熟悉目录结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8B%B7%E8%B4%9D"><span class="toc-number">2.2.</span> <span class="toc-text">拷贝</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C"><span class="toc-number">3.</span> <span class="toc-text">运行</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E6%97%B6%E9%92%9F"><span class="toc-number">4.</span> <span class="toc-text">配置时钟</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E6%97%B6%E9%92%9F"><span class="toc-number">4.1.</span> <span class="toc-text">系统时钟</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SysTick"><span class="toc-number">4.2.</span> <span class="toc-text">SysTick</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%BB%B6%E6%97%B6%E5%87%BD%E6%95%B0"><span class="toc-number">5.</span> <span class="toc-text">自定义延时函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">6.</span> <span class="toc-text">问题</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E7%B3%BB%E7%BB%9F%E7%A7%BB%E6%A4%8D/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E7%B3%BB%E7%BB%9F%E7%A7%BB%E6%A4%8D/&text=系统移植"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E7%B3%BB%E7%BB%9F%E7%A7%BB%E6%A4%8D/&title=系统移植"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E7%B3%BB%E7%BB%9F%E7%A7%BB%E6%A4%8D/&is_video=false&description=系统移植"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=系统移植&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E7%B3%BB%E7%BB%9F%E7%A7%BB%E6%A4%8D/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E7%B3%BB%E7%BB%9F%E7%A7%BB%E6%A4%8D/&title=系统移植"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E7%B3%BB%E7%BB%9F%E7%A7%BB%E6%A4%8D/&title=系统移植"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E7%B3%BB%E7%BB%9F%E7%A7%BB%E6%A4%8D/&title=系统移植"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E7%B3%BB%E7%BB%9F%E7%A7%BB%E6%A4%8D/&title=系统移植"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E7%B3%BB%E7%BB%9F%E7%A7%BB%E6%A4%8D/&name=系统移植&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E7%B3%BB%E7%BB%9F%E7%A7%BB%E6%A4%8D/&t=系统移植"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    kay
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

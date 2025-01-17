@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="注意：#开头的指示字，都是用于预处理器的 #error#error 用于生成一个编译错误消息 用法 1#error message  message 不需要用双引号包围  #error 编译指示字用于自定义程序员特有的编译错误消息 类似的，#warning 用于生成编译警告  #error 是一种预编译器的指示字 #error 可用于提示编译条件是否满足 123#ifndef __cplusplu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="预处理指令">
+<meta property="og:url" content="https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/%E9%A2%84%E5%A4%84%E7%90%86%E6%8C%87%E4%BB%A4/index.html">
+<meta property="og:site_name" content="流年不知心底事">
+<meta property="og:description" content="注意：#开头的指示字，都是用于预处理器的 #error#error 用于生成一个编译错误消息 用法 1#error message  message 不需要用双引号包围  #error 编译指示字用于自定义程序员特有的编译错误消息 类似的，#warning 用于生成编译警告  #error 是一种预编译器的指示字 #error 可用于提示编译条件是否满足 123#ifndef __cplusplu">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.tooupper.org/public/image/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/Ctouwenjianduibi.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/Cneicunduiqi.png">
+<meta property="article:published_time" content="2024-10-10T11:38:00.000Z">
+<meta property="article:modified_time" content="2025-01-07T10:58:33.635Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="C语言进阶">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.tooupper.org/public/image/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/Ctouwenjianduibi.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>预处理指令</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/%E6%93%8D%E4%BD%9C%E7%AC%A6/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/STC8H/%E8%93%9D%E7%89%99%E9%80%9A%E4%BF%A1/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/%E9%A2%84%E5%A4%84%E7%90%86%E6%8C%87%E4%BB%A4/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/%E9%A2%84%E5%A4%84%E7%90%86%E6%8C%87%E4%BB%A4/&text=预处理指令"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/%E9%A2%84%E5%A4%84%E7%90%86%E6%8C%87%E4%BB%A4/&title=预处理指令"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/%E9%A2%84%E5%A4%84%E7%90%86%E6%8C%87%E4%BB%A4/&is_video=false&description=预处理指令"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=预处理指令&body=Check out this article: https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/%E9%A2%84%E5%A4%84%E7%90%86%E6%8C%87%E4%BB%A4/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/%E9%A2%84%E5%A4%84%E7%90%86%E6%8C%87%E4%BB%A4/&title=预处理指令"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/%E9%A2%84%E5%A4%84%E7%90%86%E6%8C%87%E4%BB%A4/&title=预处理指令"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/%E9%A2%84%E5%A4%84%E7%90%86%E6%8C%87%E4%BB%A4/&title=预处理指令"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/%E9%A2%84%E5%A4%84%E7%90%86%E6%8C%87%E4%BB%A4/&title=预处理指令"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/%E9%A2%84%E5%A4%84%E7%90%86%E6%8C%87%E4%BB%A4/&name=预处理指令&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/%E9%A2%84%E5%A4%84%E7%90%86%E6%8C%87%E4%BB%A4/&t=预处理指令"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#error"><span class="toc-number">1.</span> <span class="toc-text">#error</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#line"><span class="toc-number">2.</span> <span class="toc-text">#line</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pragma"><span class="toc-number">3.</span> <span class="toc-text">#pragma</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#pragma-once"><span class="toc-number">3.1.</span> <span class="toc-text">#pragma once</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#pragma-pack"><span class="toc-number">3.2.</span> <span class="toc-text">#pragma pack</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        预处理指令
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">kay</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-10-10T11:38:00.000Z" class="dt-published" itemprop="datePublished">2024-10-10</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/C%E8%AF%AD%E8%A8%80/">C语言</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/" rel="tag">C语言进阶</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p><strong>注意：#开头的指示字，都是用于预处理器的</strong></p>
+<h2 id="error"><a href="#error" class="headerlink" title="#error"></a>#error</h2><p>#error 用于生成一个编译错误消息</p>
+<p><strong>用法</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">error</span> message</span></span><br></pre></td></tr></table></figure>
+
+<p>message 不需要用双引号包围</p>
+<blockquote>
+<p>#error 编译指示字用于自定义程序员特有的编译错误消息</p>
+<p>类似的，#warning 用于生成编译警告</p>
+</blockquote>
+<p>#error 是一种<strong>预编译器的指示字</strong></p>
+<p>#error 可用于<strong>提示编译条件是否满足</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifndef</span> __cplusplus</span></span><br><span class="line">	<span class="meta">#<span class="keyword">error</span> This file should be processed with C++ compiler.</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>编译过程中的任意错误信息意味着无法生成最终的可执行程序；</p>
+</blockquote>
+<p><strong>示例</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> __cplusplus</span></span><br><span class="line">	<span class="meta">#<span class="keyword">error</span> This file should be processed with C++ compiler.</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CppClass</span> &#123;</span></span><br><span class="line">    private:</span><br><span class="line">    	<span class="type">int</span> m_value;</span><br><span class="line">    public:</span><br><span class="line">    	CppClass() &#123;</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">    	~CppClass() &#123;</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>在 C 文件中编译 C++ 的代码肯定是会报错的此时如果使用 C++ 编译器进行编译是没有问题的</p>
+<p>g++ test.c &#x2F;&#x2F; ok</p>
+<p>但是如果我们此时使用 C 编译器进行编译则会出现问题：</p>
+<p>test&#x2F;demo.c:4:10: error: #error This file should be processed with C++ compiler.<br>    4 |         #error This file should be processed with C++ compiler.<br>      |          ^~~~~<br>test&#x2F;demo.c:7:1: error: unknown type name ‘class’<br>    7 | class CppClass {<br>      | ^~~~~<br>test&#x2F;demo.c:7:16: error: expected ‘&#x3D;’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token<br>    7 | class CppClass {<br>      |     </p>
+<p>上述可以看出他输出了我们自定义的宏错误，程序会判断 __cplusplus 这个 C++ 关键字是否存在如果不存在则会执行里面的代码并中止程序的执行；</p>
+</blockquote>
+<h2 id="line"><a href="#line" class="headerlink" title="#line"></a>#line</h2><p>#line 用于强制指定新的行号和编译文件名，并对源程序的代码重新编号</p>
+<p><strong>用法</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">line</span> number fileName</span></span><br><span class="line"><span class="comment">// fileName 可省略</span></span><br><span class="line"><span class="comment">// #line 编译指示字的本质就是重定义 __LINE__ 和 __FILE__</span></span><br><span class="line"><span class="comment">// __LINE__：当前编译的行号</span></span><br><span class="line"><span class="comment">// __FILE__：当前编译的文件名</span></span><br></pre></td></tr></table></figure>
+
+<p> <strong>示例</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// demo.c</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">line</span> 1 <span class="string">&quot;kay.c&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Hello world\n&quot;</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>上述代码运行后会产生错误信息：</p>
+<p>kay.c: In function ‘main’:<br>kay.c:3:28: error: expected ‘;’ before ‘return’</p>
+<p>此时我们看到，他的提示信息改变了，文件名变成了我们输出的文件名，提示的行号也从第 6 行变成了第 3 行；</p>
+<p>他会从 #line 1 “kay.c” 下开始计算为第一行</p>
+</blockquote>
+<h2 id="pragma"><a href="#pragma" class="headerlink" title="#pragma"></a>#pragma</h2><p>#pragma指示使每个编译程序在保留C和C++语言的整体兼容性时提供不同机器和操作系统特定的功能。一般是由编译器厂家在使用的；</p>
+<ul>
+<li>#pragma 用于指示编译器完成一些特定的动作</li>
+<li>#pragma 所定义的很多指示字是编译器特有的</li>
+<li>#pragma 在不同的编译器间是不可移植的<ul>
+<li>预处理器将忽略它不认识的 #pragma 指令</li>
+<li>不同的编译器可能以不同的方式解释同一条 #pragma 指令</li>
+</ul>
+</li>
+</ul>
+<p><code>#pragma</code> 是 C 和 C++ 中的一种预处理指令，用于向编译器提供特定的指示。这些指示通常与编译器的实现相关，可以控制编译器的行为、优化选项或警告设置。他是编译器所制定的，而类似 #messge 是类似 C 语言的语法；</p>
+<p><strong>用法</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 一般用法</span></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> parameter</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注：不同的 parameter 参数语法和意义各不相同</p>
+</blockquote>
+<p><strong>示例</strong></p>
+<ul>
+<li>message 参数在大多数的编译器中都有相似的实现</li>
+<li>message 参数在编译时输出消息到编译输出窗口中</li>
+<li>message 用于条件编译中可提示代码的版本信息</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">if</span> defined(ADNROID20)</span></span><br><span class="line">	<span class="meta">#<span class="keyword">pragma</span> message(<span class="string">&quot;Compiler Android SDK 2.0...&quot;</span>)</span></span><br><span class="line">	<span class="meta">#<span class="keyword">define</span> VERSION <span class="string">&quot;Android 2.0&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>与 #error 和 #waring 不同，#pragma meaasge 仅仅代表一条编译消息，不代表程序错误。</p>
+</blockquote>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">if</span> defined(ANDROID20)</span></span><br><span class="line">	<span class="meta">#<span class="keyword">pragma</span> message(<span class="string">&quot;Compiler Android SDK 2.0...&quot;</span>)</span></span><br><span class="line">	<span class="meta">#<span class="keyword">define</span> VERSION <span class="string">&quot;Android 2.0&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">elif</span> defined(ANDROID30)</span></span><br><span class="line">	<span class="meta">#<span class="keyword">pragma</span> message(<span class="string">&quot;Compiler Android SDK 3.0...&quot;</span>)</span></span><br><span class="line">	<span class="meta">#<span class="keyword">define</span> VERSION <span class="string">&quot;Android 3.0&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">elif</span> defined(ANDROID40)</span></span><br><span class="line">	<span class="meta">#<span class="keyword">pragma</span> message(<span class="string">&quot;Compiler Android SDK 4.0...&quot;</span>)</span></span><br><span class="line">	<span class="meta">#<span class="keyword">define</span> VERSION <span class="string">&quot;Android 4.0&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">else</span></span></span><br><span class="line">    <span class="meta">#<span class="keyword">error</span> Complier Version is not provided!</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%s\n&quot;</span>, VERSION);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>编译： gcc -DANDROID40 demo.c，他会输出提示信息：</p>
+<p>demo.c:10:17: note: ‘#pragma message: Compiler Android SDK 4.0…’<br>   10 |         #pragma message(“Compiler Android SDK 4.0…”)<br>        |   </p>
+<p>运行： .&#x2F;a.out</p>
+<p>Android 4.0</p>
+</blockquote>
+<p><strong>#pragma 后面跟着的参数也许在每个编译器都有实现，但是可能实现的方式是不同的</strong></p>
+<h3 id="pragma-once"><a href="#pragma-once" class="headerlink" title="#pragma once"></a><strong>#pragma once</strong></h3><ul>
+<li>#pragma once 用于保证头文件只被编译一次</li>
+<li>#pragma once 是编译器相关的，不一定被支持</li>
+</ul>
+<p><img src="/public/image/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/Ctouwenjianduibi.png" alt="Ctouwenjianduibi"></p>
+<blockquote>
+<p>#ifndef 宏保护：编译器需要检查每个包含的宏定义，因此在某些情况下可能效率稍低。他要去判断检查这个宏是否被定义，没有就展开，被定义了就不执行中间的内容</p>
+<p>#pragma once：编译器可以更高效地处理它，因为它只需跟踪文件的路径，而不需要处理宏定义的条件。他是记住头文件的路径或者文件名，下次遇到就自动跳过，减少了判断时的时间消耗。</p>
+<p>二者可以结合使用</p>
+</blockquote>
+<h3 id="pragma-pack"><a href="#pragma-pack" class="headerlink" title="#pragma pack"></a>#pragma pack</h3><p>什么是内存对齐</p>
+<ul>
+<li><strong>不同的数据类型</strong>在内存中按照<strong>一定的规则排列</strong></li>
+<li>而<strong>不一定是顺序</strong>的一个接着一个排列</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Test1</span> &#123;</span></span><br><span class="line">    <span class="type">char</span> c1; <span class="comment">// 1B</span></span><br><span class="line">    <span class="type">short</span> s; <span class="comment">// 2B </span></span><br><span class="line">    <span class="type">char</span> c2; <span class="comment">// 1B</span></span><br><span class="line">    <span class="type">int</span> i;	 <span class="comment">// 4B</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Test2</span> &#123;</span></span><br><span class="line">    <span class="type">char</span> c1; <span class="comment">// 1B</span></span><br><span class="line">    <span class="type">char</span> c2; <span class="comment">// 1B</span></span><br><span class="line">    <span class="type">short</span> s; <span class="comment">// 2B </span></span><br><span class="line">    <span class="type">int</span> i;	 <span class="comment">// 4B</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// Tset1 和 Test2 所占的内存是否相同？</span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;sizeof(struct Test1 = %ld\n&quot;</span>, <span class="keyword">sizeof</span>(<span class="keyword">struct</span> Test1));</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;sizeof(struct Test2 = %ld\n&quot;</span>, <span class="keyword">sizeof</span>(<span class="keyword">struct</span> Test2));</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// sizeof(struct Test1 = 12</span></span><br><span class="line"><span class="comment">// sizeof(struct Test2 = 8</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>为什么需要内存对齐？</strong></p>
+<ul>
+<li>CPU 对内存的读取不是连续的，而是分块读取的，块的大小只能是1，2，4，8，16，…个字节</li>
+<li>当读取操作的数据未对齐，则需要两次总线周期来访问内存，因为性能会大打折扣</li>
+<li>某些硬件平台只能从规定的相对地址处读取特定类型的数据，否则产生硬件异常</li>
+</ul>
+<p><strong>#pragma pack 用于指定内存对齐的方式</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line">pragma <span class="title function_">pack</span><span class="params">(<span class="number">1</span>)</span></span><br><span class="line"><span class="keyword">struct</span> Test1 &#123;</span><br><span class="line">    <span class="type">char</span> c1; <span class="comment">// 1B</span></span><br><span class="line">    <span class="type">short</span> s; <span class="comment">// 2B </span></span><br><span class="line">    <span class="type">char</span> c2; <span class="comment">// 1B</span></span><br><span class="line">    <span class="type">int</span> i;	 <span class="comment">// 4B</span></span><br><span class="line">&#125;;</span><br><span class="line">pragma <span class="title function_">pack</span><span class="params">()</span></span><br><span class="line"></span><br><span class="line">pragma <span class="title function_">pack</span><span class="params">(<span class="number">1</span>)</span></span><br><span class="line"><span class="keyword">struct</span> Test2 &#123;</span><br><span class="line">    <span class="type">char</span> c1; <span class="comment">// 1B</span></span><br><span class="line">    <span class="type">char</span> c2; <span class="comment">// 1B</span></span><br><span class="line">    <span class="type">short</span> s; <span class="comment">// 2B </span></span><br><span class="line">    <span class="type">int</span> i;	 <span class="comment">// 4B</span></span><br><span class="line">&#125;;</span><br><span class="line">pragma <span class="title function_">pack</span><span class="params">()</span></span><br><span class="line"><span class="comment">// Tset1 和 Test2 所占的内存是否相同？</span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;sizeof(struct Test1 = %ld\n&quot;</span>, <span class="keyword">sizeof</span>(<span class="keyword">struct</span> Test1));</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;sizeof(struct Test2 = %ld\n&quot;</span>, <span class="keyword">sizeof</span>(<span class="keyword">struct</span> Test2));</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// sizeof(struct Test1 = 8</span></span><br><span class="line"><span class="comment">// sizeof(struct Test2 = 8</span></span><br></pre></td></tr></table></figure>
+
+<p>#pragma pack 指定内存对齐的方式为：</p>
+<p>struct 占用的内存大小</p>
+<ul>
+<li>第一个成员起始于<strong>0 偏移处</strong></li>
+<li>每个成员按<strong>其大小和 pack 参数中较小的一个</strong>进行对齐<ul>
+<li>偏移地址必须能被对齐参数(其大小和 pack 中较小的一个)整除</li>
+<li>结构体成员的大小取其内部长度最大的数据成员作为其对齐大小</li>
+</ul>
+</li>
+<li>结构体总长度必须为<strong>所有对其参数的整数倍</strong></li>
+</ul>
+<p>编译器在 32 位系统下默认情况下按照 4 字节大小对齐（也就是默认情况下是#pragma pack(4)）</p>
+<p>编译器在 64 位系统下默认情况下按照 8 字节大小对齐（也就是默认情况下是#pragma pack(8)）</p>
+<blockquote>
+<p>上面的 12B 和 8B 分别是如何计算的？</p>
+<p>Tset1：</p>
+<p>c1 占一个字节 pack 是四个字节，按照 1 个字节去对齐，存入 0 下标位置</p>
+<p>s 占两个字节，pack 是四个字节，按照 2 个字节去对其，存入下标为 2 的整数倍的最小地址处，也就是下标 2 处</p>
+<p>c2 占 1 个字节，pack是四个字节，按照 1 个字节去对其，存入下标为 1 的整数倍的最小地址处的地址，也就是下标为 4 处</p>
+<p>i 占4 个字节，pack也是四个字节，按照 4 个字节对齐，存入下标为 4 的整数倍的最小地址处地址处，也就是下标为 8处，</p>
+<p>综上占了 12 个字节正好是 1 2 4 的整数倍，所以一共占了 12 个字节。</p>
+</blockquote>
+<p><img src="/public/image/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/Cneicunduiqi.png" alt="Cneicunduiqi"></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> pack(8)</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Test1</span> &#123;</span></span><br><span class="line">    <span class="type">char</span> c1; <span class="comment">// 1B</span></span><br><span class="line">    <span class="type">short</span> s; <span class="comment">// 2B </span></span><br><span class="line">    <span class="type">char</span> c2; <span class="comment">// 1B</span></span><br><span class="line">    <span class="type">int</span> i;	 <span class="comment">// 4B</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> pack()</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> pack(8)</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Test2</span> &#123;</span> </span><br><span class="line">    <span class="type">char</span> c; <span class="comment">// 1B</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">Test1</span> <span class="title">s</span>;</span> <span class="comment">// 2B  12</span></span><br><span class="line">    <span class="type">double</span> e;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> pack()</span></span><br><span class="line"><span class="comment">// Tset1 和 Test2 所占的内存是否相同？</span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;sizeof(struct Test1 = %ld\n&quot;</span>, <span class="keyword">sizeof</span>(<span class="keyword">struct</span> Test1)); <span class="comment">// 12</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;sizeof(struct Test2 = %ld\n&quot;</span>, <span class="keyword">sizeof</span>(<span class="keyword">struct</span> Test2)); <span class="comment">// 24</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// c 占下标 0处，大小为 0</span></span><br><span class="line"><span class="comment">// s 结构体成员的大小取其内部长度最大的数据成员作为其对齐大小 也就是取 4 作为对齐大小，大小为 12 个字节 4~15</span></span><br><span class="line"><span class="comment">// e 占 8 个字节取下标为 16 处 那么一共占 24 个字节</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li>#error 用于自定义一条<strong>编译错误信息</strong></li>
+<li>#warning 用于自定义一条<strong>编译警告信息</strong></li>
+<li>#rror 和 #warning 常用于<strong>条件编译</strong>的情形</li>
+<li>#line 用于强制指定新的<strong>行号</strong>和<strong>编译文件名</strong></li>
+<li></li>
+<li>#pragma 用于指示编译器完成一些特定动作</li>
+<li>#pragma 所定义的很多指示字是编译器特有的<ul>
+<li>#pragma message 用于自定义编译信息</li>
+<li>#pragma once 用于保证头文件只被编译一次</li>
+<li>#pragma pack 用于指定内存对齐方式</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">博主</a></li>
+        
+          <li><a href="/tags/">标签</a></li>
+        
+          <li><a href="/categories/">分类</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#error"><span class="toc-number">1.</span> <span class="toc-text">#error</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#line"><span class="toc-number">2.</span> <span class="toc-text">#line</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pragma"><span class="toc-number">3.</span> <span class="toc-text">#pragma</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#pragma-once"><span class="toc-number">3.1.</span> <span class="toc-text">#pragma once</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#pragma-pack"><span class="toc-number">3.2.</span> <span class="toc-text">#pragma pack</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/%E9%A2%84%E5%A4%84%E7%90%86%E6%8C%87%E4%BB%A4/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/%E9%A2%84%E5%A4%84%E7%90%86%E6%8C%87%E4%BB%A4/&text=预处理指令"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/%E9%A2%84%E5%A4%84%E7%90%86%E6%8C%87%E4%BB%A4/&title=预处理指令"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/%E9%A2%84%E5%A4%84%E7%90%86%E6%8C%87%E4%BB%A4/&is_video=false&description=预处理指令"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=预处理指令&body=Check out this article: https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/%E9%A2%84%E5%A4%84%E7%90%86%E6%8C%87%E4%BB%A4/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/%E9%A2%84%E5%A4%84%E7%90%86%E6%8C%87%E4%BB%A4/&title=预处理指令"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/%E9%A2%84%E5%A4%84%E7%90%86%E6%8C%87%E4%BB%A4/&title=预处理指令"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/%E9%A2%84%E5%A4%84%E7%90%86%E6%8C%87%E4%BB%A4/&title=预处理指令"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/%E9%A2%84%E5%A4%84%E7%90%86%E6%8C%87%E4%BB%A4/&title=预处理指令"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/%E9%A2%84%E5%A4%84%E7%90%86%E6%8C%87%E4%BB%A4/&name=预处理指令&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/C/C%E8%AF%AD%E8%A8%80%E8%BF%9B%E9%98%B6/%E9%A2%84%E5%A4%84%E7%90%86%E6%8C%87%E4%BB%A4/&t=预处理指令"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    kay
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

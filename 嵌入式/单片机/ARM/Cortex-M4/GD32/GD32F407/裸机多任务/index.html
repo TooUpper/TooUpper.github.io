@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="裸机多任务开发（Bare-Metal Multitasking Development）是指在没有操作系统的情况下，通过软件设计实现多任务运行的机制。 这种多任务实现依赖于时间分片或任务切换，任务轮流运行，但由于切换速度快，从外部看起来就像是同时进行的。 核心机制时间分片与任务切换逻辑多任务通过分配给每个任务一小段时间（称为时间片）来实现多个任务的轮流执行。  时间片分配： 每个任务在被调度到时运">
+<meta property="og:type" content="article">
+<meta property="og:title" content="裸机多任务">
+<meta property="og:url" content="https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%A3%B8%E6%9C%BA%E5%A4%9A%E4%BB%BB%E5%8A%A1/index.html">
+<meta property="og:site_name" content="流年不知心底事">
+<meta property="og:description" content="裸机多任务开发（Bare-Metal Multitasking Development）是指在没有操作系统的情况下，通过软件设计实现多任务运行的机制。 这种多任务实现依赖于时间分片或任务切换，任务轮流运行，但由于切换速度快，从外部看起来就像是同时进行的。 核心机制时间分片与任务切换逻辑多任务通过分配给每个任务一小段时间（称为时间片）来实现多个任务的轮流执行。  时间片分配： 每个任务在被调度到时运">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407yihuofeimen.png">
+<meta property="article:published_time" content="2024-11-21T00:46:00.000Z">
+<meta property="article:modified_time" content="2025-01-07T10:58:33.664Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="GD32F407">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407yihuofeimen.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>裸机多任务</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%87%AA%E5%AE%9A%E4%B9%89%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/MG_996R%E8%88%B5%E6%9C%BA/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%A3%B8%E6%9C%BA%E5%A4%9A%E4%BB%BB%E5%8A%A1/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%A3%B8%E6%9C%BA%E5%A4%9A%E4%BB%BB%E5%8A%A1/&text=裸机多任务"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%A3%B8%E6%9C%BA%E5%A4%9A%E4%BB%BB%E5%8A%A1/&title=裸机多任务"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%A3%B8%E6%9C%BA%E5%A4%9A%E4%BB%BB%E5%8A%A1/&is_video=false&description=裸机多任务"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=裸机多任务&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%A3%B8%E6%9C%BA%E5%A4%9A%E4%BB%BB%E5%8A%A1/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%A3%B8%E6%9C%BA%E5%A4%9A%E4%BB%BB%E5%8A%A1/&title=裸机多任务"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%A3%B8%E6%9C%BA%E5%A4%9A%E4%BB%BB%E5%8A%A1/&title=裸机多任务"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%A3%B8%E6%9C%BA%E5%A4%9A%E4%BB%BB%E5%8A%A1/&title=裸机多任务"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%A3%B8%E6%9C%BA%E5%A4%9A%E4%BB%BB%E5%8A%A1/&title=裸机多任务"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%A3%B8%E6%9C%BA%E5%A4%9A%E4%BB%BB%E5%8A%A1/&name=裸机多任务&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%A3%B8%E6%9C%BA%E5%A4%9A%E4%BB%BB%E5%8A%A1/&t=裸机多任务"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E6%9C%BA%E5%88%B6"><span class="toc-number">1.</span> <span class="toc-text">核心机制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%B6%E9%97%B4%E5%88%86%E7%89%87%E4%B8%8E%E4%BB%BB%E5%8A%A1%E5%88%87%E6%8D%A2"><span class="toc-number">1.1.</span> <span class="toc-text">时间分片与任务切换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6"><span class="toc-number">1.2.</span> <span class="toc-text">任务调度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8A%B6%E6%80%81%E6%9C%BA%E8%AE%BE%E8%AE%A1"><span class="toc-number">1.3.</span> <span class="toc-text">状态机设计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AD%E6%96%AD%E6%9C%BA%E5%88%B6"><span class="toc-number">1.4.</span> <span class="toc-text">中断机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%BB%E5%8A%A1%E7%9A%84%E4%B8%8A%E4%B8%8B%E6%96%87%E4%BF%9D%E5%AD%98%E4%B8%8E%E6%81%A2%E5%A4%8D"><span class="toc-number">1.5.</span> <span class="toc-text">任务的上下文保存与恢复</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">2.</span> <span class="toc-text">实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%BB%E5%8A%A1%E5%AE%9A%E6%97%B6"><span class="toc-number">2.1.</span> <span class="toc-text">任务定时</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        裸机多任务
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">kay</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-11-21T00:46:00.000Z" class="dt-published" itemprop="datePublished">2024-11-21</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/ARM/">ARM</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/GD32F407/" rel="tag">GD32F407</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>裸机多任务开发（Bare-Metal Multitasking Development）是指在没有操作系统的情况下，通过软件设计实现多任务运行的机制。</p>
+<p>这种多任务实现依赖于时间分片或任务切换，任务轮流运行，但由于切换速度快，从外部看起来就像是同时进行的。</p>
+<h2 id="核心机制"><a href="#核心机制" class="headerlink" title="核心机制"></a>核心机制</h2><h3 id="时间分片与任务切换"><a href="#时间分片与任务切换" class="headerlink" title="时间分片与任务切换"></a><strong>时间分片与任务切换</strong></h3><p>逻辑多任务通过分配给每个任务一小段时间（称为<strong>时间片</strong>）来实现多个任务的轮流执行。</p>
+<ul>
+<li><strong>时间片分配</strong>： 每个任务在被调度到时运行一段时间，然后暂停并切换到下一个任务。</li>
+<li><strong>任务切换</strong>： 在任务切换时，保存当前任务的运行状态（上下文，例如寄存器和程序计数器），以便下次恢复。</li>
+</ul>
+<h3 id="任务调度"><a href="#任务调度" class="headerlink" title="任务调度"></a><strong>任务调度</strong></h3><p>逻辑多任务依赖一个调度器来决定哪个任务应该运行。常见的调度策略有：</p>
+<ul>
+<li><strong>时间片轮转调度</strong>： 任务按固定顺序依次执行，每个任务占用固定的时间片。</li>
+<li><strong>优先级调度</strong>： 任务根据优先级执行，高优先级任务可以抢占低优先级任务。</li>
+<li><strong>事件驱动调度</strong>： 任务在满足某些条件或触发事件时被执行。</li>
+</ul>
+<h3 id="状态机设计"><a href="#状态机设计" class="headerlink" title="状态机设计"></a><strong>状态机设计</strong></h3><p>逻辑多任务常通过状态机设计来实现任务间的非阻塞切换：</p>
+<ul>
+<li>每个任务在运行过程中处于某个状态，例如<strong>初始化</strong>、<strong>运行</strong>、<strong>等待</strong>、<strong>完成</strong>等。</li>
+<li>主程序（Super Loop）中依次检查各任务的状态，并根据状态决定是否调用任务的功能。</li>
+</ul>
+<h3 id="中断机制"><a href="#中断机制" class="headerlink" title="中断机制"></a><strong>中断机制</strong></h3><p>中断是逻辑多任务的重要部分，用于处理高优先级或异步事件：</p>
+<ul>
+<li><strong>硬件中断</strong>：当硬件事件（如按键触发、UART 接收）发生时，中断服务程序（ISR）可以立即执行。</li>
+<li><strong>定时器中断</strong>：通过定时器产生周期性中断，用于触发任务切换。</li>
+</ul>
+<h3 id="任务的上下文保存与恢复"><a href="#任务的上下文保存与恢复" class="headerlink" title="任务的上下文保存与恢复"></a><strong>任务的上下文保存与恢复</strong></h3><p>为了实现任务切换，逻辑多任务需要在切换时保存任务的上下文（包括寄存器、堆栈指针等），并在下次运行时恢复这些信息。裸机系统通常通过以下方式实现上下文切换：</p>
+<ul>
+<li><strong>手动保存和恢复</strong>：由程序员在任务切换时明确保存和恢复上下文。</li>
+<li><strong>自动保存和恢复</strong>：某些嵌入式架构（如 ARM Cortex-M）在中断时自动保存部分寄存器。</li>
+</ul>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><h3 id="任务定时"><a href="#任务定时" class="headerlink" title="任务定时"></a>任务定时</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定时任务 1ms 触发一次</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407yihuofeimen.png" alt="F407yihuofeimen"></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">博主</a></li>
+        
+          <li><a href="/tags/">标签</a></li>
+        
+          <li><a href="/categories/">分类</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E6%9C%BA%E5%88%B6"><span class="toc-number">1.</span> <span class="toc-text">核心机制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%B6%E9%97%B4%E5%88%86%E7%89%87%E4%B8%8E%E4%BB%BB%E5%8A%A1%E5%88%87%E6%8D%A2"><span class="toc-number">1.1.</span> <span class="toc-text">时间分片与任务切换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6"><span class="toc-number">1.2.</span> <span class="toc-text">任务调度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8A%B6%E6%80%81%E6%9C%BA%E8%AE%BE%E8%AE%A1"><span class="toc-number">1.3.</span> <span class="toc-text">状态机设计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AD%E6%96%AD%E6%9C%BA%E5%88%B6"><span class="toc-number">1.4.</span> <span class="toc-text">中断机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%BB%E5%8A%A1%E7%9A%84%E4%B8%8A%E4%B8%8B%E6%96%87%E4%BF%9D%E5%AD%98%E4%B8%8E%E6%81%A2%E5%A4%8D"><span class="toc-number">1.5.</span> <span class="toc-text">任务的上下文保存与恢复</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">2.</span> <span class="toc-text">实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%BB%E5%8A%A1%E5%AE%9A%E6%97%B6"><span class="toc-number">2.1.</span> <span class="toc-text">任务定时</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%A3%B8%E6%9C%BA%E5%A4%9A%E4%BB%BB%E5%8A%A1/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%A3%B8%E6%9C%BA%E5%A4%9A%E4%BB%BB%E5%8A%A1/&text=裸机多任务"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%A3%B8%E6%9C%BA%E5%A4%9A%E4%BB%BB%E5%8A%A1/&title=裸机多任务"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%A3%B8%E6%9C%BA%E5%A4%9A%E4%BB%BB%E5%8A%A1/&is_video=false&description=裸机多任务"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=裸机多任务&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%A3%B8%E6%9C%BA%E5%A4%9A%E4%BB%BB%E5%8A%A1/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%A3%B8%E6%9C%BA%E5%A4%9A%E4%BB%BB%E5%8A%A1/&title=裸机多任务"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%A3%B8%E6%9C%BA%E5%A4%9A%E4%BB%BB%E5%8A%A1/&title=裸机多任务"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%A3%B8%E6%9C%BA%E5%A4%9A%E4%BB%BB%E5%8A%A1/&title=裸机多任务"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%A3%B8%E6%9C%BA%E5%A4%9A%E4%BB%BB%E5%8A%A1/&title=裸机多任务"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%A3%B8%E6%9C%BA%E5%A4%9A%E4%BB%BB%E5%8A%A1/&name=裸机多任务&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/%E8%A3%B8%E6%9C%BA%E5%A4%9A%E4%BB%BB%E5%8A%A1/&t=裸机多任务"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    kay
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

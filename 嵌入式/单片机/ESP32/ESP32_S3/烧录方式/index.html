@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="ESP32 是一款功能强大的物联网芯片，支持多种固件烧录方式以满足不同的开发需求。这些方式主要包括 USB 串口烧录、JTAG 烧录、OTA 无线升级、SD 卡烧录和外部编程器烧录。每种方法都有其特定的适用场景和特点，以下为详细说明。 USB 串口烧录ESP32 自带了 UART 烧录，特别是 ESP32-S3 芯片还支持 USB 烧录，我们只需要简单配置下 VSCode 就可以进行烧录。 当我们">
+<meta property="og:type" content="article">
+<meta property="og:title" content="烧录方式">
+<meta property="og:url" content="https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E7%83%A7%E5%BD%95%E6%96%B9%E5%BC%8F/index.html">
+<meta property="og:site_name" content="流年不知心底事">
+<meta property="og:description" content="ESP32 是一款功能强大的物联网芯片，支持多种固件烧录方式以满足不同的开发需求。这些方式主要包括 USB 串口烧录、JTAG 烧录、OTA 无线升级、SD 卡烧录和外部编程器烧录。每种方法都有其特定的适用场景和特点，以下为详细说明。 USB 串口烧录ESP32 自带了 UART 烧录，特别是 ESP32-S3 芯片还支持 USB 烧录，我们只需要简单配置下 VSCode 就可以进行烧录。 当我们">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="c:\Users\kay\AppData\Roaming\Typora\typora-user-images\image-20241211101509338.png">
+<meta property="og:image" content="c:\Users\kay\AppData\Roaming\Typora\typora-user-images\image-20241211102120061.png">
+<meta property="og:image" content="c:\Users\kay\AppData\Roaming\Typora\typora-user-images\image-20241211102650036.png">
+<meta property="article:published_time" content="2024-12-10T11:13:00.000Z">
+<meta property="article:modified_time" content="2025-01-13T12:34:38.910Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="ESP32-S3">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="c:\Users\kay\AppData\Roaming\Typora\typora-user-images\image-20241211101509338.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>烧录方式</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/SquareLineStudio/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E7%83%A7%E5%BD%95%E6%96%B9%E5%BC%8F/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E7%83%A7%E5%BD%95%E6%96%B9%E5%BC%8F/&text=烧录方式"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E7%83%A7%E5%BD%95%E6%96%B9%E5%BC%8F/&title=烧录方式"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E7%83%A7%E5%BD%95%E6%96%B9%E5%BC%8F/&is_video=false&description=烧录方式"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=烧录方式&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E7%83%A7%E5%BD%95%E6%96%B9%E5%BC%8F/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E7%83%A7%E5%BD%95%E6%96%B9%E5%BC%8F/&title=烧录方式"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E7%83%A7%E5%BD%95%E6%96%B9%E5%BC%8F/&title=烧录方式"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E7%83%A7%E5%BD%95%E6%96%B9%E5%BC%8F/&title=烧录方式"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E7%83%A7%E5%BD%95%E6%96%B9%E5%BC%8F/&title=烧录方式"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E7%83%A7%E5%BD%95%E6%96%B9%E5%BC%8F/&name=烧录方式&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E7%83%A7%E5%BD%95%E6%96%B9%E5%BC%8F/&t=烧录方式"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#USB-%E4%B8%B2%E5%8F%A3%E7%83%A7%E5%BD%95"><span class="toc-number">1.</span> <span class="toc-text">USB 串口烧录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MicriPython"><span class="toc-number">2.</span> <span class="toc-text">MicriPython</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#esptool"><span class="toc-number">3.</span> <span class="toc-text">esptool</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        烧录方式
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">kay</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-12-10T11:13:00.000Z" class="dt-published" itemprop="datePublished">2024-12-10</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/ESP32/">ESP32</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/ESP32-S3/" rel="tag">ESP32-S3</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>ESP32 是一款功能强大的物联网芯片，支持多种固件烧录方式以满足不同的开发需求。这些方式主要包括 <strong>USB 串口烧录</strong>、<strong>JTAG 烧录</strong>、<strong>OTA 无线升级</strong>、<strong>SD 卡烧录</strong>和<strong>外部编程器烧录</strong>。每种方法都有其特定的适用场景和特点，以下为详细说明。</p>
+<h2 id="USB-串口烧录"><a href="#USB-串口烧录" class="headerlink" title="USB 串口烧录"></a>USB 串口烧录</h2><p>ESP32 自带了 UART 烧录，特别是 ESP32-S3 芯片还支持 USB 烧录，我们只需要简单配置下 VSCode 就可以进行烧录。</p>
+<p>当我们便写完代码后先 Build 下；然后通过 USB 将 ESP32S3 连接到我们的 PC，此时我们需要以此选择<strong>端口</strong>、<strong>烧录方式</strong>、<strong>设备目标</strong></p>
+<p><strong>端口</strong>：S3 系列芯片因为支持 USB 烧录所以会弹出两个端口分别是 UART 和 USB 端口，这里我们任选一个；</p>
+<p><strong>烧录方式</strong>：这里我们选择 UART 方式，其他如 JTAG 需要其他软件的支持，这里我们使用最简单的即可；</p>
+<p><strong>设备目标</strong>：这里要选择我们所使用的 MCU 的型号，如我们用是的 ESP32-S3，这里就要选择esp32s3，因为不同的芯片他的 flash 起始地址可能不同，如果选错则会导致烧录失败；</p>
+<p>当上面都执行完成后，我们点击<strong>烧录</strong>，就可以将代码烧录到我们的 Flash 中</p>
+<p>如果想要看到控制台的打印信息点击<strong>监控设备</strong>即可；</p>
+<h2 id="MicriPython"><a href="#MicriPython" class="headerlink" title="MicriPython"></a>MicriPython</h2><p><a target="_blank" rel="noopener" href="https://micropython.org/download/">MicroPython 固件</a>下载地址</p>
+<p>固件烧录</p>
+<h2 id="esptool"><a href="#esptool" class="headerlink" title="esptool"></a>esptool</h2><p>一个基于 Python 的、开源的、独立于平台的实用程序，用于与 Espressif 芯片中的 ROM 引导加载程序进行通信。</p>
+<p><img src="C:\Users\kay\AppData\Roaming\Typora\typora-user-images\image-20241211101509338.png" alt="image-20241211101509338"></p>
+<p>保证可以正常连接</p>
+<p><img src="C:\Users\kay\AppData\Roaming\Typora\typora-user-images\image-20241211102120061.png" alt="image-20241211102120061"></p>
+<p><img src="C:\Users\kay\AppData\Roaming\Typora\typora-user-images\image-20241211102650036.png" alt="image-20241211102650036"></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">博主</a></li>
+        
+          <li><a href="/tags/">标签</a></li>
+        
+          <li><a href="/categories/">分类</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#USB-%E4%B8%B2%E5%8F%A3%E7%83%A7%E5%BD%95"><span class="toc-number">1.</span> <span class="toc-text">USB 串口烧录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MicriPython"><span class="toc-number">2.</span> <span class="toc-text">MicriPython</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#esptool"><span class="toc-number">3.</span> <span class="toc-text">esptool</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E7%83%A7%E5%BD%95%E6%96%B9%E5%BC%8F/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E7%83%A7%E5%BD%95%E6%96%B9%E5%BC%8F/&text=烧录方式"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E7%83%A7%E5%BD%95%E6%96%B9%E5%BC%8F/&title=烧录方式"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E7%83%A7%E5%BD%95%E6%96%B9%E5%BC%8F/&is_video=false&description=烧录方式"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=烧录方式&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E7%83%A7%E5%BD%95%E6%96%B9%E5%BC%8F/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E7%83%A7%E5%BD%95%E6%96%B9%E5%BC%8F/&title=烧录方式"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E7%83%A7%E5%BD%95%E6%96%B9%E5%BC%8F/&title=烧录方式"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E7%83%A7%E5%BD%95%E6%96%B9%E5%BC%8F/&title=烧录方式"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E7%83%A7%E5%BD%95%E6%96%B9%E5%BC%8F/&title=烧录方式"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E7%83%A7%E5%BD%95%E6%96%B9%E5%BC%8F/&name=烧录方式&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E7%83%A7%E5%BD%95%E6%96%B9%E5%BC%8F/&t=烧录方式"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    kay
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

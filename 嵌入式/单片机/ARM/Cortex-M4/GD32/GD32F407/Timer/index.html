@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="定时器（Timer）是微控制器（MCU）中的一个硬件模块，用于对时间进行精确测量或生成周期性事件。定时器的工作基于时钟信号，通过对预设计数值进行递增或递减，可以用来测量时间间隔、生成定时中断、控制PWM输出等。 定时器的工作原理定时器接收来自 RCC（时钟控制器）的时钟信号，经过预分频器对时钟进行分频以生成新的计数时钟来驱动计数器。计数器按设定的方向递增或递减，当计数器的值达到自动重装载寄存器设定">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Timer">
+<meta property="og:url" content="https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Timer/index.html">
+<meta property="og:site_name" content="流年不知心底事">
+<meta property="og:description" content="定时器（Timer）是微控制器（MCU）中的一个硬件模块，用于对时间进行精确测量或生成周期性事件。定时器的工作基于时钟信号，通过对预设计数值进行递增或递减，可以用来测量时间间隔、生成定时中断、控制PWM输出等。 定时器的工作原理定时器接收来自 RCC（时钟控制器）的时钟信号，经过预分频器对时钟进行分频以生成新的计数时钟来驱动计数器。计数器按设定的方向递增或递减，当计数器的值达到自动重装载寄存器设定">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407dingshiqiyuanli.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407dingshiqifenlei.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407Timerjishumoshi.png">
+<meta property="article:published_time" content="2024-11-03T01:11:00.000Z">
+<meta property="article:modified_time" content="2025-01-07T10:58:33.664Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="GD32F407">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407dingshiqiyuanli.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Timer</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/PWM/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E9%9D%A2%E8%AF%95%E9%A2%98/C%E8%AF%AD%E8%A8%80/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Timer/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Timer/&text=Timer"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Timer/&title=Timer"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Timer/&is_video=false&description=Timer"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Timer&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Timer/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Timer/&title=Timer"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Timer/&title=Timer"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Timer/&title=Timer"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Timer/&title=Timer"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Timer/&name=Timer&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Timer/&t=Timer"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9A%E6%97%B6%E5%99%A8%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">定时器的工作原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9A%E6%97%B6%E5%99%A8%E7%9A%84%E5%88%86%E7%B1%BB"><span class="toc-number">2.</span> <span class="toc-text">定时器的分类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GD32F407-%E7%B3%BB%E5%88%97%E5%AE%9A%E6%97%B6%E5%99%A8%E8%AF%B4%E6%98%8E"><span class="toc-number">3.</span> <span class="toc-text">GD32F407 系列定时器说明</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E9%A1%B9%E7%9B%AE%E5%90%AB%E4%B9%89"><span class="toc-number">3.1.</span> <span class="toc-text">配置项目含义</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A1%E6%95%B0%E6%A8%A1%E5%BC%8F"><span class="toc-number">4.</span> <span class="toc-text">计数模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">5.</span> <span class="toc-text">实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81"><span class="toc-number">5.1.</span> <span class="toc-text">代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%87%E7%A8%8B"><span class="toc-number">5.2.</span> <span class="toc-text">过程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">6.</span> <span class="toc-text">问题</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Timer
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">kay</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-11-03T01:11:00.000Z" class="dt-published" itemprop="datePublished">2024-11-03</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/ARM/">ARM</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/GD32F407/" rel="tag">GD32F407</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p><strong>定时器</strong>（Timer）是微控制器（MCU）中的一个硬件模块，用于对<strong>时间进行精确测量</strong>或生成<strong>周期性事件</strong>。定时器的工作基于时钟信号，通过对预设计数值进行递增或递减，可以用来测量时间间隔、生成定时中断、控制PWM输出等。</p>
+<h2 id="定时器的工作原理"><a href="#定时器的工作原理" class="headerlink" title="定时器的工作原理"></a>定时器的工作原理</h2><p>定时器接收来自 RCC（时钟控制器）的时钟信号，经过<strong>预分频器</strong>对时钟进行分频以生成新的计数时钟来驱动计数器。<strong>计数器按设定的方向递增或递减</strong>，当计数器的值达到<strong>自动重装载寄存器</strong>设定的阈值时，触发更新事件，生成中断信号或DMA请求，同时计数器重新加载起始值继续计数。控制模块负责启动、停止、清零和设置计数方向等操作，并可在计数达到设定值时触发其他外设输出或事件，使定时器能够实现精确的定时、周期性触发、PWM输出等功能。</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407dingshiqiyuanli.png" alt="F407dingshiqiyuanli"></p>
+<h2 id="定时器的分类"><a href="#定时器的分类" class="headerlink" title="定时器的分类"></a>定时器的分类</h2><p><strong>内核定时器</strong></p>
+<ul>
+<li>主要包括 SysTick 定时器。SysTick 是一个简单的定时器模块，由 ARM Cortex-M 内核自带。通常用于操作系统的时基生成，或者简单的定时任务，如延时和计时。</li>
+</ul>
+<p><strong>常规定时器</strong></p>
+<ul>
+<li><strong>通用定时器</strong>：用于多种应用的基础定时器，通常可以支持基本的延时、中断和计数功能。</li>
+<li><strong>高级定时器</strong>：通常具有更复杂的功能，如高级 PWM 生成、死区时间控制等，适合电机控制等高要求的应用。</li>
+<li><strong>基本定时器</strong>：功能比较简单，一般只支持基础的定时中断，不具备高级的捕获比较功能。</li>
+</ul>
+<p><strong>专用定时器</strong></p>
+<ul>
+<li><p><strong>独立看门狗</strong>：用于监控系统运行，防止程序跑飞或异常，当检测到系统出现问题时可以复位系统。</p>
+</li>
+<li><p><strong>窗口看门狗</strong>：比独立看门狗更加灵活，可以设置窗口期来进行复位操作，通常用于安全要求较高的系统。</p>
+</li>
+<li><p><strong>RTC（实时时钟）</strong>：提供低功耗的实时时钟功能，可以记录年月日时分秒，适用于需要精确时间管理的应用。</p>
+</li>
+</ul>
+<h2 id="GD32F407-系列定时器说明"><a href="#GD32F407-系列定时器说明" class="headerlink" title="GD32F407 系列定时器说明"></a>GD32F407 系列定时器说明</h2><p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407dingshiqifenlei.png" alt="F407dingshiqifenlei"></p>
+<h3 id="配置项目含义"><a href="#配置项目含义" class="headerlink" title="配置项目含义"></a>配置项目含义</h3><p><strong>可重复性：</strong>指定时器在达到计数上限后是否可以自动重装载并重新开始计数的能力。</p>
+<p><strong>捕获&#x2F;比较通道：</strong>用于处理输入捕获、输出比较、以及 PWM（脉宽调制）等操作。</p>
+<ul>
+<li><strong>捕获输入</strong>用于测量输入信号的时间特性，比如脉冲宽度或周期。当外部输入信号发生时（如上升沿或下降沿），捕获通道会将当前计数器的值保存到一个捕获寄存器中。通过读取这个寄存器的值，可以计算出信号的周期或高低电平时间。</li>
+<li><strong>比较输出</strong>用于生成输出控制信号，比如 PWM 输出或定时中断。定时器在计数时会不断与设置的比较值进行比较，当计数器的值与比较寄存器中的预设值相等时，会触发一个事件，比如输出信号翻转、产生中断等。</li>
+</ul>
+<p><strong>互补&#x2F;死区时间：</strong></p>
+<ul>
+<li><strong>互补输出</strong>指的是定时器产生两个<strong>相互补充的 PWM 信号</strong>，一个为高电平时另一个为低电平，反之亦然。</li>
+<li><strong>死区时间</strong>是为了避免桥式电路中的<strong>短路</strong>问题而设置的延时，就是在互补信号之间插入的一段小的延时；</li>
+</ul>
+<p><strong>中止输入：</strong>是一种保护机制，用于紧急情况下迅速停止定时器输出的功能；允许外部信号或内部事件触发“中止”操作，从而<strong>立即停用定时器的输出</strong>。</p>
+<p><strong>单脉冲：</strong>定时器在触发条件满足时，只产生<strong>一个脉冲</strong>输出，而不是连续的脉冲信号；在单脉冲模式中，定时器会等待触发信号（可以是外部信号或软件触发）。当触发信号到来时，定时器开始计数，并在达到设定的时间后输出一个单独的脉冲。</p>
+<p><strong>正交译码器：也称为</strong>增量式编码器译码器<strong>，是一种用于检测和解码正交信号的电路或模块。正交译码器的主要用途是对</strong>正交编码器<strong>（Quadrature Encoder）信号进行处理，从而测量旋转或线性位移的位置和方向。</strong></p>
+<p><strong>主-从管理：</strong>“主-从管理”是指定时器的工作模式，其中一个定时器作为“主定时器”，控制其他定时器作为“从定时器”的工作方式。</p>
+<p><strong>内部连接：</strong>指的是定时器模块内部的不同功能或模块之间的信号连接或通信。这些内部连接允许定时器模块的不同部分相互协调和配合工作，或使定时器与其他外设（如 PWM 输出、输入捕获、输出比较等）之间进行交互。</p>
+<p><strong>DMA：</strong>指定时器与 DMA（Direct Memory Access，直接内存访问）控制器协同工作的一种模式。在这个模式下，定时器的事件（例如计数溢出、比较匹配等）可以触发 DMA 控制器自动从定时器中读取数据并传输到内存，或者将内存中的数据传输到定时器的相关寄存器中，而无需 CPU 的干预。</p>
+<p><strong>Debug 模式：</strong>指定时器在调试过程中如何与调试工具（如调试器、调试接口）配合工作的一种模式。</p>
+<blockquote>
+<p>在使用时要注意区分，不同的定时器支持的功能和配置参数不同；</p>
+</blockquote>
+<h2 id="计数模式"><a href="#计数模式" class="headerlink" title="计数模式"></a>计数模式</h2><p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407Timerjishumoshi.png" alt="F407Timerjishumoshi"></p>
+<p><strong>向上计数模式（Upcounting Mode）</strong>：</p>
+<ul>
+<li>左上图展示的是<strong>向上计数模式</strong>。计数器从 0 开始计数，向上计数直到达到 CAR 的值。</li>
+<li>达到 CAR 后，计数器重置为 0 并重新开始计数，同时触发一次定时器溢出中断。</li>
+</ul>
+<p><strong>向下计数模式（Downcounting Mode）</strong>：</p>
+<ul>
+<li>右上图展示的是<strong>向下计数模式</strong>。计数器从 CAR 值开始向下计数，直到计数到 0。</li>
+<li>到达 0 后，计数器重置为 CAR 并重新开始计数，同时触发一次定时器中断。</li>
+</ul>
+<p><strong>中心对齐双向模式（Center-Aligned Both Mode）</strong>：</p>
+<ul>
+<li>计数器从 0 向上计数到 ARR，再从 ARR 计数到 0，完成一次完整的计数周期。</li>
+<li>每次到达 ARR 和 0 时都会触发更新事件，因此在一个周期中触发两次事件。</li>
+</ul>
+<p><strong>中心对齐向上模式（Center-Aligned UpMode）</strong>：</p>
+<ul>
+<li>计数器从 0 向上计数到最大值（ARR），然后反向重新计数到 0，再次向上计数。</li>
+<li>定时器模块在计数达到（ARR）时产生一个上溢事件；</li>
+</ul>
+<p><strong>中心对齐向下模式（Center-Aligned Down Mode）</strong>：</p>
+<ul>
+<li>计数器从最大值（ARR）向下计数到 0，然后反向重新计数到 ARR 值，再次向下计数。</li>
+<li>在此模式下，每次计数到达 0 时触发中断或更新事件，波形在中心对称。</li>
+</ul>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>功能：使用定时器实现LED灯的闪烁（改为了串口打印，因为将 GPIO 的控制权交给 Timer 之后就无法通过 GPIO 去改变引脚的状态了，这时候要使用 Timer 的捕获通道进行修改？）</p>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;gd32f4xx.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;systick.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;main.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;bsp_usart0.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// USART 配置...</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// LED1 GPIO Config</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">GPIO_LED_Config</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">	<span class="comment">// LED 总开关</span></span><br><span class="line">	rcu_periph_clock_enable(RCU_GPIOC);</span><br><span class="line">	gpio_mode_set(GPIOC, GPIO_MODE_OUTPUT, GPIO_PUPD_PULLUP, GPIO_PIN_6);</span><br><span class="line">	gpio_output_options_set(GPIOC, GPIO_OTYPE_PP, GPIO_OSPEED_2MHZ, GPIO_PIN_6);</span><br><span class="line">	<span class="comment">// LED1</span></span><br><span class="line">	rcu_periph_clock_enable(RCU_GPIOD);</span><br><span class="line">	gpio_mode_set(GPIOD, GPIO_MODE_AF, GPIO_PUPD_PULLUP, GPIO_PIN_15);</span><br><span class="line">	gpio_af_set(GPIOD, GPIO_AF_2, GPIO_PIN_15);</span><br><span class="line">	gpio_output_options_set(GPIOD, GPIO_OTYPE_PP, GPIO_OSPEED_2MHZ, GPIO_PIN_15);</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// 总开关常开</span></span><br><span class="line">	gpio_bit_reset(GPIOC, GPIO_PIN_6);	</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// LED1 TImer Config</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">TImer_LED_Config</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    <span class="comment">// 初始化</span></span><br><span class="line">	timer_deinit(TIMER3);</span><br><span class="line">    <span class="comment">// 使能定时器外设</span></span><br><span class="line">	rcu_periph_clock_enable(RCU_TIMER3);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 由时钟树或者总线框图可以看到 Timer 是挂在 APB1 这条总线上的,频率为 42MHz</span></span><br><span class="line">    <span class="comment">// 为了方便计算，我们将其倍频为 168HMz 进行在进行分频（注意查看框图看起最大支持的频率是多少）</span></span><br><span class="line">    <span class="comment">// 通过时钟树框图可以看到 Timer 支持对 APB1 进行 1、2、4、8、16倍分频</span></span><br><span class="line">    <span class="comment">// 根据要求我们选择 4 倍分频即可</span></span><br><span class="line">    <span class="comment">// 不倍频也可以，那就要按照 42MHz 去进行计算</span></span><br><span class="line">	rcu_timer_clock_prescaler_config(RCU_TIMER_PSC_MUL4);</span><br><span class="line">	<span class="comment">// 根据定时器的工作原理，我们要先将 APB1 总线传递过来的频率进行分频后才可使用</span></span><br><span class="line">    <span class="comment">// 在配置其参数、</span></span><br><span class="line">	timer_parameter_struct initpara;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">    initpara-&gt;prescaler = 0U; 预分频器的值，分频系数</span></span><br><span class="line"><span class="comment">    initpara-&gt;alignedmode = TIMER_COUNTER_EDGE; // 中断触发方式</span></span><br><span class="line"><span class="comment">    initpara-&gt;counterdirection = TIMER_COUNTER_UP; // 定时器计数方式</span></span><br><span class="line"><span class="comment">    initpara-&gt;period = 65535U; // 周期值，上升计数时候从0数到这个值触发</span></span><br><span class="line"><span class="comment">    // 设置定时器时钟的分频系数，在 prescaler 后的基础上在进行分频</span></span><br><span class="line"><span class="comment">    initpara-&gt;clockdivision = TIMER_CKDIV_DIV1; </span></span><br><span class="line"><span class="comment">    // 重复计数，每次溢出时会执行多少次重复计数操作。</span></span><br><span class="line"><span class="comment">    // 当溢出中断触发时，重复执行的次数</span></span><br><span class="line"><span class="comment">    initpara-&gt;repetitioncounter = 0U; 是    </span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">		</span><br><span class="line">	timer_struct_para_init(&amp;initpara);</span><br><span class="line">	initpara.prescaler         = <span class="number">16800</span>; <span class="comment">// 168000000 / 16800 = 10000 -&gt; 1S</span></span><br><span class="line">    initpara.period            = <span class="number">30000</span>; <span class="comment">// 3S</span></span><br><span class="line">		</span><br><span class="line">	timer_init(TIMER3, &amp;initpara);	</span><br><span class="line">	<span class="comment">// 触发中断 配置NVIC</span></span><br><span class="line">	nvic_irq_enable(TIMER3_IRQn, <span class="number">2</span>, <span class="number">2</span>);	</span><br><span class="line">	timer_interrupt_enable(TIMER3, TIMER_INT_UP);	</span><br><span class="line">	</span><br><span class="line">	timer_enable(TIMER3);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定时器3中断处理函数</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">TIMER3_IRQHandler</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">	<span class="keyword">if</span>(SET == timer_interrupt_flag_get(TIMER3, TIMER_INT_FLAG_UP)) &#123;</span><br><span class="line">        timer_interrupt_flag_clear(TIMER3, TIMER_INT_FLAG_UP);</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;123&quot;</span>);		</span><br><span class="line">    &#125;		</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    systick_config();</span><br><span class="line">	GPIO_USART_Config();</span><br><span class="line">    USART_Config();</span><br><span class="line">	GPIO_LED_Config();</span><br><span class="line">	TImer_LED_Config();</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;Hello\n&quot;</span>);</span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>) &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>prescaler：计数器时钟等于 TIMER_CK 时钟除以(PSC+1)，每次当更新事件产生时，PSC 的值 被装入到对应的影子寄存器。</p>
+</blockquote>
+<h3 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h3><p><strong>Timer 配置（中断）</strong></p>
+<ul>
+<li><p>使能外部 Timer 时钟</p>
+</li>
+<li><p>倍频（可以先试试看频率是否正确，不对就要去查看时钟树结构图将其倍频为 168MHz）</p>
+</li>
+<li><p>Timer 配置（分频值、自动重载器的初值、计数的方式、触发的方式）</p>
+</li>
+<li><p>使能 NVIC</p>
+</li>
+<li><p>使能 Timer 中断</p>
+</li>
+<li><p>编写中断处理函数</p>
+</li>
+</ul>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>一、<strong>定时器无法直接操控引脚，那为什么还可以将引脚复用为 Timer？</strong></p>
+<p>定时器的核心功能是<strong>计数和生成时间基准</strong>，它本身不会直接输出高低电平信号到 GPIO 上。定时器可以产生中断、溢出标志等，但这些事件并不直接影响 GPIO 的输出电平。</p>
+<p>要让定时器影响 GPIO 引脚的状态，需要借助定时器的<strong>输出模式</strong>，如 PWM 模式或输出比较模式。这些模式通过定时器的比较寄存器、占空比和计数周期来调节 GPIO 输出信号。</p>
+<p>二、<strong>在配置时候，预分频值和周期值为什么要减一</strong></p>
+<p><strong>预分频值</strong></p>
+<p>预分频器可以将定时器的时钟（TIMER_CK）频率按 1 到 65536 之间的任意值分频，分频后 的时钟 PSC_CLK 驱动计数器计数。所以我们在使用的时候需要将其减一，因为他再写入寄存器时候会自动加一；</p>
+<p><strong>周期值</strong></p>
+<p>因为定时器的中断方式为溢出中断，</p>
+<p>从 0 开始向上计数时。在（TIMERx_CREP+1）次上溢后产生更新事件。</p>
+<p>向下计数时候，在（TIMERx_CREP+1）次下溢后产生更新事件。</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">博主</a></li>
+        
+          <li><a href="/tags/">标签</a></li>
+        
+          <li><a href="/categories/">分类</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9A%E6%97%B6%E5%99%A8%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">定时器的工作原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9A%E6%97%B6%E5%99%A8%E7%9A%84%E5%88%86%E7%B1%BB"><span class="toc-number">2.</span> <span class="toc-text">定时器的分类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GD32F407-%E7%B3%BB%E5%88%97%E5%AE%9A%E6%97%B6%E5%99%A8%E8%AF%B4%E6%98%8E"><span class="toc-number">3.</span> <span class="toc-text">GD32F407 系列定时器说明</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E9%A1%B9%E7%9B%AE%E5%90%AB%E4%B9%89"><span class="toc-number">3.1.</span> <span class="toc-text">配置项目含义</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A1%E6%95%B0%E6%A8%A1%E5%BC%8F"><span class="toc-number">4.</span> <span class="toc-text">计数模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">5.</span> <span class="toc-text">实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81"><span class="toc-number">5.1.</span> <span class="toc-text">代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%87%E7%A8%8B"><span class="toc-number">5.2.</span> <span class="toc-text">过程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">6.</span> <span class="toc-text">问题</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Timer/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Timer/&text=Timer"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Timer/&title=Timer"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Timer/&is_video=false&description=Timer"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Timer&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Timer/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Timer/&title=Timer"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Timer/&title=Timer"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Timer/&title=Timer"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Timer/&title=Timer"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Timer/&name=Timer&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Timer/&t=Timer"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    kay
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
