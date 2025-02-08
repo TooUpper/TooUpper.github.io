@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="TP4056 是一款完整的单节锂离子电池充电器，采用恒定电流&#x2F;恒定电压线性充电方式。其 ESOP8&#x2F;EMSOP8 封装带有散热片，且外部元件较少，非常适合便携式应用。TP4056 可以适配 USB 电源和适配器电源工作。 由于采用了内部 PMOSFET 架构和防倒充电路，TP4056 不需要外部隔离二极管。其热反馈功能可以自动调节充电电流，以在高功率操作或高温环境下限制芯片温度">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TP4056">
+<meta property="og:url" content="https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/TP4056/index.html">
+<meta property="og:site_name" content="流年不知心底事">
+<meta property="og:description" content="TP4056 是一款完整的单节锂离子电池充电器，采用恒定电流&#x2F;恒定电压线性充电方式。其 ESOP8&#x2F;EMSOP8 封装带有散热片，且外部元件较少，非常适合便携式应用。TP4056 可以适配 USB 电源和适配器电源工作。 由于采用了内部 PMOSFET 架构和防倒充电路，TP4056 不需要外部隔离二极管。其热反馈功能可以自动调节充电电流，以在高功率操作或高温环境下限制芯片温度">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/TP4056/yjsm.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/TP4056/jddl.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/TP4056/cddlsd.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/TP4056/cddlsdb.png">
+<meta property="article:published_time" content="2025-02-09T13:29:00.000Z">
+<meta property="article:modified_time" content="2025-02-08T07:10:13.923Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="IC">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/TP4056/yjsm.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>TP4056</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/TTP224/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/TP4056/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/TP4056/&text=TP4056"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/TP4056/&title=TP4056"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/TP4056/&is_video=false&description=TP4056"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=TP4056&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/TP4056/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/TP4056/&title=TP4056"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/TP4056/&title=TP4056"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/TP4056/&title=TP4056"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/TP4056/&title=TP4056"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/TP4056/&name=TP4056&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/TP4056/&t=TP4056"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%B9%E6%80%A7"><span class="toc-number">1.</span> <span class="toc-text">特性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E8%84%9A%E8%AF%B4%E6%98%8E"><span class="toc-number">2.</span> <span class="toc-text">引脚说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%8F%E5%85%B8%E7%94%B5%E8%B7%AF"><span class="toc-number">3.</span> <span class="toc-text">经典电路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A9%B1%E5%8A%A8%E4%BB%A3%E7%A0%81"><span class="toc-number">4.</span> <span class="toc-text">驱动代码</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        TP4056
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">kay</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-02-09T13:29:00.000Z" class="dt-published" itemprop="datePublished">2025-02-09</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/IC/">IC</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/IC/" rel="tag">IC</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>TP4056 是一款完整的单节锂离子电池充电器，采用恒定电流&#x2F;恒定电压线性充电方式。其 ESOP8&#x2F;EMSOP8 封装带有散热片，且外部元件较少，非常适合便携式应用。TP4056 可以适配 USB 电源和适配器电源工作。</p>
+<p>由于采用了内部 PMOSFET 架构和防倒充电路，TP4056 不需要外部隔离二极管。其热反馈功能可以自动调节充电电流，以在高功率操作或高温环境下限制芯片温度。<strong>充电电压固定为 4.2V，充电电流可通过外部电阻设置。当充电电流降至设定值的 1&#x2F;10 时，TP4056 会自动终止充电循环。</strong></p>
+<p>当输入电压（如 USB 电源或适配器）断开时，TP4056 会自动进入低电流状态，将电池漏电流降至 2µA 以下。TP4056 还支持停机模式，将供电电流降至 55µA。此外，TP4056 具有电池温度检测、欠压闭锁、自动再充电和两个用于指示充电状态的 LED 引脚。</p>
+<h2 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h2><p><strong>输入电源电压 Vcc</strong>：0.3V ~ 8V</p>
+<p><strong>PROG 引脚电压</strong>：-0.3V ~ Vcc+0.3V<em>V**cc</em>+0.3<em>V</em></p>
+<p><strong>BAT 引脚电压</strong>：-0.3V ~ 7V</p>
+<p><strong>CHRG、STDBY、TEMP、CE 引脚电压</strong>：-0.3V ~ 10V</p>
+<p><strong>BAT 短路持续时间</strong>：连续</p>
+<p><strong>BAT 引脚电流</strong>：1200mA</p>
+<p><strong>PROG 引脚电流</strong>：1200µA</p>
+<p><strong>最大结温</strong>：145℃</p>
+<p><strong>工作环境温度范围</strong>：-40℃ ~ 85℃</p>
+<p><strong>贮存温度范围</strong>：-65℃ ~ 125℃</p>
+<p><strong>引脚温度（焊接时间 10 秒）</strong>：260℃</p>
+<h2 id="引脚说明"><a href="#引脚说明" class="headerlink" title="引脚说明"></a>引脚说明</h2><p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/TP4056/yjsm.png" alt="yjsm"></p>
+<table>
+<thead>
+<tr>
+<th align="left">引脚名称</th>
+<th align="left">引脚编号</th>
+<th align="left">功能描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>TEMP</strong></td>
+<td align="left">1</td>
+<td align="left">电池温度检测输入端。连接到电池的 NTC 传感器输出端。如果 TEMP 引脚电压小于输入电压的 45% 或大于 80%，充电暂停。如果 TEMP 直接接地，电池温度检测功能取消，其他充电功能正常。</td>
+</tr>
+<tr>
+<td align="left"><strong>PROG</strong></td>
+<td align="left">2</td>
+<td align="left">恒流充电电流设置和充电电流监测端。通过外部电阻连接到地端设置充电电流。预充电阶段，引脚电压为 0.1V；恒流充电阶段，引脚电压为 1V。可通过测量该引脚电压估算充电电流。</td>
+</tr>
+<tr>
+<td align="left"><strong>GND</strong></td>
+<td align="left">3</td>
+<td align="left">地端。</td>
+</tr>
+<tr>
+<td align="left"><strong>VCC</strong></td>
+<td align="left">4</td>
+<td align="left">电源输入端。</td>
+</tr>
+<tr>
+<td align="left"><strong>BAT</strong></td>
+<td align="left">5</td>
+<td align="left">电池连接端。连接电池正极。在芯片禁用或睡眠模式下，漏电流小于 2µA。提供充电电流和 4.2V 的限制电压。</td>
+</tr>
+<tr>
+<td align="left"><strong>STDBY</strong></td>
+<td align="left">6</td>
+<td align="left">电池充电完成指示端。充电完成时，引脚被内部开关拉低；否则为高阻态。</td>
+</tr>
+<tr>
+<td align="left"><strong>CHRG</strong></td>
+<td align="left">7</td>
+<td align="left">漏极开路输出的充电状态指示端。充电时，引脚被内部开关拉低；否则为高阻态。</td>
+</tr>
+<tr>
+<td align="left"><strong>CE</strong></td>
+<td align="left">8</td>
+<td align="left">芯片使能输入端。高电平使 TP4056 正常工作；低电平禁止充电。支持 TTL 或 CMOS 电平驱动。</td>
+</tr>
+</tbody></table>
+<h2 id="经典电路"><a href="#经典电路" class="headerlink" title="经典电路"></a>经典电路</h2><p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/TP4056/jddl.png" alt="jddl"></p>
+<blockquote>
+<p><strong>电源输入（VCC）</strong></p>
+<ul>
+<li><strong>VCC 连接 5V</strong>，为 TP4056 提供充电电源。</li>
+<li><strong>输入端并联 10uF 电容</strong>，用于滤波和稳定输入电压。</li>
+<li><strong>0.4Ω 串联电阻</strong> 用于限流，防止过流冲击。</li>
+</ul>
+<p><strong>充电状态指示</strong></p>
+<ul>
+<li>CHRG（引脚 6）：充电指示<ul>
+<li>连接 <strong>LED 红灯</strong>，表示<strong>正在充电</strong>。</li>
+</ul>
+</li>
+<li>STDBY（引脚 7）：充满指示<ul>
+<li>连接 <strong>LED 绿灯</strong>，表示<strong>充电完成</strong>。</li>
+<li><strong>LED 通过 1kΩ 电阻限流</strong>。</li>
+</ul>
+</li>
+</ul>
+<p><strong>充电电流设置</strong></p>
+<ul>
+<li>PROG（引脚 2）：充电电流设定<ul>
+<li>连接 <strong>RPROG 电阻</strong> 来设定最大充电电流，计算公式： I<sub>charge</sub> &#x3D; 1200 &#x2F; R<sub>PROG</sub> (mA)</li>
+</ul>
+</li>
+<li>例如：<ul>
+<li>RPROG &#x3D; 1.2kΩ → 充电电流 <strong>1000mA（1A）</strong></li>
+<li>RPROG &#x3D; 2.4kΩ → 充电电流 <strong>500mA</strong></li>
+</ul>
+</li>
+</ul>
+<p><strong>电池连接（BAT，PIN 5）</strong></p>
+<ul>
+<li><strong>连接到锂电池的正极（Bat+），负极（Bat-）</strong>。</li>
+<li>并联一个 <strong>10uF 滤波电容</strong> 来稳定输出电压。</li>
+</ul>
+<p><strong>温度监测（TEMP，PIN 1）</strong></p>
+<ul>
+<li><p>该引脚用于连接 </p>
+<p>NTC（负温度系数热敏电阻）</p>
+<p> 来检测电池温度：</p>
+<ul>
+<li>若 <strong>NTC 电阻值在安全范围内</strong>，则充电正常。</li>
+<li>若 <strong>温度超出安全范围</strong>，则 TP4056 停止充电。</li>
+</ul>
+</li>
+<li><p><strong>如果不使用温度检测功能</strong>，可以将 TEMP 直接接地（GND）。</p>
+</li>
+</ul>
+</blockquote>
+<p><strong>充电电流设定</strong></p>
+<p>充电电流是采用一个连接在PROG引脚与地之间的电阻器来设定的。设定电阻器和充电电流采用下列公式来计算： </p>
+<p>根据需要的充电电流来确定电阻器阻值</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/TP4056/cddlsd.png" alt="cddlsd"></p>
+<p>客户应用中，可根据需求选取合适大小的R<sub>PROG</sub>，R<sub>PROG</sub>与充电电流的关系确定可参考下表：</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/TP4056/cddlsdb.png" alt="cddlsdb"></p>
+<h2 id="驱动代码"><a href="#驱动代码" class="headerlink" title="驱动代码"></a>驱动代码</h2><p><strong>TP4056</strong> 是一款 <strong>硬件控制的线性充电芯片</strong>，它不需要编写驱动代码，只需要通过 <strong>硬件电路连接</strong> 和 <strong>外部元件配置</strong> 即可实现充电功能。</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">博主</a></li>
+        
+          <li><a href="/tags/">标签</a></li>
+        
+          <li><a href="/categories/">分类</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%B9%E6%80%A7"><span class="toc-number">1.</span> <span class="toc-text">特性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E8%84%9A%E8%AF%B4%E6%98%8E"><span class="toc-number">2.</span> <span class="toc-text">引脚说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%8F%E5%85%B8%E7%94%B5%E8%B7%AF"><span class="toc-number">3.</span> <span class="toc-text">经典电路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A9%B1%E5%8A%A8%E4%BB%A3%E7%A0%81"><span class="toc-number">4.</span> <span class="toc-text">驱动代码</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/TP4056/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/TP4056/&text=TP4056"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/TP4056/&title=TP4056"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/TP4056/&is_video=false&description=TP4056"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=TP4056&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/TP4056/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/TP4056/&title=TP4056"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/TP4056/&title=TP4056"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/TP4056/&title=TP4056"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/TP4056/&title=TP4056"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/TP4056/&name=TP4056&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/TP4056/&t=TP4056"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    kay
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="EM7028 是一款专门用于心率检测和血氧检测 的低功耗传感器芯片，广泛应用于可穿戴设备（如智能手表、手环）和健康监测设备。它可以基于 PPG（光电容积脉搏波）技术，通过发射光线并接收反射信号来计算心率和血氧饱和度（SpO₂）。 工作原理心率芯片包括发射 LED 和 PD 接收两部分。 芯片工作时，LED 发出的光打到皮肤下并反射回接收端，反射回的光强便包含了脉搏信息，这个光强经过处理后被 ADC">
+<meta property="og:type" content="article">
+<meta property="og:title" content="EM7028">
+<meta property="og:url" content="https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/EM7028/index.html">
+<meta property="og:site_name" content="流年不知心底事">
+<meta property="og:description" content="EM7028 是一款专门用于心率检测和血氧检测 的低功耗传感器芯片，广泛应用于可穿戴设备（如智能手表、手环）和健康监测设备。它可以基于 PPG（光电容积脉搏波）技术，通过发射光线并接收反射信号来计算心率和血氧饱和度（SpO₂）。 工作原理心率芯片包括发射 LED 和 PD 接收两部分。 芯片工作时，LED 发出的光打到皮肤下并反射回接收端，反射回的光强便包含了脉搏信息，这个光强经过处理后被 ADC">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/EM7028/gzyl.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/EM7028/yjsm.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/EM7028/sstx.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/EM7028/I2Cztj.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/EM7028/cssx.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/EM7028/mcsldl.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/EM7028/lxmsdl.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/EM7028/xlsf.png">
+<meta property="article:published_time" content="2024-12-15T14:09:00.000Z">
+<meta property="article:modified_time" content="2025-02-08T07:09:24.942Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="IC">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/EM7028/gzyl.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>EM7028</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/W25Q128/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/BLE%E8%93%9D%E7%89%99/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/EM7028/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/EM7028/&text=EM7028"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/EM7028/&title=EM7028"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/EM7028/&is_video=false&description=EM7028"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=EM7028&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/EM7028/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/EM7028/&title=EM7028"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/EM7028/&title=EM7028"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/EM7028/&title=EM7028"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/EM7028/&title=EM7028"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/EM7028/&name=EM7028&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/EM7028/&t=EM7028"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">工作原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A5%E4%BD%9C%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.</span> <span class="toc-text">工作模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E8%84%9A%E8%AF%B4%E6%98%8E"><span class="toc-number">3.</span> <span class="toc-text">引脚说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#I2C-%E6%97%B6%E5%BA%8F%E7%89%B9%E6%80%A7"><span class="toc-number">4.</span> <span class="toc-text">I2C 时序特性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#I2C-%E7%8A%B6%E6%80%81%E6%9C%BA"><span class="toc-number">5.</span> <span class="toc-text">I2C 状态机</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%A0%E8%BE%93%E9%A1%BA%E5%BA%8F"><span class="toc-number">6.</span> <span class="toc-text">传输顺序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8E%E8%AE%BE%E5%A4%87%E5%9C%B0%E5%9D%80"><span class="toc-number">7.</span> <span class="toc-text">从设备地址</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%E7%94%B5%E8%B7%AF"><span class="toc-number">8.</span> <span class="toc-text">示例电路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81"><span class="toc-number">9.</span> <span class="toc-text">示例代码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A2%E5%B3%B0%E6%A3%80%E6%B5%8B%E7%AE%97%E6%B3%95"><span class="toc-number">9.1.</span> <span class="toc-text">波峰检测算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A9%B1%E5%8A%A8%E5%BA%93"><span class="toc-number">9.2.</span> <span class="toc-text">驱动库</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        EM7028
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">kay</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-12-15T14:09:00.000Z" class="dt-published" itemprop="datePublished">2024-12-15</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/IC/">IC</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/IC/" rel="tag">IC</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>EM7028 是一款专门用于<strong>心率检测</strong>和<strong>血氧检测</strong> 的低功耗传感器芯片，广泛应用于可穿戴设备（如智能手表、手环）和健康监测设备。它可以基于 <strong>PPG（光电容积脉搏波）技术</strong>，通过发射光线并接收反射信号来计算心率和血氧饱和度（SpO₂）。</p>
+<h2 id="工作原理"><a href="#工作原理" class="headerlink" title="工作原理"></a>工作原理</h2><p>心率芯片包括发射 LED 和 PD 接收两部分。</p>
+<p>芯片工作时，LED 发出的光打到皮肤下并反射回接收端，反射回的光强便包含了脉搏信息，这个光强经过处理后被 ADC 转换为数值，这个值会随着脉搏跳动周期性的变化。</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/EM7028/gzyl.png" alt="gzyl"></p>
+<h2 id="工作模式"><a href="#工作模式" class="headerlink" title="工作模式"></a>工作模式</h2><p><strong>连续模式</strong></p>
+<p>在正常 HRS 模式下，其中一个 LED 亮起，HRS 传感器同时检测环境光与绿色 LED 发出的光。光敏度为 1 勒克斯&#x2F;计数，全范围内总共有65536 勒克斯;ADC 的典型分辨率为16位，转换时间为 25 毫秒。<br>在低亮度模式下，选择 8 倍 ADC 增益来接收光线，检测范围为 0.125 亮度到 8192 亮度。</p>
+<blockquote>
+<p><strong>LED 点亮</strong>：LED1 或 LED2 持续发光。</p>
+<p><strong>光检测</strong>：传感器实时接收 <strong>反射光线</strong> 和 <strong>环境光线</strong>，并进行测量。</p>
+<p><strong>数据处理</strong>：通过 ADC 转换，将光线信号转化为数字信号，提供给主控 MCU。</p>
+<p><strong>输出数据</strong>：数据存储到寄存器（如 HRS_DATA0），主控 MCU 通过 I²C 通信读取数据。</p>
+</blockquote>
+<p><strong>脉冲模式</strong></p>
+<p>脉冲模式下的心率传感器在脉冲状态下打开 LED，检测反射光。</p>
+<blockquote>
+<p><strong>LED 脉冲点亮</strong>：LED 以一定周期脉冲式点亮，亮起时间较短。</p>
+<p><strong>光检测</strong>：在 LED 点亮期间，传感器检测光线反射强度。</p>
+<p><strong>ADC 转换</strong>：将检测到的光信号通过 ADC 转换为数字信号。</p>
+<p><strong>数据输出</strong>：将数据存储到寄存器，主控 MCU 在需要时读取。</p>
+<p><strong>LED 熄灭</strong>：在脉冲关闭期间，LED 熄灭，传感器休眠以节省功耗。</p>
+</blockquote>
+<p><strong>通过 EMP7028 的寄存器配置工作模式与相关参数</strong></p>
+<h2 id="引脚说明"><a href="#引脚说明" class="headerlink" title="引脚说明"></a>引脚说明</h2><p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/EM7028/yjsm.png" alt="yjsm"></p>
+<table>
+<thead>
+<tr>
+<th align="center"><strong>PinNo</strong></th>
+<th align="center"><strong>PinName</strong></th>
+<th align="center"><strong>Type</strong></th>
+<th align="center"><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>1</strong></td>
+<td align="center"><strong>SDA</strong></td>
+<td align="center">I&#x2F;O (开漏)</td>
+<td align="center">I²C 数据线：用于 I²C 通信的数据传输，需外接上拉电阻。</td>
+</tr>
+<tr>
+<td align="center"><strong>2</strong></td>
+<td align="center"><strong>INT</strong></td>
+<td align="center">O (开漏)</td>
+<td align="center">中断引脚：当传感器有数据或事件触发时，该引脚输出中断信号。</td>
+</tr>
+<tr>
+<td align="center"><strong>3</strong></td>
+<td align="center"><strong>LED1</strong></td>
+<td align="center">O (开漏)</td>
+<td align="center">LED 电流驱动引脚 1：可提供高达 200mA 电流，通常用于驱动高功率 LED 光源。</td>
+</tr>
+<tr>
+<td align="center"><strong>4</strong></td>
+<td align="center"><strong>LED2</strong></td>
+<td align="center">O (开漏)</td>
+<td align="center">LED 电流驱动引脚 2：可提供高达 12mA 电流，通常用于低功率 LED 光源。</td>
+</tr>
+<tr>
+<td align="center"><strong>5</strong></td>
+<td align="center"><strong>LEDA</strong></td>
+<td align="center">I</td>
+<td align="center">LED 阳极端：需要连接到 LED 电源 VDD_LED，用于 LED 驱动电路供电。</td>
+</tr>
+<tr>
+<td align="center"><strong>6</strong></td>
+<td align="center"><strong>GND</strong></td>
+<td align="center">—</td>
+<td align="center">电源地：所有电压均参考此引脚接地。</td>
+</tr>
+<tr>
+<td align="center"><strong>7</strong></td>
+<td align="center"><strong>SCL</strong></td>
+<td align="center">I (开漏)</td>
+<td align="center">I²C 时钟线：提供 I²C 通信的时钟信号，需外接上拉电阻。</td>
+</tr>
+<tr>
+<td align="center"><strong>8</strong></td>
+<td align="center"><strong>VDD</strong></td>
+<td align="center">—</td>
+<td align="center">电源电压：为芯片提供供电，通常为 <strong>3.3V</strong> 或符合设备要求的电压。</td>
+</tr>
+</tbody></table>
+<h2 id="I2C-时序特性"><a href="#I2C-时序特性" class="headerlink" title="I2C 时序特性"></a>I2C 时序特性</h2><p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/EM7028/sstx.png" alt="sstx"></p>
+<blockquote>
+<p>f<sub>clek</sub>：SCL 时钟频率</p>
+<ul>
+<li><p>在 <strong>Normal Mode</strong> 下，SCL 的最大频率为 <strong>100 kHz</strong>。</p>
+</li>
+<li><p>在 <strong>Fast Mode</strong> 下，SCL 的最大频率可达 <strong>400 kHz</strong>。</p>
+</li>
+</ul>
+<p>t<sub>SUDAT</sub>：数据设置时间 (tSUDAT)</p>
+<ul>
+<li>主机在时钟信号（SCL）上升沿前，数据线（SDA）上的数据必须保持稳定的最短时间。</li>
+</ul>
+<p>t<sub>HDDAT</sub>：数据保持时间 (tHDDAT)</p>
+<ul>
+<li>在时钟信号（SCL）下降沿之后，数据线（SDA）上的数据必须继续保持的时间。</li>
+</ul>
+<p>t<sub>rise</sub>：时钟&#x2F;数据上升时间</p>
+<ul>
+<li><strong>上升时间 (trise)<strong>：SCL 和 SDA 从</strong>低电平到高电平</strong>的时间。</li>
+</ul>
+<p>t<sub>fall</sub>：时钟&#x2F;数据下降时间</p>
+<ul>
+<li><strong>下降时间 (tfall)<strong>：SCL 和 SDA 从</strong>高电平到低电平</strong>的时间。</li>
+</ul>
+<p>t<sub>LOW</sub>：SCL 低电平时间</p>
+<p>t<sub>HIGH</sub>：SCL 高电平时间</p>
+<p>t<sub>BUF</sub>：起始状态和停止状态之间的空闲时间</p>
+<ul>
+<li><strong>tBUF</strong> 定义了停止条件与下一次起始条件之间的最小空闲时间。</li>
+</ul>
+<p>t<sub>HDSTA</sub>：起始条件保持时间（重复启动）</p>
+<ul>
+<li>起始条件（START）信号的保持时间。</li>
+</ul>
+<p>t<sub>SUSTA</sub>：起始条件设置时间</p>
+<ul>
+<li>主机发送起始条件前，数据线 SDA 必须稳定的最短时间。</li>
+</ul>
+<p>t<sub>SUSTO</sub>：停止条件设置时间</p>
+<ul>
+<li>主机发送停止条件前，数据线 SDA 必须稳定的最短时间。</li>
+</ul>
+<p>t<sub>TIMEOUT</sub>：低检测时钟&#x2F;数据超时时间</p>
+<p>C<sub>load</sub>：每条总线线的电容负载</p>
+<p>R<sub>BUS</sub>：SDA 和 SCL 的上拉电阻</p>
+<p>t<sub>VD</sub>：数据有效时间</p>
+<p>t<sub>VDACK</sub>：数据有效确认时间</p>
+<ul>
+<li>定义了数据在传输中的有效性以及接收方发送确认（ACK）时的时序要求。</li>
+</ul>
+</blockquote>
+<h2 id="I2C-状态机"><a href="#I2C-状态机" class="headerlink" title="I2C 状态机"></a>I2C 状态机</h2><p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/EM7028/I2Cztj.png" alt="I2Cztj"></p>
+<blockquote>
+<p><strong>IDLE</strong></p>
+<ul>
+<li>初始状态或空闲状态。</li>
+<li>系统处于等待信号或数据的状态。</li>
+</ul>
+<p><strong>Address Dec（Address Decode）</strong></p>
+<ul>
+<li>解析或解码地址的状态。</li>
+<li>设备从总线或数据流中获取地址，并进行地址匹配。</li>
+</ul>
+<p><strong>ACK（Acknowledge）</strong></p>
+<ul>
+<li>确认状态。</li>
+<li>当设备接收到正确的数据或地址后，会发送 ACK 信号（确认响应）。</li>
+</ul>
+<p><strong>REV（Receive）</strong></p>
+<ul>
+<li>数据接收状态。</li>
+<li>系统从通信中接收数据。</li>
+</ul>
+<p><strong>TRANS（Transmit）</strong></p>
+<ul>
+<li>数据传输状态。</li>
+<li>系统将数据传输给通信对方（比如主机或其他设备）。</li>
+</ul>
+<p><strong>IDLE → Address Dec</strong></p>
+<ul>
+<li>系统从空闲状态进入地址解析状态，可能是因为接收到通信请求（如 Start 信号）。</li>
+</ul>
+<p><strong>Address Dec → IDLE</strong></p>
+<ul>
+<li>如果地址解析失败，系统返回空闲状态，等待下一次请求。</li>
+</ul>
+<p><strong>Address Dec → ACK</strong></p>
+<ul>
+<li>当地址成功匹配时，进入 ACK 状态，表示地址有效并响应确认信号。</li>
+</ul>
+<p><strong>ACK → REV</strong></p>
+<ul>
+<li>系统进入接收数据状态，表示通信对方发送数据过来，系统开始接收。</li>
+</ul>
+<p><strong>ACK → TRANS</strong></p>
+<ul>
+<li>系统进入数据传输状态，表示系统主动发送数据给对方。</li>
+</ul>
+<p><strong>REV → ACK</strong> 和 <strong>TRANS → ACK</strong></p>
+<ul>
+<li>数据传输或接收完成后，系统返回 ACK 状态，进行确认或等待下一步操作。</li>
+</ul>
+<p><strong>ACK → IDLE</strong></p>
+<ul>
+<li>在某些情况下，数据传输或接收结束，系统返回空闲状态，等待下一次通信。</li>
+</ul>
+</blockquote>
+<h2 id="传输顺序"><a href="#传输顺序" class="headerlink" title="传输顺序"></a>传输顺序</h2><p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/EM7028/cssx.png" alt="cssx"></p>
+<h2 id="从设备地址"><a href="#从设备地址" class="headerlink" title="从设备地址"></a>从设备地址</h2><p>The I2C Interface and 7-bit slave address is 0x24.</p>
+<h2 id="示例电路"><a href="#示例电路" class="headerlink" title="示例电路"></a>示例电路</h2><p><strong>HRS2 脉冲模式的典型应用电路(VDD2.6<del>3.6V，VDD PC1.6</del>3.6V、VDD LED 2.6~4.5V)</strong></p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/EM7028/mcsldl.png" alt="mcsldl"></p>
+<p><strong>HRS1 连续模式下的典型应用电路</strong></p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/EM7028/lxmsdl.png" alt="lxmsdl"></p>
+<blockquote>
+<p>VDD、VDD_I2C、VDD_LED可以连接在一起，形成VDD3.3V至3.3V的电压。</p>
+<p>VDD3.3V应将0.1uF电容器接地。</p>
+<p>如果不需要中断模式，INT可以断开。</p>
+<p>R0是LED2调节电阻器，R0的典型值为100Ω。</p>
+</blockquote>
+<h2 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h2><h3 id="波峰检测算法"><a href="#波峰检测算法" class="headerlink" title="波峰检测算法"></a>波峰检测算法</h3><p>波峰检测算法，通过传感器采集到的数据推算出心率值。</p>
+<p>在心率算法中，通过波峰（即心跳信号的峰值）之间的时间间隔计算心率，常用以下公式：</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/EM7028/xlsf.png" alt="xlsf"></p>
+<blockquote>
+<p>人体正常的心率范围一般在 <strong>60 BPM(一分钟 60 次) 到 180 BPM</strong> 之间。</p>
+</blockquote>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// HRAlgorithm.c</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义队列结构</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> QUEUE_SIZE 7</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">    <span class="type">int8_t</span> front;</span><br><span class="line">    <span class="type">int8_t</span> rear;</span><br><span class="line">    <span class="type">int8_t</span> size;</span><br><span class="line">    <span class="type">uint32_t</span> data[QUEUE_SIZE];</span><br><span class="line">&#125; Queue;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 计算 HrList 的平均值，用于平滑处理心率数据，从而减小心率计算中的波动，提高数据稳定性。</span></span><br><span class="line"><span class="type">uint8_t</span> <span class="title function_">Hr_Ave_Filter</span><span class="params">(<span class="type">uint32_t</span> *HrList, <span class="type">uint8_t</span> lenth)</span> &#123;</span><br><span class="line">	<span class="type">uint32_t</span> ave = <span class="number">0</span>;</span><br><span class="line">	<span class="type">uint8_t</span> i = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span>(i = <span class="number">0</span>;i&lt;lenth;i++) &#123;</span><br><span class="line">		ave += HrList[i];</span><br><span class="line">	&#125;</span><br><span class="line">	ave /= lenth;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">present_dat：当前时刻传感器采集到的数据值（光信号强度值）。</span></span><br><span class="line"><span class="comment">present_time：当前时刻的时间戳（单位为毫秒）。</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="type">uint16_t</span> <span class="title function_">HR_Calculate</span><span class="params">(<span class="type">uint16_t</span> present_dat,<span class="type">uint32_t</span> present_time)</span> &#123;</span><br><span class="line">	</span><br><span class="line">    <span class="comment">// peaks_time：保存最近检测到的两个波峰的时间戳。</span></span><br><span class="line">    <span class="comment">// peaks_time[0]：当前检测到的波峰时间。</span></span><br><span class="line">    <span class="comment">// peaks_time[1]：上一个波峰的时间。</span></span><br><span class="line">	<span class="type">static</span> <span class="type">uint16_t</span> peaks_time[]=&#123;<span class="number">0</span>,<span class="number">0</span>&#125;;</span><br><span class="line">    <span class="comment">// 当前计算得到的心率值。</span></span><br><span class="line">	<span class="type">static</span> <span class="type">uint8_t</span> HR=<span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// isQueueFull() 判断队列是否以满</span></span><br><span class="line">    <span class="comment">// dequeue() 从队列中移除旧数据。</span></span><br><span class="line">	<span class="keyword">if</span>(isQueueFull(&amp;datas)) &#123;</span><br><span class="line">        dequeue(&amp;datas);</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="keyword">if</span>(isQueueFull(&amp;times)) &#123;</span><br><span class="line">        dequeue(&amp;times);</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="keyword">if</span>(isQueueFull(&amp;HR_List)) &#123;</span><br><span class="line">        dequeue(&amp;HR_List);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将新数据加入队列。</span></span><br><span class="line">	enqueue(&amp;datas,present_dat);</span><br><span class="line">	enqueue(&amp;times,present_time);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span>((datas.data[<span class="number">3</span>]&gt;=datas.data[<span class="number">2</span>]) &amp;&amp; (datas.data[<span class="number">3</span>]&gt;=datas.data[<span class="number">1</span>]) &amp;&amp; (datas.data[<span class="number">3</span>]&gt;datas.data[<span class="number">0</span>]) </span><br><span class="line">		&amp;&amp; (datas.data[<span class="number">3</span>]&gt;=datas.data[<span class="number">4</span>]) &amp;&amp; (datas.data[<span class="number">3</span>]&gt;=datas.data[<span class="number">5</span>]) &amp;&amp; (datas.data[<span class="number">3</span>]&gt;datas.data[<span class="number">6</span>])) &#123;</span><br><span class="line">			<span class="keyword">if</span>((times.data[<span class="number">3</span>]-peaks_time[<span class="number">0</span>]) &gt; <span class="number">425</span>) &#123;</span><br><span class="line">					peaks_time[<span class="number">1</span>] = peaks_time[<span class="number">0</span>];</span><br><span class="line">					peaks_time[<span class="number">0</span>] = times.data[<span class="number">3</span>];</span><br><span class="line">					enqueue(&amp;HR_List,<span class="number">60000</span>/(peaks_time[<span class="number">0</span>]-peaks_time[<span class="number">1</span>]));</span><br><span class="line">					<span class="keyword">if</span>(HR_List.data[<span class="number">6</span>]!=<span class="number">0</span>) &#123;</span><br><span class="line">                        HR = Hr_Ave_Filter(HR_List.data,<span class="number">7</span>);</span><br><span class="line">                    &#125;</span><br><span class="line">			&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> HR;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>维护队列</strong>：</p>
+<ul>
+<li>如果 datas、times 和 HR_List 队列已满，则先移除最早的数据点。</li>
+<li>将当前的传感器数据 present_dat 和时间 present_time 加入队列。</li>
+</ul>
+<p><strong>波峰检测</strong>：</p>
+<ul>
+<li>判断 datas.data[3]（第4个数据点）是否为波峰。</li>
+<li>判断条件：第4个数据点必须大于前面 3 个和后面 3 个数据点（即满足局部最大值）。</li>
+<li><strong>原理</strong>：通过比较前后数据点，检测光信号数据中的局部峰值，通常对应于心跳导致的光反射峰。</li>
+</ul>
+<p><strong>波峰间隔时间检查</strong>：</p>
+<ul>
+<li>如果当前检测到的波峰与上一个波峰的时间间隔 times.data[3] - peaks_time[0] &gt; 425（大约 425 毫秒，即心率下限 60&#x2F;0.425 ≈ 141 BPM），则认为是有效波峰。</li>
+<li>更新 peaks_time 数组，保存当前和上一个波峰的时间戳。</li>
+</ul>
+<p><strong>心率计算</strong>：</p>
+<ul>
+<li>使用公式： \text{HR} &#x3D; \frac{60000}{\text{peaks_time[0]} - \text{peaks_time[1]}} 其中，60000 表示 1 分钟的时间（单位为毫秒）。</li>
+<li>将计算得到的心率值存入 HR_List 队列。</li>
+</ul>
+<p><strong>心率平滑滤波</strong>：</p>
+<ul>
+<li>当 HR_List 数据满 7 个心率值时，调用 Hr_Ave_Filter 函数对最近 7 个心率值进行平均滤波，减少抖动，提高稳定性。</li>
+<li>Hr_Ave_Filter 负责对心率值进行滤波平滑处理，返回最终的平滑心率值。</li>
+</ul>
+<p><strong>返回心率</strong>：</p>
+<ul>
+<li>返回当前平滑处理后的心率值 HR。</li>
+</ul>
+</blockquote>
+<p><strong>算法中的固定阈值 425 毫秒（对应心率上限约为 141 BPM）在高心率场景下存在局限性，无法正确检测心率超过 141 BPM 的波峰。因此，波峰间隔阈值不应设为固定值，而是应根据用户状态动态调整，应当结合陀螺仪数据判断用户当前处于静止、运动或剧烈活动状态，从而设置适合的波峰间隔阈值以提高算法的适应性和准确性。</strong></p>
+<h3 id="驱动库"><a href="#驱动库" class="headerlink" title="驱动库"></a>驱动库</h3><p><a target="_blank" rel="noopener" href="https://github.com/TooUpper/SensorDrive">https://github.com/TooUpper/SensorDrive</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">博主</a></li>
+        
+          <li><a href="/tags/">标签</a></li>
+        
+          <li><a href="/categories/">分类</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">工作原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A5%E4%BD%9C%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.</span> <span class="toc-text">工作模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E8%84%9A%E8%AF%B4%E6%98%8E"><span class="toc-number">3.</span> <span class="toc-text">引脚说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#I2C-%E6%97%B6%E5%BA%8F%E7%89%B9%E6%80%A7"><span class="toc-number">4.</span> <span class="toc-text">I2C 时序特性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#I2C-%E7%8A%B6%E6%80%81%E6%9C%BA"><span class="toc-number">5.</span> <span class="toc-text">I2C 状态机</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%A0%E8%BE%93%E9%A1%BA%E5%BA%8F"><span class="toc-number">6.</span> <span class="toc-text">传输顺序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8E%E8%AE%BE%E5%A4%87%E5%9C%B0%E5%9D%80"><span class="toc-number">7.</span> <span class="toc-text">从设备地址</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%E7%94%B5%E8%B7%AF"><span class="toc-number">8.</span> <span class="toc-text">示例电路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81"><span class="toc-number">9.</span> <span class="toc-text">示例代码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A2%E5%B3%B0%E6%A3%80%E6%B5%8B%E7%AE%97%E6%B3%95"><span class="toc-number">9.1.</span> <span class="toc-text">波峰检测算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A9%B1%E5%8A%A8%E5%BA%93"><span class="toc-number">9.2.</span> <span class="toc-text">驱动库</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/EM7028/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/EM7028/&text=EM7028"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/EM7028/&title=EM7028"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/EM7028/&is_video=false&description=EM7028"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=EM7028&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/EM7028/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/EM7028/&title=EM7028"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/EM7028/&title=EM7028"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/EM7028/&title=EM7028"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/EM7028/&title=EM7028"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/EM7028/&name=EM7028&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/EM7028/&t=EM7028"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    kay
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

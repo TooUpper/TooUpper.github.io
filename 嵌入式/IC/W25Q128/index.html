@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="W25Q128 是一种常见的串行闪存器件，它采用 SPI（Serial Peripheral Interface）接口协议，具有高速读写和擦除功能，可用于存储和读取数据。W25Q128 芯片容量为 128 Mbit（16 MB），其中名称后的数字代表不同的容量选项。不同的型号和容量选项可以满足不同应用的需求，通常被用于嵌入式设备、存储设备、路由器等高性能电子设备中。 W25Q128 闪存芯片的内存">
+<meta property="og:type" content="article">
+<meta property="og:title" content="W25Q128">
+<meta property="og:url" content="https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/W25Q128/index.html">
+<meta property="og:site_name" content="流年不知心底事">
+<meta property="og:description" content="W25Q128 是一种常见的串行闪存器件，它采用 SPI（Serial Peripheral Interface）接口协议，具有高速读写和擦除功能，可用于存储和读取数据。W25Q128 芯片容量为 128 Mbit（16 MB），其中名称后的数字代表不同的容量选项。不同的型号和容量选项可以满足不同应用的需求，通常被用于嵌入式设备、存储设备、路由器等高性能电子设备中。 W25Q128 闪存芯片的内存">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/W25Q128/ccjgt.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/W25Q128/yjsm.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/W25Q128/sjdl.png">
+<meta property="article:published_time" content="2024-12-16T13:48:00.000Z">
+<meta property="article:modified_time" content="2025-02-08T07:10:27.452Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="IC">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/W25Q128/ccjgt.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>W25Q128</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/MPU6050/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/EM7028/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/W25Q128/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/W25Q128/&text=W25Q128"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/W25Q128/&title=W25Q128"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/W25Q128/&is_video=false&description=W25Q128"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=W25Q128&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/W25Q128/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/W25Q128/&title=W25Q128"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/W25Q128/&title=W25Q128"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/W25Q128/&title=W25Q128"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/W25Q128/&title=W25Q128"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/W25Q128/&name=W25Q128&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/W25Q128/&t=W25Q128"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E8%84%9A%E8%AF%B4%E6%98%8E"><span class="toc-number">1.</span> <span class="toc-text">引脚说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%E7%94%B5%E8%B7%AF"><span class="toc-number">2.</span> <span class="toc-text">示例电路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SPI"><span class="toc-number">3.</span> <span class="toc-text">SPI</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81"><span class="toc-number">4.</span> <span class="toc-text">示例代码</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        W25Q128
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">kay</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-12-16T13:48:00.000Z" class="dt-published" itemprop="datePublished">2024-12-16</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/IC/">IC</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/IC/" rel="tag">IC</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>W25Q128 是一种常见的串行闪存器件，它采用 SPI（Serial Peripheral Interface）接口协议，具有高速读写和擦除功能，可用于存储和读取数据。W25Q128 芯片容量为 128 Mbit（16 MB），其中名称后的数字代表不同的容量选项。不同的型号和容量选项可以满足不同应用的需求，通常被用于嵌入式设备、存储设备、路由器等高性能电子设备中。</p>
+<p>W25Q128 闪存芯片的内存分配是按照扇区（Sector）和块（Block）进行的，每个扇区的大小为 4KB，每个块包含 16 个扇区，即一个块的大小为 64KB。</p>
+<p><strong>存储结构图</strong></p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/W25Q128/ccjgt.png" alt="ccjgt"></p>
+<h2 id="引脚说明"><a href="#引脚说明" class="headerlink" title="引脚说明"></a>引脚说明</h2><p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/W25Q128/yjsm.png" alt="yjsm"></p>
+<table>
+<thead>
+<tr>
+<th align="center"><strong>引脚编号</strong></th>
+<th align="left"><strong>引脚名称</strong></th>
+<th align="left"><strong>描述</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">1</td>
+<td align="left">&#x2F;CS</td>
+<td align="left">芯片选择引脚（Chip Select）</td>
+</tr>
+<tr>
+<td align="center">2</td>
+<td align="left">DO (IO₁)</td>
+<td align="left">数据输出引脚（Data Out，I&#x2F;O1）</td>
+</tr>
+<tr>
+<td align="center">3</td>
+<td align="left">&#x2F;WP (IO₂)</td>
+<td align="left">写保护引脚（Write Protect，I&#x2F;O2）</td>
+</tr>
+<tr>
+<td align="center">4</td>
+<td align="left">GND</td>
+<td align="left">地引脚（Ground）</td>
+</tr>
+<tr>
+<td align="center">5</td>
+<td align="left">DI (IO₀)</td>
+<td align="left">数据输入引脚（Data In，I&#x2F;O0）</td>
+</tr>
+<tr>
+<td align="center">6</td>
+<td align="left">CLK</td>
+<td align="left">时钟信号引脚（Clock）</td>
+</tr>
+<tr>
+<td align="center">7</td>
+<td align="left">&#x2F;HOLD or &#x2F;RESET (IO₃)</td>
+<td align="left">保持或复位引脚（Hold&#x2F;Reset，I&#x2F;O3）</td>
+</tr>
+<tr>
+<td align="center">8</td>
+<td align="left">VCC</td>
+<td align="left">电源引脚（Power Supply）</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>&#x2F; 表示引脚是<strong>低电平有效</strong>。</p>
+<p>HOLD：当它有效时允许设备暂停，低电平：DO 引脚高阻态，DI CLK 引脚的信号被忽略。高电平：设备重新开始，当多个设备共享相同的 SPI 信 号的时候该功能可能会被用到。</p>
+</blockquote>
+<h2 id="示例电路"><a href="#示例电路" class="headerlink" title="示例电路"></a>示例电路</h2><p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/W25Q128/sjdl.png" alt="sjdl"></p>
+<h2 id="SPI"><a href="#SPI" class="headerlink" title="SPI"></a>SPI</h2><p>根据 W25Q128 的数据手册，得到以下配置：</p>
+<ul>
+<li>SPI 配置为了全双工模式，可以同时发送与接收数据；</li>
+<li>STM32F407 配置为主机模式，由 STM32F407 产生时钟，与从机 W25Q128 进行通信；</li>
+<li>数据的传输以 8 位进行传输。</li>
+<li>片选方式选择软件控制片选。在硬件 SPI 中，一个 SPI 只有一个片选线，这会导致硬件 SPI 如果选择硬件控制片选信号，只能控制一个从机。我们是希望能够一个 SPI 可以控制多个从机，因此选择软件方式片选，片选线可以随意设定。</li>
+<li>时钟分频选择 4 分频，根据 W25Q128 的数据手册说明，W25Q128 的 SPI 时钟可以达到 30MHz，而我们的 SPI0 的时钟来源为 PCLK2&#x3D;84MHz，SPI 的配置中必须要求进行分频，分频之后的频率是 21MH，低于 30Mhz，W25Q1282 完全可以兼容。</li>
+<li>字节顺序选择高位在前。</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">SPI_InitTypeDef  SPI_InitStructure;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* FLASH_SPI 模式配置 */</span></span><br><span class="line">SPI_InitStructure.SPI_Direction = SPI_Direction_2Lines_FullDuplex; <span class="comment">// 传输模式全双工</span></span><br><span class="line">SPI_InitStructure.SPI_Mode = SPI_Mode_Master;                <span class="comment">// 配置为主机</span></span><br><span class="line">SPI_InitStructure.SPI_DataSize = SPI_DataSize_8b;        <span class="comment">// 8位数据</span></span><br><span class="line">SPI_InitStructure.SPI_CPOL = SPI_CPOL_High;</span><br><span class="line">SPI_InitStructure.SPI_CPHA = SPI_CPHA_2Edge;                <span class="comment">// 极性相位</span></span><br><span class="line">SPI_InitStructure.SPI_NSS = SPI_NSS_Soft;                        <span class="comment">// 软件cs</span></span><br><span class="line">SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_2; <span class="comment">// SPI时钟预调因数为2</span></span><br><span class="line">SPI_InitStructure.SPI_FirstBit = SPI_FirstBit_MSB;        <span class="comment">//高位在前</span></span><br><span class="line">SPI_InitStructure.SPI_CRCPolynomial = <span class="number">7</span>;</span><br><span class="line">SPI_Init(BSP_SPI, &amp;SPI_InitStructure);</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 使能 FLASH_SPI  */</span></span><br><span class="line">SPI_Cmd(BSP_SPI, ENABLE);</span><br></pre></td></tr></table></figure>
+
+<h2 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h2><p><a target="_blank" rel="noopener" href="https://github.com/TooUpper/SensorDrive">https://github.com/TooUpper/SensorDrive</a></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;board.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;bsp_uart.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;spi_flash.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span>&#123;</span><br><span class="line">        board_init();</span><br><span class="line">        uart1_init(<span class="number">115200U</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/* SPI初始化 */</span></span><br><span class="line">        bsp_spi_init();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 缓存区数组定义</span></span><br><span class="line">        <span class="type">unsigned</span> <span class="type">char</span> buff[<span class="number">20</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line"></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;\r\n=========【开始】========\r\n&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 擦除Flash扇区0</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;\r\n【1】擦除Flash扇区0......\r\n&quot;</span>);</span><br><span class="line">        W25Q128_erase_sector(<span class="number">0</span>);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;Flash扇区0擦除完成！！\r\n&quot;</span>);</span><br><span class="line">        delay_ms(<span class="number">200</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//获取W25Q128的设备ID</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;\r\n【2】读取设备的id......\r\n&quot;</span>);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;设备ID = %X\r\n&quot;</span>,W25Q128_readID());</span><br><span class="line"></span><br><span class="line">        <span class="comment">//读取0地址长度为10个字节的数据到buff</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;\r\n【3】读取0地址长度为10个字节的数据到buff......\r\n&quot;</span>);</span><br><span class="line">        W25Q128_read(buff, <span class="number">0</span>, <span class="number">10</span>);</span><br><span class="line">        <span class="comment">//输出读取到的数据</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;读取到的数据= %s\r\n&quot;</span>,buff);</span><br><span class="line">        delay_ms(<span class="number">200</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//往0地址写入10个字节的数据 “立创开发板”</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;\r\n【4】往0地址写入8个字节的数据 “TooUpper”......\r\n&quot;</span>);</span><br><span class="line">        W25Q128_write((<span class="type">uint8_t</span> *)<span class="string">&quot;TooUpper&quot;</span>, <span class="number">0</span>, <span class="number">8</span>);</span><br><span class="line">        <span class="comment">// 等待写入完成</span></span><br><span class="line">        delay_ms(<span class="number">200</span>);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;数据写入成功！\r\n&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//读取0地址长度为10个字节的数据到buff</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;\r\n【5】读取0地址长度为8个字节的数据到buff......\r\n&quot;</span>);</span><br><span class="line">        W25Q128_read(buff, <span class="number">0</span>, <span class="number">8</span>);</span><br><span class="line">        <span class="comment">//输出读取到的数据</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;读取到的数据= %s\r\n&quot;</span>,buff);</span><br><span class="line">        delay_ms(<span class="number">1000</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 因为是从0地址写的，所以擦除第0个扇区</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;\r\n【6】功能测试完毕擦除写入的数据......\r\n&quot;</span>);</span><br><span class="line">        W25Q128_erase_sector(<span class="number">0</span>);</span><br><span class="line">        delay_ms(<span class="number">200</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 清除缓存区</span></span><br><span class="line">        <span class="built_in">memset</span>(buff,<span class="number">0</span>,<span class="keyword">sizeof</span>(buff));</span><br><span class="line"></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;\r\n=========【结束】========\r\n&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span>(<span class="number">1</span>) &#123;</span><br><span class="line">                delay_ms(<span class="number">100</span>);</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">博主</a></li>
+        
+          <li><a href="/tags/">标签</a></li>
+        
+          <li><a href="/categories/">分类</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E8%84%9A%E8%AF%B4%E6%98%8E"><span class="toc-number">1.</span> <span class="toc-text">引脚说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%E7%94%B5%E8%B7%AF"><span class="toc-number">2.</span> <span class="toc-text">示例电路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SPI"><span class="toc-number">3.</span> <span class="toc-text">SPI</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81"><span class="toc-number">4.</span> <span class="toc-text">示例代码</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/W25Q128/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/W25Q128/&text=W25Q128"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/W25Q128/&title=W25Q128"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/W25Q128/&is_video=false&description=W25Q128"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=W25Q128&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/W25Q128/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/W25Q128/&title=W25Q128"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/W25Q128/&title=W25Q128"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/W25Q128/&title=W25Q128"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/W25Q128/&title=W25Q128"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/W25Q128/&name=W25Q128&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/W25Q128/&t=W25Q128"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    kay
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

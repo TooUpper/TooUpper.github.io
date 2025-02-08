@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="CS47L35 是 Cirrus Logic 推出的一款高性能、低功耗音频编解码器（Audio Codec），专为智能手机、可穿戴设备、蓝牙耳机、智能音箱等音频设备设计。它集成了高品质的 DAC（数字-模拟转换）、ADC（模拟-数字转换）、低功耗 DSP（数字信号处理器）和语音增强功能，支持多种音频输入&#x2F;输出接口，能够实现高质量音频播放、录音、降噪和回声消除等功能。 电气特性模拟电源（A">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CS47L35">
+<meta property="og:url" content="https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/CS47L35/index.html">
+<meta property="og:site_name" content="流年不知心底事">
+<meta property="og:description" content="CS47L35 是 Cirrus Logic 推出的一款高性能、低功耗音频编解码器（Audio Codec），专为智能手机、可穿戴设备、蓝牙耳机、智能音箱等音频设备设计。它集成了高品质的 DAC（数字-模拟转换）、ADC（模拟-数字转换）、低功耗 DSP（数字信号处理器）和语音增强功能，支持多种音频输入&#x2F;输出接口，能够实现高质量音频播放、录音、降噪和回声消除等功能。 电气特性模拟电源（A">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/CS47L35/yjsm.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/CS47L35/yydl.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/CS47L35/i2cbx.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/CS47L35/spibx.png">
+<meta property="article:published_time" content="2025-02-03T02:40:00.000Z">
+<meta property="article:modified_time" content="2025-02-08T07:09:05.161Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="IC">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/CS47L35/yjsm.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>CS47L35</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/DRV8833/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/S15OT421/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/CS47L35/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/CS47L35/&text=CS47L35"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/CS47L35/&title=CS47L35"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/CS47L35/&is_video=false&description=CS47L35"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=CS47L35&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/CS47L35/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/CS47L35/&title=CS47L35"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/CS47L35/&title=CS47L35"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/CS47L35/&title=CS47L35"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/CS47L35/&title=CS47L35"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/CS47L35/&name=CS47L35&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/CS47L35/&t=CS47L35"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%B5%E6%B0%94%E7%89%B9%E6%80%A7"><span class="toc-number">1.</span> <span class="toc-text">电气特性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E8%84%9A%E8%AF%B4%E6%98%8E"><span class="toc-number">2.</span> <span class="toc-text">引脚说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E7%94%B5%E8%B7%AF"><span class="toc-number">3.</span> <span class="toc-text">应用电路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-number">4.</span> <span class="toc-text">工作原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9F%B3%E9%A2%91%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%E6%B5%81%E7%A8%8B"><span class="toc-number">4.1.</span> <span class="toc-text">音频信号处理流程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F"><span class="toc-number">5.</span> <span class="toc-text">通信方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#I2C%E9%80%9A%E4%BF%A1"><span class="toc-number">5.1.</span> <span class="toc-text">I2C通信</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SPI%E9%80%9A%E4%BF%A1"><span class="toc-number">5.2.</span> <span class="toc-text">SPI通信</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A9%B1%E5%8A%A8%E4%BB%A3%E7%A0%81"><span class="toc-number">6.</span> <span class="toc-text">驱动代码</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        CS47L35
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">kay</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-02-03T02:40:00.000Z" class="dt-published" itemprop="datePublished">2025-02-03</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/IC/">IC</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/IC/" rel="tag">IC</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>CS47L35 是 Cirrus Logic 推出的一款高性能、低功耗音频编解码器（Audio Codec），专为智能手机、可穿戴设备、蓝牙耳机、智能音箱等音频设备设计。它集成了高品质的 DAC（数字-模拟转换）、ADC（模拟-数字转换）、低功耗 DSP（数字信号处理器）和语音增强功能，支持多种音频输入&#x2F;输出接口，能够实现高质量音频播放、录音、降噪和回声消除等功能。</p>
+<h2 id="电气特性"><a href="#电气特性" class="headerlink" title="电气特性"></a>电气特性</h2><p><strong>模拟电源（AVDD）</strong>：1.7V ~ 1.9V</p>
+<p><strong>数字核心电源（DBVDD）</strong>：1.2V</p>
+<p><strong>I&#x2F;O 电源（IOVDD）</strong>：1.8V 或 3.3V</p>
+<p><strong>耳机驱动电源（HPVDD）</strong>：2.5V ~ 5V（典型 3.3V）</p>
+<h2 id="引脚说明"><a href="#引脚说明" class="headerlink" title="引脚说明"></a>引脚说明</h2><p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/CS47L35/yjsm.png" alt="yjsm"></p>
+<table>
+<thead>
+<tr>
+<th><strong>引脚名称</strong></th>
+<th><strong>引脚编号</strong></th>
+<th><strong>功率供应</strong></th>
+<th><strong>I&#x2F;O 类型</strong></th>
+<th><strong>功能描述</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>CP1C1A</strong></td>
+<td>E5</td>
+<td>O</td>
+<td>Analog I&#x2F;O</td>
+<td>电荷泵 1 正向电容引脚 1。</td>
+</tr>
+<tr>
+<td><strong>CP1C1B</strong></td>
+<td>D6</td>
+<td>O</td>
+<td>Analog I&#x2F;O</td>
+<td>电荷泵 1 正向电容引脚 2</td>
+</tr>
+<tr>
+<td><strong>CP1C2A</strong></td>
+<td>C5</td>
+<td>O</td>
+<td>Analog I&#x2F;O</td>
+<td>电荷泵 1 反向电容引脚 1。</td>
+</tr>
+<tr>
+<td><strong>CP1C2B</strong></td>
+<td>B8</td>
+<td>O</td>
+<td>Analog I&#x2F;O</td>
+<td>电荷泵 1 反向电容引脚 2。</td>
+</tr>
+<tr>
+<td><strong>CP1VOUT1P</strong></td>
+<td>E7</td>
+<td>O</td>
+<td>Analog I&#x2F;O</td>
+<td>电荷泵 1 输出正电压。</td>
+</tr>
+<tr>
+<td><strong>CP1VOUT1N</strong></td>
+<td>F8</td>
+<td>O</td>
+<td>Analog I&#x2F;O</td>
+<td>电荷泵 1 输出负电压。</td>
+</tr>
+<tr>
+<td><strong>CP1VOUT2P</strong></td>
+<td>A7</td>
+<td>O</td>
+<td>Analog I&#x2F;O</td>
+<td>电荷泵 1 正向电压输出 2。</td>
+</tr>
+<tr>
+<td><strong>CP1VOUT2N</strong></td>
+<td>D8</td>
+<td>O</td>
+<td>Analog I&#x2F;O</td>
+<td>电荷泵 1 反向电压输出 2。</td>
+</tr>
+<tr>
+<td><strong>CP2CA</strong></td>
+<td>G7</td>
+<td>O</td>
+<td>Analog I&#x2F;O</td>
+<td>电荷泵 2 正向电容引脚。</td>
+</tr>
+<tr>
+<td><strong>CP2CB</strong></td>
+<td>G5</td>
+<td>O</td>
+<td>Analog I&#x2F;O</td>
+<td>电荷泵 2 反向电容引脚。</td>
+</tr>
+<tr>
+<td><strong>CP2VOUT</strong></td>
+<td>F4</td>
+<td>O</td>
+<td>Analog I&#x2F;O</td>
+<td>电荷泵 2 输出电压供电&#x2F;解耦。</td>
+</tr>
+<tr>
+<td><strong>EPOUTN</strong></td>
+<td>C9</td>
+<td>O</td>
+<td>Analog I&#x2F;O</td>
+<td>耳机输出负电压。</td>
+</tr>
+<tr>
+<td><strong>EPOUTP</strong></td>
+<td>A9</td>
+<td>O</td>
+<td>Analog I&#x2F;O</td>
+<td>耳机输出正电压。</td>
+</tr>
+<tr>
+<td><strong>GPSWN</strong></td>
+<td>G9</td>
+<td>I&#x2F;O</td>
+<td>General I&#x2F;O</td>
+<td>通用双向开关引脚。</td>
+</tr>
+<tr>
+<td><strong>GPSWP</strong></td>
+<td>F10</td>
+<td>I&#x2F;O</td>
+<td>General I&#x2F;O</td>
+<td>通用双向开关引脚。</td>
+</tr>
+<tr>
+<td><strong>HPDET</strong></td>
+<td>C11</td>
+<td>I</td>
+<td>Analog I&#x2F;O</td>
+<td>耳机输入检测。</td>
+</tr>
+<tr>
+<td><strong>HPOUTL</strong></td>
+<td>B12</td>
+<td>I</td>
+<td>Analog I&#x2F;O</td>
+<td>左耳机输出输入。</td>
+</tr>
+<tr>
+<td><strong>HPOUTR</strong></td>
+<td>A11</td>
+<td>I</td>
+<td>Analog I&#x2F;O</td>
+<td>右耳机输出输入。</td>
+</tr>
+<tr>
+<td><strong>HPOUT</strong></td>
+<td>D12</td>
+<td>I</td>
+<td>Analog I&#x2F;O</td>
+<td>耳机输出反馈引脚，连接外部麦克风及耳机输入。</td>
+</tr>
+<tr>
+<td><strong>IN1ALP</strong></td>
+<td>E3</td>
+<td>I</td>
+<td>Analog I&#x2F;O</td>
+<td>左通道单端输入&#x2F;左通道正向输入信号。</td>
+</tr>
+<tr>
+<td><strong>IN1ALP</strong></td>
+<td>G3</td>
+<td>I</td>
+<td>Analog I&#x2F;O</td>
+<td>左通道单端输入&#x2F;左通道正向输入信号。</td>
+</tr>
+<tr>
+<td><strong>IN1BRP</strong></td>
+<td>H2</td>
+<td>I</td>
+<td>Analog I&#x2F;O</td>
+<td>右通道单端输入&#x2F;右通道正向输入信号。</td>
+</tr>
+<tr>
+<td><strong>IN2BLP</strong></td>
+<td>H4</td>
+<td>I</td>
+<td>Analog I&#x2F;O</td>
+<td>左通道负向输入信号。</td>
+</tr>
+<tr>
+<td><strong>IN2BRP</strong></td>
+<td>H6</td>
+<td>I</td>
+<td>Analog I&#x2F;O</td>
+<td>右通道负向输入信号。</td>
+</tr>
+<tr>
+<td><strong>IN2ALP</strong></td>
+<td>K6</td>
+<td>I</td>
+<td>Analog I&#x2F;O</td>
+<td>左通道负向输入信号。</td>
+</tr>
+<tr>
+<td><strong>IN2BRP</strong></td>
+<td>K7</td>
+<td>I</td>
+<td>Analog I&#x2F;O</td>
+<td>右通道负向输入信号。</td>
+</tr>
+<tr>
+<td><strong>IN2LP</strong></td>
+<td>K4</td>
+<td>MICVDD</td>
+<td>I</td>
+<td>左通道单端麦克风输入&#x2F;左通道正向差分输入信号。</td>
+</tr>
+<tr>
+<td><strong>IN2RN&#x2F;DMICDAT2</strong></td>
+<td>E1</td>
+<td>MICVDD 或 MICBIASn</td>
+<td>I</td>
+<td>右通道单端麦克风输入&#x2F;右通道正向差分输入信号。</td>
+</tr>
+<tr>
+<td><strong>IN2RP</strong></td>
+<td>F2</td>
+<td>MICVDD</td>
+<td>I</td>
+<td>右通道单端麦克风输入&#x2F;右通道正向差分输入信号。</td>
+</tr>
+<tr>
+<td><strong>JACKDET1</strong></td>
+<td>D10</td>
+<td>AVDD</td>
+<td>I</td>
+<td>插孔检测输入 1。</td>
+</tr>
+<tr>
+<td><strong>JACKDET2</strong></td>
+<td>H10</td>
+<td>AVDD</td>
+<td>I</td>
+<td>插孔检测输入 2。</td>
+</tr>
+<tr>
+<td><strong>MICBISA1</strong></td>
+<td>A1</td>
+<td>O</td>
+<td>Analog I&#x2F;O</td>
+<td>麦克风偏置 1A。</td>
+</tr>
+<tr>
+<td><strong>MICBISA1B</strong></td>
+<td>A3</td>
+<td>O</td>
+<td>Analog I&#x2F;O</td>
+<td>麦克风偏置 1B。</td>
+</tr>
+<tr>
+<td><strong>MICBISA2</strong></td>
+<td>B2</td>
+<td>O</td>
+<td>Analog I&#x2F;O</td>
+<td>麦克风偏置 2A。</td>
+</tr>
+<tr>
+<td><strong>MICBISA2B</strong></td>
+<td>C3</td>
+<td>O</td>
+<td>Analog I&#x2F;O</td>
+<td>麦克风偏置 2B。</td>
+</tr>
+<tr>
+<td><strong>MICDET1&#x2F;HPOUTFB2</strong></td>
+<td>E11</td>
+<td>I</td>
+<td>Analog I&#x2F;O</td>
+<td>麦克风和配件传感器输入，连接到 1&#x2F;HPOUTL 和 HPOUTR 地线反馈。</td>
+</tr>
+<tr>
+<td><strong>MICVDD</strong></td>
+<td>B4</td>
+<td>O</td>
+<td>Analog I&#x2F;O</td>
+<td>LDO 输出解耦引脚（由 CS47L35 内部生成）。可用于外部麦克风的参考&#x2F;供电。</td>
+</tr>
+<tr>
+<td><strong>SPKOUT</strong></td>
+<td>P2</td>
+<td>O</td>
+<td>Analog I&#x2F;O</td>
+<td>扬声器负输出。</td>
+</tr>
+<tr>
+<td><strong>SPKOUT</strong></td>
+<td>T2</td>
+<td>O</td>
+<td>Analog I&#x2F;O</td>
+<td>扬声器正输出。</td>
+</tr>
+<tr>
+<td><strong>VREFC</strong></td>
+<td>J1</td>
+<td>I</td>
+<td>Analog I&#x2F;O</td>
+<td>带隙参考电容连接。</td>
+</tr>
+<tr>
+<td><strong>AIF1BCLK&#x2F;GPIO</strong></td>
+<td>T12</td>
+<td>DBVDD1</td>
+<td>I&#x2F;O</td>
+<td>音频接口 1 帧时钟&#x2F;GPIO。GPIO 输出可以选择 CMOS 或开漏；BCLK 输出为 CMOS。</td>
+</tr>
+<tr>
+<td><strong>AIF1LRCLK&#x2F;GPIO</strong></td>
+<td>R11</td>
+<td>DBVDD1</td>
+<td>I&#x2F;O</td>
+<td>音频接口 1 左右时钟&#x2F;GPIO。GPIO 输出可以选择 CMOS 或开漏；LRCLK 输出为 CMOS。</td>
+</tr>
+<tr>
+<td><strong>AIF1RXDAT&#x2F;GPIO</strong></td>
+<td>P10</td>
+<td>DBVDD1</td>
+<td>I&#x2F;O</td>
+<td>音频接口 1 RX 数字音频数据&#x2F;GPIO。GPIO 输出可以选择 CMOS 或开漏；TXDAT 输出为 CMOS。</td>
+</tr>
+<tr>
+<td><strong>AIF1TXDAT&#x2F;GPIO</strong></td>
+<td>T10</td>
+<td>DBVDD1</td>
+<td>I&#x2F;O</td>
+<td>音频接口 1 TX 数字音频数据&#x2F;GPIO。GPIO 输出可以选择 CMOS 或开漏；TXDAT 输出为 CMOS。</td>
+</tr>
+<tr>
+<td><strong>AIF2BCLK&#x2F;GPIO</strong></td>
+<td>P6</td>
+<td>DBVDD2</td>
+<td>I&#x2F;O</td>
+<td>音频接口 2 帧时钟&#x2F;GPIO。GPIO 输出可以选择 CMOS 或开漏；BCLK 输出为 CMOS。</td>
+</tr>
+<tr>
+<td><strong>AIF2LRCLK&#x2F;GPIO</strong></td>
+<td>M6</td>
+<td>DBVDD2</td>
+<td>I&#x2F;O</td>
+<td>音频接口 2 左右时钟&#x2F;GPIO。GPIO 输出可以选择 CMOS 或开漏；LRCLK 输出为 CMOS。</td>
+</tr>
+<tr>
+<td><strong>AIF2RXDAT&#x2F;GPIO</strong></td>
+<td>P8</td>
+<td>DBVDD2</td>
+<td>I&#x2F;O</td>
+<td>音频接口 2 RX 数字音频数据&#x2F;GPIO。GPIO 输出可以选择 CMOS 或开漏；TXDAT 输出为 CMOS。</td>
+</tr>
+<tr>
+<td><strong>AIF2TXDAT&#x2F;GPIO</strong></td>
+<td>M10</td>
+<td>DBVDD2</td>
+<td>I&#x2F;O</td>
+<td>音频接口 2 TX 数字音频数据&#x2F;GPIO。GPIO 输出可以选择 CMOS 或开漏；TXDAT 输出为 CMOS。</td>
+</tr>
+<tr>
+<td><strong>AIF3BCLK&#x2F;GPIO</strong></td>
+<td>R5</td>
+<td>DBVDD2</td>
+<td>I&#x2F;O</td>
+<td>音频接口 3 帧时钟&#x2F;GPIO。GPIO 输出可以选择 CMOS 或开漏；BCLK 输出为 CMOS。</td>
+</tr>
+<tr>
+<td><strong>AIF3RXDAT&#x2F;GPIO</strong></td>
+<td>N5</td>
+<td>DBVDD2</td>
+<td>I&#x2F;O</td>
+<td>音频接口 3 RX 数字音频数据&#x2F;GPIO。GPIO 输出可以选择 CMOS 或开漏；TXDAT 输出为 CMOS。</td>
+</tr>
+<tr>
+<td><strong>CIF1MSIO</strong></td>
+<td>M10</td>
+<td>DBVDD1</td>
+<td>I&#x2F;O</td>
+<td>控制接口 1 SPI 主模式与从模式。CIF1S 时钟在未选择时为高阻态。</td>
+</tr>
+<tr>
+<td><strong>CIF1SCLK</strong></td>
+<td>L9</td>
+<td>DBVDD1</td>
+<td>I&#x2F;O</td>
+<td>控制接口 1 SPI 时钟。CIF1S 时钟在未选择时为高阻态。</td>
+</tr>
+<tr>
+<td><strong>CIF1CSLCK</strong></td>
+<td>K7</td>
+<td>DBVDD1</td>
+<td>I&#x2F;O</td>
+<td>控制接口 1 SPI 片选信号。</td>
+</tr>
+<tr>
+<td><strong>CIF2SDA</strong></td>
+<td>N11</td>
+<td>DBVDD1</td>
+<td>I&#x2F;O</td>
+<td>控制接口 2 (I²C) 数据输入输出。SDA 输出为开漏。</td>
+</tr>
+<tr>
+<td><strong>IRQ</strong></td>
+<td>J9</td>
+<td>DBVDD1</td>
+<td>I</td>
+<td>中断请求输出（低电平有效）。引脚配置可选择 CMOS 或开漏。</td>
+</tr>
+<tr>
+<td><strong>MCLK1</strong></td>
+<td>M12</td>
+<td>DBVDD1</td>
+<td>I</td>
+<td>主时钟输入 1。</td>
+</tr>
+<tr>
+<td><strong>MCLK2</strong></td>
+<td>T6</td>
+<td>DBVDD2</td>
+<td>I</td>
+<td>主时钟输入 2。</td>
+</tr>
+<tr>
+<td><strong>MIF1SCLK&#x2F;GPIO</strong></td>
+<td>T8</td>
+<td>DBVDD1</td>
+<td>I&#x2F;O</td>
+<td>控制接口 1 时钟输出&#x2F;GPIO。GPIO 输出可选择 CMOS 或开漏；SCLK 输出为 CMOS。</td>
+</tr>
+<tr>
+<td><strong>MIF1SDA&#x2F;GPIO</strong></td>
+<td>P6</td>
+<td>DBVDD1</td>
+<td>I&#x2F;O</td>
+<td>控制接口 1 数据输入&#x2F;GPIO。GPIO 输出可选择 CMOS 或开漏；SDA 输出为开漏。</td>
+</tr>
+<tr>
+<td><strong>RESET</strong></td>
+<td>H8</td>
+<td>DBVDD1</td>
+<td>I</td>
+<td>数字复位输入（激活有效）。</td>
+</tr>
+<tr>
+<td><strong>SLIMCLK</strong></td>
+<td>R9</td>
+<td>DBVDD1</td>
+<td>I&#x2F;O</td>
+<td>SLIMbus 时钟输入输出。</td>
+</tr>
+<tr>
+<td><strong>SLIMDAT</strong></td>
+<td>N9</td>
+<td>DBVDD1</td>
+<td>I&#x2F;O</td>
+<td>SLIMbus 数据输入输出。</td>
+</tr>
+<tr>
+<td><strong>SPKDAT&#x2F;GPIO</strong></td>
+<td>N3</td>
+<td>DBVDD2</td>
+<td>I&#x2F;O</td>
+<td>数字扬声器 (PDM) 数据输出&#x2F;GPIO。GPIO 输出可选择 CMOS 或开漏；SPKDAT 输出为 CMOS。</td>
+</tr>
+<tr>
+<td><strong>TCK</strong></td>
+<td>R7</td>
+<td>DBVDD2</td>
+<td>I</td>
+<td>JTAG 时钟输入。内部下拉保持此引脚为逻辑 0，正常工作时有效。</td>
+</tr>
+<tr>
+<td><strong>TDI</strong></td>
+<td>N7</td>
+<td>DBVDD2</td>
+<td>I</td>
+<td>JTAG 数据输入。内部下拉保持此引脚为逻辑 0，正常工作时有效。</td>
+</tr>
+<tr>
+<td><strong>TDO</strong></td>
+<td>L7</td>
+<td>DBVDD2</td>
+<td>O</td>
+<td>JTAG 数据输出。</td>
+</tr>
+<tr>
+<td><strong>TMS</strong></td>
+<td>K8</td>
+<td>DBVDD2</td>
+<td>I</td>
+<td>JTAG 模式选择输入。内部下拉保持此引脚为逻辑 0，正常工作时有效。</td>
+</tr>
+<tr>
+<td><strong>TRST</strong></td>
+<td>M8</td>
+<td>DBVDD2</td>
+<td>I</td>
+<td>JTAG 复位输入（激活有效）。内部下拉保持此引脚为逻辑 0，正常工作时有效。</td>
+</tr>
+<tr>
+<td><strong>AGND1</strong></td>
+<td>L1</td>
+<td>—</td>
+<td>I</td>
+<td>模拟接地（返回 AVDD1）。</td>
+</tr>
+<tr>
+<td><strong>AGND2</strong></td>
+<td>E9</td>
+<td>—</td>
+<td>I</td>
+<td>模拟接地（返回 AVDD2）。</td>
+</tr>
+<tr>
+<td><strong>AVDD1</strong></td>
+<td>K2</td>
+<td>—</td>
+<td>O</td>
+<td>模拟电源 1。</td>
+</tr>
+<tr>
+<td><strong>AVDD2</strong></td>
+<td>F12</td>
+<td>—</td>
+<td>O</td>
+<td>模拟电源 2。</td>
+</tr>
+<tr>
+<td><strong>CPVDD</strong></td>
+<td>D6</td>
+<td>—</td>
+<td>O</td>
+<td>电荷泵电源，供给电荷泵 1 和电荷泵 2。</td>
+</tr>
+<tr>
+<td><strong>DBVDD1</strong></td>
+<td>U11</td>
+<td>—</td>
+<td>O</td>
+<td>数字电源（供音频接口、SLIMbus、控制接口等使用）。</td>
+</tr>
+<tr>
+<td><strong>DBVDD2</strong></td>
+<td>U5</td>
+<td>—</td>
+<td>O</td>
+<td>数字电源（供音频接口、SLIMbus、控制接口等使用）。</td>
+</tr>
+<tr>
+<td><strong>DCVDD</strong></td>
+<td>U7</td>
+<td>—</td>
+<td>—</td>
+<td>数字核心电源供应。</td>
+</tr>
+<tr>
+<td><strong>DGND</strong></td>
+<td>J11, T4, U9</td>
+<td>—</td>
+<td>—</td>
+<td>数字地（DCVDD 和 DBVDDn 的返回路径）。</td>
+</tr>
+<tr>
+<td><strong>FLLVDD</strong></td>
+<td>K12</td>
+<td>—</td>
+<td>—</td>
+<td>模拟电源（用于 FLL1）。</td>
+</tr>
+<tr>
+<td><strong>SPKGNDN</strong></td>
+<td>R3</td>
+<td>—</td>
+<td>—</td>
+<td>扬声器驱动地（SPKVDD 的返回路径）。¹</td>
+</tr>
+<tr>
+<td><strong>SPKGNDP</strong></td>
+<td>U3</td>
+<td>—</td>
+<td>—</td>
+<td>扬声器驱动地（SPKVDD 的返回路径）。¹</td>
+</tr>
+<tr>
+<td><strong>SPKVDD</strong></td>
+<td>R1, U1</td>
+<td>—</td>
+<td>—</td>
+<td>扬声器驱动电源供应。</td>
+</tr>
+<tr>
+<td><strong>SUBGND</strong></td>
+<td>H12, N1</td>
+<td>—</td>
+<td>—</td>
+<td>基板地（Substrate ground）。</td>
+</tr>
+<tr>
+<td><strong>NC</strong></td>
+<td>D4, H6, J5, J7</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>本芯片 <strong>CS47L35</strong> 具有丰富的 <strong>音频输入&#x2F;输出接口</strong>、<strong>GPIO</strong>、<strong>I²C&#x2F;SPI 控制接口</strong> 以及 <strong>JTAG 调试接口</strong>，并配备多种 <strong>电源管理和地连接</strong>。主要特点：</p>
+<ul>
+<li><strong>支持模拟和数字麦克风输入</strong></li>
+<li><strong>具备 3 组 I²S 接口，可用于音频数据传输</strong></li>
+<li><strong>内置 PDM 扬声器接口</strong></li>
+<li><strong>提供 SPI 和 I²C 作为控制接口</strong></li>
+<li><strong>具备 JTAG 调试支持</strong></li>
+<li><strong>内置充电泵、多个电源域，提高功耗管理</strong></li>
+</ul>
+</blockquote>
+<h2 id="应用电路"><a href="#应用电路" class="headerlink" title="应用电路"></a>应用电路</h2><p>典型应用电路</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/CS47L35/yydl.png" alt="yydl"></p>
+<blockquote>
+<p><strong>DVDD、DBVDD、FLVDD（1.2V）</strong>：芯片的 <strong>数字核心供电</strong>，通常由 LDO 或 DCDC 提供。</p>
+<p><strong>AVDD（1.8V）</strong>：<strong>模拟电路供电</strong>，驱动麦克风偏置和 ADC。</p>
+<p><strong>CPVDD（2.5V~4V）</strong>：内部 <strong>电荷泵供电</strong>，用于耳机放大。</p>
+<p><strong>SPKVDD（3.3V~5V）</strong>：提供扬声器输出的电源。</p>
+<p><strong>电源去耦电容</strong>（如 4.7µF、1µF）：用于降低电源噪声。</p>
+<p><strong>RESET</strong>：复位引脚，通常连接到 MCU 以进行芯片复位。</p>
+<p><strong>IRQ</strong>：中断信号输出，可通知 MCU 处理特定事件。</p>
+<p>SLIMBus &#x2F; I²S（AIFxBCLK、AIFxLRCLK、AIFxRXDAT、AIFxTXDAT）</p>
+<ul>
+<li>该芯片支持 <strong>SLIMBus 和 I²S&#x2F;TDM 接口</strong>，用于音频数据传输。</li>
+<li><strong>I²S 用于与 MCU 或 DSP 通信</strong>，传输麦克风和扬声器数据。</li>
+</ul>
+<p><strong>麦克风输入（MICBIAS、IN1A&#x2F;IN1B、IN2A&#x2F;IN2B）</strong></p>
+<ul>
+<li>支持 <strong>差分麦克风</strong> 和 <strong>单端麦克风</strong>。</li>
+<li><strong>MICBIAS 提供偏置电压</strong>（2.2kΩ 上拉到 MICBIAS）。</li>
+<li>可以连接到 <strong>数字 MEMS 麦克风（PDM）</strong> 通过 I²S&#x2F;TDM 接收音频数据。</li>
+</ul>
+<p><strong>耳机输出（HPOUTL、HPOUTR）</strong></p>
+<ul>
+<li>连接到 <strong>3.5mm 耳机插孔</strong>，支持 <strong>立体声耳机</strong>。</li>
+<li><strong>HPDETR</strong>（耳机检测引脚）用于检测是否插入耳机。</li>
+<li><strong>EPOUTP&#x2F;EPOUTN</strong>：支持 <strong>BTL（桥接负载）耳机驱动</strong>，提供更高功率输出。</li>
+</ul>
+<p><strong>扬声器输出（SPKOUTP、SPKOUTN）</strong></p>
+<ul>
+<li>连接到 <strong>扬声器</strong>，支持单声道 <strong>BTL（桥接负载）驱动</strong>。</li>
+<li><strong>SPKVDD 提供功率</strong>，支持更大功率输出。</li>
+</ul>
+<p><strong>数字扬声器输出（SPKDAT）</strong></p>
+<ul>
+<li>通过数字 I²S&#x2F;TDM 发送音频信号到外部 D 类放大器。</li>
+</ul>
+<p><strong>GPIOS</strong></p>
+<ul>
+<li>支持 <strong>多达 16 个 GPIO</strong>，用于控制音频路径、检测插拔、调节增益等。</li>
+</ul>
+<p><strong>MCLK（时钟输入）</strong></p>
+<ul>
+<li>提供芯片运行所需的 <strong>主时钟（MCLK1&#x2F;MCLK2）</strong>。</li>
+</ul>
+</blockquote>
+<h2 id="工作原理"><a href="#工作原理" class="headerlink" title="工作原理"></a>工作原理</h2><h3 id="音频信号处理流程"><a href="#音频信号处理流程" class="headerlink" title="音频信号处理流程"></a><strong>音频信号处理流程</strong></h3><p><strong>音频输入</strong>：</p>
+<ul>
+<li>模拟音频信号（如麦克风输入）通过 ADC（模数转换器）转换为数字信号。</li>
+<li>数字音频信号可通过 I²S 或 PDM 接口直接输入芯片。</li>
+</ul>
+<p><strong>音频信号处理（DSP）</strong>：</p>
+<ul>
+<li>语音增强（Beamforming、降噪、回声消除等）。</li>
+<li>音效处理（如均衡器、混响等）。</li>
+</ul>
+<p><strong>音频输出</strong>：</p>
+<ul>
+<li>处理后的音频信号可通过 DAC（数模转换器）转换为模拟信号，并通过耳机放大器驱动耳机或扬声器。</li>
+<li>也可以以数字信号的形式通过 I²S 或 TDM 发送到外部设备。</li>
+</ul>
+<h2 id="通信方式"><a href="#通信方式" class="headerlink" title="通信方式"></a>通信方式</h2><h3 id="I2C通信"><a href="#I2C通信" class="headerlink" title="I2C通信"></a>I2C通信</h3><p><strong>I2C（Two-Wire）模式下控制接口的时序要求</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>参数</strong></th>
+<th><strong>符号</strong></th>
+<th><strong>最小值（Min）</strong></th>
+<th><strong>典型值（Typ）</strong></th>
+<th><strong>最大值（Max）</strong></th>
+<th><strong>单位</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>SCL 时钟频率</strong></td>
+<td>f_SCL</td>
+<td>—</td>
+<td>—</td>
+<td>3400</td>
+<td>kHz</td>
+</tr>
+<tr>
+<td><strong>SCL 低脉冲宽度</strong></td>
+<td>t1</td>
+<td>160</td>
+<td>—</td>
+<td>—</td>
+<td>ns</td>
+</tr>
+<tr>
+<td><strong>SCL 高脉冲宽度</strong></td>
+<td>t2</td>
+<td>160</td>
+<td>—</td>
+<td>—</td>
+<td>ns</td>
+</tr>
+<tr>
+<td><strong>启动条件保持时间</strong></td>
+<td>t3</td>
+<td>160</td>
+<td>—</td>
+<td>—</td>
+<td>ns</td>
+</tr>
+<tr>
+<td><strong>启动条件设置时间</strong></td>
+<td>t4</td>
+<td>160</td>
+<td>—</td>
+<td>—</td>
+<td>ns</td>
+</tr>
+<tr>
+<td><strong>SDA, SCL 上升时间（10%-90%）</strong></td>
+<td>t5</td>
+<td>SCL 频率 &gt; 1.7MHz</td>
+<td>—</td>
+<td>80</td>
+<td>ns</td>
+</tr>
+<tr>
+<td><strong>SDA, SCL 上升时间（10%-90%）</strong></td>
+<td>t5</td>
+<td>SCL 频率 ≤ 1MHz</td>
+<td>—</td>
+<td>2000</td>
+<td>ns</td>
+</tr>
+<tr>
+<td><strong>SDA, SCL 降落时间（90%-10%）</strong></td>
+<td>t6</td>
+<td>SCL 频率 &gt; 1.7MHz</td>
+<td>—</td>
+<td>160</td>
+<td>ns</td>
+</tr>
+<tr>
+<td><strong>SDA, SCL 降落时间（90%-10%）</strong></td>
+<td>t6</td>
+<td>SCL 频率 ≤ 1MHz</td>
+<td>—</td>
+<td>200</td>
+<td>ns</td>
+</tr>
+<tr>
+<td><strong>停止条件设置时间</strong></td>
+<td>t7</td>
+<td>160</td>
+<td>—</td>
+<td>—</td>
+<td>ns</td>
+</tr>
+<tr>
+<td><strong>SDA 设置时间（数据输入）</strong></td>
+<td>t8</td>
+<td>40</td>
+<td>—</td>
+<td>—</td>
+<td>ns</td>
+</tr>
+<tr>
+<td><strong>SDA 保持时间（数据输入&#x2F;ACK 输出）</strong></td>
+<td>t9</td>
+<td>0</td>
+<td>—</td>
+<td>40</td>
+<td>ns</td>
+</tr>
+<tr>
+<td><strong>SDA 保持时间（数据输入）</strong></td>
+<td>t10</td>
+<td>SCL 上升时间（90%-10%）&#x3D; 20ns, C_LOAD（SDA）&#x3D; 15pF</td>
+<td>—</td>
+<td>40</td>
+<td>ns</td>
+</tr>
+<tr>
+<td><strong>SDA 保持时间（数据输入）</strong></td>
+<td>t10</td>
+<td>SCL 上升时间（90%-10%）&#x3D; 60ns, C_LOAD（SDA）&#x3D; 100pF</td>
+<td>—</td>
+<td>130</td>
+<td>ns</td>
+</tr>
+<tr>
+<td><strong>SDA 保持时间（数据输入）</strong></td>
+<td>t10</td>
+<td>SCL 上升时间（90%-10%）&#x3D; 160ns, C_LOAD（SDA）&#x3D; 400pF</td>
+<td>—</td>
+<td>190</td>
+<td>ns</td>
+</tr>
+<tr>
+<td><strong>SDA 保持时间（数据输入）</strong></td>
+<td>t10</td>
+<td>SCL 上升时间（90%-10%）&#x3D; 200ns, C_LOAD（SDA）&#x3D; 550pF</td>
+<td>—</td>
+<td>220</td>
+<td>ns</td>
+</tr>
+<tr>
+<td><strong>时序波形脉冲</strong></td>
+<td>tps</td>
+<td>0</td>
+<td>—</td>
+<td>25</td>
+<td>ns</td>
+</tr>
+</tbody></table>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/CS47L35/i2cbx.png" alt="i2cbx"></p>
+<h3 id="SPI通信"><a href="#SPI通信" class="headerlink" title="SPI通信"></a>SPI通信</h3><p><strong>SPI(Serial Peripheral Interface)四线模式</strong> 的控制接口时序要求</p>
+<table>
+<thead>
+<tr>
+<th><strong>参数</strong></th>
+<th><strong>符号</strong></th>
+<th><strong>最小值（Min）</strong></th>
+<th><strong>典型值（Typ）</strong></th>
+<th><strong>最大值（Max）</strong></th>
+<th><strong>单位</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>SS 到 SCLK 上升沿的时间</strong></td>
+<td>t_ssu</td>
+<td>2.6</td>
+<td>—</td>
+<td>—</td>
+<td>ns</td>
+</tr>
+<tr>
+<td><strong>SCLK 到 SS 上升沿的时间</strong></td>
+<td>t_sho</td>
+<td>0</td>
+<td>—</td>
+<td>—</td>
+<td>ns</td>
+</tr>
+<tr>
+<td><strong>SCLK 脉冲周期时间</strong></td>
+<td>t_scy</td>
+<td>50.0</td>
+<td>—</td>
+<td>—</td>
+<td>ns</td>
+</tr>
+<tr>
+<td><strong>SCLK 脉冲周期时间（系统时钟禁用时）</strong></td>
+<td>t_scy</td>
+<td>76.8</td>
+<td>—</td>
+<td>—</td>
+<td>ns</td>
+</tr>
+<tr>
+<td><strong>SCLK 脉冲周期时间（SYSCLK 频率 &gt; 000 时）</strong></td>
+<td>t_scy</td>
+<td>38.4</td>
+<td>—</td>
+<td>—</td>
+<td>ns</td>
+</tr>
+<tr>
+<td><strong>SCLK 低电平宽度</strong></td>
+<td>t_scl</td>
+<td>15.3</td>
+<td>—</td>
+<td>—</td>
+<td>ns</td>
+</tr>
+<tr>
+<td><strong>SCLK 高电平宽度</strong></td>
+<td>t_sch</td>
+<td>15.3</td>
+<td>—</td>
+<td>—</td>
+<td>ns</td>
+</tr>
+<tr>
+<td><strong>MOSI 到 SCLK 设置时间</strong></td>
+<td>t_msu</td>
+<td>1.5</td>
+<td>—</td>
+<td>—</td>
+<td>ns</td>
+</tr>
+<tr>
+<td><strong>MOSI 到 SCLK 保持时间</strong></td>
+<td>t_mho</td>
+<td>1.7</td>
+<td>—</td>
+<td>—</td>
+<td>ns</td>
+</tr>
+<tr>
+<td><strong>SCLK 上升沿到 MISO 传输的时间</strong></td>
+<td>t_su</td>
+<td>0</td>
+<td>—</td>
+<td>12.6</td>
+<td>ns</td>
+</tr>
+</tbody></table>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/CS47L35/spibx.png" alt="spibx"></p>
+<h2 id="驱动代码"><a href="#驱动代码" class="headerlink" title="驱动代码"></a>驱动代码</h2>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">博主</a></li>
+        
+          <li><a href="/tags/">标签</a></li>
+        
+          <li><a href="/categories/">分类</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%B5%E6%B0%94%E7%89%B9%E6%80%A7"><span class="toc-number">1.</span> <span class="toc-text">电气特性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E8%84%9A%E8%AF%B4%E6%98%8E"><span class="toc-number">2.</span> <span class="toc-text">引脚说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E7%94%B5%E8%B7%AF"><span class="toc-number">3.</span> <span class="toc-text">应用电路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-number">4.</span> <span class="toc-text">工作原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9F%B3%E9%A2%91%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%E6%B5%81%E7%A8%8B"><span class="toc-number">4.1.</span> <span class="toc-text">音频信号处理流程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F"><span class="toc-number">5.</span> <span class="toc-text">通信方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#I2C%E9%80%9A%E4%BF%A1"><span class="toc-number">5.1.</span> <span class="toc-text">I2C通信</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SPI%E9%80%9A%E4%BF%A1"><span class="toc-number">5.2.</span> <span class="toc-text">SPI通信</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A9%B1%E5%8A%A8%E4%BB%A3%E7%A0%81"><span class="toc-number">6.</span> <span class="toc-text">驱动代码</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/CS47L35/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/CS47L35/&text=CS47L35"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/CS47L35/&title=CS47L35"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/CS47L35/&is_video=false&description=CS47L35"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=CS47L35&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/CS47L35/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/CS47L35/&title=CS47L35"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/CS47L35/&title=CS47L35"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/CS47L35/&title=CS47L35"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/CS47L35/&title=CS47L35"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/CS47L35/&name=CS47L35&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/CS47L35/&t=CS47L35"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    kay
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

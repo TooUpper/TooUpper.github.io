@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="BQ25700A 是德州仪器（Texas Instruments, TI）推出的一款高度集成的电源管理芯片，主要用于单节或多节电池充电管理。 主要特性多源充电：支持从多种输入源为 1 至 4 节电池充电，输入电压范围为 3.5V 至 24V，兼容 USB 2.0、USB 3.0、USB 3.1 (Type-C) 和 USB_PD。 功率管理：具有窄 VDC (NVDC) 电源路径管理，支持无电池或">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BQ25700A">
+<meta property="og:url" content="https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/BQ25700A/index.html">
+<meta property="og:site_name" content="流年不知心底事">
+<meta property="og:description" content="BQ25700A 是德州仪器（Texas Instruments, TI）推出的一款高度集成的电源管理芯片，主要用于单节或多节电池充电管理。 主要特性多源充电：支持从多种输入源为 1 至 4 节电池充电，输入电压范围为 3.5V 至 24V，兼容 USB 2.0、USB 3.0、USB 3.1 (Type-C) 和 USB_PD。 功率管理：具有窄 VDC (NVDC) 电源路径管理，支持无电池或">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/BQ25700A/yjsm.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/BQ25700A/sldl.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/BQ25700A/xrgs.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/BQ25700A/xrsst.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/BQ25700A/dqgs.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/BQ25700A/dqsst.png">
+<meta property="article:published_time" content="2025-01-31T09:21:00.000Z">
+<meta property="article:modified_time" content="2025-02-08T07:08:54.721Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="IC">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/BQ25700A/yjsm.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>BQ25700A</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/S15OT421/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/%E9%98%BF%E9%87%8C%E4%BA%91IOT/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/BQ25700A/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/BQ25700A/&text=BQ25700A"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/BQ25700A/&title=BQ25700A"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/BQ25700A/&is_video=false&description=BQ25700A"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=BQ25700A&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/BQ25700A/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/BQ25700A/&title=BQ25700A"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/BQ25700A/&title=BQ25700A"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/BQ25700A/&title=BQ25700A"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/BQ25700A/&title=BQ25700A"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/BQ25700A/&name=BQ25700A&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/BQ25700A/&t=BQ25700A"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E7%89%B9%E6%80%A7"><span class="toc-number">1.</span> <span class="toc-text">主要特性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E8%84%9A%E8%AF%B4%E6%98%8E"><span class="toc-number">2.</span> <span class="toc-text">引脚说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%E7%94%B5%E8%B7%AF"><span class="toc-number">3.</span> <span class="toc-text">示例电路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F"><span class="toc-number">4.</span> <span class="toc-text">通信方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%99%E5%85%A5%E6%A0%BC%E5%BC%8F"><span class="toc-number">4.1.</span> <span class="toc-text">写入格式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96%E6%A0%BC%E5%BC%8F"><span class="toc-number">4.2.</span> <span class="toc-text">读取格式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-number">5.</span> <span class="toc-text">寄存器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%E9%A9%B1%E5%8A%A8"><span class="toc-number">6.</span> <span class="toc-text">示例驱动</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        BQ25700A
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">kay</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-01-31T09:21:00.000Z" class="dt-published" itemprop="datePublished">2025-01-31</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/IC/">IC</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/IC/" rel="tag">IC</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>BQ25700A 是德州仪器（Texas Instruments, TI）推出的一款高度集成的电源管理芯片，主要用于单节或多节电池充电管理。</p>
+<h2 id="主要特性"><a href="#主要特性" class="headerlink" title="主要特性"></a>主要特性</h2><p><strong>多源充电</strong>：支持从多种输入源为 1 至 4 节电池充电，输入电压范围为 3.5V 至 24V，兼容 USB 2.0、USB 3.0、USB 3.1 (Type-C) 和 USB_PD。</p>
+<p><strong>功率管理</strong>：具有窄 VDC (NVDC) 电源路径管理，支持无电池或深度放电电池的瞬时启动，并能在适配器满载时由电池补充系统电量。</p>
+<p><strong>USB OTG 功能</strong>：支持从电池为 USB 端口供电，输出电压范围为 4.48V 至 20.8V，兼容 USB PD，输出电流限制高达 6.35A。</p>
+<p><strong>可编程开关频率</strong>：支持 800kHz 或 1.2MHz 的可编程开关频率，适用于 1μH 至 3.3μH 的电源器。</p>
+<p><strong>系统配置与控制</strong>：通过 SMBus 端口实现灵活的系统配置和状态报告，支持硬件引脚设置输入电流限制，无需外部控制器。</p>
+<p><strong>高精度监控</strong>：集成 ADC 监控电压、电流和功率，具有高精度的调节和监控功能。</p>
+<p><strong>安全性</strong>：包括热关断、过电压保护和 MOSFET 电磁过流保护等多种安全特性。</p>
+<p><strong>低静态电流</strong>：具有低电池静态电流，优化了电池使用效率。</p>
+<p><strong>输入电流优化器</strong>：可获取最大输入功率，支持多种化学电池充电。(ICO)</p>
+<p><strong>封装</strong>：采用 32 引脚 4 x 4 WOFN 封装。</p>
+<h2 id="引脚说明"><a href="#引脚说明" class="headerlink" title="引脚说明"></a>引脚说明</h2><p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/BQ25700A/yjsm.png" alt="yjsm"></p>
+<table>
+<thead>
+<tr>
+<th align="left">引脚名称</th>
+<th align="center">引脚编号</th>
+<th align="center">输入&#x2F;输出</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">VBUS</td>
+<td align="center">1</td>
+<td align="center">PMR</td>
+<td align="left">充电器输入电压。建议使用 12Ω 和 0.47µF（最小）的输入低通滤波器。</td>
+</tr>
+<tr>
+<td align="left">ACN</td>
+<td align="center">2</td>
+<td align="center">PWR</td>
+<td align="left">输入电流检测电阻负端输入。ACP 和 ACN 的漏电流匹配。ACP 和 ACN 引脚上的串联电阻放置在检测电阻和滤波电容之间。请参阅数据手册《应用与实现》中的 ACP&#x2F;ACN 滤波器设计。</td>
+</tr>
+<tr>
+<td align="left">ACP</td>
+<td align="center">3</td>
+<td align="center">PWR</td>
+<td align="left">输入电流检测电阻正端输入。ACP 和 ACN 的漏电流匹配。ACP 和 ACN 引脚上的串联电阻放置在检测电阻和滤波电容之间。请参阅数据手册《应用与实现》中的 ACP&#x2F;ACN 滤波器设计。</td>
+</tr>
+<tr>
+<td align="left">CHRG_OK</td>
+<td align="center">4</td>
+<td align="center">O</td>
+<td align="left">开漏主动高电平指示器，用于通知系统已连接到充电输入的良好电源。通过 10 kΩ 电阻连接到上拉电源轨。当 VBUS 上升到 3.5V 以上或下降到 24.5V 以下时，CHRG_OK 在 50ms 去抖时间后为高电平。当 VBUS 下降到 3.2V 以下或上升到 26V 以上时，CHRG_OK 为低电平。发生故障时，CHRG_OK 被置为低电平。</td>
+</tr>
+<tr>
+<td align="left">EN_OTG</td>
+<td align="center">5</td>
+<td align="center">I</td>
+<td align="left">高电平有效以启用 OTG 模式。当 EN_OTG 引脚为高电平且 REG0x32[13] 为高电平时，可以启用 OTG，请参阅 USB On-The-Go (OTG) 以了解如何启用 OTG 功能的详细信息。</td>
+</tr>
+<tr>
+<td align="left">ILIM_HIZ</td>
+<td align="center">6</td>
+<td align="center">I</td>
+<td align="left">输入电流限制输入。通过从电源轨到 ILIM_HIZ 引脚再到地的电阻分压器编程 ILIM_HIZ 电压。引脚电压计算为：V<sub>(ILIM_HIZ)</sub> &#x3D; 1V + 40 × IDPM × RAC，其中 IDPM 是目标输入电流。充电器使用的输入电流限制是 ILIM_HIZ 引脚和 REG0x3F() 的较低设置。当引脚电压低于 0.4V 时，设备进入高阻模式，静态电流低。当引脚电压高于 0.8V 时，设备退出高阻模式。</td>
+</tr>
+<tr>
+<td align="left">VDDA</td>
+<td align="center">7</td>
+<td align="center">PMR</td>
+<td align="left">内部参考偏置引脚。从 REGN 到 VDDA 连接一个 10Ω 电阻，并从 VDDA 到电源地连接一个 1µF 陶瓷电容。</td>
+</tr>
+<tr>
+<td align="left">IADPT</td>
+<td align="center">8</td>
+<td align="center">I&#x2F;O</td>
+<td align="left">缓冲的适配器电流输出。V<sub>(IADPT)</sub> &#x3D; 20 或 40 × (V<sub>(ACP)</sub> − V<sub>(ACN)</sub>)。比例可通过 REG0x12[4] 选择。根据使用的电感从 IADPT 引脚到地放置一个电阻。对于 2.2μH，电阻为 137kΩ。在 IADPT 引脚到地之间放置一个 100pF 或更小的陶瓷去耦电容。IADPT 输出电压被钳位在 3.3V 以下。</td>
+</tr>
+<tr>
+<td align="left">IBAT</td>
+<td align="center">9</td>
+<td align="center">O</td>
+<td align="left">由 SMBus 选择的缓冲电池电流。V<sub>(IBAT)</sub> &#x3D; 8 或 16 × (V<sub>(SRP)</sub>−V<sub>(SRN)</sub>) 用于充电电流，或 V<sub>(IBAT)</sub> &#x3D; 8 或 16 × (V<sub>(SRN)</sub>−V<sub>(SRP)</sub>) 用于放电电流，比例可通过 REG0x12[3] 选择。在 IBAT 引脚到地之间放置一个 100pF 或更小的陶瓷去耦电容。如果未使用，此引脚可以悬空。其输出电压被钳位在 3.3V 以下。</td>
+</tr>
+<tr>
+<td align="left">PSYS</td>
+<td align="center">10</td>
+<td align="center">O</td>
+<td align="left">电流模式系统功率监视器。输出电流与来自适配器和电池的总功率成正比。增益可通过 SMBus 选择。从 PSYS 到地放置一个电阻以生成输出电压。如果未使用，此引脚可以悬空。其输出电压被钳位在 3.3V 以下。在电阻上并联一个电容以进行滤波。</td>
+</tr>
+<tr>
+<td align="left">PROCHOT</td>
+<td align="center">11</td>
+<td align="center">O</td>
+<td align="left">处理器热指示器的低电平有效开漏输出。它监控适配器输入电流、电池放电电流和系统电压。在 PROCHOT 配置文件中的任何事件触发后，会发出一个脉冲。最小脉冲宽度可在 REG0x33[5:2] 中调整。</td>
+</tr>
+<tr>
+<td align="left">SDA</td>
+<td align="center">12</td>
+<td align="center">I&#x2F;O</td>
+<td align="left">SMBus 开漏数据 I&#x2F;O。连接到主机控制器或智能电池的数据线。根据 SMBus 规格连接一个 10kΩ 上拉电阻。</td>
+</tr>
+<tr>
+<td align="left">SCL</td>
+<td align="center">13</td>
+<td align="center">I</td>
+<td align="left">SMBus 时钟输入。连接到主机控制器或智能电池的时钟线。根据 SMBus 规格连接一个 10kΩ 上拉电阻。</td>
+</tr>
+<tr>
+<td align="left">CMPIN</td>
+<td align="center">14</td>
+<td align="center">I</td>
+<td align="left">独立比较器的输入。独立比较器将 CMPIN 引脚上的电压与内部参考电压进行比较，输出在 CMPOUT 引脚上。内部参考电压、输出极性和去抖时间可通过 SMBus 选择。当极性为高（REG0x30[6] &#x3D; 1）时，在 CMPIN 和 CMPOUT 之间放置一个电阻以设置滞后。当极性为低（REG0x30[6] &#x3D; 0）时，内部滞后为 100mV。如果独立比较器未使用，将 CMPIN 接地。</td>
+</tr>
+<tr>
+<td align="left">CMPOUT</td>
+<td align="center">15</td>
+<td align="center">O</td>
+<td align="left">独立比较器的开漏输出。从 CMPOUT 到上拉电源轨放置一个上拉电阻。内部参考电压、输出极性和去抖时间可通过 SMBus 选择。</td>
+</tr>
+<tr>
+<td align="left">COMP1</td>
+<td align="center">16</td>
+<td align="center">I</td>
+<td align="left">降压-升压转换器补偿引脚 1。请参阅 bq25700 EVM 原理图中的 COMP1 引脚 RC 网络。</td>
+</tr>
+<tr>
+<td align="left">COMP2</td>
+<td align="center">17</td>
+<td align="center">I</td>
+<td align="left">降压-升压转换器补偿引脚 2。请参阅 bq25700 EVM 原理图中的 COMP2 引脚 RC 网络。</td>
+</tr>
+<tr>
+<td align="left">CELL_BATPRESZ</td>
+<td align="center">18</td>
+<td align="center">I</td>
+<td align="left">电池单元选择引脚，用于 1-4 单元电池设置，CELL_BATPRESZ 引脚从 VDDA 偏置。CELL_BATPRESZ 引脚还将 SYSOVP 阈值设置为 1 单元时为 5V，2 单元时为 12V，3 单元&#x2F;4 单元时为 19.5V。CELL_BATPRESZ 引脚拉低至 V<sub>CELL_BATPRESZ_FALL</sub> 以下以指示电池移除。设备退出 LEARN 模式并禁用充电。REG0x15() 恢复为默认值。</td>
+</tr>
+<tr>
+<td align="left">SRN</td>
+<td align="center">19</td>
+<td align="center">PMR</td>
+<td align="left">充电电流检测电阻负端输入。SRN 引脚也用于电池电压检测。将 SRN 引脚与可选的 0.1 µF 陶瓷电容连接到 GND 以进行共模滤波。在 SRP 和 SRN 之间连接一个 0.1µF 陶瓷电容以提供差模滤波。SRP 和 SRN 的漏电流匹配。为防止反向电池插入，SRP 和 SRN 上放置了 10Ω 的串联电阻。</td>
+</tr>
+<tr>
+<td align="left">SRP</td>
+<td align="center">20</td>
+<td align="center">PMR</td>
+<td align="left">充电电流检测电阻正端输入。在 SRP 和 SRN 之间连接一个 0.1µF 陶瓷电容以提供差模滤波。SRP 和 SRN 的漏电流匹配。为防止反向电池插入，SRP 和 SRN 上放置了 10Ω 的串联电阻。将 SRP 引脚与可选的 0.1µF 陶瓷电容连接到 GND 以进行共模滤波。</td>
+</tr>
+<tr>
+<td align="left">BATDRV</td>
+<td align="center">21</td>
+<td align="center">O</td>
+<td align="left">P 沟道电池 FET (BATFET) 栅极驱动输出。短路到 VSYS 以关闭 BATFET。低于 VSYS 10V 以完全打开 BATFET。当电池耗尽时，BATFET 处于线性模式以调节 VSYS 至最小系统电压。在快速充电和补充模式下，BATFET 完全打开。</td>
+</tr>
+<tr>
+<td align="left">VSYS</td>
+<td align="center">22</td>
+<td align="center">PMR</td>
+<td align="left">充电器系统电压检测。系统电压调节限制在 REG(x15f) 和 REG(x3Ef) 中编程。</td>
+</tr>
+<tr>
+<td align="left">SW2</td>
+<td align="center">23</td>
+<td align="center">PMR</td>
+<td align="left">升压模式高侧功率 MOSFET 驱动器源极。连接到高侧 n 沟道 MOSFET 的源极。</td>
+</tr>
+<tr>
+<td align="left">HIDRV2</td>
+<td align="center">24</td>
+<td align="center">O</td>
+<td align="left">升压模式高侧功率 MOSFET (Q4) 驱动器。连接到高侧 n 沟道 MOSFET 栅极。</td>
+</tr>
+<tr>
+<td align="left">BTST2</td>
+<td align="center">25</td>
+<td align="center">PWR</td>
+<td align="left">升压模式高侧功率 MOSFET 驱动器电源。在 SW2 和 BTST2 之间连接一个 0.047 µF 电容。REGN 和 BTST2 之间的自举二极管已集成。</td>
+</tr>
+<tr>
+<td align="left">LODRV2</td>
+<td align="center">26</td>
+<td align="center">O</td>
+<td align="left">升压模式低侧功率 MOSFET (Q3) 驱动器。连接到低侧 n 沟道 MOSFET 栅极。</td>
+</tr>
+<tr>
+<td align="left">PGND</td>
+<td align="center">27</td>
+<td align="center">GND</td>
+<td align="left">设备电源地。</td>
+</tr>
+<tr>
+<td align="left">REGN</td>
+<td align="center">28</td>
+<td align="center">PWR</td>
+<td align="left">6 V 线性稳压器输出，由 VBUS 或 VSYS 供电。当 VBUS 高于 VVBUS<em>V<strong>V</strong>B<strong>U</strong>S</em> 凸点时，LDO 处于活动状态。从 REGN 到电源地连接一个 2.2 或 3.3μF 陶瓷电容。REGN 引脚输出用于电源级栅极驱动。</td>
+</tr>
+<tr>
+<td align="left">LODRV1</td>
+<td align="center">29</td>
+<td align="center">O</td>
+<td align="left">降压模式低侧功率 MOSFET (Q2) 驱动器。连接到低侧 n 沟道 MOSFET 栅极。</td>
+</tr>
+<tr>
+<td align="left">BTST1</td>
+<td align="center">30</td>
+<td align="center">PWR</td>
+<td align="left">降压模式高侧功率 MOSFET 驱动器电源。在 SW1 和 BTST1 之间连接一个 0.047µF 电容。REGN 和 BTST1 之间的自举二极管已集成。</td>
+</tr>
+<tr>
+<td align="left">HIDRV1</td>
+<td align="center">31</td>
+<td align="center">O</td>
+<td align="left">降压模式高侧功率 MOSFET (Q1) 驱动器。连接到高侧 n 沟道 MOSFET 栅极。</td>
+</tr>
+<tr>
+<td align="left">SW1</td>
+<td align="center">32</td>
+<td align="center">PMR</td>
+<td align="left">降压模式高侧功率 MOSFET 驱动器源极。连接到高侧 n 沟道 MOSFET 的源极。</td>
+</tr>
+<tr>
+<td align="left">热焊盘</td>
+<td align="center">–</td>
+<td align="center">–</td>
+<td align="left">IC 下方的裸露焊盘。模拟地和电源地在 IC 的地附近星形连接。始终将热焊盘焊接到电路板上，并在热焊盘平面上设置通孔连接到电源地平面。它还用作散热焊盘以散发热量。</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>PMR</strong>：这通常表示“Power Management Rail”（电源管理轨），指的是与电源管理相关的引脚。这些引脚通常用于电源输入、输出或电源管理功能。</p>
+<p><strong>PWR</strong>：表示“Power”（电源），指的是与电源相关的引脚，如电源输入、电源输出或电源参考电压。</p>
+<p><strong>I</strong>：表示“Input”（输入），指的是该引脚用于输入信号或电压。</p>
+<p><strong>O</strong>：表示“Output”（输出），指的是该引脚用于输出信号或电压。</p>
+<p><strong>I&#x2F;O</strong>：表示“Input&#x2F;Output”（输入&#x2F;输出），指的是该引脚既可以作为输入也可以作为输出。</p>
+</blockquote>
+<h2 id="示例电路"><a href="#示例电路" class="headerlink" title="示例电路"></a>示例电路</h2><p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/BQ25700A/sldl.png" alt="sldl"></p>
+<blockquote>
+<p><strong>BATDRV</strong>：这个引脚控制电池的充电和放电，通过电流控制电池的充电过程。</p>
+<p><strong>VSYS</strong>：通过这个引脚，芯片可以向外部电路（比如主控 MCU）提供电源。当充电过程进行时，它可以从电池获取电源。</p>
+<p><strong>SRP&#x2F;SRN</strong>：这两个引脚用于电池电压和充电电流的监测，可以帮助芯片评估电池的状态，并根据电池的健康状况调整充电策略。</p>
+<p><strong>CELL_BATPRESZ</strong>：这是一个电池存在检测引脚，可以检测电池是否存在或是否正常连接。</p>
+<p><strong>SDA</strong> 和 <strong>SCL</strong>：这两个引脚用于与主控 MCU 进行通信。它们支持 <strong>SMBus</strong> 协议，允许主控读取或写入 BQ25700A 的寄存器，从而控制充电参数或读取电池状态。</p>
+<p><strong>Host</strong>：通过 I2C（或 SMBus）接口，主控设备可以与 BQ25700A 进行数据交互，例如设置充电电流、电压、监测电池的健康状态等。</p>
+<p><strong>REGN</strong>：这是一个用于电压稳定的参考电压引脚，可以为其他相关电路提供稳定的电源。</p>
+<p><strong>COMP1 和 COMP2</strong>：这些引脚用于电流控制，芯片通过它们调整充电电流，使电池的充电过程更平稳、避免过充或过流。</p>
+<p><strong>ILIM_HIZ</strong>：这个引脚控制充电电流的限制，防止电池被过快充电。</p>
+<p><strong>CHRG_OK</strong>：这个引脚指示充电是否正常，当充电完成时会发出信号。</p>
+<p><strong>CMPIN</strong>：用于保护电池免受过压或过温影响。</p>
+</blockquote>
+<h2 id="通信方式"><a href="#通信方式" class="headerlink" title="通信方式"></a>通信方式</h2><p><strong>BQ25700A</strong> 电池管理芯片通过 <strong>SMBus</strong> （System Management Bus）进行通信，它与主控 MCU（如微控制器）之间的通信方式与 I2C 非常相似。SMBus 是 I2C 的一种扩展协议，专门用于电池、温控、电源管理等硬件设备的通信。</p>
+<p>如果主控没有直接支持 <strong>SMBus</strong> 协议，但你仍然想与 <strong>BQ25700A</strong> 通信，实际上可以通过 <strong>I2C</strong> 接口来实现通信，因为 <strong>SMBus</strong> 基于 <strong>I2C</strong> 协议，它们在物理层面上是兼容的。</p>
+<p> BQ25700A 的 SMBus 地址是 <strong>0x12</strong>（7 位地址）。</p>
+<h3 id="写入格式"><a href="#写入格式" class="headerlink" title="写入格式"></a>写入格式</h3><p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/BQ25700A/xrgs.png" alt="xrgs"></p>
+<blockquote>
+<p>S (Start Condition)：表示起始条件，主设备发出一个信号，表明通信的开始。</p>
+<p>SLAVE ADDRESS：从设备的地址（7位），标识目标设备。</p>
+<p>W (Write bit)：写入位，值为 0，表示写操作。</p>
+<p>ACK (Acknowledge)：应答信号，接收设备确认收到数据。</p>
+<p>COMMAND BYTE：命令字节，主设备向从设备发送的命令，用于指示操作的类型或目标寄存器。</p>
+<p>LOW DATA BYTE 和 HIGH DATA BYTE：分别是数据的低字节和高字节。在一个完整的数据传输中，数据被分为低字节和高字节，逐字节传输。</p>
+<p>P (Stop Condition)：停止条件，表示通信的结束</p>
+</blockquote>
+<p><strong>写入时序图</strong></p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/BQ25700A/xrsst.png" alt="xrsst"></p>
+<blockquote>
+<p><strong>A &#x3D; Start condition（起始条件）</strong>：</p>
+<ul>
+<li>当通信开始时，主设备在 SMBCLK 为高电平时，SMBDATA 从高电平变为低电平。这个状态表示开始一个新的通信会话。</li>
+</ul>
+<p><strong>B &#x3D; MSB of address clocked into slave（地址的高位字节被时钟同步到从设备）</strong>：</p>
+<ul>
+<li>在主设备发送起始信号后，主设备开始向从设备发送地址的高位字节。此时，SMBDATA 会根据时钟信号（SMBCLK）同步传输数据。</li>
+</ul>
+<p><strong>C &#x3D; LSB of address clocked into slave（地址的低位字节被时钟同步到从设备）</strong>：</p>
+<ul>
+<li>继续传送从设备的地址，此时传送的是地址的低位字节。</li>
+</ul>
+<p><strong>D &#x3D; R&#x2F;W bit clocked into slave（读写位被时钟同步到从设备）</strong>：</p>
+<ul>
+<li>主设备发送读写控制位，指定当前操作是读取还是写入。读写位（R&#x2F;W）在这个阶段通过 SMBDATA 传送给从设备。</li>
+</ul>
+<p><strong>E &#x3D; Slave pulls SMBDATA line low（从设备将 SMBDATA 拉低）</strong>：</p>
+<ul>
+<li>从设备确认接收到主设备发出的地址和读写位后，它会拉低数据线，表示准备好接收数据或者准备发送数据。</li>
+</ul>
+<p><strong>F &#x3D; ACKNOWLEDGE bit clocked into master（主设备接收到的应答位）</strong>：</p>
+<ul>
+<li>从设备通过拉低 SMBDATA 线来确认它已成功接收到主设备发送的数据或命令。</li>
+</ul>
+<p><strong>G &#x3D; MSB of data clocked into slave（数据的高位字节被时钟同步到从设备）</strong>：</p>
+<ul>
+<li>主设备将要写入的数据的高位字节通过 SMBCLK 时钟信号发送到从设备。SMBDATA 数据线同步传送。</li>
+</ul>
+<p><strong>H &#x3D; LSB of data clocked into slave（数据的低位字节被时钟同步到从设备）</strong>：</p>
+<ul>
+<li>数据的低位字节被发送到从设备，继续通过 SMBDATA 进行传输。</li>
+</ul>
+<p><strong>I &#x3D; Slave pulls SMBDATA line low（从设备将 SMBDATA 拉低）</strong>：</p>
+<ul>
+<li>从设备确认已接收到数据的低位字节，再次拉低数据线进行应答。</li>
+</ul>
+<p><strong>J &#x3D; Acknowledge clocked into master（主设备接收到的应答信号）</strong>：</p>
+<ul>
+<li>主设备通过时钟信号接收到从设备的确认信号，表明数据已成功传输。</li>
+</ul>
+<p><strong>K &#x3D; Acknowledge clock pulse（应答时钟脉冲）</strong>：</p>
+<ul>
+<li>这表示主设备在通信过程中接收来自从设备的确认信号的时钟脉冲。</li>
+</ul>
+<p><strong>L &#x3D; Stop condition, data executed by slave（停止条件，数据由从设备执行）</strong>：</p>
+<ul>
+<li>在所有数据传输完成后，主设备发出停止条件（Stop condition），这标志着通信会话的结束。从设备会根据收到的数据执行操作。</li>
+</ul>
+<p><strong>M &#x3D; New start condition（新的起始条件）</strong>：</p>
+<ul>
+<li>如果主设备需要重新启动一个新的通信会话，它可以发出新的起始条件（Start condition）。</li>
+</ul>
+</blockquote>
+<h3 id="读取格式"><a href="#读取格式" class="headerlink" title="读取格式"></a>读取格式</h3><p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/BQ25700A/dqgs.png" alt="dqgs"></p>
+<blockquote>
+<p>S (Start Condition)：表示起始条件，主设备发出一个信号，表明通信的开始。</p>
+<p>SLAVE ADDRESS：从设备的地址（7位），标识目标设备。</p>
+<p>R (Read bit)：读取位，值为 1，表示读操作。</p>
+<p>ACK (Acknowledge)：应答信号，接收设备确认收到数据。</p>
+<p>LOW DATA BYTE 和 HIGH DATA BYTE：分别是数据的低字节和高字节。从设备返回的数据被分为低字节和高字节，主设备逐字节读取。</p>
+<p>NACK (Not Acknowledge)：非应答信号，表示读取完毕或传输结束。</p>
+<p>P (Stop Condition)：停止条件，表示通信的结束。</p>
+</blockquote>
+<p><strong>读取时序图</strong></p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/BQ25700A/dqsst.png" alt="dqsst"></p>
+<blockquote>
+<p><strong>A &#x3D; Start condition</strong>: 这是传输开始的标志，数据线从高电平跳到低电平。</p>
+<p><strong>B &#x3D; MSB of address clocked into slave</strong>: 这是传输地址的最高有效位（MSB），被时钟信号驱动传送给从设备。</p>
+<p><strong>C &#x3D; LSB of address clocked into slave</strong>: 地址的最低有效位（LSB）被传送给从设备。</p>
+<p><strong>D &#x3D; R&#x2F;W bit clocked into slave</strong>: 读写控制位（R&#x2F;W）传送给从设备，决定是读操作还是写操作。</p>
+<p><strong>E &#x3D; Slave pulls SMBDATA line low</strong>: 从设备拉低数据线，表示准备响应。</p>
+<p><strong>F &#x3D; ACKNOWLEDGE bit clocked into master</strong>: 主设备收到从设备的响应，表示数据有效。</p>
+<p><strong>G &#x3D; MSB of data clocked into master</strong>: 数据的最高有效位（MSB）被传送给主设备。</p>
+<p><strong>H &#x3D; LSB of data clocked into master</strong>: 数据的最低有效位（LSB）被传送给主设备。</p>
+<p><strong>I &#x3D; Acknowledge clock pulse</strong>: 主设备发出时钟脉冲，从设备回传响应信号。</p>
+<p><strong>J &#x3D; Stop condition</strong>: 这是传输的停止条件，数据线从低电平跳到高电平，表示数据传输结束。</p>
+<p><strong>K &#x3D; New start condition</strong>: 新的起始条件，表示将开始新的数据传输</p>
+</blockquote>
+<h2 id="寄存器"><a href="#寄存器" class="headerlink" title="寄存器"></a>寄存器</h2><table>
+<thead>
+<tr>
+<th align="left">SMBus 地址</th>
+<th align="left">寄存器名称</th>
+<th align="left">类型</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">12h</td>
+<td align="left">ChargeOption00</td>
+<td align="left">读写</td>
+<td align="left">充电选项 0</td>
+</tr>
+<tr>
+<td align="left">14h</td>
+<td align="left">ChargeCurrent</td>
+<td align="left">读写</td>
+<td align="left">7 位充电电流设置，LSB 64mA，范围 8128mA</td>
+</tr>
+<tr>
+<td align="left">15h</td>
+<td align="left">MaxChargeVoltage</td>
+<td align="left">读写</td>
+<td align="left">11 位充电电压设置，LSB 16mV，默认值：1S-4192mV, 2S-8400mV, 3S-12592mV, 4S-16800mV</td>
+</tr>
+<tr>
+<td align="left">30h</td>
+<td align="left">ChargeOption10</td>
+<td align="left">读写</td>
+<td align="left">充电选项 1</td>
+</tr>
+<tr>
+<td align="left">31h</td>
+<td align="left">ChargeOption20</td>
+<td align="left">读写</td>
+<td align="left">充电选项 2</td>
+</tr>
+<tr>
+<td align="left">32h</td>
+<td align="left">ChargeOption30</td>
+<td align="left">读写</td>
+<td align="left">充电选项 3</td>
+</tr>
+<tr>
+<td align="left">33h</td>
+<td align="left">ProchotOption00</td>
+<td align="left">读写</td>
+<td align="left">PROCHOT 选项 0</td>
+</tr>
+<tr>
+<td align="left">34h</td>
+<td align="left">ProchotOption10</td>
+<td align="left">读写</td>
+<td align="left">PROCHOT 选项 1</td>
+</tr>
+<tr>
+<td align="left">35h</td>
+<td align="left">ADCOption</td>
+<td align="left">读写</td>
+<td align="left">ADC 选项</td>
+</tr>
+<tr>
+<td align="left">20h</td>
+<td align="left">ChargerStatus</td>
+<td align="left">只读</td>
+<td align="left">充电状态</td>
+</tr>
+<tr>
+<td align="left">21h</td>
+<td align="left">ProchotStatus</td>
+<td align="left">只读</td>
+<td align="left">PROCHOT 状态</td>
+</tr>
+<tr>
+<td align="left">22h</td>
+<td align="left">IIN_DPM</td>
+<td align="left">只读</td>
+<td align="left">7 位输入电流限制，LSB 50mA，范围 50mA - 6400mA</td>
+</tr>
+<tr>
+<td align="left">23h</td>
+<td align="left">ADCVBUS&#x2F;PSYS</td>
+<td align="left">只读</td>
+<td align="left">输入电压的 8 位数字输出，系统功率 PSYS 的 8 位数字输出，PSYS 全范围：3.06V，LSB 12 mV，VBUS 全范围：3.2V - 19.52V，LSB 64mV</td>
+</tr>
+<tr>
+<td align="left">24h</td>
+<td align="left">ADCIBAT</td>
+<td align="left">只读</td>
+<td align="left">电池充电电流的 8 位数字输出，电池放电电流的 8 位数字输出，ICHC 全范围 8.128A，LSB 64mA，IDCHG 全范围：32.512A，LSB 256mA</td>
+</tr>
+<tr>
+<td align="left">25h</td>
+<td align="left">ADCIN&#x2F;CMPIN</td>
+<td align="left">只读</td>
+<td align="left">输入电流的 8 位数字输出，CMPIN 电压的 8 位数字输出，POR 状态 - IN 全范围：12.75 A，LSB 50mA，CMPIN 全范围：3.06V，LSB 12mV</td>
+</tr>
+<tr>
+<td align="left">26h</td>
+<td align="left">ADCVSYSVBAT</td>
+<td align="left">只读</td>
+<td align="left">系统电压的 8 位数字输出，电池电压的 8 位数字输出，VSYS 全范围：2.88V - 19.2V，LSB 64 mV，VBAT 全范围：2.88V - 19.2V，LSB 64mV</td>
+</tr>
+<tr>
+<td align="left">38h</td>
+<td align="left">OTGVoltage</td>
+<td align="left">读写</td>
+<td align="left">8 位 OTG 电压设置，LSB 64mV，范围：4480 – 20800mV</td>
+</tr>
+<tr>
+<td align="left">3Ch</td>
+<td align="left">OTGCurrent</td>
+<td align="left">读写</td>
+<td align="left">7 位 OTG 输出电流设置，LSB 50mA，范围：0A – 6350mA</td>
+</tr>
+<tr>
+<td align="left">3Dh</td>
+<td align="left">InputVoltage</td>
+<td align="left">读写</td>
+<td align="left">8 位输入电压设置，LSB64 mV，范围：3200mV – 19520mV</td>
+</tr>
+<tr>
+<td align="left">3Eh</td>
+<td align="left">MinSystemVoltage</td>
+<td align="left">读写</td>
+<td align="left">6 位最小系统电压设置，LSB 256mV，范围：1024mV - 16182mV，默认值：1S-3.584V, 2S-6.144V, 3S-9.216V, 4S-12.288V</td>
+</tr>
+<tr>
+<td align="left">3Fh</td>
+<td align="left">IIN_HOST</td>
+<td align="left">读写</td>
+<td align="left">主机设置的 6 位输入电流限制，LSB 50mA，范围：50 mA - 6400mA</td>
+</tr>
+<tr>
+<td align="left">FEn</td>
+<td align="left">ManufacturerID</td>
+<td align="left">只读</td>
+<td align="left">制造商 ID - 0x0040H</td>
+</tr>
+<tr>
+<td align="left">FFh</td>
+<td align="left">DeviceID</td>
+<td align="left">只读</td>
+<td align="left">设备 ID</td>
+</tr>
+</tbody></table>
+<p>具体描述请查看数据手册。</p>
+<h2 id="示例驱动"><a href="#示例驱动" class="headerlink" title="示例驱动"></a>示例驱动</h2><p><a target="_blank" rel="noopener" href="https://github.com/TooUpper/SensorDrive">https://github.com/TooUpper/SensorDrive</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">博主</a></li>
+        
+          <li><a href="/tags/">标签</a></li>
+        
+          <li><a href="/categories/">分类</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E7%89%B9%E6%80%A7"><span class="toc-number">1.</span> <span class="toc-text">主要特性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E8%84%9A%E8%AF%B4%E6%98%8E"><span class="toc-number">2.</span> <span class="toc-text">引脚说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%E7%94%B5%E8%B7%AF"><span class="toc-number">3.</span> <span class="toc-text">示例电路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F"><span class="toc-number">4.</span> <span class="toc-text">通信方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%99%E5%85%A5%E6%A0%BC%E5%BC%8F"><span class="toc-number">4.1.</span> <span class="toc-text">写入格式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96%E6%A0%BC%E5%BC%8F"><span class="toc-number">4.2.</span> <span class="toc-text">读取格式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-number">5.</span> <span class="toc-text">寄存器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%E9%A9%B1%E5%8A%A8"><span class="toc-number">6.</span> <span class="toc-text">示例驱动</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/BQ25700A/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/BQ25700A/&text=BQ25700A"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/BQ25700A/&title=BQ25700A"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/BQ25700A/&is_video=false&description=BQ25700A"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=BQ25700A&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/BQ25700A/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/BQ25700A/&title=BQ25700A"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/BQ25700A/&title=BQ25700A"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/BQ25700A/&title=BQ25700A"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/BQ25700A/&title=BQ25700A"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/BQ25700A/&name=BQ25700A&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/BQ25700A/&t=BQ25700A"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    kay
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

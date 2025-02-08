@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="DRV8833 是一款由德州仪器（Texas Instruments, TI）推出的双通道 H 桥电机驱动器芯片，广泛应用于直流电机、步进电机和其他低电压驱动场景。 H桥控制电路桥是一个比较简单的电路，通常它会包含四个独立控制的开关元器件（例如 MOSFET），它们通常用于驱动电流较大的负载，比如电机，至于为什么要叫H桥（H-Bridge），因为长得比较像 字母H，具体如下图所示  正转 此时假设">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DRV8833">
+<meta property="og:url" content="https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/DRV8833/index.html">
+<meta property="og:site_name" content="流年不知心底事">
+<meta property="og:description" content="DRV8833 是一款由德州仪器（Texas Instruments, TI）推出的双通道 H 桥电机驱动器芯片，广泛应用于直流电机、步进电机和其他低电压驱动场景。 H桥控制电路桥是一个比较简单的电路，通常它会包含四个独立控制的开关元器件（例如 MOSFET），它们通常用于驱动电流较大的负载，比如电机，至于为什么要叫H桥（H-Bridge），因为长得比较像 字母H，具体如下图所示  正转 此时假设">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/DRV8833/hqiao.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/DRV8833/zhengzhuan.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/DRV8833/fanzhuan.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/DRV8833/yjsm.png">
+<meta property="article:published_time" content="2025-02-07T10:29:00.000Z">
+<meta property="article:modified_time" content="2025-02-08T07:09:18.588Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="IC">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/DRV8833/hqiao.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>DRV8833</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/TTP224/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/CS47L35/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/DRV8833/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/DRV8833/&text=DRV8833"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/DRV8833/&title=DRV8833"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/DRV8833/&is_video=false&description=DRV8833"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=DRV8833&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/DRV8833/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/DRV8833/&title=DRV8833"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/DRV8833/&title=DRV8833"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/DRV8833/&title=DRV8833"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/DRV8833/&title=DRV8833"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/DRV8833/&name=DRV8833&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/DRV8833/&t=DRV8833"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#H%E6%A1%A5%E6%8E%A7%E5%88%B6%E7%94%B5%E8%B7%AF"><span class="toc-number">1.</span> <span class="toc-text">H桥控制电路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%B9%E6%80%A7"><span class="toc-number">2.</span> <span class="toc-text">特性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E8%84%9A%E8%AF%B4%E6%98%8E"><span class="toc-number">3.</span> <span class="toc-text">引脚说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#H%E6%A1%A5%E6%8E%A7%E5%88%B6%E9%80%BB%E8%BE%91"><span class="toc-number">4.</span> <span class="toc-text">H桥控制逻辑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PWM-%E6%8E%A7%E5%88%B6%E4%B8%8E%E8%A1%B0%E5%87%8F%E6%A8%A1%E5%BC%8F"><span class="toc-number">5.</span> <span class="toc-text">PWM 控制与衰减模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A9%B1%E5%8A%A8%E4%BB%A3%E7%A0%81"><span class="toc-number">6.</span> <span class="toc-text">驱动代码</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        DRV8833
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">kay</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-02-07T10:29:00.000Z" class="dt-published" itemprop="datePublished">2025-02-07</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/IC/">IC</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/IC/" rel="tag">IC</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p><strong>DRV8833</strong> 是一款由德州仪器（Texas Instruments, TI）推出的双通道 H 桥电机驱动器芯片，广泛应用于直流电机、步进电机和其他低电压驱动场景。</p>
+<h2 id="H桥控制电路"><a href="#H桥控制电路" class="headerlink" title="H桥控制电路"></a>H桥控制电路</h2><p>桥是一个比较简单的电路，通常它会包含四个独立控制的开关元器件（例如 MOSFET），它们通常用于驱动电流较大的负载，比如电机，至于为什么要叫H桥（H-Bridge），因为长得比较像 字母H，具体如下图所示</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/DRV8833/hqiao.png" alt="hqiao"></p>
+<p><strong>正转</strong></p>
+<p>此时假设电机正转，这电流依次经过 Q1 ， M ， Q4 ，在图中使用黄色线段进行标注，具体如下图所示</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/DRV8833/zhengzhuan.png" alt="zhengzhuan"></p>
+<p><strong>反转</strong></p>
+<p>此时电机反转（与前面介绍的情况相反），这电流依次经过 Q2 ， M ， Q3 ，在图中使用黄色线段进行标注，具体如下图所示</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/DRV8833/fanzhuan.png" alt="fanzhuan"></p>
+<h2 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h2><p><strong>双路 H 桥电流控制电机驱动器</strong>：</p>
+<ul>
+<li>可驱动两部直流电机或一部步进电机。</li>
+<li>低 MOSFET 导通电阻：高侧 (HS) + 低侧 (LS) 为 360mΩ。</li>
+</ul>
+<p><strong>输出电流</strong>：</p>
+<ul>
+<li>PWP&#x2F;RTY 封装：每条 H 桥的 RMS 电流为 1.5A，峰值电流为 2A。</li>
+<li>PW 封装：每条 H 桥的 RMS 电流为 500mA，峰值电流为 2A。</li>
+<li>支持输出并联，PWP 和 RTY 封装可实现 3A RMS 电流和 4A 峰值电流；PW 封装可实现 1A RMS 电流和 4A 峰值电流。</li>
+</ul>
+<p><strong>宽电源电压范围</strong>：2.7V 至 10.8V。</p>
+<p><strong>PWM 绕组电流调节&#x2F;电流限制</strong>。</p>
+<h2 id="引脚说明"><a href="#引脚说明" class="headerlink" title="引脚说明"></a>引脚说明</h2><p>DRV8833 共有三总封装类型：</p>
+<ul>
+<li>TSSOP (16)：5.00mm x 4.40mm</li>
+<li>HTSSOP (16)：5.00mm x 4.40mm</li>
+<li>WQFN (16)：4.00mm x 4.00mm</li>
+</ul>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E4%BC%A0%E6%84%9F%E5%99%A8/DRV8833/yjsm.png" alt="yjsm"></p>
+<table>
+<thead>
+<tr>
+<th><strong>名称</strong></th>
+<th align="center"><strong>WQFN</strong></th>
+<th align="center"><strong>HTSSOP, TSSOP</strong></th>
+<th>I&#x2F;O</th>
+<th>描述</th>
+<th>外部组件或连接</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>电源和接地</strong></td>
+<td align="center"></td>
+<td align="center"></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>GND</td>
+<td align="center">11</td>
+<td align="center">13</td>
+<td>—</td>
+<td>设备接地。HTSSOP 包装具有 PowerPAD。</td>
+<td>GND 引脚和电源 PowerPAD 都需要连接到地。</td>
+</tr>
+<tr>
+<td>VINT</td>
+<td align="center">12</td>
+<td align="center">14</td>
+<td>—</td>
+<td>内部电源旁路</td>
+<td>用 2.2µF、6.3V 电容旁路到地。</td>
+</tr>
+<tr>
+<td>VM</td>
+<td align="center">10</td>
+<td align="center">12</td>
+<td>—</td>
+<td>设备电源</td>
+<td>连接到电机驱动。推荐使用 10µF（最小值）陶瓷旁路电容到 GND。</td>
+</tr>
+<tr>
+<td>VCP</td>
+<td align="center">9</td>
+<td align="center">11</td>
+<td>IO</td>
+<td>高侧门驱动电压</td>
+<td>连接到 0.01µF、16V（最小值）X7R 陶瓷电容到 VM。</td>
+</tr>
+<tr>
+<td><strong>控制</strong></td>
+<td align="center"></td>
+<td align="center"></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>AIN1</td>
+<td align="center">14</td>
+<td align="center">16</td>
+<td>I</td>
+<td>桥 A 输入 1</td>
+<td>逻辑输入控制 AOUT1 的状态。内部下拉电阻。</td>
+</tr>
+<tr>
+<td>AIN2</td>
+<td align="center">13</td>
+<td align="center">15</td>
+<td>I</td>
+<td>桥 A 输入 2</td>
+<td>逻辑输入控制 AOUT2 的状态。内部下拉电阻。</td>
+</tr>
+<tr>
+<td>BIN1</td>
+<td align="center">7</td>
+<td align="center">9</td>
+<td>I</td>
+<td>桥 B 输入 1</td>
+<td>逻辑输入控制 BOUT1 的状态。内部下拉电阻。</td>
+</tr>
+<tr>
+<td>BIN2</td>
+<td align="center">8</td>
+<td align="center">10</td>
+<td>I</td>
+<td>桥 B 输入 2</td>
+<td>逻辑输入控制 BOUT2 的状态。内部下拉电阻。</td>
+</tr>
+<tr>
+<td>nSLEEP</td>
+<td align="center">15</td>
+<td align="center">1</td>
+<td>I</td>
+<td>睡眠模式</td>
+<td>逻辑高使设备进入低功耗睡眠模式，并重置所有内部逻辑。内部下拉电阻。</td>
+</tr>
+<tr>
+<td><strong>状态</strong></td>
+<td align="center"></td>
+<td align="center"></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>nFAULT</td>
+<td align="center">6</td>
+<td align="center">8</td>
+<td>OD</td>
+<td>故障输出</td>
+<td>故障条件下（过温、过流）逻辑低电平输出。</td>
+</tr>
+<tr>
+<td><strong>输出</strong></td>
+<td align="center"></td>
+<td align="center"></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>AISEN</td>
+<td align="center">1</td>
+<td align="center">3</td>
+<td>IO</td>
+<td>桥 A 地面 &#x2F; I_SENSE</td>
+<td>连接到桥 A 的电流感测电阻，或如果不需要电流控制，则连接到 GND。</td>
+</tr>
+<tr>
+<td>BISEN</td>
+<td align="center">4</td>
+<td align="center">6</td>
+<td>IO</td>
+<td>桥 B 地面 &#x2F; I_SENSE</td>
+<td>连接到桥 B 的电流感测电阻，或如果不需要电流控制，则连接到 GND。</td>
+</tr>
+<tr>
+<td>AOUT1</td>
+<td align="center">16</td>
+<td align="center">2</td>
+<td>O</td>
+<td>桥 A 输出 1</td>
+<td>连接到电机 A 绕组。</td>
+</tr>
+<tr>
+<td>AOUT2</td>
+<td align="center">2</td>
+<td align="center">4</td>
+<td>O</td>
+<td>桥 A 输出 2</td>
+<td>连接到电机 A 绕组。</td>
+</tr>
+<tr>
+<td>BOUT1</td>
+<td align="center">5</td>
+<td align="center">7</td>
+<td>O</td>
+<td>桥 B 输出 1</td>
+<td>连接到电机 B 绕组。</td>
+</tr>
+<tr>
+<td>BOUT2</td>
+<td align="center">3</td>
+<td align="center">5</td>
+<td>O</td>
+<td>桥 B 输出 2</td>
+<td>连接到电机 B 绕组。</td>
+</tr>
+</tbody></table>
+<h2 id="H桥控制逻辑"><a href="#H桥控制逻辑" class="headerlink" title="H桥控制逻辑"></a>H桥控制逻辑</h2><p>DRV8833 的每个 H 桥（A 桥和 B 桥）由两个输入引脚（xIN1 和 xIN2）控制，分别对应两个输出引脚（xOUT1 和 xOUT2）。通过输入引脚的不同逻辑组合，可以实现电机的不同工作状态。</p>
+<table>
+<thead>
+<tr>
+<th align="left">xIN1</th>
+<th align="left">xIN2</th>
+<th align="left">xOUT1</th>
+<th align="left">xOUT2</th>
+<th align="left">功能描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">Z</td>
+<td align="left">Z</td>
+<td align="left">滑行&#x2F;快速衰减（Coast&#x2F;Fast Decay）</td>
+</tr>
+<tr>
+<td align="left">0</td>
+<td align="left">1</td>
+<td align="left">L</td>
+<td align="left">H</td>
+<td align="left">反转（Reverse）</td>
+</tr>
+<tr>
+<td align="left">1</td>
+<td align="left">0</td>
+<td align="left">H</td>
+<td align="left">L</td>
+<td align="left">正转（Forward）</td>
+</tr>
+<tr>
+<td align="left">1</td>
+<td align="left">1</td>
+<td align="left">L</td>
+<td align="left">L</td>
+<td align="left">刹车&#x2F;慢速衰减（Brake&#x2F;Slow Decay）</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>Z</strong>：高阻态（输出断开）。<strong>L</strong>：低电平。<strong>H</strong>：高电平。</p>
+</blockquote>
+<h2 id="PWM-控制与衰减模式"><a href="#PWM-控制与衰减模式" class="headerlink" title="PWM 控制与衰减模式"></a>PWM 控制与衰减模式</h2><p>当使用 PWM（脉宽调制）控制电机速度时，电机绕组的感性特性会导致电流在 PWM 信号中断后继续流动，这种电流称为<strong>续流电流</strong>。为了处理续流电流，H 桥可以工作在两种不同的衰减模式下：</p>
+<p><strong>快速衰减（Fast Decay）</strong></p>
+<ul>
+<li><strong>工作原理</strong>：H 桥被禁用，续流电流通过 MOSFET 的体二极管流动。</li>
+<li><strong>优点</strong>：电流衰减速度快，适合需要快速停止或反转的场景。</li>
+<li><strong>控制方式</strong>：<ul>
+<li>正转 PWM + 快速衰减：xIN1 &#x3D; PWM，xIN2 &#x3D; 0。</li>
+<li>反转 PWM + 快速衰减：xIN1 &#x3D; 0，xIN2 &#x3D; PWM。</li>
+</ul>
+</li>
+</ul>
+<p><strong>慢速衰减（Slow Decay）</strong></p>
+<ul>
+<li><strong>工作原理</strong>：电机绕组被短路，续流电流通过 MOSFET 的低阻抗路径流动。</li>
+<li><strong>优点</strong>：电流衰减平稳，适合需要平滑控制的场景。</li>
+<li><strong>控制方式</strong>：<ul>
+<li>正转 PWM + 慢速衰减：xIN1 &#x3D; 1，xIN2 &#x3D; PWM。</li>
+<li>反转 PWM + 慢速衰减：xIN1 &#x3D; PWM，xIN2 &#x3D; 1。</li>
+</ul>
+</li>
+</ul>
+<p><strong>PWM 控制逻辑表</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left">xIN1</th>
+<th align="left">xIN2</th>
+<th align="left">功能描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">PWM</td>
+<td align="left">0</td>
+<td align="left">正转 PWM + 快速衰减</td>
+</tr>
+<tr>
+<td align="left">1</td>
+<td align="left">PWM</td>
+<td align="left">正转 PWM + 慢速衰减</td>
+</tr>
+<tr>
+<td align="left">0</td>
+<td align="left">PWM</td>
+<td align="left">反转 PWM + 快速衰减</td>
+</tr>
+<tr>
+<td align="left">PWM</td>
+<td align="left">1</td>
+<td align="left">反转 PWM + 慢速衰减</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>PWM（脉宽调制信号）、1（高电平）、0（低电平）</p>
+</blockquote>
+<h2 id="驱动代码"><a href="#驱动代码" class="headerlink" title="驱动代码"></a>驱动代码</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// drv8833.h</span></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> __DRV8833_H</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> __DRV8833_H</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;gd32e23x.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;systick.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> RCU_AIN1                 RCU_GPIOA</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> PORT_AIN1                GPIOA</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> GPIO_AIN1                GPIO_PIN_2</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> AF_AIN1                  GPIO_AF_0</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> RCU_AIN2                 RCU_GPIOA</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> PORT_AIN2                GPIOA</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> GPIO_AIN2                GPIO_PIN_3</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> AF_AIN2                  GPIO_AF_0</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> RCU_BIN1                 RCU_GPIOB</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> PORT_BIN1                GPIOB</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> GPIO_BIN1                GPIO_PIN_0</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> AF_BIN1                  GPIO_AF_1</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> RCU_BIN2                 RCU_GPIOB</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> PORT_BIN2                GPIOB</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> GPIO_BIN2                GPIO_PIN_1</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> AF_BIN2                  GPIO_AF_1</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> RCU_AIN1_TIMER           RCU_TIMER14</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> BSP_AIN1_TIMER           TIMER14         <span class="comment">// 定时器</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> BSP_AIN1_CHANNEL         TIMER_CH_0     <span class="comment">// 定时器通道</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> RCU_AIN2_TIMER           RCU_TIMER14</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> BSP_AIN2_TIMER           TIMER14         <span class="comment">// 定时器</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> BSP_AIN2_CHANNEL         TIMER_CH_1     <span class="comment">// 定时器通道</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> RCU_BIN1_TIMER           RCU_TIMER2</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> BSP_BIN1_TIMER           TIMER2         <span class="comment">// 定时器</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> BSP_BIN1_CHANNEL         TIMER_CH_2     <span class="comment">// 定时器通道</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> RCU_BIN2_TIMER           RCU_TIMER2</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> BSP_BIN2_TIMER           TIMER2         <span class="comment">// 定时器</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> BSP_BIN2_CHANNEL         TIMER_CH_3     <span class="comment">// 定时器通道</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> AIN1_OUT(X)  gpio_bit_write(PORT_AIN1, GPIO_AIN1, X?SET:RESET)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> AIN2_OUT(X)  gpio_bit_write(PORT_AIN2, GPIO_AIN2, X?SET:RESET)</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> BIN1_OUT(X)  gpio_bit_write(PORT_BIN1, GPIO_BIN1, X?SET:RESET)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> BIN2_OUT(X)  gpio_bit_write(PORT_BIN2, GPIO_BIN2, X?SET:RESET)</span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">DRV8833_Init</span><span class="params">(<span class="type">uint16_t</span> pre,<span class="type">uint16_t</span> per)</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">AO_Control</span><span class="params">(<span class="type">uint8_t</span> dir, <span class="type">uint32_t</span> speed)</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">BO_Control</span><span class="params">(<span class="type">uint8_t</span> dir, <span class="type">uint32_t</span> speed)</span>;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">============================================================================</span><br><span class="line"><span class="comment">//drv8833.c</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;bsp_drv8833.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;systick.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">/******************************************************************</span></span><br><span class="line"><span class="comment"> * 函 数 名 称：DRV8833_Init</span></span><br><span class="line"><span class="comment"> * 函 数 说 明：PWM配置</span></span><br><span class="line"><span class="comment"> * 函 数 形 参： pre定时器时钟预分频值    per周期</span></span><br><span class="line"><span class="comment"> * 函 数 返 回：无</span></span><br><span class="line"><span class="comment"> * 作       者：LC</span></span><br><span class="line"><span class="comment"> * 备       注：PWM频率=200 000 000 /( (pre+1) * (per+1) )</span></span><br><span class="line"><span class="comment">******************************************************************/</span></span><br><span class="line"><span class="type">void</span> DRV8833_Init(<span class="type">uint16_t</span> pre,<span class="type">uint16_t</span> per)&#123;</span><br><span class="line">    <span class="comment">// 定义定时器结构体</span></span><br><span class="line">    timer_parameter_struct timere_initpara=&#123;<span class="number">0</span>&#125;; </span><br><span class="line">    <span class="comment">//定时器比较输出结构体</span></span><br><span class="line">    timer_oc_parameter_struct timer_ocintpara=&#123;<span class="number">0</span>&#125;;                                </span><br><span class="line"></span><br><span class="line">    <span class="comment">//定时器时钟</span></span><br><span class="line">    rcu_periph_clock_enable(RCU_AIN1_TIMER); <span class="comment">// 开启定时器时钟</span></span><br><span class="line">    rcu_periph_clock_enable(RCU_AIN2_TIMER);</span><br><span class="line">    rcu_periph_clock_enable(RCU_BIN1_TIMER);</span><br><span class="line">    rcu_periph_clock_enable(RCU_BIN2_TIMER);</span><br><span class="line">    <span class="comment">//引脚时钟</span></span><br><span class="line">    rcu_periph_clock_enable(RCU_AIN1);</span><br><span class="line">    rcu_periph_clock_enable(RCU_AIN2);</span><br><span class="line">    rcu_periph_clock_enable(RCU_BIN1);</span><br><span class="line">    rcu_periph_clock_enable(RCU_BIN2);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//rcu_timer_clock_prescaler_config(RCU_TIMER_PSC_MUL4); // 配置定时器时钟</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 配置AIN1*/</span></span><br><span class="line">    gpio_mode_set(PORT_AIN1,GPIO_MODE_AF,GPIO_PUPD_NONE,GPIO_AIN1);</span><br><span class="line">    gpio_output_options_set(PORT_AIN1,GPIO_OTYPE_PP,GPIO_OSPEED_50MHZ,GPIO_AIN1);</span><br><span class="line">    gpio_af_set(PORT_AIN1,AF_AIN1,GPIO_AIN1);</span><br><span class="line">    <span class="comment">/* 配置AIN2*/</span></span><br><span class="line">    gpio_mode_set(PORT_AIN2,GPIO_MODE_AF,GPIO_PUPD_NONE,GPIO_AIN2);</span><br><span class="line">    gpio_output_options_set(PORT_AIN2,GPIO_OTYPE_PP,GPIO_OSPEED_50MHZ,GPIO_AIN2);</span><br><span class="line">    gpio_af_set(PORT_AIN2,AF_AIN2,GPIO_AIN2);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 配置BIN1*/</span></span><br><span class="line">    gpio_mode_set(PORT_BIN1,GPIO_MODE_AF,GPIO_PUPD_NONE,GPIO_BIN1);</span><br><span class="line">    gpio_output_options_set(PORT_BIN1,GPIO_OTYPE_PP,GPIO_OSPEED_50MHZ,GPIO_BIN1);</span><br><span class="line">    gpio_af_set(PORT_BIN1,AF_BIN1,GPIO_BIN1);</span><br><span class="line">    <span class="comment">/* 配置BIN2*/</span></span><br><span class="line">    gpio_mode_set(PORT_BIN2,GPIO_MODE_AF,GPIO_PUPD_NONE,GPIO_BIN2);</span><br><span class="line">    gpio_output_options_set(PORT_BIN2,GPIO_OTYPE_PP,GPIO_OSPEED_50MHZ,GPIO_BIN2);</span><br><span class="line">    gpio_af_set(PORT_BIN2,AF_BIN2,GPIO_BIN2);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 配置定时器参数 */</span></span><br><span class="line">    timer_deinit(BSP_AIN1_TIMER);</span><br><span class="line">    timer_deinit(BSP_AIN2_TIMER);</span><br><span class="line">    timer_deinit(BSP_BIN1_TIMER);</span><br><span class="line">    timer_deinit(BSP_BIN2_TIMER);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 复位定时器</span></span><br><span class="line">    timere_initpara.prescaler = pre<span class="number">-1</span>;      <span class="comment">// 时钟预分频值</span></span><br><span class="line">    timere_initpara.alignedmode = TIMER_COUNTER_EDGE;              <span class="comment">// 边缘对齐</span></span><br><span class="line">    timere_initpara.counterdirection = TIMER_COUNTER_UP;    <span class="comment">// 向上计数</span></span><br><span class="line">    timere_initpara.period = per<span class="number">-1</span>;                                              <span class="comment">// 周期</span></span><br><span class="line">    timere_initpara.clockdivision = TIMER_CKDIV_DIV1;            <span class="comment">// 分频因子</span></span><br><span class="line">    timere_initpara.repetitioncounter = <span class="number">0</span>;                  <span class="comment">// 重复计数器 0-255</span></span><br><span class="line"></span><br><span class="line">    timer_init(BSP_AIN1_TIMER,&amp;timere_initpara); <span class="comment">// 初始化定时器</span></span><br><span class="line">    timer_init(BSP_AIN2_TIMER,&amp;timere_initpara); <span class="comment">// 初始化定时器</span></span><br><span class="line">    timer_init(BSP_BIN1_TIMER,&amp;timere_initpara); <span class="comment">// 初始化定时器</span></span><br><span class="line">    timer_init(BSP_BIN2_TIMER,&amp;timere_initpara); <span class="comment">// 初始化定时器</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 配置输出结构体 */</span></span><br><span class="line">    timer_ocintpara.ocpolarity = TIMER_OC_POLARITY_HIGH;           <span class="comment">// 有效电平的极性</span></span><br><span class="line">    timer_ocintpara.outputstate = TIMER_CCX_ENABLE;                <span class="comment">// 配置比较输出模式状态 也就是使能PWM输出到端口</span></span><br><span class="line">    timer_ocintpara.ocnpolarity  = TIMER_OCN_POLARITY_HIGH;        <span class="comment">// 通道互补输出极性为高电平</span></span><br><span class="line">    timer_ocintpara.outputnstate = TIMER_CCXN_DISABLE;            <span class="comment">// 通道互补输出状态失能</span></span><br><span class="line">    timer_ocintpara.ocidlestate  = TIMER_OC_IDLE_STATE_LOW;        <span class="comment">// 信道输出的空闲状态为低</span></span><br><span class="line">    timer_ocintpara.ocnidlestate = TIMER_OCN_IDLE_STATE_LOW;<span class="comment">// 信道互补输出的空闲状态为低</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 配置定时器输出功能 */</span></span><br><span class="line">    timer_channel_output_config(BSP_AIN1_TIMER,BSP_AIN1_CHANNEL,&amp;timer_ocintpara);</span><br><span class="line">    timer_channel_output_config(BSP_AIN2_TIMER,BSP_AIN2_CHANNEL,&amp;timer_ocintpara);</span><br><span class="line">    timer_channel_output_config(BSP_BIN1_TIMER,BSP_BIN1_CHANNEL,&amp;timer_ocintpara);</span><br><span class="line">    timer_channel_output_config(BSP_BIN2_TIMER,BSP_BIN2_CHANNEL,&amp;timer_ocintpara);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 配置占空比 范围 0 ~ (per-1) */</span></span><br><span class="line">    timer_channel_output_pulse_value_config(BSP_AIN1_TIMER,BSP_AIN1_CHANNEL,<span class="number">1000</span>);</span><br><span class="line">    timer_channel_output_pulse_value_config(BSP_AIN2_TIMER,BSP_AIN2_CHANNEL,<span class="number">1000</span>);</span><br><span class="line">    timer_channel_output_pulse_value_config(BSP_BIN1_TIMER,BSP_BIN1_CHANNEL,<span class="number">1000</span>);</span><br><span class="line">    timer_channel_output_pulse_value_config(BSP_BIN2_TIMER,BSP_BIN2_CHANNEL,<span class="number">1000</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 配置定时器通道输出比较模式</span></span><br><span class="line">    timer_channel_output_mode_config(BSP_AIN1_TIMER,BSP_AIN1_CHANNEL,TIMER_OC_MODE_PWM0);                       <span class="comment">// 配置定时器通道输出比较模式</span></span><br><span class="line">    timer_channel_output_mode_config(BSP_AIN2_TIMER,BSP_AIN2_CHANNEL,TIMER_OC_MODE_PWM0);                       <span class="comment">// 配置定时器通道输出比较模式</span></span><br><span class="line">    timer_channel_output_mode_config(BSP_BIN1_TIMER,BSP_BIN1_CHANNEL,TIMER_OC_MODE_PWM0);                       <span class="comment">// 配置定时器通道输出比较模式</span></span><br><span class="line">    timer_channel_output_mode_config(BSP_BIN2_TIMER,BSP_BIN2_CHANNEL,TIMER_OC_MODE_PWM0);                       </span><br><span class="line">    <span class="comment">// 配置定时器通道输出影子寄存器</span></span><br><span class="line">    timer_channel_output_shadow_config(BSP_AIN1_TIMER,BSP_AIN1_CHANNEL,TIMER_OC_SHADOW_DISABLE);  </span><br><span class="line">    <span class="comment">// 配置定时器通道输出影子寄存器</span></span><br><span class="line">    timer_channel_output_shadow_config(BSP_AIN2_TIMER,BSP_AIN2_CHANNEL,TIMER_OC_SHADOW_DISABLE); </span><br><span class="line">    <span class="comment">// 配置定时器通道输出影子寄存器</span></span><br><span class="line">    timer_channel_output_shadow_config(BSP_BIN1_TIMER,BSP_BIN1_CHANNEL,TIMER_OC_SHADOW_DISABLE);  </span><br><span class="line">    <span class="comment">// 配置定时器通道输出影子寄存器</span></span><br><span class="line">    timer_channel_output_shadow_config(BSP_BIN2_TIMER,BSP_BIN2_CHANNEL,TIMER_OC_SHADOW_DISABLE);  </span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 只有高级定时器使用 */</span></span><br><span class="line">    timer_auto_reload_shadow_enable(BSP_AIN1_TIMER);</span><br><span class="line">    timer_auto_reload_shadow_enable(BSP_AIN2_TIMER);</span><br><span class="line">    timer_auto_reload_shadow_enable(BSP_BIN1_TIMER);</span><br><span class="line">    timer_auto_reload_shadow_enable(BSP_BIN2_TIMER);</span><br><span class="line"></span><br><span class="line">    timer_primary_output_config(BSP_AIN1_TIMER, ENABLE);</span><br><span class="line">    timer_primary_output_config(BSP_AIN2_TIMER, ENABLE);</span><br><span class="line">    timer_primary_output_config(BSP_BIN1_TIMER, ENABLE);</span><br><span class="line">    timer_primary_output_config(BSP_BIN2_TIMER, ENABLE);</span><br><span class="line"></span><br><span class="line">     <span class="comment">/* 使能定时器 */</span></span><br><span class="line">    timer_enable(BSP_AIN1_TIMER);</span><br><span class="line">    timer_enable(BSP_AIN2_TIMER);</span><br><span class="line">    timer_enable(BSP_BIN1_TIMER);</span><br><span class="line">    timer_enable(BSP_BIN2_TIMER);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/******************************************************************</span></span><br><span class="line"><span class="comment"> * 函 数 名 称：AO_Control</span></span><br><span class="line"><span class="comment"> * 函 数 说 明：A端口电机控制</span></span><br><span class="line"><span class="comment"> * 函 数 形 参：dir旋转方向 1正转0反转   speed旋转速度，范围（0 ~ per-1）</span></span><br><span class="line"><span class="comment"> * 函 数 返 回：无</span></span><br><span class="line"><span class="comment"> * 作       者：LC</span></span><br><span class="line"><span class="comment"> * 备       注：无</span></span><br><span class="line"><span class="comment">******************************************************************/</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">AO_Control</span><span class="params">(<span class="type">uint8_t</span> dir, <span class="type">uint32_t</span> speed)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>( dir == <span class="number">1</span> )&#123;</span><br><span class="line">        <span class="comment">//AO1输出</span></span><br><span class="line">        timer_channel_output_pulse_value_config(BSP_AIN1_TIMER,BSP_AIN1_CHANNEL, <span class="number">0</span> );</span><br><span class="line">                <span class="comment">//AO2输出</span></span><br><span class="line">        timer_channel_output_pulse_value_config(BSP_AIN2_TIMER,BSP_AIN2_CHANNEL, speed );</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="comment">//AO1输出</span></span><br><span class="line">        timer_channel_output_pulse_value_config(BSP_AIN1_TIMER,BSP_AIN1_CHANNEL, speed );</span><br><span class="line">        <span class="comment">//AO2输出</span></span><br><span class="line">        timer_channel_output_pulse_value_config(BSP_AIN2_TIMER,BSP_AIN2_CHANNEL, <span class="number">0</span> );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/******************************************************************</span></span><br><span class="line"><span class="comment"> * 函 数 名 称：B0_Control</span></span><br><span class="line"><span class="comment"> * 函 数 说 明：B端口电机控制</span></span><br><span class="line"><span class="comment"> * 函 数 形 参：dir旋转方向 1正转0反转   speed旋转速度，范围（0 ~ per-1）</span></span><br><span class="line"><span class="comment"> * 函 数 返 回：无</span></span><br><span class="line"><span class="comment"> * 作       者：LC</span></span><br><span class="line"><span class="comment"> * 备       注：无</span></span><br><span class="line"><span class="comment">******************************************************************/</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">BO_Control</span><span class="params">(<span class="type">uint8_t</span> dir, <span class="type">uint32_t</span> speed)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>( dir == <span class="number">1</span> )&#123;</span><br><span class="line">        <span class="comment">//BO1输出</span></span><br><span class="line">        timer_channel_output_pulse_value_config(BSP_BIN1_TIMER,BSP_BIN1_CHANNEL, <span class="number">0</span> );</span><br><span class="line">        <span class="comment">//BO2输出</span></span><br><span class="line">        timer_channel_output_pulse_value_config(BSP_BIN2_TIMER,BSP_BIN2_CHANNEL, speed );</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="comment">//BO1输出</span></span><br><span class="line">        timer_channel_output_pulse_value_config(BSP_BIN1_TIMER,BSP_BIN1_CHANNEL, speed );</span><br><span class="line">        <span class="comment">//BO2输出</span></span><br><span class="line">        timer_channel_output_pulse_value_config(BSP_BIN2_TIMER,BSP_BIN2_CHANNEL, <span class="number">0</span> );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">===========================================================================</span><br><span class="line"><span class="comment">// main.c</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;gd32e23x.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;systick.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;bsp_usart.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;bsp_drv8833.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> main(<span class="type">void</span>)&#123;</span><br><span class="line">    <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    systick_config();             <span class="comment">// 滴答定时器初始化</span></span><br><span class="line">    usart_gpio_config(<span class="number">9600U</span>); <span class="comment">// 串口0初始化</span></span><br><span class="line"></span><br><span class="line">    DRV8833_Init(<span class="number">10</span>,<span class="number">8000</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>)&#123;</span><br><span class="line">            i += <span class="number">100</span>;</span><br><span class="line">            <span class="keyword">if</span>( i &gt; <span class="number">8000</span> ) i = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">            AO_Control(<span class="number">0</span>,i);<span class="comment">//A端电机反转</span></span><br><span class="line">            BO_Control(<span class="number">1</span>,i);<span class="comment">//B端电机正转</span></span><br><span class="line">            delay_1ms(<span class="number">50</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">博主</a></li>
+        
+          <li><a href="/tags/">标签</a></li>
+        
+          <li><a href="/categories/">分类</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#H%E6%A1%A5%E6%8E%A7%E5%88%B6%E7%94%B5%E8%B7%AF"><span class="toc-number">1.</span> <span class="toc-text">H桥控制电路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%B9%E6%80%A7"><span class="toc-number">2.</span> <span class="toc-text">特性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E8%84%9A%E8%AF%B4%E6%98%8E"><span class="toc-number">3.</span> <span class="toc-text">引脚说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#H%E6%A1%A5%E6%8E%A7%E5%88%B6%E9%80%BB%E8%BE%91"><span class="toc-number">4.</span> <span class="toc-text">H桥控制逻辑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PWM-%E6%8E%A7%E5%88%B6%E4%B8%8E%E8%A1%B0%E5%87%8F%E6%A8%A1%E5%BC%8F"><span class="toc-number">5.</span> <span class="toc-text">PWM 控制与衰减模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A9%B1%E5%8A%A8%E4%BB%A3%E7%A0%81"><span class="toc-number">6.</span> <span class="toc-text">驱动代码</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/DRV8833/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/DRV8833/&text=DRV8833"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/DRV8833/&title=DRV8833"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/DRV8833/&is_video=false&description=DRV8833"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=DRV8833&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/DRV8833/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/DRV8833/&title=DRV8833"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/DRV8833/&title=DRV8833"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/DRV8833/&title=DRV8833"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/DRV8833/&title=DRV8833"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/DRV8833/&name=DRV8833&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/IC/DRV8833/&t=DRV8833"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    kay
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
