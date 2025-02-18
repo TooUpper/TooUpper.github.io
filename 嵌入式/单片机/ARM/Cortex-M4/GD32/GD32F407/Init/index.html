@@ -6,12 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta name="description" content="准备阶段下载相关文件，GD32F407 的用户手册、数组手册、选型手册、固件使用指南（一般下载固件库时会附带）等。 创建项目与配置创建项目 在工程目录中创捷下列文件夹 1234567891011&#x2F;&#x2F; 目录结构Demo01└── Docs&#x2F;		    &#x2F;&#x2F; 说明文档 README.md└── Project&#x2F;		&#x2F;&#x2F; 存放 Keil 文件和生成的一些配置文件、hex 文件     ├── CMSIS">
+    <meta name="description" content="准备阶段下载相关文件，GD32F407 的用户手册、数据手册、选型手册、固件使用指南（一般下载固件库时会附带）等。 官网下载地址 创建项目与配置创建项目 在工程目录中创捷下列文件夹 12345678910&#x2F;&#x2F; 目录结构Demo01└── Docs&#x2F;		 &#x2F;&#x2F; 说明文档 README.md└── Project&#x2F;	 &#x2F;&#x2F; 存放 Keil 文件和生成的一些配置文件、hex 文件     ├── CMS">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Init">
 <meta property="og:url" content="https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/GD32/GD32F407/Init/index.html">
 <meta property="og:site_name" content="流年不知心底事">
-<meta property="og:description" content="准备阶段下载相关文件，GD32F407 的用户手册、数组手册、选型手册、固件使用指南（一般下载固件库时会附带）等。 创建项目与配置创建项目 在工程目录中创捷下列文件夹 1234567891011&#x2F;&#x2F; 目录结构Demo01└── Docs&#x2F;		    &#x2F;&#x2F; 说明文档 README.md└── Project&#x2F;		&#x2F;&#x2F; 存放 Keil 文件和生成的一些配置文件、hex 文件     ├── CMSIS">
+<meta property="og:description" content="准备阶段下载相关文件，GD32F407 的用户手册、数据手册、选型手册、固件使用指南（一般下载固件库时会附带）等。 官网下载地址 创建项目与配置创建项目 在工程目录中创捷下列文件夹 12345678910&#x2F;&#x2F; 目录结构Demo01└── Docs&#x2F;		 &#x2F;&#x2F; 说明文档 README.md└── Project&#x2F;	 &#x2F;&#x2F; 存放 Keil 文件和生成的一些配置文件、hex 文件     ├── CMS">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407Keilyinruwenjian.png">
 <meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407Keilinclude.png">
@@ -24,7 +24,7 @@
 <meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407xinpianxuanxingbiao.png">
 <meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407jinzhenbufen.png">
 <meta property="article:published_time" content="2024-10-24T11:48:00.000Z">
-<meta property="article:modified_time" content="2025-01-07T10:58:33.648Z">
+<meta property="article:modified_time" content="2025-02-13T06:20:11.031Z">
 <meta property="article:author" content="kay">
 <meta property="article:tag" content="GD32F407">
 <meta name="twitter:card" content="summary">
@@ -140,7 +140,7 @@
     
     
       <div id="toc">
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%86%E5%A4%87%E9%98%B6%E6%AE%B5"><span class="toc-number">1.</span> <span class="toc-text">准备阶段</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE%E4%B8%8E%E9%85%8D%E7%BD%AE"><span class="toc-number">2.</span> <span class="toc-text">创建项目与配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E5%8F%91%E4%B8%8E%E8%B0%83%E8%AF%95"><span class="toc-number">3.</span> <span class="toc-text">开发与调试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%83%A7%E5%86%99%E4%B8%8E%E9%AA%8C%E8%AF%81"><span class="toc-number">4.</span> <span class="toc-text">烧写与验证</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#DAP-Link-%E4%B8%8B%E8%BD%BD"><span class="toc-number">4.1.</span> <span class="toc-text">DAP-Link 下载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-DFU-%E7%83%A7%E5%BD%95"><span class="toc-number">4.2.</span> <span class="toc-text">使用 DFU 烧录</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B0%83%E6%95%B4%E7%B3%BB%E7%BB%9F%E4%B8%BB%E9%A2%91"><span class="toc-number">5.</span> <span class="toc-text">调整系统主频</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE-SysTick"><span class="toc-number">6.</span> <span class="toc-text">配置 SysTick</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">7.</span> <span class="toc-text">问题</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%86%E5%A4%87%E9%98%B6%E6%AE%B5"><span class="toc-number">1.</span> <span class="toc-text">准备阶段</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE%E4%B8%8E%E9%85%8D%E7%BD%AE"><span class="toc-number">2.</span> <span class="toc-text">创建项目与配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Keil%E9%85%8D%E7%BD%AE"><span class="toc-number">2.1.</span> <span class="toc-text">Keil配置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E5%8F%91%E4%B8%8E%E8%B0%83%E8%AF%95"><span class="toc-number">3.</span> <span class="toc-text">开发与调试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%83%A7%E5%86%99%E4%B8%8E%E9%AA%8C%E8%AF%81"><span class="toc-number">4.</span> <span class="toc-text">烧写与验证</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#DAP-Link-%E4%B8%8B%E8%BD%BD"><span class="toc-number">4.1.</span> <span class="toc-text">DAP-Link 下载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-DFU-%E7%83%A7%E5%BD%95"><span class="toc-number">4.2.</span> <span class="toc-text">使用 DFU 烧录</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B0%83%E6%95%B4%E7%B3%BB%E7%BB%9F%E4%B8%BB%E9%A2%91"><span class="toc-number">5.</span> <span class="toc-text">调整系统主频</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE-SysTick"><span class="toc-number">6.</span> <span class="toc-text">配置 SysTick</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">7.</span> <span class="toc-text">问题</span></a></li></ol>
       </div>
     
   </span>
@@ -190,13 +190,15 @@
   
 
   <div class="content e-content" itemprop="articleBody">
-    <h2 id="准备阶段"><a href="#准备阶段" class="headerlink" title="准备阶段"></a>准备阶段</h2><p>下载相关文件，GD32F407 的用户手册、数组手册、选型手册、固件使用指南（一般下载固件库时会附带）等。</p>
+    <h2 id="准备阶段"><a href="#准备阶段" class="headerlink" title="准备阶段"></a>准备阶段</h2><p>下载相关文件，GD32F407 的用户手册、数据手册、选型手册、固件使用指南（一般下载固件库时会附带）等。</p>
+<p><a target="_blank" rel="noopener" href="https://www.gd32mcu.com/cn/download/">官网下载地址</a></p>
 <h2 id="创建项目与配置"><a href="#创建项目与配置" class="headerlink" title="创建项目与配置"></a>创建项目与配置</h2><p><strong>创建项目</strong></p>
 <p>在工程目录中创捷下列文件夹</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 目录结构</span></span><br><span class="line"></span><br><span class="line">Demo01</span><br><span class="line">└── Docs/		    <span class="comment">// 说明文档 README.md</span></span><br><span class="line">└── Project/		<span class="comment">// 存放 Keil 文件和生成的一些配置文件、hex 文件     </span></span><br><span class="line">├── CMSIS/          <span class="comment">// CMSIS 中 ARM 相关文件</span></span><br><span class="line">├── Firmware/       <span class="comment">// 官方标准固件库中的驱动程序</span></span><br><span class="line">├── Drivers/        <span class="comment">// 外设硬件驱动程序</span></span><br><span class="line">├── Middleware/     <span class="comment">// 中间件组件</span></span><br><span class="line">├── App/            <span class="comment">// 应用层代码</span></span><br><span class="line">└── User/      		<span class="comment">// 入口层     </span></span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 目录结构</span></span><br><span class="line">Demo01</span><br><span class="line">└── Docs/		 <span class="comment">// 说明文档 README.md</span></span><br><span class="line">└── Project/	 <span class="comment">// 存放 Keil 文件和生成的一些配置文件、hex 文件     </span></span><br><span class="line">├── CMSIS/       <span class="comment">// CMSIS 中 ARM 相关文件</span></span><br><span class="line">├── Firmware/    <span class="comment">// 官方标准固件库中的驱动程序</span></span><br><span class="line">├── Drivers/     <span class="comment">// 外设硬件驱动程序</span></span><br><span class="line">├── Middleware/  <span class="comment">// 中间件组件</span></span><br><span class="line">├── App/         <span class="comment">// 应用层代码</span></span><br><span class="line">└── User/        <span class="comment">// 入口层     </span></span><br></pre></td></tr></table></figure>
 
 <p><strong>文件移植</strong></p>
 <p>将官方标准固件库中我们需要的的文件拷贝到对应的工程目录中去：</p>
+<blockquote>
 <p><strong>CMSIS</strong> –&gt; 官方标准固件库中的 CMSIS 中的代码；</p>
 <p><strong>Firmware</strong> –&gt; 官方标准固件库中的外设驱动；</p>
 <p><strong>Drivers</strong> –&gt; 我们自己封装的驱动，如按键、显示屏等；</p>
@@ -204,9 +206,10 @@
 <p><strong>App</strong> –&gt; 具体的业务处理逻辑</p>
 <p><strong>User</strong> –&gt; 程序的入口和一些工具文件</p>
 <p><strong>Project</strong> –&gt; Keil 文件的目录</p>
+</blockquote>
 <p>那么具体都是要拷贝哪些软件呢，</p>
 <ul>
-<li><p>将对应目录下文件都拷贝过去，然后将所有 .c 文件添加进项目中然后在解决错误问题（不建议）</p>
+<li><p>将对应目录下文件都拷贝过去，然后将所有 .c 文件添加进项目中然后在解决错误问题(不建议）</p>
 </li>
 <li><p>查看官方的示例代码，看看人家官方示例是需要拷贝那些，</p>
 <ul>
@@ -222,8 +225,7 @@
 <p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407Keilyinruwenjian.png" alt="F407Keilyinruwenjian"></p>
 <p><strong>添加 Include PATH 路径</strong></p>
 <p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/GD32/GD32F407/F407Keilinclude.png" alt="F407Keilinclude"></p>
-<p><strong>其他 Keil 配置</strong></p>
-<ol>
+<h3 id="Keil配置"><a href="#Keil配置" class="headerlink" title="Keil配置"></a>Keil配置</h3><ol>
 <li><strong>芯片的型号要与所用硬件一致</strong></li>
 </ol>
 <p>“”魔术棒” –&gt; “Device” 下的芯片型号与我们用的硬件是否一样，不一样就要改；</p>
@@ -242,7 +244,7 @@
 <ol start="4">
 <li><strong>设置 C 和 C++ 的编译器版本，不然有些宏关键字它可能不识别，设置代码优化级别</strong></li>
 </ol>
-<p>“魔术棒” –&gt; “C&#x2F;C++” 下的 Language C 设置为 “C990”，Language C++ 设置为 “C++ 11”</p>
+<p>“魔术棒” –&gt; “C&#x2F;C++” 下的 Language C 设置为 “C99”，Language C++ 设置为 “C++ 11”</p>
 <p>设置编译警告的级别，选择 “Wamings” 中的内容为 “AC5-like Wamings”，表示与 Keil5 一致；</p>
 <p>设置代码优化的级别，选择 “Optimizaion” 中的内容为 “-O1”，级别越高优化程序越高，但是太高了有时候会出错，此处设置为 “-O1” 即可；</p>
 <ol start="5">
@@ -536,7 +538,7 @@
     
     
       <div id="toc-footer" style="display: none">
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%86%E5%A4%87%E9%98%B6%E6%AE%B5"><span class="toc-number">1.</span> <span class="toc-text">准备阶段</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE%E4%B8%8E%E9%85%8D%E7%BD%AE"><span class="toc-number">2.</span> <span class="toc-text">创建项目与配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E5%8F%91%E4%B8%8E%E8%B0%83%E8%AF%95"><span class="toc-number">3.</span> <span class="toc-text">开发与调试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%83%A7%E5%86%99%E4%B8%8E%E9%AA%8C%E8%AF%81"><span class="toc-number">4.</span> <span class="toc-text">烧写与验证</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#DAP-Link-%E4%B8%8B%E8%BD%BD"><span class="toc-number">4.1.</span> <span class="toc-text">DAP-Link 下载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-DFU-%E7%83%A7%E5%BD%95"><span class="toc-number">4.2.</span> <span class="toc-text">使用 DFU 烧录</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B0%83%E6%95%B4%E7%B3%BB%E7%BB%9F%E4%B8%BB%E9%A2%91"><span class="toc-number">5.</span> <span class="toc-text">调整系统主频</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE-SysTick"><span class="toc-number">6.</span> <span class="toc-text">配置 SysTick</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">7.</span> <span class="toc-text">问题</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%86%E5%A4%87%E9%98%B6%E6%AE%B5"><span class="toc-number">1.</span> <span class="toc-text">准备阶段</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE%E4%B8%8E%E9%85%8D%E7%BD%AE"><span class="toc-number">2.</span> <span class="toc-text">创建项目与配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Keil%E9%85%8D%E7%BD%AE"><span class="toc-number">2.1.</span> <span class="toc-text">Keil配置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E5%8F%91%E4%B8%8E%E8%B0%83%E8%AF%95"><span class="toc-number">3.</span> <span class="toc-text">开发与调试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%83%A7%E5%86%99%E4%B8%8E%E9%AA%8C%E8%AF%81"><span class="toc-number">4.</span> <span class="toc-text">烧写与验证</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#DAP-Link-%E4%B8%8B%E8%BD%BD"><span class="toc-number">4.1.</span> <span class="toc-text">DAP-Link 下载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-DFU-%E7%83%A7%E5%BD%95"><span class="toc-number">4.2.</span> <span class="toc-text">使用 DFU 烧录</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B0%83%E6%95%B4%E7%B3%BB%E7%BB%9F%E4%B8%BB%E9%A2%91"><span class="toc-number">5.</span> <span class="toc-text">调整系统主频</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE-SysTick"><span class="toc-number">6.</span> <span class="toc-text">配置 SysTick</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">7.</span> <span class="toc-text">问题</span></a></li></ol>
       </div>
     
 
