@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="输入捕获是一种通过定时器捕捉外部信号特定边沿（如上升沿或下降沿）发生时的时间戳的功能。它可以精确测量外部信号的周期、频率或脉宽等时间特性，常用于频率计数、脉冲宽度测量和信号时序分析等应用。输入捕获模式通常通过定时器的输入引脚接收信号，并将捕获的时间值存储在定时器的捕获寄存器中。 工作原理输入捕获模式：  当定时器在输入捕获模式下工作时，它会检测输入信号（如ICx引脚上的信号），并根据设定条件记录捕">
+<meta property="og:type" content="article">
+<meta property="og:title" content="输入捕获">
+<meta property="og:url" content="https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M3/STM32/STM32F103/%E8%BE%93%E5%85%A5%E6%8D%95%E8%8E%B7/index.html">
+<meta property="og:site_name" content="流年不知心底事">
+<meta property="og:description" content="输入捕获是一种通过定时器捕捉外部信号特定边沿（如上升沿或下降沿）发生时的时间戳的功能。它可以精确测量外部信号的周期、频率或脉宽等时间特性，常用于频率计数、脉冲宽度测量和信号时序分析等应用。输入捕获模式通常通过定时器的输入引脚接收信号，并将捕获的时间值存储在定时器的捕获寄存器中。 工作原理输入捕获模式：  当定时器在输入捕获模式下工作时，它会检测输入信号（如ICx引脚上的信号），并根据设定条件记录捕">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M3/STM32/STM32F103/Timerqf.png">
+<meta property="og:image" content="c:\Users\kay\AppData\Roaming\Typora\typora-user-images\image-20250222225348316.png">
+<meta property="og:image" content="c:\Users\kay\AppData\Roaming\Typora\typora-user-images\image-20250222225521201.png">
+<meta property="og:image" content="c:\Users\kay\AppData\Roaming\Typora\typora-user-images\image-20250222225559187.png">
+<meta property="article:published_time" content="2025-02-25T14:31:00.000Z">
+<meta property="article:modified_time" content="2025-02-25T14:41:10.921Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="STM32F103">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M3/STM32/STM32F103/Timerqf.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>输入捕获</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M3/STM32/STM32F103/DMA/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M3/STM32/STM32F103/Timer/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M3/STM32/STM32F103/%E8%BE%93%E5%85%A5%E6%8D%95%E8%8E%B7/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M3/STM32/STM32F103/%E8%BE%93%E5%85%A5%E6%8D%95%E8%8E%B7/&text=输入捕获"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M3/STM32/STM32F103/%E8%BE%93%E5%85%A5%E6%8D%95%E8%8E%B7/&title=输入捕获"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M3/STM32/STM32F103/%E8%BE%93%E5%85%A5%E6%8D%95%E8%8E%B7/&is_video=false&description=输入捕获"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=输入捕获&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M3/STM32/STM32F103/%E8%BE%93%E5%85%A5%E6%8D%95%E8%8E%B7/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M3/STM32/STM32F103/%E8%BE%93%E5%85%A5%E6%8D%95%E8%8E%B7/&title=输入捕获"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M3/STM32/STM32F103/%E8%BE%93%E5%85%A5%E6%8D%95%E8%8E%B7/&title=输入捕获"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M3/STM32/STM32F103/%E8%BE%93%E5%85%A5%E6%8D%95%E8%8E%B7/&title=输入捕获"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M3/STM32/STM32F103/%E8%BE%93%E5%85%A5%E6%8D%95%E8%8E%B7/&title=输入捕获"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M3/STM32/STM32F103/%E8%BE%93%E5%85%A5%E6%8D%95%E8%8E%B7/&name=输入捕获&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M3/STM32/STM32F103/%E8%BE%93%E5%85%A5%E6%8D%95%E8%8E%B7/&t=输入捕获"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">工作原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%B9%E6%80%A7"><span class="toc-number">2.</span> <span class="toc-text">特性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD%E6%A1%86%E5%9B%BE"><span class="toc-number">3.</span> <span class="toc-text">功能框图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E6%9D%BF%E4%BB%A3%E7%A0%81"><span class="toc-number">4.</span> <span class="toc-text">模板代码</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        输入捕获
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">kay</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-02-25T14:31:00.000Z" class="dt-published" itemprop="datePublished">2025-02-25</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/ARM/">ARM</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/STM32F103/" rel="tag">STM32F103</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>输入捕获是一种通过定时器捕捉外部信号<strong>特定边沿</strong>（如上升沿或下降沿）发生时的时间戳的功能。它可以精确测量外部信号的周期、频率或脉宽等时间特性，常用于频率计数、脉冲宽度测量和信号时序分析等应用。输入捕获模式通常通过定时器的输入引脚接收信号，并将捕获的时间值存储在定时器的捕获寄存器中。</p>
+<h2 id="工作原理"><a href="#工作原理" class="headerlink" title="工作原理"></a>工作原理</h2><p><strong>输入捕获模式</strong>：</p>
+<ul>
+<li>当定时器在输入捕获模式下工作时，它会检测输入信号（如ICx引脚上的信号），并根据设定条件记录捕获时刻的计数器值。</li>
+<li>在这种模式下，定时器会通过输入信号触发捕获，并将捕获的时间戳存储在寄存器TIMx_CCR1中。</li>
+<li>需要注意的是，捕获是基于输入信号的边沿进行的，通常是上升沿或下降沿，取决于配置。</li>
+</ul>
+<p><strong>配置步骤</strong>：</p>
+<ul>
+<li>选择输入引脚并配置TIMx_CCR1寄存器连接到对应的输入信号。</li>
+<li>配置输入信号的边沿检测（上升沿或下降沿），通过设置TIMx_CCMR寄存器的CC1S位来选择。</li>
+<li>配置定时器的周期频率，并通过设置TIMx_CCR1寄存器的C1E位来允许或禁止捕获。</li>
+</ul>
+<p><strong>定时器寄存器的配置</strong>：</p>
+<ul>
+<li>配置TIMx_CCR1寄存器中的C1S位来选择输入信号的类型（例如选择TIMx的输入引脚）。</li>
+<li>配置TIMx_CCMR寄存器中的CC1S位，用于选择捕获的边沿（上升沿或下降沿）。</li>
+<li>允许或禁止DMA请求和中断功能，通过设置TIMx_DIER寄存器中的CC1IE位和CC1DMA位来启用DMA和中断请求。</li>
+</ul>
+<p><strong>输入捕获时的工作原理</strong>：</p>
+<ul>
+<li>在输入信号的每次边沿变化时，TIMx_CCR1寄存器会捕获当前计数器的值。</li>
+<li>如果启用了DMA，捕获值会自动传送到内存或其他寄存器，并生成中断或DMA请求。</li>
+</ul>
+<h2 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h2><p><strong>主要特点</strong></p>
+<ul>
+<li><p><strong>16 位计数器</strong>：定时器采用 <strong>16 位计数器</strong>，可以产生高精度的计时和信号控制。</p>
+</li>
+<li><p><strong>可编程的时钟分频器</strong>：定时器支持 <strong>16 位可编程预分频器</strong>，时钟频率可调，分频范围从 1 到 65536，适应不同的应用场景。</p>
+</li>
+<li><p><strong>多功能通道支持</strong>：支持 <strong>4 种输入输出通道</strong>，可以进行 <strong>输入捕获、输出比较、PWM 输出</strong> 等多种功能，广泛用于电机控制、亮度调节、频率测量等。</p>
+</li>
+<li><p><strong>死区时间控制</strong>：支持 <strong>PWM 信号的死区时间控制</strong>，适用于 H 桥电路驱动和电机控制等应用，确保信号的稳定性。</p>
+</li>
+<li><p><strong>DMA 支持</strong>：定时器支持 <strong>DMA</strong>，可以高效地将数据从外设传输到内存，减少 CPU 占用，提高系统性能。</p>
+</li>
+<li><p><strong>多定时器同步</strong>：多个定时器可以通过同步信号协同工作，适用于更复杂的应用场景，如多任务控制。</p>
+</li>
+<li><p><strong>高级功能（TIM1 和 TIM8）</strong>：<strong>TIM1</strong> 和 <strong>TIM8</strong> 定时器作为高级定时器，支持更高精度的频率控制、波形生成和同步功能。</p>
+</li>
+</ul>
+<p><strong>各定时器功能区分如下</strong></p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M3/STM32/STM32F103/Timerqf.png" alt="Timerqf"></p>
+<p><strong>注意事项</strong></p>
+<ul>
+<li><p><strong>时钟配置</strong>：在配置定时器时，要确保时钟源的正确配置，特别是当使用 <strong>外部时钟源</strong> 或 <strong>预分频器</strong> 时，确保时钟频率符合系统要求。</p>
+</li>
+<li><p><strong>死区时间控制</strong>：当使用 <strong>PWM 输出</strong> 时，需要合理设置 <strong>死区时间</strong>，避免输出信号的交叠，这在电机驱动和高功率控制应用中尤为重要。</p>
+</li>
+<li><p><strong>DMA 配置</strong>：使用 <strong>DMA</strong> 时，要确保 DMA 配置正确，确保数据的传输效率，并避免冲突。</p>
+</li>
+<li><p><strong>同步信号</strong>：在使用多个定时器进行同步操作时，需要确保各定时器的同步信号正确配置，避免不同定时器之间的竞争条件。</p>
+</li>
+<li><p><strong>高级定时器的资源共享</strong>：<strong>TIM1</strong> 和 <strong>TIM8</strong> 是高级定时器，它们共享一些系统资源。在使用这些定时器时，要注意避免资源冲突，确保系统的稳定性。</p>
+</li>
+</ul>
+<h2 id="功能框图"><a href="#功能框图" class="headerlink" title="功能框图"></a>功能框图</h2><p><strong>高级定时器框图</strong></p>
+<p><img src="C:\Users\kay\AppData\Roaming\Typora\typora-user-images\image-20250222225348316.png" alt="image-20250222225348316"></p>
+<p><strong>通用定时器框图</strong></p>
+<p><img src="C:\Users\kay\AppData\Roaming\Typora\typora-user-images\image-20250222225521201.png" alt="image-20250222225521201"></p>
+<p><strong>基本定时器框图</strong></p>
+<p><img src="C:\Users\kay\AppData\Roaming\Typora\typora-user-images\image-20250222225559187.png" alt="image-20250222225559187"></p>
+<h2 id="模板代码"><a href="#模板代码" class="headerlink" title="模板代码"></a>模板代码</h2><p><a target="_blank" rel="noopener" href="https://github.com/TooUpper/SensorDrive">https://github.com/TooUpper/SensorDrive</a></p>
+<p>说明一下这里采样到的数值是 0~4095 因为寄存器最大就是 12 位，所以是 4095；</p>
+<p><strong>ADC值 0</strong>：表示输入电压为 <strong>0V</strong>。</p>
+<p><strong>ADC值 4095</strong>：表示输入电压为 <strong>V_ref</strong>（通常为 3.3V 或 5V）。</p>
+<p><strong>ADC值 2047</strong>：表示输入电压大约为 <strong>V_ref &#x2F; 2</strong>，例如 1.65V 如果 <strong>V_ref &#x3D; 3.3V</strong>。</p>
+<p>这里得到的 0~4095 不停波动的值指的是该引脚采样所获取的电压值；</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">博主</a></li>
+        
+          <li><a href="/tags/">标签</a></li>
+        
+          <li><a href="/categories/">分类</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">工作原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%B9%E6%80%A7"><span class="toc-number">2.</span> <span class="toc-text">特性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD%E6%A1%86%E5%9B%BE"><span class="toc-number">3.</span> <span class="toc-text">功能框图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E6%9D%BF%E4%BB%A3%E7%A0%81"><span class="toc-number">4.</span> <span class="toc-text">模板代码</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M3/STM32/STM32F103/%E8%BE%93%E5%85%A5%E6%8D%95%E8%8E%B7/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M3/STM32/STM32F103/%E8%BE%93%E5%85%A5%E6%8D%95%E8%8E%B7/&text=输入捕获"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M3/STM32/STM32F103/%E8%BE%93%E5%85%A5%E6%8D%95%E8%8E%B7/&title=输入捕获"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M3/STM32/STM32F103/%E8%BE%93%E5%85%A5%E6%8D%95%E8%8E%B7/&is_video=false&description=输入捕获"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=输入捕获&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M3/STM32/STM32F103/%E8%BE%93%E5%85%A5%E6%8D%95%E8%8E%B7/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M3/STM32/STM32F103/%E8%BE%93%E5%85%A5%E6%8D%95%E8%8E%B7/&title=输入捕获"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M3/STM32/STM32F103/%E8%BE%93%E5%85%A5%E6%8D%95%E8%8E%B7/&title=输入捕获"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M3/STM32/STM32F103/%E8%BE%93%E5%85%A5%E6%8D%95%E8%8E%B7/&title=输入捕获"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M3/STM32/STM32F103/%E8%BE%93%E5%85%A5%E6%8D%95%E8%8E%B7/&title=输入捕获"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M3/STM32/STM32F103/%E8%BE%93%E5%85%A5%E6%8D%95%E8%8E%B7/&name=输入捕获&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M3/STM32/STM32F103/%E8%BE%93%E5%85%A5%E6%8D%95%E8%8E%B7/&t=输入捕获"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    kay
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
