@@ -14,8 +14,9 @@
 <meta property="og:description" content="J-Link 是由 SEGGER 公司推出的一款高性能的调试和烧录工具，广泛用于嵌入式开发领域，支持多种微控制器（MCU）的调试和烧录功能。J-Link 烧录是通过该工具与目标硬件进行通信，将程序固件烧录到目标芯片的闪存中，通常与开发环境（如 IAR Embedded Workbench、Keil MDK、GCC 等）配合使用。下面我将从多个角度详细介绍 J-Link 烧录的过程和特点。 J-Li">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/%E7%83%A7%E5%BD%95%E5%99%A8/JLink/lxt.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/%E7%83%A7%E5%BD%95%E5%99%A8/JLink/sbtp.png">
 <meta property="article:published_time" content="2025-01-03T12:39:00.000Z">
-<meta property="article:modified_time" content="2025-01-09T01:10:20.602Z">
+<meta property="article:modified_time" content="2025-03-06T10:01:23.881Z">
 <meta property="article:author" content="kay">
 <meta property="article:tag" content="烧录器">
 <meta name="twitter:card" content="summary">
@@ -185,7 +186,8 @@
 <h3 id="J-Link-硬件概述"><a href="#J-Link-硬件概述" class="headerlink" title="J-Link 硬件概述"></a><strong>J-Link 硬件概述</strong></h3><p>J-Link 是一款 USB 接口的调试器，它通过 <strong>USB 连接到开发主机</strong>（通常是 PC），并通过 <strong>JTAG</strong> 或 <strong>SWD</strong> 接口<strong>与目标微控制器进行通信</strong>。J-Link 兼容多种微控制器架构，最常见的有 ARM Cortex-M 系列、Cortex-A 系列、RX、Renesas 等。</p>
 <p>J-Link 的工作原理是通过在主机和目标硬件之间建立一个高效的通信通道，进行数据交换和控制。它不仅支持调试功能，还可以实现烧录、读取、擦除闪存等功能。</p>
 <p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/%E7%83%A7%E5%BD%95%E5%99%A8/JLink/lxt.png" alt="lxt"></p>
-<h3 id="J-Link-烧录流程"><a href="#J-Link-烧录流程" class="headerlink" title="J-Link 烧录流程"></a><strong>J-Link 烧录流程</strong></h3><h4 id="安装-J-Link-驱动"><a href="#安装-J-Link-驱动" class="headerlink" title="安装 J-Link 驱动"></a>安装 J-Link 驱动</h4><p>在 PC 上需要安装 J-Link 的驱动程序和相关软件工具包。可以通过 SEGGER 官方网站下载最新版本的 J-Link 软件和驱动程序。安装后，J-Link 会被识别为一个调试器设备，通常在设备管理器中显示为“J-Link”或“J-Link Plus”。</p>
+<h3 id="J-Link-烧录流程"><a href="#J-Link-烧录流程" class="headerlink" title="J-Link 烧录流程"></a><strong>J-Link 烧录流程</strong></h3><h4 id="安装-J-Link-驱动"><a href="#安装-J-Link-驱动" class="headerlink" title="安装 J-Link 驱动"></a>安装 J-Link 驱动</h4><p>在 PC 上需要安装 J-Link 的驱动程序和相关软件工具包。可以通过 SEGGER 官方网站下载最新版本的 J-Link 软件和驱动程序。安装 J-Link 驱动并将 J-Link 连接到电脑后设备会被识别为一个调试器设备，通常在设备管理器中显示为“J-Link”或“J-Link Plus”。</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/%E7%83%A7%E5%BD%95%E5%99%A8/JLink/sbtp.png" alt="sbtp"></p>
 <blockquote>
 <p>注意有些非正版的 J-Link 设备，可能由于被屏蔽等问题导致安装驱动后不显示“J-Link”或“J-Link Plus”只显示一个 USB Composite Device，那么这时候就需要去找厂家要硬件所支持的版本驱动；</p>
 </blockquote>
