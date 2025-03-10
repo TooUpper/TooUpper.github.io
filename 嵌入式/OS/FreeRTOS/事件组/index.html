@@ -6,20 +6,22 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta name="description" content="事件组（Event Groups）是一种用于任务间通信的机制，主要用于多任务之间的同步。事件组允许任务通过设置和清除标志位来彼此协作，完成类似于“事件通知”的功能。事件组适合用于当多个任务需要等待某些条件或事件时，它们之间进行同步。 事件位(事件标志)事件位用于指示事件 是否发生。事件位通常称为事件标志。例如，应用程序可以：  定义一个位（或标志），设置为 1 时表示“已收到消息并准备好处理”，">
+    <meta name="description" content="在 FreeRTOS 中，队列（Queue）、信号量（Semaphore）、任务通知（Task Notification）等同步机制，每次只能处理一个任务。换句话说，这些机制都是点对点的，一次只能满足一个任务的同步需求。 但在实际应用中，我们往往需要多个任务同时等待一个或多个事件的发生，比如多个外设的状态变化、多个任务等待某个初始化完成等。这时候，事件组（Event Groups）就派上了用场！">
 <meta property="og:type" content="article">
 <meta property="og:title" content="事件组">
 <meta property="og:url" content="https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%BA%8B%E4%BB%B6%E7%BB%84/index.html">
 <meta property="og:site_name" content="流年不知心底事">
-<meta property="og:description" content="事件组（Event Groups）是一种用于任务间通信的机制，主要用于多任务之间的同步。事件组允许任务通过设置和清除标志位来彼此协作，完成类似于“事件通知”的功能。事件组适合用于当多个任务需要等待某些条件或事件时，它们之间进行同步。 事件位(事件标志)事件位用于指示事件 是否发生。事件位通常称为事件标志。例如，应用程序可以：  定义一个位（或标志），设置为 1 时表示“已收到消息并准备好处理”，">
+<meta property="og:description" content="在 FreeRTOS 中，队列（Queue）、信号量（Semaphore）、任务通知（Task Notification）等同步机制，每次只能处理一个任务。换句话说，这些机制都是点对点的，一次只能满足一个任务的同步需求。 但在实际应用中，我们往往需要多个任务同时等待一个或多个事件的发生，比如多个外设的状态变化、多个任务等待某个初始化完成等。这时候，事件组（Event Groups）就派上了用场！">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/sjzys.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/sjz32w.png">
 <meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/eventgroupshili.gif">
 <meta property="article:published_time" content="2024-11-24T14:23:00.000Z">
-<meta property="article:modified_time" content="2025-01-07T10:58:33.648Z">
+<meta property="article:modified_time" content="2025-03-07T01:11:42.760Z">
 <meta property="article:author" content="kay">
 <meta property="article:tag" content="FreeRTOS">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/eventgroupshili.gif">
+<meta name="twitter:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/sjzys.png">
     
     
       
@@ -98,7 +100,7 @@
     <span id="actions">
       <ul>
         
-        <li><a class="icon" aria-label="上一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/%E5%9F%BA%E7%A1%80%E6%8E%A7%E4%BB%B6/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="上一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/LVGL/%E5%B8%83%E5%B1%80/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
         
         
         <li><a class="icon" aria-label="下一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/%E4%B8%B4%E7%95%8C%E5%8C%BA/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
@@ -131,7 +133,7 @@
     
     
       <div id="toc">
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6%E4%BD%8D-%E4%BA%8B%E4%BB%B6%E6%A0%87%E5%BF%97"><span class="toc-number">1.</span> <span class="toc-text">事件位(事件标志)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6%E7%BB%84"><span class="toc-number">2.</span> <span class="toc-text">事件组</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6%E7%BB%84%E5%92%8C%E4%BA%8B%E4%BB%B6%E4%BD%8D%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">3.</span> <span class="toc-text">事件组和事件位数据类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6%E7%BB%84%E7%9B%B8%E5%85%B3%E5%87%BD%E6%95%B0"><span class="toc-number">4.</span> <span class="toc-text">事件组相关函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E4%BA%8B%E4%BB%B6%E7%BB%84%E6%97%B6-RTOS-%E5%BF%85%E9%A1%BB%E5%85%8B%E6%9C%8D%E7%9A%84%E6%8C%91%E6%88%98"><span class="toc-number">5.</span> <span class="toc-text">实现事件组时 RTOS 必须克服的挑战</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#API"><span class="toc-number">6.</span> <span class="toc-text">API</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#xEventGroupCreate"><span class="toc-number">6.1.</span> <span class="toc-text">xEventGroupCreate</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xEventGroupSetBits"><span class="toc-number">6.2.</span> <span class="toc-text">xEventGroupSetBits</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xEventGroupWaitBits"><span class="toc-number">6.3.</span> <span class="toc-text">xEventGroupWaitBits</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xEventGroupSync"><span class="toc-number">6.4.</span> <span class="toc-text">xEventGroupSync</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">7.</span> <span class="toc-text">实现</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">工作原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6%E7%BB%84%E5%92%8C%E4%BA%8B%E4%BB%B6%E4%BD%8D%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">2.</span> <span class="toc-text">事件组和事件位数据类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6%E7%BB%84%E7%9B%B8%E5%85%B3%E5%87%BD%E6%95%B0"><span class="toc-number">3.</span> <span class="toc-text">事件组相关函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E4%BA%8B%E4%BB%B6%E7%BB%84%E6%97%B6-RTOS-%E5%BF%85%E9%A1%BB%E5%85%8B%E6%9C%8D%E7%9A%84%E6%8C%91%E6%88%98"><span class="toc-number">4.</span> <span class="toc-text">实现事件组时 RTOS 必须克服的挑战</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#API"><span class="toc-number">5.</span> <span class="toc-text">API</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#xEventGroupCreate"><span class="toc-number">5.1.</span> <span class="toc-text">xEventGroupCreate</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xEventGroupSetBits"><span class="toc-number">5.2.</span> <span class="toc-text">xEventGroupSetBits</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xEventGroupWaitBits"><span class="toc-number">5.3.</span> <span class="toc-text">xEventGroupWaitBits</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xEventGroupSync"><span class="toc-number">5.4.</span> <span class="toc-text">xEventGroupSync</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">6.</span> <span class="toc-text">实现</span></a></li></ol>
       </div>
     
   </span>
@@ -181,19 +183,16 @@
   
 
   <div class="content e-content" itemprop="articleBody">
-    <p>事件组（Event Groups）是一种用于任务间通信的机制，主要用于多任务之间的同步。事件组允许任务通过设置和清除标志位来彼此协作，完成类似于“事件通知”的功能。事件组适合用于当多个任务需要等待某些条件或事件时，它们之间进行同步。</p>
-<h2 id="事件位-事件标志"><a href="#事件位-事件标志" class="headerlink" title="事件位(事件标志)"></a>事件位(事件标志)</h2><p>事件位用于指示事件 是否发生。事件位通常称为事件标志。例如，应用程序可以：</p>
-<ul>
-<li>定义一个位（或标志），设置为 1 时表示“已收到消息并准备好处理”， 设置为 0 时表示“没有消息等待处理”。</li>
-<li>定义一个位（或标志），设置为 1 时表示“应用程序已将准备发送到网络的消息排队”， 设置为 0 时表示 “没有消息需要排队准备发送到网络”。</li>
-<li>定义一个位（或标志），设置为 1 时表示“需要向网络发送心跳消息”， 设置为 0 时表示“不需要向网络发送心跳消息”。</li>
-</ul>
-<h2 id="事件组"><a href="#事件组" class="headerlink" title="事件组"></a>事件组</h2><p>事件组就是一组事件位。事件组中的事件位通过位编号来引用。同样，以上面列出的三个例子为例：</p>
-<ul>
-<li>事件组位 0 号位表示“已收到消息并准备好处理”。</li>
-<li>事件组位 1 号位表示“应用程序已将准备发送到网络的消息排队”。</li>
-<li>事件组位 2 号位表示“需要向网络发送心跳消息”。</li>
-</ul>
+    <p>在 <strong>FreeRTOS</strong> 中，<strong>队列（Queue）、信号量（Semaphore）、任务通知（Task Notification）等同步机制，每次只能处理一个任务</strong>。换句话说，这些机制都是<strong>点对点</strong>的，一次只能满足一个任务的同步需求。</p>
+<p>但在实际应用中，我们往往<strong>需要多个任务同时等待一个或多个事件</strong>的发生，比如多个外设的状态变化、多个任务等待某个初始化完成等。这时候，<strong>事件组（Event Groups）</strong>就派上了用场！</p>
+<p>事件组（Event Groups）是一种用于任务间通信的机制，主要用于多任务之间的同步。事件组允许任务通过设置和清除标志位来彼此协作，完成类似于“事件通知”的功能。事件组适合用于当多个任务需要等待某些条件或事件时，它们之间进行同步。</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/sjzys.png" alt="sjzys"></p>
+<h2 id="工作原理"><a href="#工作原理" class="headerlink" title="工作原理"></a>工作原理</h2><p>在 FreeRTOS 中，事件组的本质是一个结构体，包含一个用于存储事件位状态的整数，通常是一个 <strong>32 位的无符号整数</strong>。其中，<strong>高 8 位</strong>用来存储<strong>事件组</strong>的控制信息，而<strong>低 24 位</strong>用来存储<strong>事件标志位</strong>（最多 24 个事件标志）。因此，一个事件组最多可以存储 24 个事件标志，而具体这些标志表示什么事件则由<strong>应用程序</strong>来决定。此外事件组还包含一个<strong>等待链表</strong>，链表中存放了一个个等待该事件组的任务。当任务等待事件组的标志位时，它们会被添加到该链表中，直到满足条件，事件组才会唤醒相应的任务。</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/OS/FreeRTOS/sjz32w.png" alt="sjz32w"></p>
+<blockquote>
+<p>高 8 位通常存储的是与<strong>事件组本身</strong>的管理和状态相关的信息，诸如：是否有任务等待、事件组是否需要清除标志位、同步操作模式（AND&#x2F;OR），等等。</p>
+<p>这些控制信息是<strong>事件组级别的管理</strong>，而不是单个任务的状态控制。</p>
+</blockquote>
 <h2 id="事件组和事件位数据类型"><a href="#事件组和事件位数据类型" class="headerlink" title="事件组和事件位数据类型"></a>事件组和事件位数据类型</h2><p>事件组由 EventGroupHandle_t 类型的变量引用。</p>
 <p>如果 configUSE_16_BIT_TICKS 设为 1，则事件组中存储的位（或标志）数为 8； 如果 configUSE_16_BIT_TICKS 设为 0，则为 24。 configUSE_16_BIT_TICKS 的值取决于 任务内部实现中用于线程本地存储的数据类型。</p>
 <p>事件组中的所有事件位都存储在 EventBits_t 类型的单个无符号整数变量中。事件位 0 存储在位 0 中， 事件位 1 存储在位1 中，依此类推。</p>
@@ -378,7 +377,7 @@
     
     
       <div id="toc-footer" style="display: none">
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6%E4%BD%8D-%E4%BA%8B%E4%BB%B6%E6%A0%87%E5%BF%97"><span class="toc-number">1.</span> <span class="toc-text">事件位(事件标志)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6%E7%BB%84"><span class="toc-number">2.</span> <span class="toc-text">事件组</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6%E7%BB%84%E5%92%8C%E4%BA%8B%E4%BB%B6%E4%BD%8D%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">3.</span> <span class="toc-text">事件组和事件位数据类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6%E7%BB%84%E7%9B%B8%E5%85%B3%E5%87%BD%E6%95%B0"><span class="toc-number">4.</span> <span class="toc-text">事件组相关函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E4%BA%8B%E4%BB%B6%E7%BB%84%E6%97%B6-RTOS-%E5%BF%85%E9%A1%BB%E5%85%8B%E6%9C%8D%E7%9A%84%E6%8C%91%E6%88%98"><span class="toc-number">5.</span> <span class="toc-text">实现事件组时 RTOS 必须克服的挑战</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#API"><span class="toc-number">6.</span> <span class="toc-text">API</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#xEventGroupCreate"><span class="toc-number">6.1.</span> <span class="toc-text">xEventGroupCreate</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xEventGroupSetBits"><span class="toc-number">6.2.</span> <span class="toc-text">xEventGroupSetBits</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xEventGroupWaitBits"><span class="toc-number">6.3.</span> <span class="toc-text">xEventGroupWaitBits</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xEventGroupSync"><span class="toc-number">6.4.</span> <span class="toc-text">xEventGroupSync</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">7.</span> <span class="toc-text">实现</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">工作原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6%E7%BB%84%E5%92%8C%E4%BA%8B%E4%BB%B6%E4%BD%8D%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">2.</span> <span class="toc-text">事件组和事件位数据类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6%E7%BB%84%E7%9B%B8%E5%85%B3%E5%87%BD%E6%95%B0"><span class="toc-number">3.</span> <span class="toc-text">事件组相关函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E4%BA%8B%E4%BB%B6%E7%BB%84%E6%97%B6-RTOS-%E5%BF%85%E9%A1%BB%E5%85%8B%E6%9C%8D%E7%9A%84%E6%8C%91%E6%88%98"><span class="toc-number">4.</span> <span class="toc-text">实现事件组时 RTOS 必须克服的挑战</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#API"><span class="toc-number">5.</span> <span class="toc-text">API</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#xEventGroupCreate"><span class="toc-number">5.1.</span> <span class="toc-text">xEventGroupCreate</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xEventGroupSetBits"><span class="toc-number">5.2.</span> <span class="toc-text">xEventGroupSetBits</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xEventGroupWaitBits"><span class="toc-number">5.3.</span> <span class="toc-text">xEventGroupWaitBits</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xEventGroupSync"><span class="toc-number">5.4.</span> <span class="toc-text">xEventGroupSync</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">6.</span> <span class="toc-text">实现</span></a></li></ol>
       </div>
     
 

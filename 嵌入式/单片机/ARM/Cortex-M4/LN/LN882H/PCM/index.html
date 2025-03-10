@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="PCM（Pulse Code Modulation，脉冲编码调制）是一种用于数字音频信号处理的技术（可以理解为是一种音频数据格式），广泛应用于语音通信、音频存储和信号传输等领域。它的基本原理是将连续的模拟信号（如声音）转换为离散的数字信号，以便进行存储、传输和处理。 PCM的基本工作原理PCM 的工作原理与 PWM 非常相似，主要包括三个关键步骤： 采样（Sampling）  采样是指按照一定的时">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PCM">
+<meta property="og:url" content="https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/PCM/index.html">
+<meta property="og:site_name" content="流年不知心底事">
+<meta property="og:description" content="PCM（Pulse Code Modulation，脉冲编码调制）是一种用于数字音频信号处理的技术（可以理解为是一种音频数据格式），广泛应用于语音通信、音频存储和信号传输等领域。它的基本原理是将连续的模拟信号（如声音）转换为离散的数字信号，以便进行存储、传输和处理。 PCM的基本工作原理PCM 的工作原理与 PWM 非常相似，主要包括三个关键步骤： 采样（Sampling）  采样是指按照一定的时">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/LN882H/cyljs.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/LN882H/wfhzkbjs.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/LN882H/yfhzkbjs.png">
+<meta property="article:published_time" content="2025-03-09T06:32:00.000Z">
+<meta property="article:modified_time" content="2025-03-10T03:16:34.149Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="LN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/LN882H/cyljs.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>PCM</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/%E7%89%87%E4%B8%8AFlash/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/PCM/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/PCM/&text=PCM"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/PCM/&title=PCM"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/PCM/&is_video=false&description=PCM"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=PCM&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/PCM/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/PCM/&title=PCM"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/PCM/&title=PCM"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/PCM/&title=PCM"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/PCM/&title=PCM"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/PCM/&name=PCM&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/PCM/&t=PCM"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#PCM%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">PCM的基本工作原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PCM%E7%B1%BB%E5%9E%8B"><span class="toc-number">2.</span> <span class="toc-text">PCM类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PCM%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-number">3.</span> <span class="toc-text">PCM优缺点</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E7%82%B9"><span class="toc-number">3.1.</span> <span class="toc-text">优点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%BA%E7%82%B9"><span class="toc-number">3.2.</span> <span class="toc-text">缺点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PCM%E4%B8%8EPWM%E5%8C%BA%E5%88%AB"><span class="toc-number">4.</span> <span class="toc-text">PCM与PWM区别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E8%80%85%E7%9A%84%E6%A0%B8%E5%BF%83%E5%8C%BA%E5%88%AB"><span class="toc-number">4.1.</span> <span class="toc-text">二者的核心区别</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PCM%E5%A6%82%E4%BD%95%E8%BD%AC%E4%B8%BAPWM%E4%BF%A1%E5%8F%B7"><span class="toc-number">5.</span> <span class="toc-text">PCM如何转为PWM信号</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BD%AC%E6%8D%A2%E6%AD%A5%E9%AA%A4"><span class="toc-number">5.1.</span> <span class="toc-text">转换步骤</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%9A%E5%8A%A1%E9%80%BB%E8%BE%91"><span class="toc-number">6.</span> <span class="toc-text">业务逻辑</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        PCM
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">kay</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-03-09T06:32:00.000Z" class="dt-published" itemprop="datePublished">2025-03-09</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/ARM/">ARM</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/LN/" rel="tag">LN</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>PCM（Pulse Code Modulation，脉冲编码调制）是一种用于数字音频信号处理的技术（可以理解为是一种音频数据格式），广泛应用于语音通信、音频存储和信号传输等领域。它的基本原理是将连续的模拟信号（如声音）转换为离散的数字信号，以便进行存储、传输和处理。</p>
+<h2 id="PCM的基本工作原理"><a href="#PCM的基本工作原理" class="headerlink" title="PCM的基本工作原理"></a><strong>PCM的基本工作原理</strong></h2><p>PCM 的工作原理与 PWM 非常相似，主要包括三个关键步骤：</p>
+<p><strong>采样（Sampling）</strong></p>
+<ul>
+<li>采样是指按照一定的时间间隔对连续的模拟信号进行测量，以获取其瞬时值。</li>
+<li>采样率决定了信号的时间分辨率，通常以 Hz（每秒采样次数）表示。</li>
+<li>例如，CD 音频的标准采样率是 <strong>44.1 kHz</strong>，即每秒钟采样 44100 次。</li>
+</ul>
+<p><strong>量化（Quantization）</strong></p>
+<ul>
+<li>量化是将采样得到的模拟值映射到离散的数值范围。</li>
+<li>量化精度由位深度（Bit Depth）决定，例如 16-bit 量化表示信号可以分成 $2^{16} &#x3D; 65536$ 个离散级别。</li>
+<li>量化误差是指实际信号值与量化后信号值之间的误差，较高的位深度可以减少误差，提高音频质量。</li>
+</ul>
+<p><strong>编码（Encoding）</strong></p>
+<ul>
+<li>编码是将量化后的数值转换为二进制数据，以便存储或传输。</li>
+<li>例如，16-bit PCM 每个采样点用 16 位二进制数表示。</li>
+</ul>
+<h2 id="PCM类型"><a href="#PCM类型" class="headerlink" title="PCM类型"></a>PCM类型</h2><p>PCM 有不同的变种，主要包括：</p>
+<p><strong>线性 PCM（Linear PCM, LPCM）</strong></p>
+<ul>
+<li>最常见的 PCM 形式，量化间隔是等间隔的，因此信号的失真较小。</li>
+<li>CD 音频、WAV 文件等使用的是线性 PCM。</li>
+</ul>
+<p><strong>对数 PCM（Logarithmic PCM）</strong></p>
+<ul>
+<li>使用非线性量化，以减少数据量，常用于语音编码。</li>
+<li>典型编码方式包括 <strong>μ-law（美式标准）</strong> 和 <strong>A-law（欧洲标准）</strong>，用于电话通信。</li>
+</ul>
+<p><strong>差分 PCM（DPCM, Differential PCM）</strong></p>
+<ul>
+<li>记录相邻采样值之间的差值，而不是绝对值，从而降低数据存储需求。</li>
+<li>适用于低比特率的应用，如语音编码。</li>
+</ul>
+<p><strong>自适应差分 PCM（ADPCM, Adaptive Differential PCM）</strong></p>
+<ul>
+<li>在 DPCM 的基础上，动态调整量化步长，以适应信号的变化，提高效率。</li>
+<li>广泛用于音视频压缩，如 G.726 语音编码标准。</li>
+</ul>
+<h2 id="PCM优缺点"><a href="#PCM优缺点" class="headerlink" title="PCM优缺点"></a>PCM优缺点</h2><h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a><strong>优点</strong></h3><p>✅ <strong>高保真</strong>：PCM 是无损编码方式，不会丢失音频质量。<br> ✅ <strong>简单易实现</strong>：相比其他复杂的音频压缩算法（如 MP3、AAC），PCM 编解码计算量较低，适用于实时音频处理。<br> ✅ <strong>兼容性强</strong>：几乎所有音频设备（CD 播放器、计算机、手机等）都支持 PCM。</p>
+<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a><strong>缺点</strong></h3><p>❌ <strong>数据量大</strong>：PCM 不进行压缩，存储和传输成本高。例如，一分钟的 16-bit 44.1 kHz 立体声音频数据大约需要 10 MB。<br> ❌ <strong>对带宽要求高</strong>：在网络传输中，未经压缩的 PCM 需要较高带宽，不适合低带宽环境。</p>
+<h2 id="PCM与PWM区别"><a href="#PCM与PWM区别" class="headerlink" title="PCM与PWM区别"></a>PCM与PWM区别</h2><p>PCM（脉冲编码调制）和 PWM（脉冲宽度调制）在名字上确实有些相似，但它们的原理和应用是完全不同的。可以简单理解为：</p>
+<p>✅ <strong>PCM 是一种数字信号编码方式</strong>，主要用于音频、语音等信号的数字化存储与传输。<br>✅ <strong>PWM 是一种模拟信号调制方式</strong>，用于控制电机、LED 亮度、音频信号合成等。</p>
+<blockquote>
+<p>PCM 格式的数据是二进制的(0 和 1)，PWM 输出的是高低电平(0 和 1)，二者看似是一样的，但其实对于信息表达方式是完全不同的</p>
+<p>✅ <strong>PCM 直接表示信号的数值</strong>（用二进制编码一个具体的幅值）。<br>✅ <strong>PWM 通过时间来编码信号的幅值</strong>（用脉冲的占空比表示模拟信号的强度）。</p>
+</blockquote>
+<h3 id="二者的核心区别"><a href="#二者的核心区别" class="headerlink" title="二者的核心区别"></a>二者的核心区别</h3><p><strong>PCM - 直接量化幅度</strong></p>
+<p>PCM 通过<strong>二进制编码</strong>直接表示信号的瞬时幅度。<br>例如，16-bit PCM 编码可能会用 0110110100101110 这样的二进制数来表示某一时刻的信号幅值。<br>这意味着<strong>每个 PCM 采样点的数值与输入信号的幅度一一对应</strong>。</p>
+<p><strong>PWM - 用时间表示幅度</strong></p>
+<p>PWM <strong>不直接存储幅度值</strong>，而是通过调整“高电平持续的时间”来表达信号的强弱。<br>例如，占空比 50% 代表 50% 的幅度，占空比 75% 代表 75% 的幅度，占空比 25% 代表 25% 的幅度。<br>PWM 输出的是一连串<strong>固定频率</strong>的脉冲，而不是直接的二进制数值。</p>
+<h2 id="PCM如何转为PWM信号"><a href="#PCM如何转为PWM信号" class="headerlink" title="PCM如何转为PWM信号"></a>PCM如何转为PWM信号</h2><p>PCM（脉冲编码调制）转换为 PWM（脉冲宽度调制）通常用于数字音频信号驱动功率放大器（如 D 类放大器），在这个转换过程中，PCM 主要提供<strong>信号的幅度信息</strong>，而 PWM 需要根据 PCM 信号计算出<strong>占空比</strong>，而<strong>频率通常是固定的</strong>。</p>
+<h3 id="转换步骤"><a href="#转换步骤" class="headerlink" title="转换步骤"></a>转换步骤</h3><p><strong>设定 PWM 频率</strong></p>
+<p>PWM 频率通常远高于 PCM 采样率，以确保信号能够被低通滤波器平滑还原，并避免高频噪声进入可听范围（20 Hz - 20 kHz）。<br>例如，对于 44.1 kHz 的 PCM 采样率（CD 音频），PWM 频率通常设定在 100 kHz 至 500 kHz 之间，其中 D 类音频放大器常使用 200 kHz 以上，以保证噪声超出人耳感知范围。</p>
+<blockquote>
+<p>PWM 频率至少应为采样率的 4-10 倍（Nyquist 定理的扩展考虑），以保证波形保真度。对于 44.1 kHz 采样率，100 kHz 是一个合理的最小值，而 200-500 kHz 是 D 类放大器的常见范围。</p>
+</blockquote>
+<p>PCM 本身是<strong>裸数据</strong>格式，通常没有文件头，所以你<strong>不能直接</strong>从 PCM 文件内部获取采样率，而需要从外部信息（比如文件命名、存储格式说明）或者使用正确的播放参数来解析（与同事那边商量好都使用一直的频率，比如都使用 44.1kHz）。</p>
+<p>当然我们也可以使用公式大概计算出 PCM 文件的采样率</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/LN882H/cyljs.png" alt="cyljs"></p>
+<p><strong>计算占空比</strong></p>
+<p>PCM 信号的数值范围通常是有符号整数，例如：</p>
+<ul>
+<li><strong>8-bit PCM</strong>: -128 ～ +127</li>
+<li><strong>16-bit PCM</strong>: -32768 ～ +32767</li>
+</ul>
+<p>PWM 占空比计算方式：</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/LN882H/wfhzkbjs.png" alt="wfhzkbjs"></p>
+<p>对于有符号 PCM 数据：</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/LN882H/yfhzkbjs.png" alt="yfhzkbjs"></p>
+<p>其中 V<sub>PCM</sub> 是当前 PCM 采样值。<br>V<sub>max</sub> 是 PCM 信号的最大值（比如 32767 对于 16-bit PCM）。<br>V<sub>min</sub> 是 PCM 信号的最小值（比如 -32768）。</p>
+<p>示例：假设 PCM 采样值是 <strong>16-bit</strong>，范围是 <strong>-32768 到 32767</strong>：</p>
+<ul>
+<li>当 PCM &#x3D; <strong>0</strong> 时，PWM 占空比 &#x3D; <strong>50%</strong>(表示中间电平)</li>
+<li>当 PCM &#x3D; <strong>32767</strong> 时，PWM 占空比 &#x3D; <strong>100%</strong></li>
+<li>当 PCM &#x3D; <strong>-32768</strong> 时，PWM 占空比 &#x3D; <strong>0%</strong></li>
+<li>当 PCM &#x3D; <strong>16384</strong>（一半）时，PWM 占空比 &#x3D; <strong>75%</strong></li>
+<li>当 PCM &#x3D; <strong>-16384</strong>（负一半）时，PWM 占空比 &#x3D; <strong>25%</strong></li>
+</ul>
+<p>✅ 这样，PCM 的幅度信息就映射到了 PWM 的占空比。</p>
+<p><strong>具体的数值范围可以询问数据的来源，或则通过 PCM_Bit.py 工具码进行检测</strong></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/TooUpper/SensorDrive/tree/main/%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7">PCM_Bit.py 工具下载链接</a></p>
+<h2 id="业务逻辑"><a href="#业务逻辑" class="headerlink" title="业务逻辑"></a>业务逻辑</h2><p>服务端要么直接发送过来 PCM 编码，要么发送 MP3 编码，然后我本地解析为 PCM。</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">博主</a></li>
+        
+          <li><a href="/tags/">标签</a></li>
+        
+          <li><a href="/categories/">分类</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#PCM%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">PCM的基本工作原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PCM%E7%B1%BB%E5%9E%8B"><span class="toc-number">2.</span> <span class="toc-text">PCM类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PCM%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-number">3.</span> <span class="toc-text">PCM优缺点</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E7%82%B9"><span class="toc-number">3.1.</span> <span class="toc-text">优点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%BA%E7%82%B9"><span class="toc-number">3.2.</span> <span class="toc-text">缺点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PCM%E4%B8%8EPWM%E5%8C%BA%E5%88%AB"><span class="toc-number">4.</span> <span class="toc-text">PCM与PWM区别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E8%80%85%E7%9A%84%E6%A0%B8%E5%BF%83%E5%8C%BA%E5%88%AB"><span class="toc-number">4.1.</span> <span class="toc-text">二者的核心区别</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PCM%E5%A6%82%E4%BD%95%E8%BD%AC%E4%B8%BAPWM%E4%BF%A1%E5%8F%B7"><span class="toc-number">5.</span> <span class="toc-text">PCM如何转为PWM信号</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BD%AC%E6%8D%A2%E6%AD%A5%E9%AA%A4"><span class="toc-number">5.1.</span> <span class="toc-text">转换步骤</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%9A%E5%8A%A1%E9%80%BB%E8%BE%91"><span class="toc-number">6.</span> <span class="toc-text">业务逻辑</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/PCM/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/PCM/&text=PCM"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/PCM/&title=PCM"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/PCM/&is_video=false&description=PCM"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=PCM&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/PCM/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/PCM/&title=PCM"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/PCM/&title=PCM"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/PCM/&title=PCM"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/PCM/&title=PCM"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/PCM/&name=PCM&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/PCM/&t=PCM"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    kay
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
