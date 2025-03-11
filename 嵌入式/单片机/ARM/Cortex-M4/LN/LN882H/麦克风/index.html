@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="ADC 指模&#x2F;数转换器或者模数转换器。是指将连续变化的模拟信号转换为离散的数字信号的器件。 我们这里需要使用 ADC 功能采集麦克风数据，将其作为 PMC 数据流发送给服务端。 LN882H对ADC的支持支持 6 通道轮询采样12bit 分辨率单次和连续转换模式支持DMA支持转换完成中断  注：如果要使用 ADC 的 DMA，除了要使能 ADC_DMA_EN，还要配置 ADC 的转换中断">
+<meta property="og:type" content="article">
+<meta property="og:title" content="麦克风">
+<meta property="og:url" content="https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/%E9%BA%A6%E5%85%8B%E9%A3%8E/index.html">
+<meta property="og:site_name" content="流年不知心底事">
+<meta property="og:description" content="ADC 指模&#x2F;数转换器或者模数转换器。是指将连续变化的模拟信号转换为离散的数字信号的器件。 我们这里需要使用 ADC 功能采集麦克风数据，将其作为 PMC 数据流发送给服务端。 LN882H对ADC的支持支持 6 通道轮询采样12bit 分辨率单次和连续转换模式支持DMA支持转换完成中断  注：如果要使用 ADC 的 DMA，除了要使能 ADC_DMA_EN，还要配置 ADC 的转换中断">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/LN882H/mtmkf.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/LN882H/mkfgzsm.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/LN882H/dbjsgs.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/LN882H/dairufsycs.png">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/LN882H/zxcsdl.png">
+<meta property="article:published_time" content="2025-03-10T03:40:00.000Z">
+<meta property="article:modified_time" content="2025-03-11T06:19:37.862Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="LN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/LN882H/mtmkf.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>麦克风</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/PCM/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/%E9%BA%A6%E5%85%8B%E9%A3%8E/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/%E9%BA%A6%E5%85%8B%E9%A3%8E/&text=麦克风"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/%E9%BA%A6%E5%85%8B%E9%A3%8E/&title=麦克风"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/%E9%BA%A6%E5%85%8B%E9%A3%8E/&is_video=false&description=麦克风"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=麦克风&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/%E9%BA%A6%E5%85%8B%E9%A3%8E/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/%E9%BA%A6%E5%85%8B%E9%A3%8E/&title=麦克风"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/%E9%BA%A6%E5%85%8B%E9%A3%8E/&title=麦克风"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/%E9%BA%A6%E5%85%8B%E9%A3%8E/&title=麦克风"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/%E9%BA%A6%E5%85%8B%E9%A3%8E/&title=麦克风"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/%E9%BA%A6%E5%85%8B%E9%A3%8E/&name=麦克风&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/%E9%BA%A6%E5%85%8B%E9%A3%8E/&t=麦克风"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#LN882H%E5%AF%B9ADC%E7%9A%84%E6%94%AF%E6%8C%81"><span class="toc-number">1.</span> <span class="toc-text">LN882H对ADC的支持</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%B5%E8%B7%AF%E8%AE%BE%E8%AE%A1"><span class="toc-number">2.</span> <span class="toc-text">电路设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BD%AF%E4%BB%B6%E5%AE%9E%E7%8E%B0"><span class="toc-number">3.</span> <span class="toc-text">软件实现</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        麦克风
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">kay</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-03-10T03:40:00.000Z" class="dt-published" itemprop="datePublished">2025-03-10</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/ARM/">ARM</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/LN/" rel="tag">LN</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>ADC 指模&#x2F;数转换器或者模数转换器。是指将连续变化的模拟信号转换为离散的数字信号的器件。</p>
+<p>我们这里需要使用 ADC 功能采集麦克风数据，将其作为 PMC 数据流发送给服务端。</p>
+<h2 id="LN882H对ADC的支持"><a href="#LN882H对ADC的支持" class="headerlink" title="LN882H对ADC的支持"></a>LN882H对ADC的支持</h2><p>支持 6 通道轮询采样<br>12bit 分辨率<br>单次和连续转换模式<br>支持DMA<br>支持转换完成中断</p>
+<blockquote>
+<p>注：如果要使用 ADC 的 DMA，除了要使能 ADC_DMA_EN，还要配置 ADC 的转换中断使能（不用配置 NVIC），这样才能触发 DMA采集数据</p>
+</blockquote>
+<p>引脚和ADC通道对应关系</p>
+<p>GPIOA0  -&gt;  ADC2<br>GPIOA1  -&gt;  ADC3<br>GPIOA4  -&gt;  ADC4<br>GPIOB3  -&gt;  ADC5<br>GPIOB4  -&gt;  ADC6<br>GPIOB5  -&gt;  ADC7</p>
+<h2 id="电路设计"><a href="#电路设计" class="headerlink" title="电路设计"></a>电路设计</h2><p><strong>实体样式</strong></p>
+<p>咪头式麦克风</p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/LN882H/mtmkf.png" alt="mtmkf"></p>
+<p><strong>规格说明</strong></p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/LN882H/mkfgzsm.png" alt="mkfgzsm"></p>
+<p>参数说明：</p>
+<p>指向性：全指向(说明麦克风能均匀接收<strong>各个方向</strong>的声音，适用于语音采集)<br>灵敏度：-31±3(麦克风将声压转换为电信号的能力)</p>
+<ul>
+<li><strong>0 dB &#x3D; 1V&#x2F;Pa</strong>，即 <strong>1 帕斯卡（Pa）的声压下，麦克风输出 1V 电压</strong>。</li>
+<li>规格中参数是 <strong>-31 ±3 dB</strong>，意味着灵敏度范围在 <strong>-34 dB 到 -28 dB</strong> 之间。</li>
+<li>那么根据公式：<img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/LN882H/dbjsgs.png" alt="dbjsgs"></li>
+<li>我们可以将参数 -31dB 带入：<img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/LN882H/dairufsycs.png" alt="dairufsycs">可以得出有效值为 28.2mv，峰值约为 39.9mV</li>
+</ul>
+<p>标准工作电压：4.5V(范围是 2v-10V，4.5V 最佳)<br>输出阻抗：2.2KΩ(麦克风输出信号的内阻，影响与后续电路的匹配)<br>频率：100Hz-20000Hz(麦克风能有效响应的音频频率范围)<br>最大耗电流：0.5mA(麦克风在工作时的最大电流)<br>…</p>
+<p><strong>最小测试电路</strong></p>
+<p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU/ARM/Cortex-M4/LN882H/zxcsdl.png" alt="zxcsdl"></p>
+<p>为什么不可以直接将咪头麦克风接入 ADC 引脚而需要外置电路？</p>
+<p>根据规格说明中的解释我们可以得出如下麦克风特性：<br>咪头麦克风（驻极体麦克风）输出的是<strong>交流音频信号</strong>，以直流偏置电压为中心。<br>直流偏置：根据公式，假设负载电阻 R<sub>L</sub> &#x3D; 2.2kΩ，电流 0.5 mA，咪头两端压降约为 0.5 x 10<sup>-3</sup> x 2200 &#x3D; 1.1 V。若供电4.5V，输出引脚（Term 1）的直流电平约为 4.5 - 1.1 &#x3D; 3.4。<br>交流部分：±39.9 mV（1Pa声压），总输出范围约为 3.4V ± 39.9 mV（3.3601V到3.4399V）。</p>
+<p>LN882H ADC 引脚特性：<br><strong>输入范围</strong>：0V 至 3.3V（单极输入，常见值）。</p>
+<p><strong>分辨率</strong>：LN882H ADC 12 位(2<sup>12</sup> &#x3D; 4096），电压分辨率约为$$ \frac{3.3}{4096} \approx 0.805\text{mV} $$</p>
+<p>这两个特性说明了两点：</p>
+<p>第一、引脚输入电压不能超过 3.3V，因为它最大只支持 3.3V<br>第二、咪头麦克风的电压变化大概在 0.805mV 左右太微弱了，ADC 可能无法精确识别<br>第三、麦克风需要的电压为 4.5V，ADC 引脚最大也就 3.3V</p>
+<p>为了解决这些问题：我们就需要外置电路，对麦克风提供 4.5V 的电压，并将电压变大让 ADC 可以正常采集这些变化；</p>
+<h2 id="软件实现"><a href="#软件实现" class="headerlink" title="软件实现"></a>软件实现</h2><p>思路：通过 ADC 读取音频数据，将其转为 PCM 数据流，通过 socket 发送给大模型进行处理</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;hal/hal_clock.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;hal/hal_common.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;hal/hal_gpio.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;hal/hal_adc.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;hal/hal_timer.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;ln_show_reg.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;ln_test_common.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;utils/debug/log.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;ln_drv_timer.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;ln_drv_adc.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ADC_CHANNEL   ADC_CH5    <span class="comment">// 使用GPIOB3作为ADC输入</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> SAMPLE_RATE   40000      <span class="comment">// 目标采样率 40kHz</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> BUFFER_SIZE   1024       <span class="comment">// PCM缓冲区大小</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// PCM缓冲区</span></span><br><span class="line"><span class="type">int16_t</span> pcmBuffer[BUFFER_SIZE];</span><br><span class="line"><span class="keyword">volatile</span> <span class="type">uint16_t</span> bufferIndex = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定时器中断回调</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">timer_callback</span><span class="params">(<span class="type">void</span>)</span>&#123;</span><br><span class="line">    <span class="comment">// 直接读取最新ADC值 (0-4095，非阻塞)</span></span><br><span class="line">    <span class="type">uint16_t</span> adcValue = adc_get_data(ADC_CHANNEL);</span><br><span class="line">	LOG(LOG_LVL_INFO, <span class="string">&quot;PCM ...\n&quot;</span>);</span><br><span class="line">    <span class="comment">// 转换为16位PCM (-32768至32767)</span></span><br><span class="line">    <span class="type">int16_t</span> pcmValue = (<span class="type">int16_t</span>)((adcValue - <span class="number">2048</span>) * (<span class="number">32767.0</span> / <span class="number">2047.0</span>)); <span class="comment">// 线性映射</span></span><br><span class="line">    <span class="keyword">if</span> (pcmValue &gt; <span class="number">32767</span>) pcmValue = <span class="number">32767</span>;  <span class="comment">// 防止溢出</span></span><br><span class="line">    <span class="keyword">if</span> (pcmValue &lt; <span class="number">-32768</span>) pcmValue = <span class="number">-32768</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 存储到缓冲区</span></span><br><span class="line">    <span class="keyword">if</span> (bufferIndex &lt; BUFFER_SIZE)&#123;</span><br><span class="line">        pcmBuffer[bufferIndex++] = pcmValue;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="comment">// 缓冲区满，处理数据（例如发送或重置）</span></span><br><span class="line">        bufferIndex = <span class="number">0</span>;</span><br><span class="line">        LOG(LOG_LVL_INFO, <span class="string">&quot;PCM Buffer Full, Processing...\n&quot;</span>);</span><br><span class="line">        <span class="comment">// 可添加数据传输逻辑（如串口发送）</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span>&#123;</span><br><span class="line">    <span class="comment">/****************** 1. 系统初始化 ***********************/</span></span><br><span class="line">    SetSysClock();</span><br><span class="line">    log_init();</span><br><span class="line">    LOG(LOG_LVL_INFO, <span class="string">&quot;LN882H init for audio capture!\n&quot;</span>);</span><br><span class="line">    ln_show_reg_init();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/****************** 2. 外设配置 ***********************/</span></span><br><span class="line">    <span class="comment">// 初始化ADC</span></span><br><span class="line">    adc_init(ADC_CHANNEL);  <span class="comment">// 配置ADC_CH5 (GPIOB3)为连续模式</span></span><br><span class="line">    adc_start();            <span class="comment">// 开始ADC转换</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 初始化定时器 (使用Timer0，40kHz中断)</span></span><br><span class="line">    <span class="type">uint32_t</span> timer_us = <span class="number">1000000</span> / SAMPLE_RATE; <span class="comment">// 40kHz -&gt; 25 us</span></span><br><span class="line">    timer_init(TIMER_CH_0, timer_us, timer_callback); <span class="comment">// 初始化Timer0，25us中断</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/****************** 3. 采集循环 ***********************/</span></span><br><span class="line">    <span class="keyword">while</span> (<span class="number">1</span>)&#123;</span><br><span class="line">        ln_delay_ms(<span class="number">100</span>);  <span class="comment">// 避免CPU过载</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">博主</a></li>
+        
+          <li><a href="/tags/">标签</a></li>
+        
+          <li><a href="/categories/">分类</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#LN882H%E5%AF%B9ADC%E7%9A%84%E6%94%AF%E6%8C%81"><span class="toc-number">1.</span> <span class="toc-text">LN882H对ADC的支持</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%B5%E8%B7%AF%E8%AE%BE%E8%AE%A1"><span class="toc-number">2.</span> <span class="toc-text">电路设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BD%AF%E4%BB%B6%E5%AE%9E%E7%8E%B0"><span class="toc-number">3.</span> <span class="toc-text">软件实现</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/%E9%BA%A6%E5%85%8B%E9%A3%8E/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/%E9%BA%A6%E5%85%8B%E9%A3%8E/&text=麦克风"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/%E9%BA%A6%E5%85%8B%E9%A3%8E/&title=麦克风"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/%E9%BA%A6%E5%85%8B%E9%A3%8E/&is_video=false&description=麦克风"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=麦克风&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/%E9%BA%A6%E5%85%8B%E9%A3%8E/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/%E9%BA%A6%E5%85%8B%E9%A3%8E/&title=麦克风"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/%E9%BA%A6%E5%85%8B%E9%A3%8E/&title=麦克风"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/%E9%BA%A6%E5%85%8B%E9%A3%8E/&title=麦克风"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/%E9%BA%A6%E5%85%8B%E9%A3%8E/&title=麦克风"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/%E9%BA%A6%E5%85%8B%E9%A3%8E/&name=麦克风&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ARM/Cortex-M4/LN/LN882H/%E9%BA%A6%E5%85%8B%E9%A3%8E/&t=麦克风"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    kay
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
