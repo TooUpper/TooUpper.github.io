@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Keil 是 ARM 旗下的一款 IDE（集成开发环境），主要用于嵌入式系统开发，特别适用于 Cortex-M 处理器系列。Keil 提供了一整套的开发工具，包括代码编辑、编译、链接和调试。 Keil调试方式Keil 提供多种调试方式，包括： 软件仿真（Simulator）：在 PC 上模拟 MCU 的执行，不依赖实际硬件，适用于代码逻辑验证。JTAG&#x2F;SWD 仿真器调试：使用硬件调试工">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Keil调试">
+<meta property="og:url" content="https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E7%83%A7%E5%BD%95%E8%B0%83%E8%AF%95/Keil%E8%B0%83%E8%AF%95/index.html">
+<meta property="og:site_name" content="流年不知心底事">
+<meta property="og:description" content="Keil 是 ARM 旗下的一款 IDE（集成开发环境），主要用于嵌入式系统开发，特别适用于 Cortex-M 处理器系列。Keil 提供了一整套的开发工具，包括代码编辑、编译、链接和调试。 Keil调试方式Keil 提供多种调试方式，包括： 软件仿真（Simulator）：在 PC 上模拟 MCU 的执行，不依赖实际硬件，适用于代码逻辑验证。JTAG&#x2F;SWD 仿真器调试：使用硬件调试工">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E7%83%A7%E5%BD%95%E8%B0%83%E8%AF%95/%E4%B8%B2%E5%8F%A3%E7%83%A7%E5%BD%95/ch340lj.png">
+<meta property="article:published_time" content="2025-01-10T12:39:00.000Z">
+<meta property="article:modified_time" content="2025-03-13T03:10:14.140Z">
+<meta property="article:author" content="kay">
+<meta property="article:tag" content="烧录调试">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.tooupper.org/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E7%83%A7%E5%BD%95%E8%B0%83%E8%AF%95/%E4%B8%B2%E5%8F%A3%E7%83%A7%E5%BD%95/ch340lj.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Keil调试</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E5%8D%95%E7%89%87%E6%9C%BA/ESP32/ESP32_S3/SmartConfig/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E7%83%A7%E5%BD%95%E8%B0%83%E8%AF%95/%E4%B8%B2%E5%8F%A3%E7%83%A7%E5%BD%95/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E7%83%A7%E5%BD%95%E8%B0%83%E8%AF%95/Keil%E8%B0%83%E8%AF%95/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E7%83%A7%E5%BD%95%E8%B0%83%E8%AF%95/Keil%E8%B0%83%E8%AF%95/&text=Keil调试"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E7%83%A7%E5%BD%95%E8%B0%83%E8%AF%95/Keil%E8%B0%83%E8%AF%95/&title=Keil调试"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E7%83%A7%E5%BD%95%E8%B0%83%E8%AF%95/Keil%E8%B0%83%E8%AF%95/&is_video=false&description=Keil调试"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Keil调试&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E7%83%A7%E5%BD%95%E8%B0%83%E8%AF%95/Keil%E8%B0%83%E8%AF%95/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E7%83%A7%E5%BD%95%E8%B0%83%E8%AF%95/Keil%E8%B0%83%E8%AF%95/&title=Keil调试"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E7%83%A7%E5%BD%95%E8%B0%83%E8%AF%95/Keil%E8%B0%83%E8%AF%95/&title=Keil调试"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E7%83%A7%E5%BD%95%E8%B0%83%E8%AF%95/Keil%E8%B0%83%E8%AF%95/&title=Keil调试"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E7%83%A7%E5%BD%95%E8%B0%83%E8%AF%95/Keil%E8%B0%83%E8%AF%95/&title=Keil调试"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E7%83%A7%E5%BD%95%E8%B0%83%E8%AF%95/Keil%E8%B0%83%E8%AF%95/&name=Keil调试&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E7%83%A7%E5%BD%95%E8%B0%83%E8%AF%95/Keil%E8%B0%83%E8%AF%95/&t=Keil调试"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Keil%E8%B0%83%E8%AF%95%E6%96%B9%E5%BC%8F"><span class="toc-number">1.</span> <span class="toc-text">Keil调试方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JTAG-SWD-%E4%BB%BF%E7%9C%9F%E5%99%A8%E8%B0%83%E8%AF%95"><span class="toc-number">2.</span> <span class="toc-text">JTAG&#x2F;SWD 仿真器调试</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Keil调试
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">kay</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-01-10T12:39:00.000Z" class="dt-published" itemprop="datePublished">2025-01-10</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/">嵌入式</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/%E7%83%A7%E5%BD%95%E8%B0%83%E8%AF%95/" rel="tag">烧录调试</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>Keil 是 ARM 旗下的一款 IDE（集成开发环境），主要用于嵌入式系统开发，特别适用于 Cortex-M 处理器系列。Keil 提供了一整套的开发工具，包括代码编辑、编译、链接和调试。</p>
+<h2 id="Keil调试方式"><a href="#Keil调试方式" class="headerlink" title="Keil调试方式"></a>Keil调试方式</h2><p>Keil 提供多种调试方式，包括：</p>
+<p><strong>软件仿真（Simulator）</strong>：在 PC 上模拟 MCU 的执行，不依赖实际硬件，适用于代码逻辑验证。<br><strong>JTAG&#x2F;SWD 仿真器调试</strong>：使用硬件调试工具（如 J-Link、ST-Link）进行单步调试、寄存器查看、变量监视等。<br><strong>Flash 下载调试</strong>：将程序烧录到 MCU 的 Flash 中，适用于真实硬件运行测试。</p>
+<h2 id="JTAG-SWD-仿真器调试"><a href="#JTAG-SWD-仿真器调试" class="headerlink" title="JTAG&#x2F;SWD 仿真器调试"></a>JTAG&#x2F;SWD 仿真器调试</h2><p><img src="/public/image/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E7%83%A7%E5%BD%95%E8%B0%83%E8%AF%95/%E4%B8%B2%E5%8F%A3%E7%83%A7%E5%BD%95/ch340lj.png" alt="ch340lj"></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">博主</a></li>
+        
+          <li><a href="/tags/">标签</a></li>
+        
+          <li><a href="/categories/">分类</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Keil%E8%B0%83%E8%AF%95%E6%96%B9%E5%BC%8F"><span class="toc-number">1.</span> <span class="toc-text">Keil调试方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JTAG-SWD-%E4%BB%BF%E7%9C%9F%E5%99%A8%E8%B0%83%E8%AF%95"><span class="toc-number">2.</span> <span class="toc-text">JTAG&#x2F;SWD 仿真器调试</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E7%83%A7%E5%BD%95%E8%B0%83%E8%AF%95/Keil%E8%B0%83%E8%AF%95/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E7%83%A7%E5%BD%95%E8%B0%83%E8%AF%95/Keil%E8%B0%83%E8%AF%95/&text=Keil调试"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E7%83%A7%E5%BD%95%E8%B0%83%E8%AF%95/Keil%E8%B0%83%E8%AF%95/&title=Keil调试"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E7%83%A7%E5%BD%95%E8%B0%83%E8%AF%95/Keil%E8%B0%83%E8%AF%95/&is_video=false&description=Keil调试"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Keil调试&body=Check out this article: https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E7%83%A7%E5%BD%95%E8%B0%83%E8%AF%95/Keil%E8%B0%83%E8%AF%95/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E7%83%A7%E5%BD%95%E8%B0%83%E8%AF%95/Keil%E8%B0%83%E8%AF%95/&title=Keil调试"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E7%83%A7%E5%BD%95%E8%B0%83%E8%AF%95/Keil%E8%B0%83%E8%AF%95/&title=Keil调试"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E7%83%A7%E5%BD%95%E8%B0%83%E8%AF%95/Keil%E8%B0%83%E8%AF%95/&title=Keil调试"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E7%83%A7%E5%BD%95%E8%B0%83%E8%AF%95/Keil%E8%B0%83%E8%AF%95/&title=Keil调试"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E7%83%A7%E5%BD%95%E8%B0%83%E8%AF%95/Keil%E8%B0%83%E8%AF%95/&name=Keil调试&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://www.tooupper.org/%E5%B5%8C%E5%85%A5%E5%BC%8F/%E7%83%A7%E5%BD%95%E8%B0%83%E8%AF%95/Keil%E8%B0%83%E8%AF%95/&t=Keil调试"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    kay
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">博主</a></li><!--
+     --><!--
+       --><li><a href="/tags/">标签</a></li><!--
+     --><!--
+       --><li><a href="/categories/">分类</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
